@@ -76,6 +76,7 @@ dev = [
     "respx>=0.21.0",
     "ruff>=0.5.0",
     "mypy>=1.10.0",
+    "types-pyyaml>=6.0.12",
 ]
 
 # Local-only (ADR-040 browser verification). Excluded from `--dev` so CI never
