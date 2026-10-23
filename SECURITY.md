@@ -59,9 +59,11 @@ finding fails the build. Findings are redacted in the log.
 
 ### 3. What may be sent to a model provider
 
-The narrative layer sends data to OpenAI or Anthropic. Only public-derived
-material may go: figures computed from SEC filings, framework scores, overlay
-verdicts, ticker and exchange.
+The LLM call sites allow-listed in `tests/test_llm_call_sites.py` (narrative,
+chat and external-signals extraction) send data to OpenAI or Anthropic. Only
+public-derived material may go: figures computed from SEC filings, framework
+scores, overlay verdicts, ticker and exchange. Chat also sends the operator's
+own typed question and the earlier turns of that conversation, as written.
 
 The following must never be sent, and a change that sends them is a
 vulnerability worth reporting: portfolio holdings, position sizes, cost basis,

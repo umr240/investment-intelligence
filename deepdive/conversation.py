@@ -12,8 +12,8 @@ fallback. Both clamp to the configured `*_narrative_model` (Sonnet 4.6 by
 default for Anthropic; Haiku 4.5 was empirically unreliable for tool-use
 schema fills, see settings.py).
 
-Rules (inherited from CLAUDE.md "AI layer boundary — ONE permitted location
-only"):
+An allow-listed LLM call site (tests/test_llm_call_sites.py, ADR-031-A1).
+Rules (CLAUDE.md "AI layer boundary"):
   • LLMs are presentation only — every number must be grounded
   • Conversation grounds in a *frozen* ScorecardView from the linked
     DeepDiveRun. Re-dive creates a new run + a fresh conversation.
