@@ -239,6 +239,7 @@ exports/
 
 # Machine-local Claude state. worktrees/ is 331M of another project.
 .claude/settings.local.json
+.claude/sessions/
 .claude/worktrees/
 .claude/scheduled_tasks.lock
 
