@@ -120,7 +120,7 @@ def generate_narrative(
         )
 
     raise NarrativeUnavailableError(
-        f"All narrative providers failed. Last error: {last_err!s}",
+        f"All narrative providers failed. Last error: {_redact(str(last_err))}",
     )
 
 
