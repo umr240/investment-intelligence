@@ -280,7 +280,6 @@ def _call_anthropic(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, 
         resp = client.messages.create(
             model=model,
             max_tokens=4096,
-            temperature=0.2,
             system=system_prompt,
             tools=[{
                 "name": "emit_narrative",

@@ -293,7 +293,6 @@ def _call_anthropic_chat(
         resp = client.messages.create(
             model=model,
             max_tokens=2048,
-            temperature=0.2,
             system=_SYSTEM_PROMPT,
             tools=[{
                 "name": "emit_chat_turn",
