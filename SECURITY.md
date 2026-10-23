@@ -31,14 +31,23 @@ analysed. They are attacker-influenceable free text, and this project treats
 them that way.
 
 Filing text is parsed by regex and HTML parsing into numeric and structured
-values. The language model that writes the narrative receives **those computed
-values, never the raw filing prose**. Instruction-like text inside a filing
-("ignore previous guidance", "rate this a strong buy") is inert by
-construction, because there is no path from filing text into a prompt.
+values. The language models that write the narrative and answer chat receive
+**those computed values, never the raw filing prose**. Instruction-like text
+inside a filing ("ignore previous guidance", "rate this a strong buy") cannot
+reach those prompts.
 
-This is a security property, not only an architectural preference. **A change
-that pipes raw filing text into a model prompt would be a vulnerability**, even
-if it improved output quality. Report it as one.
+One opt-in path is the exception: the `/external-signals` extraction sends the
+text of an earnings release (8-K EX-99.1) or proxy statement (DEF 14A) to the
+model, marked as source data, after the operator confirms the run. Its results
+are stored apart from every score. It is the weakest point of this boundary:
+today the only check on a returned quote is its length, not that it appears in
+the source. Hardening it is the next planned work.
+
+This is a security property, not only an architectural preference. **Any other
+change that pipes raw filing text into a model prompt would be a
+vulnerability**, even if it improved output quality. Report it as one, and
+report a way to make the external-signals path act on filing text as
+instructions as one too.
 
 ### 2. Secrets
 

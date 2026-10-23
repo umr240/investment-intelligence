@@ -57,8 +57,8 @@ export function getScorecard(ticker: string) {
 }
 
 // ── Narrative + Chat ────────────────────────────────────────────────────
-// Real Anthropic/OpenAI spend on the POST calls (~$0.03-0.05/turn, ADR-031
-// §3). Never call these from a useEffect / on mount — only from a click
+// Real Anthropic/OpenAI spend on the POST calls (~$0.08/narrative on Claude
+// Sonnet 4.6, measured 2026-10-23; ADR-031 §3). Never call these from a useEffect / on mount — only from a click
 // the user explicitly initiated, same role --narrate / invest chat plays
 // in the CLI.
 

@@ -78,7 +78,7 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
           <div style={{ padding: "16px 0" }}>
             <p className="dim">No narrative generated yet for this dive.</p>
             <button onClick={handleGenerate} disabled={genLoading}>
-              {genLoading ? "Generating…" : "Generate Narrative (~$0.03-0.05, real spend)"}
+              {genLoading ? "Generating…" : "Generate Narrative (real token spend)"}
             </button>
             {genError && <div className="error-box">{genError}</div>}
           </div>
@@ -181,7 +181,7 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
             {chatLoading ? "…" : "Send"}
           </button>
         </div>
-        <p className="dim" style={{ marginTop: 6 }}>Real token spend per message (~$0.03-0.05) — open conversation, grounded in this dive's scorecard.</p>
+        <p className="dim" style={{ marginTop: 6 }}>Real token spend per message — open conversation, grounded in this dive's scorecard.</p>
       </div>
     </div>
   );

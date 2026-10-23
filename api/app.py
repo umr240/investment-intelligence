@@ -220,7 +220,7 @@ async def scorecard(ticker: str, mode: str | None = None) -> dict[str, Any]:
 # permitted-call-sites rule): this file still never imports the SDKs
 # itself, it calls into the same permitted modules `invest score-card
 # --narrate` and `invest chat` already call. Real token spend either way
-# (~$0.03-0.05/narrate turn per ADR-031 §3) — POST here is the explicit-
+# (~$0.08/narrative on Claude Sonnet 4.6, measured 2026-10-23) — POST here is the explicit-
 # action gate, same role `--narrate` / typing into the chat REPL plays
 # in the CLI. Not auto-fired by GET or by page load.
 

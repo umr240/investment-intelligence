@@ -102,7 +102,7 @@ The skill is the **checklist over the CLI**. The CLI itself is the canonical imp
 **Note on narrative**: this skill does NOT invoke the LLM narrative layer
 (score-card with the narrate flag). Per frontmatter `permitted_anthropic_calls:
 [none]`, this skill is deterministic-only. Narrative generation is a separate,
-explicit, paid step the user requests (~$0.04-0.05/call; LLM calls only at
+explicit, paid step the user requests (~$0.08/narrative on Claude Sonnet 4.6, measured 2026-10-23; LLM calls only at
 the sites allow-listed in `tests/test_llm_call_sites.py`). After a successful dive-complete,
 the user may follow up with the narrate flag on score-card to populate the
 `bull_narrative` / `bear_narrative` / `risk_factors` JSON columns on the
