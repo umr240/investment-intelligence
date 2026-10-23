@@ -44,9 +44,23 @@ a gitignored `CLAUDE.local.md`, which Claude Code also loads.
   ordinary changes; one that can lose rows or columns is not.
 - **Decisions are proposed, not absorbed.** A change to an ADR, a new ADR, or
   code that knowingly diverges from an accepted one is raised for review, never
-  made silently.
+  made silently. Accepted ADRs are the design of record: a spec, plan or
+  implementation that contradicts one is a proposed amendment, not a fix.
 - **Say what you see.** A security hole, a plan that will not survive contact,
   an ADR that no longer matches the code: raise it, unprompted.
+- **Cite, don't recall.** A claim about the code (a behaviour, a count, a call
+  path) names `file:line` or a command the reader can re-run. A claim without
+  one is labelled a guess.
+- **Unknowns are written down, then asked.** A question the code and ADRs
+  cannot answer goes in `docs/OPEN_QUESTIONS.md`, and work that depends on it
+  stops until the owner answers. It is never filled with a plausible default.
+- **A fresh pair of eyes before the owner's.** Each implementation PR is
+  reviewed by a verifier that sees only the spec, the diff and the gate output,
+  not the implementing session's reasoning. Its findings are fixed or listed in
+  the PR. It filters; the owner still decides.
+- **Gates, not prompts.** A rule that matters is enforced by a test or a CI
+  check (as `tests/test_llm_call_sites.py` enforces the LLM call sites). Where a
+  rule can only live in prose, say so where it is stated.
 
 ---
 

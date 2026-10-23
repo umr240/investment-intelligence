@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/.env)",
+      "Read(/tests/fixtures/narrative_golden/test/**)",
+      "Edit(/tests/fixtures/narrative_golden/**)"
+    ]
+  }
+}
