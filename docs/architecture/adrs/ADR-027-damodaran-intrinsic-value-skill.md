@@ -164,7 +164,7 @@ class IVResult:
 
 - **Morningstar / Yahoo fair value**: closed methodology, third-party black box. Rejected per first-principles requirement.
 - **Simple multiples-based valuation (P/E, EV/EBITDA against peer median)**: already in F7 z-scores. Doesn't answer "what's it worth on first-principles cash flows."
-- **Tier 2 ContrarianDCF from the parent project's `unified-backend/`**: exists for the React/EdTech frontend but uses analyst-consensus growth forecasts (not fundamental growth) and lives in a separate codebase outside `investment-intelligence`'s lazy-load architecture. Porting it would also import its analyst-forecast dependency. Rejected — building Damodaran-style fresh is cleaner and methodologically more rigorous.
+- **Tier 2 ContrarianDCF from a separate codebase's `unified-backend/`**: exists for a React/EdTech frontend but uses analyst-consensus growth forecasts (not fundamental growth) and lives outside `investment-intelligence`'s lazy-load architecture. Porting it would also import its analyst-forecast dependency. Rejected — building Damodaran-style fresh is cleaner and methodologically more rigorous.
 - **Reverse-DCF (Mauboussin "what's priced in")**: complementary, not competing. Could be a future ADR-029. Solves the inverse problem: given the current price, what growth rate is implied? Useful but doesn't replace forward DCF.
 - **Skip ADR-027, just expose Peters-Taylor ROIC as the "intrinsic" measure**: half-measure. ROIC is a *quality* signal, not a *value* signal. A 30% ROIC business can still be overvalued if the market is pricing 40%.
 

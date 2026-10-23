@@ -5,7 +5,7 @@
 | **Status** | **PROPOSED — awaiting user sign-off. Blocked until ADR-047 ships.** |
 | **Phase** | AI narrative layer — experiment |
 | **Depends on** | ADR-045 (field-ID citations), ADR-047 (eval harness) |
-| **Constraint** | The two permitted LLM call sites (ADR-031 §4, ADR-032 §1.5) |
+| **Constraint** | The LLM call-site allow-list in `tests/test_llm_call_sites.py` (ADR-031 §4, ADR-031-A1, ADR-032 §1.5) |
 | **Provenance** | Proposal review 2026-10-21 |
 
 ---

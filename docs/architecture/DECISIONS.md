@@ -137,8 +137,8 @@ absorbs anything the duplicate said uniquely, marked `**Merged**`.
 ## DEC-08 — `.claude/` session-persisting layer at lab root
 
 **Date**: 2026-05-03
-**Decision**: Lab keeps its own `.claude/` directory for session continuity, mirroring the parent `next-nvidia-detector/.claude/`.
-**Why**: The lab needed its own audit trail, independent of the parent project.
+**Decision**: Lab keeps its own `.claude/` directory for session continuity, mirroring the layout of an earlier, separate project.
+**Why**: The lab needed its own audit trail, independent of any other codebase.
 **Files**: `architecture/DATA_LAYER.md`, `architecture/DECISIONS.md` (this file). The status snapshot and session logs were retired at public release (archived); `.claude/README.md` describes what remains.
 
 ## DEC-09 — Screener uses SEC frames.json for universe-wide fundamentals
@@ -306,7 +306,7 @@ Dropped the misleading "GAAP" label entirely from dive + screener output. The pr
 
 **Date**: 2026-05-10
 **Decision**: Build a multi-turn LLM Q&A on top of the existing one-shot narrative path. Same hard constraints as `narrative.py`: every numeric value in the assistant reply must come with a `field_path` into the dive's frozen `ScorecardView` JSON, validated by walking the path. Mismatches surface as guard warnings, not silent corruption.
-**Why**: The one-shot bull/bear/risks narrative answers "what does the data say" once; users want "let me dig in" — follow-up questions, comparisons across frameworks, "what would change my mind" thinking. This is also the lab prototype for The Boardroom feature in the parent project (Q&A with investor personas + conviction scoring).
+**Why**: The one-shot bull/bear/risks narrative answers "what does the data say" once; users want "let me dig in" — follow-up questions, comparisons across frameworks, "what would change my mind" thinking. This is also the prototype for a planned feature, The Boardroom (Q&A with investor personas + conviction scoring).
 **Architecture**:
 - `deepdive/conversation.py` — `ChatTurnOutput` Pydantic schema (reply + numeric_claims), `generate_chat_response()` with provider routing mirroring narrative.py, `validate_chat_turn()` reusing `narrative_guard._walk_path` for field-path validation.
 - `deep_dive_conversations` table (migration `o6d7e8f9a0b1`) — append-only audit log, one row per turn keyed by `(deep_dive_run_id, turn_index)`. Stores role, content, numeric_claims_json, guard_warnings_json, provider/model, token counts, cost_usd.

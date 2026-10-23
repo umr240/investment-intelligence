@@ -132,9 +132,9 @@ Data sources:    SEC EDGAR (companyfacts.json) — 10yr fundamentals default (ov
                  yfinance — 20yr price history, market cap, ownership %,
                    institutional holders, insider trades, analyst consensus
                  BeautifulSoup4 + regex — DEF 14A HTML parsing, 10-K text patterns
-                 Anthropic Python SDK — deepdive/narrative.py + deepdive/external_signals.py
-                   ONLY (two permitted call sites per ADR-031 §4.1 + ADR-032 §1.5).
-                 OpenAI Python SDK — deepdive/narrative.py only (primary provider; Anthropic is fallback)
+                 Anthropic / OpenAI Python SDKs — ONLY at the call sites allow-listed in
+                   tests/test_llm_call_sites.py (ADR-031-A1). OpenAI is the primary
+                   provider for narrative + chat; Anthropic is fallback.
                  FMP — screener metadata only (one bulk call per run, ADR-016);
                    optional, and never for per-ticker fundamentals
                  Alpha Vantage — not used
@@ -357,14 +357,17 @@ For the dive command itself:
 
 ## CRITICAL CODING RULES
 
-### 1. AI layer boundary — TWO permitted locations only
+### 1. AI layer boundary — allow-listed call sites only
 
-There are exactly two places where the Anthropic SDK may be called (per ADR-031 §4.1 + ADR-032 §1.5):
+The Anthropic / OpenAI SDKs may be imported only by the modules in `ALLOWED` in
+`tests/test_llm_call_sites.py`, which CI enforces. That set is the single source
+of truth; adding to it is an ADR amendment (ADR-031 §4.1, ADR-032 §1.5, ADR-031-A1).
 
 | Module | Purpose | When called |
 |--------|---------|-------------|
 | `deepdive/narrative.py` | **Narrative generation** — qualitative bull/bear/risk narrative for the deep-dive report. Constrained to pre-computed quant metrics — never invents numbers. Renders the DEC-23 hold-philosophy frame (ADR-023 §10). | Only when user explicitly runs `invest score-card TICKER --narrate`. Persists structured JSON to `deepdive_runs.bull_narrative` / `.bear_narrative` / `.risk_factors`. |
 | `deepdive/external_signals.py` | **Supplementary signal extraction** — NRR / GRR / ARR / GMV / take-rate from 8-K EX-99.1 earnings releases. Writes to `external_signals` table only — **strictly isolated** from F1-F7 framework scoring (no Financial / Company canonical writes). | Only when user explicitly invokes `/external-signals TICKER` skill (`dangerous: true` — requires confirmation per ADR-032 §2.4). |
+| `deepdive/conversation.py` | **Conversational dive** — multi-turn Q&A grounded in the *frozen* `ScorecardView` of one `DeepDiveRun`. Every reply's `numeric_claims` must resolve to a view field path; mismatches surface as guard warnings. | Only when the user types a question into `invest chat TICKER` (default $2 session budget, `--budget`) or the UI "Ask about this dive" box (`POST /dive/{ticker}/chat`, no session budget). Persists every turn, append-only, to `deep_dive_conversations`. |
 
 The data-fetch and screener paths are **fully deterministic**: EDGAR XBRL → regex on 10-K text → BeautifulSoup on DEF 14A HTML → yfinance typed snapshot. There is no LLM fallback in the data layer. A missing value surfaces as a `data_gaps` entry, never a hallucinated number.
 
@@ -385,8 +388,8 @@ def parse_customer_concentration(text: str) -> CustomerSignals:
 
 # WRONG — AI calls from any data / framework / screener / overlay module
 def compute_piotroski(financials: FinancialData) -> PiotroskiResult:
-    response = anthropic.messages.create(...)  # ❌ NEVER outside the two permitted sites
-                                                #    (narrative.py / external_signals.py)
+    response = anthropic.messages.create(...)  # ❌ NEVER outside the allow-listed sites
+                                                #    (tests/test_llm_call_sites.py)
 ```
 
 **Key principle**: explicit data gaps are better than LLM approximations. A missing value flagged as a gap can be patched later with better source code; a hallucinated value silently corrupts every downstream framework score.
@@ -507,14 +510,14 @@ migration) is not verified by having been written.
 ```bash
 # .env (can live at project root or repo root — settings.py finds it)
 EDGAR_IDENTITY="Your Name your.email@example.com"   # SEC fair-use header (no key)
-ANTHROPIC_API_KEY=                                   # OPTIONAL — narrative.py + external_signals.py
-OPENAI_API_KEY=                                      # OPTIONAL — narrative.py primary; falls back to Anthropic
+ANTHROPIC_API_KEY=                                   # OPTIONAL — LLM call sites only
+OPENAI_API_KEY=                                      # OPTIONAL — narrative/chat primary; falls back to Anthropic
 DATABASE_URL=sqlite:///./investment_intelligence.db
 LOG_LEVEL=INFO
 ENVIRONMENT=development
 ```
 
-The data path runs end-to-end without `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`. Set them only when narrative generation (`invest score-card TICKER --narrate`) or `/external-signals` skill invocation is needed.
+The data path runs end-to-end without `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`. Set them only when narrative generation (`invest score-card TICKER --narrate`), chat (`invest chat` / the UI chat box) or `/external-signals` skill invocation is needed.
 
 ---
 
@@ -525,7 +528,7 @@ The data path runs end-to-end without `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`. S
 | SEC EDGAR | 10 req/sec free (User-Agent required) | Tier-0 `financial_source_log` cache by accession # → ~0 calls per refresh after first run |
 | yfinance | Unofficial (Yahoo scraper, no key) | TTL cache 6h on `.info`, 1h on price; fail soft to `data_gaps` |
 | Polygon.io | Free tier 5 req/min — opt-in (`POLYGON_API_KEY`) | Watchlist-scope only (universe-scale infeasible at 5/min). Process-wide TokenBucket + 429 retry-after backoff. ADR-019. |
-| Anthropic / OpenAI | Per token budget (~$0.03-$0.05/narrate, ADR-031 §3 ceiling $100/mo) | Two permitted call sites: `deepdive/narrative.py` (invoked by `invest score-card --narrate`) + `deepdive/external_signals.py` (invoked by `/external-signals` skill, `dangerous: true`). OpenAI primary; Anthropic fallback. |
+| Anthropic / OpenAI | Per token budget (~$0.03-$0.05/narrate, ADR-031 §3 ceiling $100/mo) | Only the allow-listed call sites (`tests/test_llm_call_sites.py`): `narrative.py` (`invest score-card --narrate`), `external_signals.py` (`/external-signals` skill, `dangerous: true`), `conversation.py` (`invest chat` / UI chat box). OpenAI primary; Anthropic fallback. |
 
 ---
 
@@ -557,7 +560,7 @@ Secrets in scope: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `POLYGON_API_KEY`,
 - Never print, log, echo in tool/CLI output, or write into a committed file.
   This includes log lines, stack traces, error messages, and diffs pasted
   back to the user. Redact before surfacing.
-- Never embed a secret in an LLM prompt (narrative or external-signals).
+- Never embed a secret in an LLM prompt (any allow-listed call site).
 - `.env` is gitignored and stays gitignored. `.env.example` carries key
   NAMES only, never values.
 - Assume any secret that has ever hit disk unredacted or git history is
@@ -565,13 +568,16 @@ Secrets in scope: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `POLYGON_API_KEY`,
 
 ### 2. Data egress to LLM providers — allow-list
 
-`deepdive/narrative.py` (OpenAI primary, Anthropic fallback) and
-`deepdive/external_signals.py` send data to third parties. Only the
-following may enter a prompt:
+The call sites allow-listed in `tests/test_llm_call_sites.py` (OpenAI primary,
+Anthropic fallback) send data to third parties. Only the following may enter a
+prompt:
 
 - Public-derived quant metrics: EDGAR XBRL fundamentals, framework F1-F7
   scores, overlay verdicts, deterministic signals computed from public
   filings, ticker + exchange.
+- In `deepdive/conversation.py`, the user's own typed question and the prior
+  turns of that conversation, sent as written. Whatever the user types leaves
+  the machine; the rules below still bind what the code attaches.
 
 The following NEVER enter a prompt, a serialised scorecard bound for a
 prompt, or provider logs — no exceptions, no "it would improve the
@@ -600,7 +606,7 @@ architecture choice:
   inside a filing ("ignore prior guidance", "rate this BUY") is inert by
   construction and must stay that way — no future path may pipe raw filing
   text into a prompt as instructions.
-- This is why the AI-layer boundary (two call sites, numeric inputs only) is
+- This is why the AI-layer boundary (allow-listed call sites, numeric inputs only) is
   load-bearing beyond token cost.
 
 ### 4. Source integrity — trust hierarchy
@@ -638,8 +644,8 @@ Routine workflows live in `.claude/skills/*.md`. Each skill is invoked
 via the `Skill` tool by name (e.g., `Skill(skill="dive-complete", args="SHOP")`).
 Skills are deterministic checklists OVER existing CLI subcommands —
 they do NOT replace any CLI behaviour, do NOT introduce new persistence paths,
-and do NOT add new Anthropic call sites. The two-permitted-Anthropic-call-sites
-rule (`deepdive/narrative.py`, `deepdive/external_signals.py`) is preserved.
+and do NOT add new LLM call sites. The call-site allow-list
+(`tests/test_llm_call_sites.py`) is preserved.
 
 See **ADR-032** for the skill pattern, schema, shadow-mode discipline, and
 the rule-of-three for new-skill authoring. See `.claude/skills/README.md`
@@ -668,9 +674,8 @@ TypeScript) sit on top of the CLI engine. Verify API changes through `/docs`
 ## WHAT THE SYSTEM MUST NEVER DO
 
 1. Auto-advance any stage without user input
-2. Call Anthropic/OpenAI API from any module outside `deepdive/narrative.py`
-   OR `deepdive/external_signals.py` (the two permitted call sites — see
-   ADR-031 §4.1 and ADR-032 §1.5)
+2. Call Anthropic/OpenAI API from any module outside the call sites
+   allow-listed in `tests/test_llm_call_sites.py` (ADR-031 §4.1, ADR-031-A1)
 3. Make assumptions about missing financial data
 4. Run an overlay whose trigger did not fire
 5. Run scheduled jobs without being explicitly registered by the user

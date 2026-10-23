@@ -18,9 +18,8 @@ The runtime (`cli/skills/runtime.py`) reads the frontmatter for metadata
 handler, runs the workflow, captures postconditions, writes a
 SkillInvocation row.
 
-No new Anthropic call sites are added by this package. Skills that
-need LLM work invoke `deepdive/narrative.py` or
-`deepdive/external_signals.py` — the existing two permitted sites.
+No new LLM call sites are added by this package. Skills that need LLM
+work invoke a site allow-listed in `tests/test_llm_call_sites.py`.
 """
 from __future__ import annotations
 

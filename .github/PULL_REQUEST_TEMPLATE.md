@@ -14,7 +14,7 @@
 
 - [ ] No missing value is filled with a default, estimate, or guess — gaps are
       recorded as `data_gaps` entries
-- [ ] No LLM call outside `deepdive/narrative.py` / `deepdive/external_signals.py`
+- [ ] No LLM call outside the sites allow-listed in `tests/test_llm_call_sites.py`
 - [ ] No raw filing text reaches a model prompt
 - [ ] Public functions are annotated, return types included
 

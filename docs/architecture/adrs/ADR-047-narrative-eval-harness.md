@@ -73,7 +73,7 @@ The first run on today's code is the baseline. It is expected to fail.
 
 ### 2.6 What this ADR does NOT decide
 
-- An LLM judge. A judge is a third call site, so it needs an ADR-031 §4 amendment, and a judge must itself be validated against human labels first.
+- An LLM judge. A judge is a new call site, so it needs an amendment to ADR-031-A1 (and an entry in `tests/test_llm_call_sites.py`), and a judge must itself be validated against human labels first.
 
 ## 3. Inversion (mandatory)
 

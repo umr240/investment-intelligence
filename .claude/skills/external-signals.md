@@ -84,7 +84,7 @@ changelog:
 
 Runs the LLM-extraction prototype (`deepdive/external_signals.py`) for one ticker, persisting results to the isolated `external_signals` channel. Surfaces them in the dive display via the existing `_render_external_signals` panel. **F1-F7 framework scoring is unaffected** — the architectural moat from ADR-031 §4.1 is preserved.
 
-This is the second permitted Anthropic call site (after `deepdive/narrative.py`). No third site exists or will be added without an ADR amendment.
+This is one of the LLM call sites allow-listed in `tests/test_llm_call_sites.py`. No site is added to that list without an ADR amendment.
 
 The skill exists because the manual workflow was executed 3+ times in the 2026-05-15 session (SHOP twice, INTA once) and every invocation followed an identical structure with identical guards. Rule-of-three satisfied.
 

@@ -37,8 +37,8 @@ if data.rd_expense is None:
     raise MissingDataError("rd_expense", endpoint, ticker)
 ```
 
-**No model calls outside the two permitted sites.** `deepdive/narrative.py` and
-`deepdive/external_signals.py` are the only modules that may call an LLM. The
+**No model calls outside the allow-listed sites.** Only the modules in `ALLOWED`
+in `tests/test_llm_call_sites.py` may call an LLM, and CI enforces it. The
 data, framework, screener and overlay layers are deterministic, and must stay
 that way — run them twice, get the same answer.
 

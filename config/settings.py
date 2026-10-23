@@ -22,7 +22,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # OpenAI is the PRIMARY narrative provider (deepdive/narrative.py only).
+    # OpenAI is the PRIMARY provider for narrative.py and conversation.py.
     # Anthropic is the fallback when OpenAI rate-limits / quota-exceeds.
     # The data-fetch and screener paths require zero LLM keys — they are
     # fully deterministic (EDGAR XBRL + regex + HTML table parsing + yfinance).
