@@ -154,6 +154,7 @@ Type checking:   mypy (strict mode)
 ```
 investment-intelligence/
 ├── CLAUDE.md                        ← this file
+├── AGENTS.md                        ← pointer here for other coding agents
 ├── pyproject.toml                   ← uv project file
 ├── .env.example
 ├── alembic.ini
