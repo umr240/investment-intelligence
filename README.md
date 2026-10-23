@@ -51,11 +51,19 @@ yfinance snapshot   ─┘
 Everything above is deterministic Python. Run it twice on the same filings and
 you get the same answer. No API key is required for any of it.
 
-An LLM is used in exactly one place — writing the prose narrative at the end —
-and it is handed the already-computed numbers, never the raw filing text. Its
-output is then validated claim by claim against the scorecard; any figure that
-does not appear in the source data is flagged as a possible hallucination
-before you ever read it.
+Language models are called only from the modules allow-listed in
+`tests/test_llm_call_sites.py`, and CI enforces that list. The prose narrative
+and the follow-up chat are handed the already-computed numbers, never raw
+filing text. Their output is validated claim by claim against the scorecard;
+any figure that does not appear in the source data is flagged as a possible
+hallucination before you ever read it.
+
+One opt-in path does send filing text to a model: the `/external-signals`
+extraction of metrics such as net revenue retention from earnings releases and
+proxy statements. It asks for confirmation before running, its results are
+stored apart from every framework score, and each value must come with a quote
+from the source — the quote's length is checked, but not yet that it actually
+appears there.
 
 ## What the seven frameworks measure
 
@@ -208,7 +216,7 @@ paths the old way regardless. Shallow is the fix; longpaths is not a substitute.
 | Screener over the full SEC US universe | working |
 | Deep dives, scorecards, narrative layer | working |
 | Local web UI | working |
-| Test suite | 419 passing, plus 11 browser tests (`-m browser`) |
+| Test suite | passing in CI on Linux, Windows and macOS, plus 11 browser tests run locally (`-m browser`) |
 | `ruff` / `mypy --strict` | **not clean** — 364 / 1086, an honest backlog. Reported by CI but not gating; the correctness subset (`F821`, `F811`, `E722`) is gating and is clean. |
 | Filing-text extraction | **weak.** Attempted on a small fraction of the universe, largely untested, and a failed extraction is currently indistinguishable from a genuine non-disclosure. |
 | Retrieval over filing text | not built |
@@ -229,10 +237,11 @@ A tool whose whole premise is honesty about gaps has to be honest about its own.
 - **Financial Modeling Prep** — optional, one bulk call per screener run for
   metadata only. Never used for per-ticker fundamentals.
 
-Filing text is treated as untrusted input throughout. It is parsed into
-structured values by regex and HTML parsing; instruction-like text inside a
-filing cannot reach a language model as an instruction, because raw filing prose
-never enters a prompt.
+Filing text is treated as untrusted input throughout. On the scoring path it is
+parsed into structured values by regex and HTML parsing, so raw filing prose
+never reaches the narrative or chat prompts. The opt-in `/external-signals`
+extraction is the exception: it sends earnings-release and proxy text to a
+model, marked as source data, and its output never feeds a score.
 
 ## Notes
 
