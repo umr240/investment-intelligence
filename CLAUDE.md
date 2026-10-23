@@ -281,7 +281,7 @@ investment-intelligence/
 | 5 | Overlays ICA/PSA/BEW (passive detector + verdict math, auto-integrated DEC-30 / ADR-021 §4.4) | ✅ Complete |
 | 5a | Polygon plugin tasks (price / RSI / SMA / MACD / short interest — opt-in, watchlist scope) | ✅ Complete (ADR-019) |
 | 5T | Damodaran intrinsic value + sibling outputs (EPV / Reverse DCF / Narrative Premium) | ✅ Complete (ADR-027, ADR-029) |
-| 6 | AI narrative layer (deepdive/narrative.py + deepdive/external_signals.py) | ✅ Complete — invoked via `invest score-card TICKER --narrate`; structured-output validation in `narrative_guard.py`; DEC-23 hold-philosophy framing (ADR-023) |
+| 6 | AI narrative layer (the call sites in `tests/test_llm_call_sites.py`) | 🟡 Built, contract not met — invoked via `invest score-card TICKER --narrate`; output checked by `narrative_guard.py`, but 8 of 13 stored narratives fail it (ADR-023-A1); ADR-045–047 carry the fix |
 | 7 | Scheduler jobs (quarterly, monthly, deepdive) | ✅ Wiring complete |
 | — | Mental-models lattice (114 models across 16 domains, composer wired into narrative) | ✅ Complete (ADR-024) |
 | — | Project-local skills runtime (3 skills: dive-complete, audit-completeness, external-signals) | ✅ Complete (ADR-032) |
@@ -543,7 +543,7 @@ The data path runs end-to-end without `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`. S
 | SEC EDGAR | 10 req/sec free (User-Agent required) | Tier-0 `financial_source_log` cache by accession # → ~0 calls per refresh after first run |
 | yfinance | Unofficial (Yahoo scraper, no key) | TTL cache 6h on `.info`, 1h on price; fail soft to `data_gaps` |
 | Polygon.io | Free tier 5 req/min — opt-in (`POLYGON_API_KEY`) | Watchlist-scope only (universe-scale infeasible at 5/min). Process-wide TokenBucket + 429 retry-after backoff. ADR-019. |
-| Anthropic / OpenAI | Per token budget (~$0.03-$0.05/narrate, ADR-031 §3 ceiling $100/mo) | Only the allow-listed call sites (`tests/test_llm_call_sites.py`): `narrative.py` (`invest score-card --narrate`), `external_signals.py` (`/external-signals` skill, `dangerous: true`), `conversation.py` (`invest chat` / UI chat box). OpenAI primary; Anthropic fallback. |
+| Anthropic / OpenAI | Per token budget (~$0.08 per narrative on Claude Sonnet 4.6, measured 2026-10-23 over 9 stored runs; gpt-4o-mini unmeasured; ADR-031 §3 ceiling $100/mo) | Only the allow-listed call sites (`tests/test_llm_call_sites.py`): `narrative.py` (`invest score-card --narrate`), `external_signals.py` (`/external-signals` skill, `dangerous: true`), `conversation.py` (`invest chat` / UI chat box). OpenAI primary; Anthropic fallback. |
 
 ---
 
@@ -621,8 +621,15 @@ architecture choice:
   inside a filing ("ignore prior guidance", "rate this BUY") is inert by
   construction and must stay that way — no future path may pipe raw filing
   text into a prompt as instructions.
-- This is why the AI-layer boundary (allow-listed call sites, numeric inputs only) is
-  load-bearing beyond token cost.
+- The one existing exception: `deepdive/external_signals.py` (opt-in
+  `/external-signals`, `dangerous: true`) sends up to 80,000 characters of
+  8-K EX-99.1 or DEF 14A text to the model as delimited source data
+  (`external_signals.py:181-183`, `:335`), and persists only to
+  `external_signals`. Its quote check is length-only
+  (`cli/skills/external_signals.py:227`) and runs after persistence; hardening
+  it is the next planned work.
+- This is why the AI-layer boundary (allow-listed call sites, numeric inputs
+  only, bar the exception above) is load-bearing beyond token cost.
 
 ### 4. Source integrity — trust hierarchy
 

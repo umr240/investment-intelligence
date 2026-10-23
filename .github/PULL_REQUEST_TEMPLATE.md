@@ -15,7 +15,7 @@
 - [ ] No missing value is filled with a default, estimate, or guess — gaps are
       recorded as `data_gaps` entries
 - [ ] No LLM call outside the sites allow-listed in `tests/test_llm_call_sites.py`
-- [ ] No raw filing text reaches a model prompt
+- [ ] No new path sends raw filing text to a model prompt (`/external-signals` is the one documented exception)
 - [ ] Public functions are annotated, return types included
 
 ## Decisions

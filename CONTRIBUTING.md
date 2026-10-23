@@ -42,9 +42,11 @@ in `tests/test_llm_call_sites.py` may call an LLM, and CI enforces it. The
 data, framework, screener and overlay layers are deterministic, and must stay
 that way — run them twice, get the same answer.
 
-**Raw filing text never reaches a prompt.** Filings are untrusted input. They
-get parsed into structured values; the model sees the values. See
-[SECURITY.md](SECURITY.md) for why this is a security boundary.
+**Raw filing text does not reach a prompt.** Filings are untrusted input. They
+get parsed into structured values; the model sees the values. The opt-in
+`/external-signals` extraction is the one documented exception; a new path is a
+vulnerability. See [SECURITY.md](SECURITY.md) for why this is a security
+boundary.
 
 **Every public function is annotated.** Including the return type.
 

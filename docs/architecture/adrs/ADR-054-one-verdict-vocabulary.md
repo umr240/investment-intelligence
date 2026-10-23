@@ -2,7 +2,7 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **ACCEPTED 2026-10-21.** `monitor` maps to WATCHLIST WITH TRIGGERS. To be built in release Phase 6. |
+| **Status** | **ACCEPTED 2026-10-21; implemented.** `monitor` maps to WATCHLIST WITH TRIGGERS. Read-time mapping of stored labels in `config/verdicts.py`, covered by `tests/test_frameworks/test_verdict_vocabulary.py`. |
 | **Phase** | Scoring presentation |
 | **Aligns** | CLAUDE.md ("never offers a buy verdict"), ADR-023 §1.4, ADR-023-A1 |
 | **Unblocks** | ADR-045 (verdict field mapping) |
