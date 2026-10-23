@@ -33,6 +33,7 @@ from deepdive.narrative import (
     NarrativeProvider,
     _provider_order,
     _ProviderError,
+    _redact,
 )
 from deepdive.narrative_guard import _walk_path
 from deepdive.narrative_output import NumericClaim
@@ -377,7 +378,7 @@ def generate_chat_response(
             else:
                 body, pt, ct, model = _call_anthropic_chat(view, history, user_message)
         except _ProviderError as exc:
-            logger.warning("Chat provider %s failed: %s", provider.value, exc)
+            logger.warning("Chat provider %s failed: %s", provider.value, _redact(str(exc)))
             last_err = exc
             continue
 
@@ -395,7 +396,7 @@ def generate_chat_response(
 
     from deepdive.narrative import NarrativeUnavailableError
     raise NarrativeUnavailableError(
-        f"All chat providers failed. Last error: {last_err}"
+        f"All chat providers failed. Last error: {_redact(str(last_err))}"
     )
 
 
