@@ -1,0 +1,20 @@
+# Local copies of two checks CI gates after the push. On a public repo a pushed
+# branch is public at once, so a secret has to be stopped before the commit.
+# Hooks are local: no hook repositories are fetched. ruff comes from uv.lock;
+# gitleaks should match CI's pin (8.30.1, .github/workflows/ci.yml).
+#
+#   uv sync --dev --group hooks && uv run pre-commit install
+#   brew install gitleaks
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks (staged changes)
+        entry: gitleaks git --pre-commit --staged --redact --verbose
+        language: system
+        pass_filenames: false
+      - id: ruff-gated
+        name: ruff F821,F811,E722 (the CI-gated subset)
+        entry: uv run --no-sync ruff check --select F821,F811,E722 --force-exclude
+        language: system
+        types: [python]

@@ -83,6 +83,10 @@ dev = [
 # Use: uv sync --dev --group browser && uv run python -m playwright install chromium
 browser = ["playwright>=1.62.0"]
 
+# Local git hooks (.pre-commit-config.yaml). Excluded from `--dev`: CI runs the
+# same checks itself. Use: uv sync --dev --group hooks && uv run pre-commit install
+hooks = ["pre-commit>=4.7.0"]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 100
