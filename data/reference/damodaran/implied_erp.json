@@ -1,0 +1,34 @@
+{
+  "_doc": "Implied equity risk premium for the US market. Damodaran's signature metric — derived from current S&P 500 price and dividend+buyback yield, NOT historical realised returns. Updated monthly.",
+  "_source": "Damodaran 'Implied ERP for the S&P 500', headline figure published on his home page",
+  "_refresh_cadence": "monthly",
+  "_staleness_warning_days": 35,
+  "_methodology": "Damodaran calc: implied ERP = (expected cash flows / current price) - risk_free_rate. Cash flows = current div + buybacks, growing at expected real rate (capped at risk-free).",
+  "snapshot_date": "2026-08-01",
+  "publication": "Damodaran monthly update, August 1 2026",
+  "implied_erp_pct": 4.28,
+  "_variant_used": "Trailing 12 month, with adjusted payout — Damodaran's headline measure and the one he uses in his own valuations. The alternatives below are published alongside it and are NOT interchangeable; swapping variants moves cost of equity by up to 257bps.",
+  "_published_variants_pct": {
+    "trailing_12m_adjusted_payout": 4.28,
+    "trailing_12m_cash_yield": 4.23,
+    "average_cf_yield_last_10_years": 6.25,
+    "net_cash_yield": 3.94,
+    "normalized_earnings_and_payout": 3.68
+  },
+  "components": {
+    "_doc": "Decomposition for transparency — not used directly in calc but useful for narrative",
+    "expected_cash_flow_yield_pct": 9.02,
+    "less_risk_free_rate_pct": 4.74,
+    "implied_erp_pct": 4.28
+  },
+  "_pairing_caveat": "Damodaran computed this 4.28% against a US treasury rate of 4.74% on 2026-08-01. risk_free_rate.json holds 4.63% (FRED DGS10, 2026-08-13) — a different date and an 11bps difference. Cost of equity in this codebase is therefore rf(4.63) + beta x ERP(4.28), which is internally consistent but not byte-identical to Damodaran's own pairing. The 11bps is immaterial next to beta and margin uncertainty; recorded so nobody rediscovers it as a discrepancy.",
+  "_us_default_spread_pct": 0.22,
+  "_adjusted_dollar_riskfree_pct": 4.52,
+  "_refreshed_on": "2026-08-16",
+  "_previous_snapshot": {
+    "snapshot_date": "2026-04-01",
+    "implied_erp_pct": 4.6,
+    "_note": "Superseded 2026-08-16. ERP compressed 32bps while the risk-free rose 28bps — the two largely offset, so cost of equity is roughly unchanged."
+  },
+  "source_url": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/home.htm"
+}

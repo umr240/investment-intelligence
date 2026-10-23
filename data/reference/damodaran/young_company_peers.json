@@ -1,0 +1,98 @@
+{
+  "_doc": "Mature-peer benchmarks for Damodaran young-company DCF (ADR-028). Each entry names a mature, scaled-up peer with established steady-state economics, used as the TARGET that the young company can plausibly reach. Target operating margin and sales-to-capital ratio come from the peer's last 3-5 year averages.",
+  "_source": "Hand-curated using Damodaran's industry data + peer-company filings. Refresh annually.",
+  "_refresh_cadence": "annual",
+  "_staleness_warning_days": 400,
+  "_methodology_notes": [
+    "Target op margin is the mature peer's last-3yr-average operating margin",
+    "Sales-to-capital ratio = (3yr-avg revenue) / (3yr-avg invested capital). Damodaran's published industry table provides defaults.",
+    "Peer selection priority: similar business model > similar end-market > similar size at maturity"
+  ],
+  "snapshot_date": "2026-05-13",
+  "industries": {
+    "Healthcare Information Tech": {
+      "mature_peer_ticker": "VEEV",
+      "mature_peer_name": "Veeva Systems",
+      "target_op_margin": 0.25,
+      "sales_to_capital_ratio": 2.5,
+      "notes": "Veeva is the canonical mature health-IT cloud platform. 25% steady-state op margin reflects scale economics; sales-to-capital 2.5 reflects capital-light SaaS. For genomics/AI-diagnostics tickers (TEM, NTRA), this is the aspirational endpoint."
+    },
+    "Drugs (Biotechnology)": {
+      "mature_peer_ticker": "VRTX",
+      "mature_peer_name": "Vertex Pharmaceuticals",
+      "target_op_margin": 0.30,
+      "sales_to_capital_ratio": 1.5,
+      "notes": "Vertex represents a successfully scaled rare-disease biotech. 30% steady-state op margin; lower sales-to-capital reflects R&D + manufacturing capital intensity."
+    },
+    "Software (System & Application)": {
+      "mature_peer_ticker": "ADBE",
+      "mature_peer_name": "Adobe",
+      "target_op_margin": 0.35,
+      "sales_to_capital_ratio": 2.8,
+      "notes": "Adobe represents mature software-platform economics. 35% op margin from subscription scale + brand pricing."
+    },
+    "Software (Internet)": {
+      "mature_peer_ticker": "META",
+      "mature_peer_name": "Meta Platforms",
+      "target_op_margin": 0.35,
+      "sales_to_capital_ratio": 1.8,
+      "notes": "Meta represents network-effect internet at scale. Lower sales-to-capital reflects data-center capex."
+    },
+    "Information Services": {
+      "mature_peer_ticker": "NOW",
+      "mature_peer_name": "ServiceNow",
+      "target_op_margin": 0.28,
+      "sales_to_capital_ratio": 2.3,
+      "notes": "ServiceNow is the SaaS information-services benchmark. For INTA-class platforms, this is the target."
+    },
+    "Computer Services": {
+      "mature_peer_ticker": "ACN",
+      "mature_peer_name": "Accenture",
+      "target_op_margin": 0.16,
+      "sales_to_capital_ratio": 3.5,
+      "notes": "Accenture-style services have lower margins than product SaaS but higher capital efficiency. For PATH-class automation/AI services."
+    },
+    "Semiconductor": {
+      "mature_peer_ticker": "TSM",
+      "mature_peer_name": "TSMC",
+      "target_op_margin": 0.42,
+      "sales_to_capital_ratio": 0.8,
+      "notes": "TSMC represents mature fabless/foundry semis. High margins, capital-heavy (low sales-to-capital)."
+    },
+    "Retail (Online)": {
+      "mature_peer_ticker": "AMZN",
+      "mature_peer_name": "Amazon",
+      "target_op_margin": 0.12,
+      "sales_to_capital_ratio": 1.6,
+      "notes": "Amazon represents mature scale-economics online retail. Op margin understates because AWS pulls it up."
+    },
+    "Retail (Apparel)": {
+      "mature_peer_ticker": "NKE",
+      "mature_peer_name": "Nike",
+      "target_op_margin": 0.13,
+      "sales_to_capital_ratio": 2.0,
+      "notes": "Nike represents mature apparel-brand economics. For aspirational DTC apparel ticker IVs."
+    },
+    "Financial Services (Non-bank)": {
+      "mature_peer_ticker": "V",
+      "mature_peer_name": "Visa",
+      "target_op_margin": 0.65,
+      "sales_to_capital_ratio": 5.0,
+      "notes": "Visa represents the elite payments-network endpoint. Very high op margin from network moat; very high capital efficiency."
+    },
+    "Advertising": {
+      "mature_peer_ticker": "GOOG",
+      "mature_peer_name": "Alphabet",
+      "target_op_margin": 0.30,
+      "sales_to_capital_ratio": 2.0,
+      "notes": "Alphabet represents mature scaled-ad networks."
+    },
+    "_fallback_default": {
+      "mature_peer_ticker": "(industry-median estimate)",
+      "mature_peer_name": "(no canonical peer)",
+      "target_op_margin": 0.15,
+      "sales_to_capital_ratio": 2.0,
+      "notes": "Fallback when industry isn't in the table. 15% op margin and 2.0 sales-to-capital are Damodaran's published US-market median. Will trigger data_gap; user should specify peer explicitly."
+    }
+  }
+}

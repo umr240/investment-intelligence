@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Windows Task Scheduler config for the investment-intelligence APScheduler daemon.
+
+  Imports as the task "InvestmentIntelligenceScheduler". Starts on user logon,
+  runs hidden (no console window), re-launches on crash (3 retries, 1 min apart),
+  logs stdout+stderr to %USERPROFILE%\investment_intelligence_daemon.log.
+
+  BEFORE IMPORTING, replace both placeholders below:
+    YOUR_WINDOWS_USERNAME  — output of `echo %USERNAME%`
+    YOUR_PROJECT_ROOT      — absolute path of your checkout
+
+  Importing through the Task Scheduler GUI instead re-binds the user for you,
+  and is the more reliable route: schtasks /Create /XML is fussy about encoding
+  and permissions. scripts\run_scheduler_daemon.bat works either way and needs
+  no path editing — it resolves its own location.
+
+  INSTALL:
+    schtasks /Create /XML scripts\windows_task_scheduler_daemon.xml /TN "InvestmentIntelligenceScheduler"
+
+  VERIFY:
+    schtasks /Query /TN "InvestmentIntelligenceScheduler" /FO LIST /V
+    tasklist /FI "imagename eq python.exe" /V
+
+  UNINSTALL:
+    schtasks /Delete /TN "InvestmentIntelligenceScheduler" /F
+
+  PATH NOTE: assumes `uv` is on system PATH (default after the Astral
+  installer). If not, use the full path to uv.exe, typically
+  %USERPROFILE%\.local\bin\uv.exe.
+-->
+<Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Date>2026-05-12T00:00:00</Date>
+    <Author>YOUR_WINDOWS_USERNAME</Author>
+    <Description>investment-intelligence APScheduler daemon. Fires the crons registered via `invest scheduler add-deepdive`.</Description>
+    <URI>\InvestmentIntelligenceScheduler</URI>
+  </RegistrationInfo>
+  <Triggers>
+    <LogonTrigger>
+      <Enabled>true</Enabled>
+      <UserId>YOUR_WINDOWS_USERNAME</UserId>
+    </LogonTrigger>
+    <BootTrigger>
+      <Enabled>false</Enabled>
+      <!-- Disabled by default: boot triggers run before user session loads
+           which means .env may not resolve correctly. Logon trigger is
+           safer. Enable this if you want the daemon up before login. -->
+    </BootTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>YOUR_WINDOWS_USERNAME</UserId>
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>true</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+    <Priority>7</Priority>
+    <RestartOnFailure>
+      <Interval>PT1M</Interval>
+      <Count>3</Count>
+    </RestartOnFailure>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>cmd.exe</Command>
+      <Arguments>/c "YOUR_PROJECT_ROOT\scripts\run_scheduler_daemon.bat"</Arguments>
+    </Exec>
+  </Actions>
+</Task>

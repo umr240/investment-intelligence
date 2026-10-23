@@ -1,0 +1,134 @@
+[
+  {
+    "accession": "0000320193-25-000079",
+    "cik": "320193",
+    "file": "AAPL_10k_sections.txt.gz",
+    "filing_date": "2025-10-31",
+    "fiscal_year_hint": "2025",
+    "section_chars": {
+      "Item 1": 16054,
+      "Item 1A": 68163,
+      "Item 7": 18018,
+      "Item 8": 60874
+    },
+    "sections": [
+      "Item 1",
+      "Item 1A",
+      "Item 7",
+      "Item 8"
+    ],
+    "sha256": "ac848c3187c300a37134cb97f0fb4482a3307a1c280bb5e8fe7362fdae8cfd40",
+    "ticker": "AAPL",
+    "total_chars": 163115
+  },
+  {
+    "accession": "0001045810-26-000021",
+    "cik": "1045810",
+    "file": "NVDA_10k_sections.txt.gz",
+    "filing_date": "2026-02-25",
+    "fiscal_year_hint": "2026",
+    "section_chars": {
+      "Item 1": 48222,
+      "Item 1A": 114773,
+      "Item 7": 34156,
+      "Item 8": 207
+    },
+    "sections": [
+      "Item 1",
+      "Item 1A",
+      "Item 7",
+      "Item 8"
+    ],
+    "sha256": "46c69d549ca36cc2aebf970b072825f3fc4d92900d18bfdce25d28fc48b51358",
+    "ticker": "NVDA",
+    "total_chars": 197364
+  },
+  {
+    "accession": "0001437749-26-018542",
+    "cik": "880807",
+    "file": "AMSC_10k_sections.txt.gz",
+    "filing_date": "2026-05-27",
+    "fiscal_year_hint": "2026",
+    "section_chars": {
+      "Item 1": 62407,
+      "Item 1A": 79033,
+      "Item 7": 42302,
+      "Item 8": 153908
+    },
+    "sections": [
+      "Item 1",
+      "Item 1A",
+      "Item 7",
+      "Item 8"
+    ],
+    "sha256": "3ee1109931d629cb1274b61aa3c4c4d1c6c3b8143856139e9ce0d5eb4ff57fd1",
+    "ticker": "AMSC",
+    "total_chars": 337656
+  },
+  {
+    "accession": "0000815556-26-000009",
+    "cik": "815556",
+    "file": "FAST_10k_sections.txt.gz",
+    "filing_date": "2026-02-05",
+    "fiscal_year_hint": "2026",
+    "section_chars": {
+      "Item 1": 72811,
+      "Item 1A": 49925,
+      "Item 7": 42917,
+      "Item 8": 58738
+    },
+    "sections": [
+      "Item 1",
+      "Item 1A",
+      "Item 7",
+      "Item 8"
+    ],
+    "sha256": "08163e8122c2d1c81f5efe858fa031aa24cb0d6b310245912a1b6a9773aced42",
+    "ticker": "FAST",
+    "total_chars": 224397
+  },
+  {
+    "accession": "0001193125-26-323660",
+    "cik": "789019",
+    "file": "MSFT_10k_sections.txt.gz",
+    "filing_date": "2026-07-29",
+    "fiscal_year_hint": "2026",
+    "section_chars": {
+      "Item 1": 41280,
+      "Item 1A": 81066,
+      "Item 7": 53403,
+      "Item 8": 131116
+    },
+    "sections": [
+      "Item 1",
+      "Item 1A",
+      "Item 7",
+      "Item 8"
+    ],
+    "sha256": "aeae7f08f5117200e37ad4a608256d734a156a423efec1ef55ecb697dc232667",
+    "ticker": "MSFT",
+    "total_chars": 306871
+  },
+  {
+    "accession": "0001565687-26-000073",
+    "cik": "1565687",
+    "file": "INTA_10k_sections.txt.gz",
+    "filing_date": "2026-08-14",
+    "fiscal_year_hint": "2026",
+    "section_chars": {
+      "Item 1": 44965,
+      "Item 1A": 141144,
+      "Item 7": 44575,
+      "Item 8": 112631
+    },
+    "sections": [
+      "Item 1",
+      "Item 1A",
+      "Item 7",
+      "Item 8"
+    ],
+    "sha256": "6c7d61478c49771ca7f0058a899962546334f02dade591f3ada2cc4da2f93e83",
+    "ticker": "INTA",
+    "total_chars": 343321
+  }
+]

@@ -1,0 +1,38 @@
+name: Signal or framework proposal
+description: Propose a new scoring signal, or a change to an existing one
+labels: ["signal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Signals must trace to a published source. The two questions below get
+        asked of every proposal, so answering them up front saves a round trip.
+  - type: textarea
+    id: signal
+    attributes:
+      label: The signal
+      description: What it measures, and how it is computed from available data.
+    validations: { required: true }
+  - type: textarea
+    id: source
+    attributes:
+      label: Published source
+      description: Author, year, and what the paper actually claims — not a summary of the claim.
+    validations: { required: true }
+  - type: textarea
+    id: false_positives
+    attributes:
+      label: What false positives does it produce, and at what cost?
+      description: Every signal is wrong sometimes. Characterise how.
+    validations: { required: true }
+  - type: textarea
+    id: inversion
+    attributes:
+      label: What would have to be true for this to be a bad signal?
+      description: If the answer is "nothing", it needs more thought.
+    validations: { required: true }
+  - type: textarea
+    id: data
+    attributes:
+      label: Data requirements
+      description: Which fields are needed, and are they in SEC filings? A signal needing data we cannot get deterministically will not ship.

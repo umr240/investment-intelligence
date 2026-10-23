@@ -1,0 +1,43 @@
+name: Bug report
+description: Something computes the wrong answer, crashes, or behaves unexpectedly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A wrong number is a bug worth reporting. Please include the ticker —
+        most data-layer problems are specific to one filer's disclosures.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Include the exact command and the output. Redact your EDGAR_IDENTITY.
+      placeholder: |
+        $ uv run invest score-card XYZ
+        ...
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: If a figure is wrong, say what it should be and how you know.
+    validations: { required: true }
+  - type: input
+    id: ticker
+    attributes:
+      label: Ticker
+      description: Which company, if the issue is specific to one.
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Output of `uv run python -V`, your OS, and the commit you are on.
+    validations: { required: true }
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I ran `uv run invest db-init` and the schema is current
+        - label: My output contains no API keys or personal contact details
+          required: true

@@ -1,0 +1,107 @@
+{
+  "_doc": "Sovereign 10yr government bond yield PER CURRENCY. Used as the risk-free rate for cash flows in that currency, and as the ceiling on terminal growth. Damodaran's first consistency check is that the risk-free rate matches the cash-flow currency (ADR-043).",
+  "_source": "FRED — DGS10 for USD; OECD long-term interest rates (IRLTLT01*) otherwise",
+  "_refresh_cadence": "weekly for USD (daily series); monthly for the OECD series",
+  "_selection_rule": "Look up by the filer's REPORTING currency (Company.currency). A currency absent from rates_by_currency is a data gap and the valuation refuses — it is NEVER silently substituted with USD.",
+  "_refreshed_by": "scripts/refresh_damodaran_reference.py",
+  "_refreshed_on": "2026-08-17",
+  "_unresolved_series": [],
+  "snapshot_date": "2026-08-13",
+  "ten_year_treasury_yield_pct": 4.63,
+  "_staleness_warning_days": 7,
+  "currency": "USD",
+  "source_url": "https://fred.stlouisfed.org/series/DGS10",
+  "rates_by_currency": {
+    "USD": {
+      "pct": 4.63,
+      "snapshot_date": "2026-08-13",
+      "series": "DGS10",
+      "cadence": "daily",
+      "staleness_warning_days": 7
+    },
+    "SEK": {
+      "pct": 2.78067,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01SEM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "EUR": {
+      "pct": 3.2209840909,
+      "snapshot_date": "2026-01-01",
+      "series": "IRLTLT01EZM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "GBP": {
+      "pct": 4.796,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01GBM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "NOK": {
+      "pct": 4.20271428571429,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01NOM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "DKK": {
+      "pct": 2.807,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01DKM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "CAD": {
+      "pct": 3.42,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01CAM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "CHF": {
+      "pct": 0.31,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01CHM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "AUD": {
+      "pct": 4.831,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01AUM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "PLN": {
+      "pct": 5.51,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01PLM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "JPY": {
+      "pct": 2.67,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01JPM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "KRW": {
+      "pct": 4.181,
+      "snapshot_date": "2026-06-01",
+      "series": "IRLTLT01KRM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    },
+    "ISK": {
+      "pct": 1.0,
+      "snapshot_date": "2022-08-01",
+      "series": "IRLTLT01ISM156N",
+      "cadence": "monthly",
+      "staleness_warning_days": 75
+    }
+  }
+}

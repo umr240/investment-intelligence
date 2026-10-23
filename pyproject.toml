@@ -1,0 +1,109 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "investment-intelligence"
+version = "0.1.0"
+description = "Quantitative equity research — 7 academic frameworks, lazy-load CLI, scheduled screener"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Umar Mohammad" }]
+keywords = ["finance", "investing", "equity-research", "sec-edgar", "valuation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Typing :: Typed",
+]
+dependencies = [
+    "typer[all]>=0.12.0",
+    "rich>=13.7.0",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13.1",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.3.0",
+    "python-dotenv>=1.0.1",
+    "apscheduler>=3.10.4",
+    "anthropic>=0.28.0",  # deepdive/narrative.py only — fallback provider
+    "openai>=1.40.0",     # deepdive/narrative.py only — primary provider
+    "anyio>=4.4.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "scipy>=1.13.0",
+    "edgartools>=2.0.0",
+    "yfinance>=0.2.40",
+    "beautifulsoup4>=4.12.0",  # DEF 14A HTML beneficial-ownership table parsing
+    "lxml>=5.2.0",             # fast HTML parser backend for BeautifulSoup
+    "fastapi>=0.115.0",        # api/app.py only (ADR-040) — thin pass-through, no ORM/DB code here
+    "uvicorn[standard]>=0.30.0",  # ASGI server for api/app.py
+]
+
+# Declared for foresight (ADR-040 Postgres-readiness addendum), NOT installed
+# by default and NOT imported anywhere yet — data/db.py's create_engine()
+# already dispatches on DATABASE_URL's scheme without needing this driver
+# present until a Postgres/Neon DSN is actually configured. Install with
+# `uv sync --extra postgres` only when that switch actually happens (yagni).
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.2.0"]
+
+[project.urls]
+Homepage = "https://github.com/umr240/investment-intelligence"
+Repository = "https://github.com/umr240/investment-intelligence"
+Issues = "https://github.com/umr240/investment-intelligence/issues"
+
+[project.scripts]
+invest = "cli.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["config", "data", "screener", "frameworks", "overlays", "deepdive", "scheduler", "cli", "api"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "responses>=0.25.0",
+    "respx>=0.21.0",
+    "ruff>=0.5.0",
+    "mypy>=1.10.0",
+]
+
+# Local-only (ADR-040 browser verification). Excluded from `--dev` so CI never
+# downloads a browser toolchain to run tests that skip without live servers.
+# Use: uv sync --dev --group browser && uv run python -m playwright install chromium
+browser = ["playwright>=1.62.0"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+# `browser` tests need a live API + Vite dev server and a Chromium binary, so
+# they are excluded from the default run and opted into with `-m browser`.
+# Everything else in the suite stays pure/respx-mocked and network-free.
+addopts = "-m 'not browser'"
+markers = [
+    "browser: end-to-end tests driving the real UI via Playwright (ADR-040). Needs live servers; skips if absent.",
+    "requires_data: asserts invariants over a populated investment_intelligence.db. Skips on an empty database, so a green run without `-m requires_data` has NOT checked these.",
+]

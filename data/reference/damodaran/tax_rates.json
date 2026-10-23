@@ -1,0 +1,34 @@
+{
+  "_doc": "Marginal corporate tax rates by country. Damodaran's strict teaching: use MARGINAL tax rate (statutory federal + weighted state) NOT effective tax rate from the income statement. Effective rates embed one-time items, tax credits, foreign-income mix, etc. — all of which can revert.",
+  "_source": "Statutory rates from country tax authorities + Damodaran 'Marginal Tax Rates around the world'",
+  "_refresh_cadence": "annually (or on policy change)",
+  "_staleness_warning_days": 400,
+  "snapshot_date": "2026-01-01",
+  "marginal_tax_rates_pct": {
+    "United States": {
+      "_doc": "21% federal + ~4% state-weighted average. Damodaran's standard US marginal rate.",
+      "federal": 21.0,
+      "state_weighted": 4.0,
+      "combined": 25.0
+    },
+    "Canada": {"combined": 26.5},
+    "United Kingdom": {"combined": 25.0},
+    "Germany": {"combined": 30.0},
+    "France": {"combined": 25.0},
+    "Japan": {"combined": 30.6},
+    "Australia": {"combined": 30.0},
+    "Switzerland": {"combined": 19.7},
+    "Netherlands": {"combined": 25.8},
+    "Israel": {"combined": 23.0},
+    "China": {"combined": 25.0},
+    "Hong Kong": {"combined": 16.5},
+    "India": {"combined": 25.2},
+    "Brazil": {"combined": 34.0},
+    "Mexico": {"combined": 30.0},
+    "Singapore": {"combined": 17.0},
+    "Taiwan": {"combined": 20.0},
+    "South Korea": {"combined": 24.0},
+    "_fallback_default": {"combined": 25.0, "_fallback_doc": "Global median when country missing"}
+  },
+  "source_url": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/countrytaxrate.html"
+}

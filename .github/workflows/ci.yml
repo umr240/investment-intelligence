@@ -1,0 +1,154 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Read-only token: no job writes to the repository, issues or pull requests.
+# Actions are pinned to commit SHAs (tags can be moved); Dependabot's
+# github-actions ecosystem proposes the updates.
+permissions:
+  contents: read
+
+env:
+  # Placeholders only — the data path is deterministic and tests hit no network.
+  EDGAR_IDENTITY: "CI Runner ci@example.invalid"
+  DATABASE_URL: "sqlite:///./ci_scratch.db"
+
+jobs:
+  test:
+    # The gate. Browser tests excluded by pyproject addopts.
+    #
+    # Three operating systems because two Windows-only defects have already
+    # reached main past a Linux-only CI: documentation filenames that overflow
+    # MAX_PATH during checkout, and a `git clone` that reports success while
+    # doing so. Development happens on Windows and may move to macOS, so
+    # neither is a platform this project can afford to leave unexercised.
+    #
+    # Python is pinned so the operating system is the only variable and a red
+    # leg names a platform rather than an interpreter. 3.11 is the floor in
+    # requires-python; local development runs 3.12, so this tests the end of
+    # the supported range that nothing else does.
+    #
+    # macOS is non-gating because the suite has never run there. This repo
+    # gates what is proven rather than what is hoped for — the same reason
+    # correctness-lint selects three rules instead of all of ruff. Promote it
+    # by setting unproven to false once it has been green for a while.
+    name: pytest (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.unproven }}
+    strategy:
+      # One platform failing must not cancel the others — the comparison
+      # between legs is the diagnostic.
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            unproven: false
+          - os: windows-latest
+            unproven: false
+          - os: macos-latest
+            unproven: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86  # v5.4.2
+        with:
+          enable-cache: true
+          python-version: "3.11"
+      - name: Sync (locked — SECURITY §5)
+        run: uv sync --locked --dev
+      - name: Bootstrap the schema
+        # The documented first command, so CI runs what a new user runs — and
+        # the migration chain gets smoke-tested on all three platforms, which
+        # nothing else here does. Without it SQLite hands the suite a database
+        # file with no tables in it.
+        run: uv run invest db-init
+      - name: pytest
+        run: uv run pytest -q
+      - name: confirm data-dependent tests were not silently skipped
+        # These assert invariants over a populated database and skip on an
+        # empty one. CI has no seeded DB, so they cannot run here — this step
+        # makes that explicit rather than letting a green run imply coverage
+        # it does not have. Run them locally: uv run pytest -m requires_data
+        #
+        # Explicit bash: windows-latest defaults to pwsh, which has no tail.
+        shell: bash
+        run: |
+          echo "requires_data tests are NOT exercised in CI (no seeded database)."
+          uv run pytest -m requires_data --collect-only -q | tail -1
+
+  correctness-lint:
+    # Gating. These rules catch errors that fail at runtime, not style:
+    # F821 undefined name, F811 redefinition, E722 bare except. All three sit
+    # at zero, so the gate is enforceable today rather than aspirational.
+    # An undefined name reached main once already — a refactor dropped a
+    # variable that was still being read, and the non-gating lint below
+    # reported it into a log nobody was watching.
+    # F401 (unused import) is excluded: 36 remain, mostly __init__.py
+    # re-exports that need `__all__` rather than deletion.
+    name: ruff (correctness rules — gating)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86  # v5.4.2
+        with:
+          enable-cache: true
+      - run: uv sync --locked --dev
+      - name: ruff --select F821,F811,E722
+        run: uv run ruff check . --select F821,F811,E722
+
+  lint:
+    # Non-gating: baseline at release is ruff 364 / mypy --strict 1086 (D9).
+    # Visible, not blocking; a change should not grow either number.
+    name: ruff + mypy (non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86  # v5.4.2
+        with:
+          enable-cache: true
+      - run: uv sync --locked --dev
+      - name: ruff
+        run: uv run ruff check . --statistics
+        continue-on-error: true
+      - name: mypy --strict
+        run: uv run mypy . --strict
+        continue-on-error: true
+
+  secrets:
+    # Gating. Scans every commit reachable from the ref, not only the diff: a
+    # secret deleted in a later commit is still in history (SECURITY.md).
+    # The release binary is checksum-verified rather than run through a
+    # third-party action, so the job needs no token scope beyond read.
+    # --redact keeps any finding's value out of the public log.
+    name: gitleaks (secret scan — gating)
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: "8.30.1"
+      GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install gitleaks
+        run: |
+          curl -fsSLo gitleaks.tgz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum --check
+          tar -xzf gitleaks.tgz gitleaks
+      - name: gitleaks detect
+        run: ./gitleaks detect --source . --redact --verbose --exit-code 1

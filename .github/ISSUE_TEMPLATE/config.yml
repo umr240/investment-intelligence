@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/umr240/investment-intelligence/security/advisories/new
+    about: Report privately, not as a public issue. See SECURITY.md.
+  - name: Investment advice
+    url: https://github.com/umr240/investment-intelligence#why-there-is-no-buy
+    about: This project produces no buy/sell recommendations, and issues are not a place to request them.

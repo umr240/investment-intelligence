@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: investment-intelligence
+message: If you use this software or its methodology, please cite it.
+type: software
+authors:
+  - family-names: Mohammad
+    given-names: Umar
+repository-code: "https://github.com/umr240/investment-intelligence"
+abstract: >-
+  A command-line equity research tool that scores companies against seven
+  frameworks drawn from published finance research, computing from SEC EDGAR
+  filings deterministically and recording missing data explicitly rather than
+  estimating it.
+keywords:
+  - quantitative-finance
+  - equity-research
+  - sec-edgar
+  - financial-analysis
+license: MIT

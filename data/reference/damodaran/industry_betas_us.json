@@ -1,0 +1,248 @@
+{
+  "_doc": "Damodaran's industry-level UNLEVERED betas for US-listed companies. Re-levered to each company's specific debt/equity ratio at WACC computation time.",
+  "_source": "Damodaran 'Betas by Sector (US)' — Betas.html, parsed verbatim",
+  "_refresh_cadence": "annual — Damodaran recomputes betas each January. The previous 'quarterly' claim in this file was wrong and caused a snapshot_date (2026-04-01) that post-dated any publication that ever existed.",
+  "_staleness_warning_days": 400,
+  "_methodology": "Unlevered beta = levered beta / (1 + (1-tax)(D/E)), computed by Damodaran across all US-listed firms in the industry.",
+  "_relevering_formula": "levered_beta = unlevered_beta * (1 + (1 - marginal_tax) * (D/E))",
+  "_refreshed_by": "scripts/refresh_damodaran_reference.py",
+  "_refreshed_on": "2026-08-17",
+  "snapshot_date": "2026-01-01",
+  "publication": "Data used is as of January 2026 (per the source page header)",
+  "_unmatched_mappings": [],
+  "source_url": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html",
+  "industries": {
+    "_doc": "Subset of Damodaran's ~96 US industries covering the screened universe. Keys are OUR stable internal labels (see cost_of_capital._SECTOR_TO_DAMODARAN_INDUSTRY); `damodaran_industry` records the exact source row each value came from, and `mapping` declares whether that correspondence is exact, a rename, or our own approximation.",
+    "Software (System & Application)": {
+      "firm_count": 309,
+      "unlevered_beta": 1.23,
+      "unlevered_beta_corrected_for_cash": 1.25,
+      "damodaran_industry": "Software (System & Application)",
+      "mapping": "exact"
+    },
+    "Software (Internet)": {
+      "firm_count": 29,
+      "unlevered_beta": 1.55,
+      "unlevered_beta_corrected_for_cash": 1.59,
+      "damodaran_industry": "Software (Internet)",
+      "mapping": "exact"
+    },
+    "Software (Entertainment)": {
+      "firm_count": 77,
+      "unlevered_beta": 1.01,
+      "unlevered_beta_corrected_for_cash": 1.02,
+      "damodaran_industry": "Software (Entertainment)",
+      "mapping": "exact"
+    },
+    "Information Services": {
+      "firm_count": 15,
+      "unlevered_beta": 0.74,
+      "unlevered_beta_corrected_for_cash": 0.76,
+      "damodaran_industry": "Information Services",
+      "mapping": "exact"
+    },
+    "Computer Services": {
+      "firm_count": 64,
+      "unlevered_beta": 0.92,
+      "unlevered_beta_corrected_for_cash": 0.96,
+      "damodaran_industry": "Computer Services",
+      "mapping": "exact"
+    },
+    "Semiconductor": {
+      "firm_count": 66,
+      "unlevered_beta": 1.49,
+      "unlevered_beta_corrected_for_cash": 1.5,
+      "damodaran_industry": "Semiconductor",
+      "mapping": "exact"
+    },
+    "Computers/Peripherals": {
+      "firm_count": 36,
+      "unlevered_beta": 1.31,
+      "unlevered_beta_corrected_for_cash": 1.32,
+      "damodaran_industry": "Computers/Peripherals",
+      "mapping": "exact"
+    },
+    "Electronics (General)": {
+      "firm_count": 114,
+      "unlevered_beta": 0.9,
+      "unlevered_beta_corrected_for_cash": 0.94,
+      "damodaran_industry": "Electronics (General)",
+      "mapping": "exact"
+    },
+    "Semiconductor Equipment": {
+      "firm_count": 31,
+      "unlevered_beta": 1.35,
+      "unlevered_beta_corrected_for_cash": 1.39,
+      "damodaran_industry": "Semiconductor Equip",
+      "mapping": "renamed"
+    },
+    "Healthcare Information Tech": {
+      "firm_count": 115,
+      "unlevered_beta": 0.99,
+      "unlevered_beta_corrected_for_cash": 1.02,
+      "damodaran_industry": "Heathcare Information and Techno logy",
+      "mapping": "renamed"
+    },
+    "Drugs (Biotechnology)": {
+      "firm_count": 496,
+      "unlevered_beta": 1.03,
+      "unlevered_beta_corrected_for_cash": 1.08,
+      "damodaran_industry": "Drugs (Biotechnology)",
+      "mapping": "exact"
+    },
+    "Drugs (Pharmaceutical)": {
+      "firm_count": 228,
+      "unlevered_beta": 0.89,
+      "unlevered_beta_corrected_for_cash": 0.92,
+      "damodaran_industry": "Drugs (Pharmaceutical)",
+      "mapping": "exact"
+    },
+    "Healthcare Products": {
+      "firm_count": 204,
+      "unlevered_beta": 0.83,
+      "unlevered_beta_corrected_for_cash": 0.86,
+      "damodaran_industry": "Healthcare Products",
+      "mapping": "exact"
+    },
+    "Healthcare Services": {
+      "firm_count": 31,
+      "unlevered_beta": 0.55,
+      "unlevered_beta_corrected_for_cash": 0.56,
+      "damodaran_industry": "Hospitals/Healthcare Facilities",
+      "mapping": "approximate"
+    },
+    "Healthcare Support Services": {
+      "firm_count": 104,
+      "unlevered_beta": 0.69,
+      "unlevered_beta_corrected_for_cash": 0.74,
+      "damodaran_industry": "Healthcare Support Services",
+      "mapping": "exact"
+    },
+    "Retail (General)": {
+      "firm_count": 23,
+      "unlevered_beta": 0.76,
+      "unlevered_beta_corrected_for_cash": 0.78,
+      "damodaran_industry": "Retail (General)",
+      "mapping": "exact"
+    },
+    "Retail (Online)": {
+      "firm_count": 94,
+      "unlevered_beta": 0.95,
+      "unlevered_beta_corrected_for_cash": 1.0,
+      "damodaran_industry": "Retail (Special Lines)",
+      "mapping": "approximate"
+    },
+    "Retail (Apparel)": {
+      "firm_count": 35,
+      "unlevered_beta": 0.76,
+      "unlevered_beta_corrected_for_cash": 0.79,
+      "damodaran_industry": "Apparel",
+      "mapping": "approximate"
+    },
+    "Retail (Distributors)": {
+      "firm_count": 62,
+      "unlevered_beta": 0.78,
+      "unlevered_beta_corrected_for_cash": 0.8,
+      "damodaran_industry": "Retail (Distributors)",
+      "mapping": "exact"
+    },
+    "Food & Beverage": {
+      "firm_count": 78,
+      "unlevered_beta": 0.46,
+      "unlevered_beta_corrected_for_cash": 0.47,
+      "damodaran_industry": "Food Processing",
+      "mapping": "approximate"
+    },
+    "Restaurants/Dining": {
+      "firm_count": 64,
+      "unlevered_beta": 0.77,
+      "unlevered_beta_corrected_for_cash": 0.78,
+      "damodaran_industry": "Restaurant/Dining",
+      "mapping": "renamed"
+    },
+    "Telecom Services": {
+      "firm_count": 39,
+      "unlevered_beta": 0.37,
+      "unlevered_beta_corrected_for_cash": 0.38,
+      "damodaran_industry": "Telecom. Services",
+      "mapping": "renamed"
+    },
+    "Telecom Equipment": {
+      "firm_count": 57,
+      "unlevered_beta": 0.86,
+      "unlevered_beta_corrected_for_cash": 0.89,
+      "damodaran_industry": "Telecom. Equipment",
+      "mapping": "renamed"
+    },
+    "Advertising": {
+      "firm_count": 52,
+      "unlevered_beta": 0.93,
+      "unlevered_beta_corrected_for_cash": 1.01,
+      "damodaran_industry": "Advertising",
+      "mapping": "exact"
+    },
+    "Real Estate (Development)": {
+      "firm_count": 14,
+      "unlevered_beta": 0.48,
+      "unlevered_beta_corrected_for_cash": 0.56,
+      "damodaran_industry": "Real Estate (Development)",
+      "mapping": "exact"
+    },
+    "Construction Supplies": {
+      "firm_count": 40,
+      "unlevered_beta": 1.02,
+      "unlevered_beta_corrected_for_cash": 1.05,
+      "damodaran_industry": "Construction Supplies",
+      "mapping": "exact"
+    },
+    "Industrials (Diversified)": {
+      "firm_count": 20,
+      "unlevered_beta": 0.79,
+      "unlevered_beta_corrected_for_cash": 0.84,
+      "damodaran_industry": "Diversified",
+      "mapping": "approximate"
+    },
+    "Industrials (Machinery)": {
+      "firm_count": 105,
+      "unlevered_beta": 0.87,
+      "unlevered_beta_corrected_for_cash": 0.89,
+      "damodaran_industry": "Machinery",
+      "mapping": "renamed"
+    },
+    "Auto & Truck": {
+      "firm_count": 33,
+      "unlevered_beta": 1.27,
+      "unlevered_beta_corrected_for_cash": 1.31,
+      "damodaran_industry": "Auto & Truck",
+      "mapping": "exact"
+    },
+    "Financial Services (Non-bank)": {
+      "firm_count": 176,
+      "unlevered_beta": 0.32,
+      "unlevered_beta_corrected_for_cash": 0.33,
+      "damodaran_industry": "Financial Svcs. (Non-bank & Insur ance)",
+      "mapping": "renamed"
+    },
+    "Insurance (General)": {
+      "firm_count": 21,
+      "unlevered_beta": 0.56,
+      "unlevered_beta_corrected_for_cash": 0.58,
+      "damodaran_industry": "Insurance (General)",
+      "mapping": "exact"
+    },
+    "Education": {
+      "firm_count": 32,
+      "unlevered_beta": 0.66,
+      "unlevered_beta_corrected_for_cash": 0.72,
+      "damodaran_industry": "Education",
+      "mapping": "exact"
+    },
+    "Basic Materials (Mining)": {
+      "firm_count": 73,
+      "unlevered_beta": 0.96,
+      "unlevered_beta_corrected_for_cash": 1.01,
+      "damodaran_industry": "Metals & Mining",
+      "mapping": "approximate"
+    }
+  }
+}

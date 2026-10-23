@@ -1,0 +1,19 @@
+# Normalise line endings. Authored on Windows, CI runs ubuntu / macos / windows
+# — without this every file round-trips CRLF<->LF and produces phantom
+# whole-file diffs.
+* text=auto eol=lf
+
+# Windows-only launchers must keep CRLF or cmd.exe mis-parses them.
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Shell scripts and git hooks must stay LF even on a Windows checkout.
+*.sh   text eol=lf
+
+# Generated lockfile — collapse in review, no merge-conflict churn.
+uv.lock linguist-generated=true -diff
+
+# Binary assets: never text-convert.
+*.png  binary
+*.svg  text eol=lf
