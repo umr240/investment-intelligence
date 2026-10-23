@@ -211,7 +211,6 @@ def extract_signals_via_llm(
     resp = client.messages.create(
         model=model,
         max_tokens=4096,
-        temperature=0.0,
         system=system_prompt,
         tools=[{
             "name": "emit_signals",
@@ -371,7 +370,6 @@ def extract_ceo_equity_via_llm(
     resp = client.messages.create(
         model=model,
         max_tokens=2048,
-        temperature=0.0,
         system=system_prompt,
         tools=[{
             "name": "emit_signals",
