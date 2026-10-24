@@ -55,7 +55,7 @@ _FUNDAMENTAL_FORMS: frozenset[str] = frozenset({
 # Order matters: first-match wins per concept.
 # Bump when the concept chains or period derivation change: filings logged
 # under an older version are then re-read once (data/pipeline.py coverage gate).
-PARSER_VERSION = 2
+PARSER_VERSION = 4
 
 _INCOME_CONCEPTS: list[tuple[str, list[str]]] = [
     ("revenue", [
@@ -273,10 +273,14 @@ _BALANCE_CONCEPTS: list[tuple[str, list[str]]] = [
 ]
 
 _CASHFLOW_CONCEPTS: list[tuple[str, list[str]]] = [
-    ("operating_cash_flow", [
-        "NetCashProvidedByUsedInOperatingActivities",
-        "NetCashFromOperatingActivities",
-    ]),
+    (
+        "operating_cash_flow",
+        [
+            "NetCashProvidedByUsedInOperatingActivities",
+            "NetCashFromOperatingActivities",
+            "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",  # COST FY2013-16
+        ],
+    ),
     ("capex", [
         "PaymentsToAcquirePropertyPlantAndEquipment",
         "PaymentsToAcquireProductiveAssets",       # NVDA FY2021+ uses this tag
@@ -416,6 +420,36 @@ def fetch_latest_filings(
     return rows
 
 
+def fye_month_from_submissions(raw: str | None) -> int | None:
+    """Nominal fiscal-year-end month from submissions.json `fiscalYearEnd` ("MMDD")."""
+    if not (isinstance(raw, str) and len(raw) == 4 and raw.isdigit()):
+        return None
+    month, day = int(raw[:2]), int(raw[2:])
+    if not (1 <= month <= 12 and 1 <= day <= 31):
+        return None
+    # "0201": a 52/53-week year ending Feb 1 belongs to January.
+    return (month - 2) % 12 + 1 if day <= 7 else month
+
+
+def _duration_end_dates(us_gaap: dict[str, Any]) -> frozenset[date]:
+    """End dates of every reported period of 14+ days: the filer's real period ends."""
+    ends: set[date] = set()
+    for concept in us_gaap.values():
+        for entries in concept.get("units", {}).values():
+            for e in entries:
+                span = _span_days(e.get("start"), e.get("end"))
+                if span is not None and span >= 14:
+                    d = _parse_iso(e.get("end"))
+                    if d is not None:
+                        ends.add(d)
+    return frozenset(ends)
+
+
+def _nominal_period_end(d: date) -> date:
+    """52/53-week periods end within a week of a month end: days 1-7 belong to the prior month."""
+    return d.replace(day=1) - timedelta(days=1) if d.day <= 7 else d
+
+
 def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
     """
     Fetch filer-level metadata from SEC submissions.json — small (~50-200KB)
@@ -454,14 +488,7 @@ def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
         return None
 
     fy_end_raw = data.get("fiscalYearEnd") or None
-    fy_end_month: int | None = None
-    if isinstance(fy_end_raw, str) and len(fy_end_raw) == 4 and fy_end_raw.isdigit():
-        try:
-            month_val = int(fy_end_raw[:2])
-            if 1 <= month_val <= 12:
-                fy_end_month = month_val
-        except ValueError:
-            pass
+    fy_end_month = fye_month_from_submissions(fy_end_raw)
 
     return {
         "cik": cik,
@@ -606,6 +633,9 @@ def parse_companyfacts(
         return []
 
     by_filing: dict[tuple[str, int, str], _FilingFacts] = {}
+    # Every concept, unit and form, before the accession/form filters: a
+    # re-parse that skips logged filings must still see their period ends.
+    period_ends = _duration_end_dates(us_gaap)
 
     def _ingest(concept_name: str, field_name: str, unit_key: str) -> None:
         concept = us_gaap.get(concept_name)
@@ -628,7 +658,9 @@ def parse_companyfacts(
             if end_date is None:
                 continue
             start_date = _parse_iso(entry_start) if entry_start else None
-            derived = _derive_fiscal_period(end_date, start_date, fiscal_year_end_month)
+            derived = _derive_fiscal_period(
+                end_date, start_date, fiscal_year_end_month, period_ends
+            )
             if derived is None:
                 # Entry's end isn't a fiscal-period boundary — skip.
                 continue
@@ -1168,6 +1200,7 @@ def _derive_fiscal_period(
     period_end: date,
     period_start: date | None,
     fye_month: int,
+    period_ends: frozenset[date] | None = None,
 ) -> tuple[int, str] | None:
     """
     Derive (fiscal_year, period) from an entry's calendar window using the
@@ -1190,14 +1223,31 @@ def _derive_fiscal_period(
     if not (1 <= fye_month <= 12):
         fye_month = 12
 
+    # An instant away from a month end counts only on a date some reported
+    # period ends: adoption (ASC 842 at 2019-01-01) and acquisition-date
+    # balances (KFS 2019-03-01) are not period-end balance sheets. Known cost:
+    # a new 52/53-week filer's prior year-end balance (in 10-Qs, before its
+    # first 10-K) and MRVL's 2019-02-02 equity under its post-2021 CIK have no
+    # matching period, so they are dropped.
+    if (
+        period_start is None
+        and period_ends is not None
+        and period_end.day < 24
+        and period_end not in period_ends
+    ):
+        return None
+    # Year and quarter come from the nominal month end; the span check below
+    # still uses the real dates (LULU 2025-02-02 is January's year end).
+    nominal = _nominal_period_end(period_end)
+
     # End-year convention: FY = the calendar year in which the period ends.
     # For FYEM=6 (Jun): end Jun→FY ends in same year; Jul-Dec→FY ends NEXT year.
-    # For FYEM=12 (Dec): end Jan-Dec→FY ends same year (Jan periods are 53-week
-    #   year ends carrying the prior fiscal year — see footnote).
-    if period_end.month <= fye_month:
-        fiscal_year = period_end.year
+    # For FYEM=12 (Dec): every nominal month is in the same year (ILMN's
+    #   2023-01-01 year end is nominally 2022-12-31, so FY2022).
+    if nominal.month <= fye_month:
+        fiscal_year = nominal.year
     else:
-        fiscal_year = period_end.year + 1
+        fiscal_year = nominal.year + 1
 
     # Span-FIRST detection (2026-05-17 fix). When period_start is provided AND
     # the span is annual (~365 days), accept as annual REGARDLESS of whether
@@ -1218,7 +1268,7 @@ def _derive_fiscal_period(
     # Quarter-boundary check. Only end-months that are fiscal-quarter ends
     # are valid period anchors. Anything else (mid-quarter snapshot) skips.
     fy_start_month = (fye_month % 12) + 1
-    months_from_fy_start = ((period_end.month - fy_start_month) % 12) + 1
+    months_from_fy_start = ((nominal.month - fy_start_month) % 12) + 1
     quarter_map = {3: "Q1", 6: "Q2", 9: "Q3", 12: "Q4"}
     quarter_label = quarter_map.get(months_from_fy_start)
     if quarter_label is None:
