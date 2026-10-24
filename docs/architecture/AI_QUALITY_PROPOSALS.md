@@ -1,6 +1,6 @@
 # AI Quality and Data Integrity — Proposed ADRs
 
-**Audited:** 2026-10-21 · **Data:** author DB snapshot of 2026-10-19 · **Status:** ADR-023-A1, ADR-054 and ADR-055 accepted 2026-10-21; the rest PROPOSED
+**Audited:** 2026-10-21 · **Data:** author DB snapshot of 2026-10-19 · **Status:** ADR-023-A1, ADR-054 and ADR-055 accepted 2026-10-21; ADR-057 accepted 2026-10-24; the rest PROPOSED
 
 This file is the entry point for review. It records what the audit measured,
 which proposals it supports, and the order to take them in. Each decision
@@ -90,9 +90,12 @@ do not match the code. That is the subject of ADR-023-A1.
 
 Measure before changing, so every change has a before and an after.
 
-On 2026-10-24 the user put **ADR-057** (external-signals verification, zero
-tokens, no dependency) first, then ADR-048, the ADR-047 baseline and ADR-045+046.
-Where ADR-044 falls in that order is not yet decided.
+On 2026-10-24 the user set the order: **ADR-057** (external-signals
+verification, accepted that day), ADR-048, **ADR-044**, the ADR-047 baseline,
+then ADR-045+046. ADR-044 goes before the baseline because a 52/53-week parser
+bug found that day had dropped balance-sheet values and mislabelled fiscal
+years (34 of 67 dived tickers had a year without total assets), so a baseline
+on unchecked data would measure the data, not the narrative.
 
 1. **ADR-044:** data contracts, then the backfill. Wrong data makes every later number wrong.
 2. **ADR-048:** the `llm_calls` table, so cost and latency are recorded from the first eval run.
