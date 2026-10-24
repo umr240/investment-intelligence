@@ -741,10 +741,12 @@ class DeepDiveRun(Base):
     # SEC EDGAR reference
     edgar_10k_accession = Column(Text)         # accession number of 10-K used as primary source
     # DEC-46: what the dive read, and whether that has since been superseded.
-    parser_version = Column(Integer)           # newest parser that wrote the ticker's rows; NULL = unversioned
-    scorecard_view_json = Column(Text)         # ScorecardView.to_llm_context() at dive time
+    # parser_version: newest parser that wrote the ticker's rows (NULL = unversioned).
+    # stale_reason: set once those inputs are superseded; stale dives are never deleted.
+    parser_version = Column(Integer)
+    scorecard_view_json = Column(Text)  # ScorecardView.to_llm_context() at dive time
     scorecard_view_sha256 = Column(Text)
-    stale_reason = Column(Text)                # set once inputs are superseded; stale dives are never deleted
+    stale_reason = Column(Text)
     stale_at = Column(DateTime)
     created_at = Column(DateTime, server_default=func.now())
 

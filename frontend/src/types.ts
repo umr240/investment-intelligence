@@ -63,6 +63,7 @@ export interface OverlayTriggerView {
 export interface ScorecardView {
   ticker: string;
   run_date: string;
+  stale_reason?: string | null;
   mode_used: string;
   company: CompanyHeader;
   stage: StageView;

@@ -3,6 +3,7 @@
 The 52/53-week parser fix (parser v3, 2026-10-24) re-read every dived ticker's
 filings, and no stored dive recorded which data it had read.
 """
+
 from __future__ import annotations
 
 from collections.abc import Generator, Iterator
@@ -38,18 +39,34 @@ def db(monkeypatch: pytest.MonkeyPatch) -> Generator[sessionmaker[Session], None
     engine.dispose()
 
 
-def _seed(factory: sessionmaker[Session], log_versions: list[int | None],
-          dive_versions: list[int | None]) -> None:
+def _seed(
+    factory: sessionmaker[Session], log_versions: list[int | None], dive_versions: list[int | None]
+) -> None:
     with factory() as s:
         co = Company(ticker="LULU", name="lululemon", exchange="NASDAQ")
         s.add(co)
         s.flush()
         for i, v in enumerate(log_versions):
-            s.add(FinancialSourceLog(ticker="LULU", accession_number=f"a-{i}", form_type="10-K",
-                                     fiscal_year=2020 + i, period="annual", parser_version=v))
+            s.add(
+                FinancialSourceLog(
+                    ticker="LULU",
+                    accession_number=f"a-{i}",
+                    form_type="10-K",
+                    fiscal_year=2020 + i,
+                    period="annual",
+                    parser_version=v,
+                )
+            )
         for v in dive_versions:
-            s.add(DeepDiveRun(company_id=co.id, ticker="LULU", mode="default", parser_version=v,
-                              bull_narrative="[]"))
+            s.add(
+                DeepDiveRun(
+                    company_id=co.id,
+                    ticker="LULU",
+                    mode="default",
+                    parser_version=v,
+                    bull_narrative="[]",
+                )
+            )
         s.commit()
 
 
@@ -86,8 +103,16 @@ def test_nothing_is_flagged_while_no_filing_is_versioned(db: sessionmaker[Sessio
 def test_provenance_lookups(db: sessionmaker[Session]) -> None:
     _seed(db, log_versions=[None, 3], dive_versions=[])
     with db() as s:
-        s.add(FinancialSourceLog(ticker="LULU", accession_number="q-1", form_type="10-Q",
-                                 fiscal_year=2030, period="Q1", parser_version=3))
+        s.add(
+            FinancialSourceLog(
+                ticker="LULU",
+                accession_number="q-1",
+                form_type="10-Q",
+                fiscal_year=2030,
+                period="Q1",
+                parser_version=3,
+            )
+        )
         s.commit()
         assert staleness.fundamentals_parser_version(s, "LULU") == 3
         assert staleness.latest_10k_accession(s, "LULU") == "a-1"
@@ -124,10 +149,18 @@ def test_narrative_is_not_generated_on_a_stale_dive(monkeypatch: pytest.MonkeyPa
 def test_export_withholds_the_narrative_of_a_stale_dive() -> None:
     from deepdive.serializer import export_deepdive_markdown
 
-    run = DeepDiveRun(ticker="LULU", mode="default", tier=2, run_date=datetime(2026, 5, 17),
-                      composite_score=5.0, verdict="watchlist", stale_reason="fundamentals re-read",
-                      bull_narrative='[{"point": "x"}]', bear_narrative='[{"point": "y"}]',
-                      risk_factors='{"risks": []}')
+    run = DeepDiveRun(
+        ticker="LULU",
+        mode="default",
+        tier=2,
+        run_date=datetime(2026, 5, 17),
+        composite_score=5.0,
+        verdict="watchlist",
+        stale_reason="fundamentals re-read",
+        bull_narrative='[{"point": "x"}]',
+        bear_narrative='[{"point": "y"}]',
+        risk_factors='{"risks": []}',
+    )
     md = export_deepdive_markdown(run)
     assert "**Stale:** fundamentals re-read" in md
     assert "Withheld" in md

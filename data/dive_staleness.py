@@ -20,8 +20,9 @@ from data.models.schema import Company, DeepDiveRun, FinancialSourceLog
 def fundamentals_parser_version(session: Session, ticker: str) -> int | None:
     """Newest parser version among the ticker's logged filings; None if none is versioned."""
     v = session.execute(
-        select(func.max(FinancialSourceLog.parser_version))
-        .where(FinancialSourceLog.ticker == ticker)
+        select(func.max(FinancialSourceLog.parser_version)).where(
+            FinancialSourceLog.ticker == ticker
+        )
     ).scalar()
     return int(v) if v is not None else None
 
@@ -46,13 +47,17 @@ def flag_superseded_dives(ticker: str) -> int:
         company_id = session.execute(select(Company.id).where(Company.ticker == ticker)).scalar()
         if company_id is None:
             return 0
-        runs = session.execute(
-            select(DeepDiveRun).where(
-                DeepDiveRun.company_id == company_id,
-                DeepDiveRun.stale_reason.is_(None),
-                func.coalesce(DeepDiveRun.parser_version, 0) < current,  # NULL = unversioned
+        runs = (
+            session.execute(
+                select(DeepDiveRun).where(
+                    DeepDiveRun.company_id == company_id,
+                    DeepDiveRun.stale_reason.is_(None),
+                    func.coalesce(DeepDiveRun.parser_version, 0) < current,  # NULL = unversioned
+                )
             )
-        ).scalars().all()
+            .scalars()
+            .all()
+        )
         now = datetime.now()
         for run in runs:
             was = "unversioned" if run.parser_version is None else f"v{run.parser_version}"
@@ -65,7 +70,10 @@ def latest_dive_stale_reason(ticker: str) -> str | None:
     """Stale reason of the ticker's most recent dive; None if it is current or absent."""
     with get_session() as session:
         reason = session.execute(
-            select(DeepDiveRun.stale_reason).join(Company, Company.id == DeepDiveRun.company_id)
-            .where(Company.ticker == ticker.upper()).order_by(DeepDiveRun.id.desc()).limit(1)
+            select(DeepDiveRun.stale_reason)
+            .join(Company, Company.id == DeepDiveRun.company_id)
+            .where(Company.ticker == ticker.upper())
+            .order_by(DeepDiveRun.id.desc())
+            .limit(1)
         ).scalar()
         return str(reason) if reason else None

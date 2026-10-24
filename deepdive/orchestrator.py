@@ -672,8 +672,11 @@ def _record_scorecard_view(ticker: str, mode: str) -> None:
     body = view.to_llm_context()
     with get_session() as session:
         run = session.execute(
-            select(DeepDiveRun).join(Company, Company.id == DeepDiveRun.company_id)
-            .where(Company.ticker == ticker).order_by(desc(DeepDiveRun.id)).limit(1)
+            select(DeepDiveRun)
+            .join(Company, Company.id == DeepDiveRun.company_id)
+            .where(Company.ticker == ticker)
+            .order_by(desc(DeepDiveRun.id))
+            .limit(1)
         ).scalar_one_or_none()
         if run is not None:
             run.scorecard_view_json = body

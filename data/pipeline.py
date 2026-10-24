@@ -204,10 +204,13 @@ async def refresh_ticker(
         _persist_source_log(ticker, edgar_result.financials, reparsed=edgar_result.reparsed)
         if edgar_result.reparsed:
             from data.dive_staleness import flag_superseded_dives
+
             flagged = flag_superseded_dives(ticker)
             if flagged:
-                gaps.append(f"{ticker}: {flagged} earlier deep dive(s) flagged stale "
-                            "(fundamentals re-read); re-run the dive")
+                gaps.append(
+                    f"{ticker}: {flagged} earlier deep dive(s) flagged stale "
+                    "(fundamentals re-read); re-run the dive"
+                )
         # ADR-039: persist non-SEC provenance (data_source_tier, reporting
         # currency, FX) so the dive methodology panel + data_completeness
         # reflect Tier-3 sourcing. SEC rows keep the 'sec_edgar' default.
