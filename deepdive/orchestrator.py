@@ -942,7 +942,7 @@ def _persist_dive_results(
         )
         session.add(run)
         session.flush()
-        run_id = run.id
+        run_id = int(run.id)
 
     return composite_gaap, composite_non_gaap, run_id
 
