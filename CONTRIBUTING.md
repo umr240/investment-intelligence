@@ -89,7 +89,7 @@ review by mentioning `@claude` in a comment or review, for example
 `@claude please review this PR`. It runs `.github/workflows/claude-review.yml`
 on the repository's `GITHUB_TOKEN` with `contents: read`, so it can read the code
 and CI results and comment, but cannot push. Comments from people without write
-access do not trigger it. A run is capped (15 turns, 20 minutes), so a large PR
+access do not trigger it. A run is capped (30 turns, 20 minutes), so a large PR
 may get a partial review. Its review is a second opinion; a maintainer still
 decides.
 
