@@ -84,10 +84,15 @@ do not match the code. That is the subject of ADR-023-A1.
 | ADR-054 | One verdict vocabulary; retire "initiate" — **accepted**, built in release Phase 6 | — |
 | ADR-055 | RAG and other rejected LLM techniques — **accepted** | — |
 | ADR-056 | Hosted read-only demo | public release, ADR-054 |
+| ADR-057 | External signals: verify before storing (added 2026-10-24) | — |
 
 ## 4. Suggested order
 
 Measure before changing, so every change has a before and an after.
+
+On 2026-10-24 the user put **ADR-057** (external-signals verification, zero
+tokens, no dependency) first, then ADR-048, the ADR-047 baseline and ADR-045+046.
+Where ADR-044 falls in that order is not yet decided.
 
 1. **ADR-044:** data contracts, then the backfill. Wrong data makes every later number wrong.
 2. **ADR-048:** the `llm_calls` table, so cost and latency are recorded from the first eval run.
