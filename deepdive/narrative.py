@@ -741,10 +741,14 @@ def persist_narrative(narrative: NarrativeOutput) -> bool:
         run = s.execute(
             select(DeepDiveRun)
             .where(DeepDiveRun.company_id == co.id)
-            .order_by(desc(DeepDiveRun.run_date))
+            .order_by(desc(DeepDiveRun.id))  # the row generate_narrative's stale check read
         ).scalars().first()
         if run is None:
             return False
+        if run.stale_reason:  # flagged while the provider call ran (DEC-46)
+            raise NarrativeOnStaleDiveError(
+                f"{narrative.ticker}: latest dive is stale ({run.stale_reason}); not stored"
+            )
         run.bull_narrative = bull_json
         run.bear_narrative = bear_json
         run.risk_factors = risk_json

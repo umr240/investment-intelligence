@@ -1,16 +1,18 @@
 """Deep-dive provenance and staleness (DEC-46).
 
-A dive records the newest parser version that wrote its ticker's fundamentals
-and the 10-K it read. When a later refresh re-reads those filings with a newer
-parser, the dive's inputs are superseded: it is flagged stale, never deleted,
-and its narrative is withheld until the dive is re-run.
+A dive records the oldest parser version among its ticker's logged filings and
+the latest 10-K in that log. When a later refresh re-reads those filings, the
+dive's inputs are superseded: it is flagged stale, never deleted, and its
+narrative is withheld until the dive is re-run. Flagging does not compare the
+old and new values, and the reason says so.
 """
 
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import ColumnElement, Select, func, select
 from sqlalchemy.orm import Session
 
 from data.db import get_session
@@ -18,9 +20,9 @@ from data.models.schema import Company, DeepDiveRun, FinancialSourceLog
 
 
 def fundamentals_parser_version(session: Session, ticker: str) -> int | None:
-    """Newest parser version among the ticker's logged filings; None if none is versioned."""
+    """Oldest parser version among the ticker's logged filings (unversioned = 0); None if none."""
     v = session.execute(
-        select(func.max(FinancialSourceLog.parser_version)).where(
+        select(func.min(func.coalesce(FinancialSourceLog.parser_version, 0))).where(
             FinancialSourceLog.ticker == ticker
         )
     ).scalar()
@@ -38,42 +40,61 @@ def latest_10k_accession(session: Session, ticker: str) -> str | None:
     return str(acc) if acc else None
 
 
-def flag_superseded_dives(ticker: str) -> int:
-    """Flag dives read by an older parser than the ticker's rows now carry; returns the count."""
+def _flag(session: Session, ticker: str, reason: str, *extra: ColumnElement[bool]) -> int:
+    company_id = session.execute(select(Company.id).where(Company.ticker == ticker)).scalar()
+    if company_id is None:
+        return 0
+    runs = (
+        session.execute(
+            select(DeepDiveRun).where(
+                DeepDiveRun.company_id == company_id, DeepDiveRun.stale_reason.is_(None), *extra
+            )
+        )
+        .scalars()
+        .all()
+    )
+    now = datetime.now()
+    for run in runs:
+        run.stale_reason = reason
+        run.stale_at = now
+    return len(runs)
+
+
+def flag_dives_after_reparse(ticker: str, parser_version: int) -> int:
+    """Flag every earlier dive of a ticker whose filings were just re-read; returns the count."""
+    reason = (
+        f"filings re-read by parser v{parser_version} on {datetime.now():%Y-%m-%d} "
+        "after this dive; values not compared"
+    )
     with get_session() as session:
-        current = fundamentals_parser_version(session, ticker)
+        return _flag(session, ticker, reason)
+
+
+def flag_dives_read_by_older_parser(ticker: str) -> int:
+    """Backfill: flag dives recorded below the newest parser in the ticker's log."""
+    with get_session() as session:
+        current = session.execute(
+            select(func.max(FinancialSourceLog.parser_version)).where(
+                FinancialSourceLog.ticker == ticker
+            )
+        ).scalar()
         if current is None:
             return 0
-        company_id = session.execute(select(Company.id).where(Company.ticker == ticker)).scalar()
-        if company_id is None:
-            return 0
-        runs = (
-            session.execute(
-                select(DeepDiveRun).where(
-                    DeepDiveRun.company_id == company_id,
-                    DeepDiveRun.stale_reason.is_(None),
-                    func.coalesce(DeepDiveRun.parser_version, 0) < current,  # NULL = unversioned
-                )
-            )
-            .scalars()
-            .all()
+        reason = f"stored before filings were re-read by parser v{current}; values not compared"
+        return _flag(
+            session, ticker, reason, func.coalesce(DeepDiveRun.parser_version, 0) < current
         )
-        now = datetime.now()
-        for run in runs:
-            was = "unversioned" if run.parser_version is None else f"v{run.parser_version}"
-            run.stale_reason = f"fundamentals re-read by parser v{current} (dive read {was})"
-            run.stale_at = now
-        return len(runs)
 
 
-def latest_dive_stale_reason(ticker: str) -> str | None:
-    """Stale reason of the ticker's most recent dive; None if it is current or absent."""
+def latest_dive_stale_reason(ticker: str, mode: str | None = None) -> str | None:
+    """Stale reason of the ticker's most recent dive (of `mode`, if given); None if current."""
     with get_session() as session:
-        reason = session.execute(
+        q: Select[Any] = (
             select(DeepDiveRun.stale_reason)
             .join(Company, Company.id == DeepDiveRun.company_id)
             .where(Company.ticker == ticker.upper())
-            .order_by(DeepDiveRun.id.desc())
-            .limit(1)
-        ).scalar()
+        )
+        if mode is not None:
+            q = q.where(DeepDiveRun.mode == mode)
+        reason = session.execute(q.order_by(DeepDiveRun.id.desc()).limit(1)).scalar()
         return str(reason) if reason else None

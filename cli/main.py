@@ -981,8 +981,11 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         ))
 
     # Persist (best-effort — silent if no DeepDiveRun row).
-    if persist_narrative(narrative):
-        rprint("[dim](narrative persisted to deepdive_runs)[/dim]")
+    try:
+        if persist_narrative(narrative):
+            rprint("[dim](narrative persisted to deepdive_runs)[/dim]")
+    except NarrativeOnStaleDiveError as e:
+        rprint(f"[yellow]Narrative not stored:[/yellow] {e}")
 
 
 # ── Chat (Phase 5L — conversational dive) ────────────────────────────────

@@ -211,7 +211,7 @@ async def scorecard(ticker: str, mode: str | None = None) -> dict[str, Any]:
     view = load_scorecard_view(ticker.upper(), mode=mode)
     if view is None:
         raise HTTPException(404, f"No scorecard for {ticker.upper()}. POST /dive/{ticker.upper()} first.")
-    return {**view.to_dict(), "stale_reason": latest_dive_stale_reason(ticker)}  # DEC-46
+    return {**view.to_dict(), "stale_reason": latest_dive_stale_reason(ticker, mode)}  # DEC-46
 
 
 # ── Narrative + Chat ─────────────────────────────────────────────────────
@@ -308,7 +308,10 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
         raise HTTPException(409, f"{exc}. Re-run the dive, then generate.") from exc
     except NarrativeUnavailableError as exc:
         raise HTTPException(503, str(exc)) from exc
-    persist_narrative(narrative)
+    try:
+        persist_narrative(narrative)
+    except NarrativeOnStaleDiveError as exc:
+        raise HTTPException(409, f"{exc}. Re-run the dive, then generate.") from exc
 
     body = narrative.body
     return {

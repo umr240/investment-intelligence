@@ -34,6 +34,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    """Loses every stale flag, so withheld narratives become servable again. Back up first."""
     with op.batch_alter_table("deepdive_runs") as batch:
         for col in reversed(_COLUMNS):
             batch.drop_column(col.name)

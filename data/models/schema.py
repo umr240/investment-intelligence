@@ -739,9 +739,9 @@ class DeepDiveRun(Base):
     # Data quality log
     data_gaps_json = Column(Text)              # JSON array of gap strings
     # SEC EDGAR reference
-    edgar_10k_accession = Column(Text)         # accession number of 10-K used as primary source
+    edgar_10k_accession = Column(Text)         # latest 10-K in the filing log at dive time
     # DEC-46: what the dive read, and whether that has since been superseded.
-    # parser_version: newest parser that wrote the ticker's rows (NULL = unversioned).
+    # parser_version: oldest parser among the ticker's logged filings (0 = unversioned).
     # stale_reason: set once those inputs are superseded; stale dives are never deleted.
     parser_version = Column(Integer)
     scorecard_view_json = Column(Text)  # ScorecardView.to_llm_context() at dive time
