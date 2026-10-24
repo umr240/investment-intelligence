@@ -84,6 +84,15 @@ cd frontend && npm run dev
 uv run pytest -m browser -q           # needs: uv sync --group browser
 ```
 
+Once a pull request is open, anyone with write access can ask for an automated
+review by mentioning `@claude` in a comment or review, for example
+`@claude please review this PR`. It runs `.github/workflows/claude-review.yml`
+on the repository's `GITHUB_TOKEN` with `contents: read`, so it can read the code
+and CI results and comment, but cannot push. Comments from people without write
+access do not trigger it. A run is capped (15 turns, 20 minutes), so a large PR
+may get a partial review. Its review is a second opinion; a maintainer still
+decides.
+
 ## Adding a framework signal
 
 Signals must be traceable to a published source. Each framework composes named,

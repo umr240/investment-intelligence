@@ -37,15 +37,17 @@ jobs:
       )
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Review only: Claude can read code and CI results and comment, not push.
+    # Review only, enforced: the action runs on GITHUB_TOKEN (passed below), so
+    # these permissions bind it. Without github_token it would swap in the
+    # Claude GitHub App's token, which can write code.
     permissions:
       contents: read
       pull-requests: write
       issues: write
       actions: read
-      id-token: write  # GitHub App token exchange
     steps:
-      # Base ref only (no `ref:`), as the action's security guide advises.
+      # Base ref at the workspace root, as the action's security guide advises;
+      # the action then checks out the PR head itself to review it.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           fetch-depth: 1
@@ -53,5 +55,6 @@ jobs:
       - uses: anthropics/claude-code-action@ae68417a745a5df4b2124873632bd73a2255e6f6  # v1.0.259
         with:
           anthropic_api_key: ${{ secrets.CLAUDE_REVIEW_ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # comments post as github-actions[bot]
           claude_args: |
             --max-turns 15
