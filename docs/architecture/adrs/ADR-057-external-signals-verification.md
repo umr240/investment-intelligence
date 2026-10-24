@@ -2,7 +2,7 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **ACCEPTED 2026-10-24.** Not yet implemented. |
 | **Phase** | Supplementary data (external signals) |
 | **Extends** | ADR-031 §4 (the external-signals channel), ADR-031-A1 (call-site allow-list) |
 | **Resolves** | Unverified LLM quotes and values stored as `high` confidence; broken provenance on the DEF 14A path |
