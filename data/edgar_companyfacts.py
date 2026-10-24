@@ -633,6 +633,8 @@ def parse_companyfacts(
         return []
 
     by_filing: dict[tuple[str, int, str], _FilingFacts] = {}
+    # Every concept, unit and form, before the accession/form filters: a
+    # re-parse that skips logged filings must still see their period ends.
     period_ends = _duration_end_dates(us_gaap)
 
     def _ingest(concept_name: str, field_name: str, unit_key: str) -> None:
@@ -1223,7 +1225,10 @@ def _derive_fiscal_period(
 
     # An instant away from a month end counts only on a date some reported
     # period ends: adoption (ASC 842 at 2019-01-01) and acquisition-date
-    # balances (KFS 2019-03-01) are not period-end balance sheets.
+    # balances (KFS 2019-03-01) are not period-end balance sheets. Known cost:
+    # a new 52/53-week filer's prior year-end balance (in 10-Qs, before its
+    # first 10-K) and MRVL's 2019-02-02 equity under its post-2021 CIK have no
+    # matching period, so they are dropped.
     if (
         period_start is None
         and period_ends is not None

@@ -218,3 +218,22 @@ def test_acquisition_date_instant_does_not_replace_the_quarter_end() -> None:
         for r in parse_companyfacts("KFS", payload, fiscal_year_end_month=12)
     }
     assert rows[(2019, "Q1")].total_assets == 4.05e8
+
+
+def test_the_period_end_gate_decides_for_instants_before_the_24th() -> None:
+    lulu_ye = date(2025, 2, 2)
+    assert _derive_fiscal_period(lulu_ye, None, 1, frozenset({lulu_ye})) == (2025, "annual")
+    assert _derive_fiscal_period(lulu_ye, None, 1, frozenset()) is None
+    # A month-end instant does not need a matching period (HIMS 2018-12-31 stubs).
+    assert _derive_fiscal_period(date(2018, 12, 31), None, 12, frozenset()) == (2018, "annual")
+
+
+def test_a_52_53_week_instant_with_no_matching_period_is_dropped() -> None:
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "Assets": {"units": {"USD": [_instant(7.6e9, "2025-02-02", "a-25", "2025-03-27")]}}
+            }
+        }
+    }
+    assert parse_companyfacts("LULU", payload, fiscal_year_end_month=1) == []
