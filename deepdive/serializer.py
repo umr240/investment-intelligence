@@ -31,6 +31,8 @@ def export_deepdive_markdown(run: DeepDiveRun, company_name: str = "") -> str:
         f"**Score:** {score_str} / 10  |  **Verdict:** {verdict.upper()}",
         "",
     ]
+    if run.stale_reason:
+        lines += [f"> **Stale:** {run.stale_reason}. Re-run the dive before relying on it.", ""]
 
     # EDGAR source
     if run.edgar_10k_accession:
@@ -111,15 +113,18 @@ def export_deepdive_markdown(run: DeepDiveRun, company_name: str = "") -> str:
     # per `deepdive/narrative_output.py:NarrativeBody`. Render the structure
     # rather than dumping raw JSON — caller can still inspect raw via the
     # DB columns directly.
-    if run.bull_narrative:
-        lines += ["", "## Bull Case"]
-        lines += _render_case_points(run.bull_narrative)
-    if run.bear_narrative:
-        lines += ["", "## Bear Case"]
-        lines += _render_case_points(run.bear_narrative)
-    if run.risk_factors:
-        lines += ["", "## Thesis-Validation Checkpoints"]
-        lines += _render_risk_section(run.risk_factors)
+    if run.stale_reason and (run.bull_narrative or run.bear_narrative or run.risk_factors):
+        lines += ["", "## Narrative", "Withheld: it was built on inputs since superseded (DEC-46)."]
+    else:
+        if run.bull_narrative:
+            lines += ["", "## Bull Case"]
+            lines += _render_case_points(run.bull_narrative)
+        if run.bear_narrative:
+            lines += ["", "## Bear Case"]
+            lines += _render_case_points(run.bear_narrative)
+        if run.risk_factors:
+            lines += ["", "## Thesis-Validation Checkpoints"]
+            lines += _render_risk_section(run.risk_factors)
 
     # Data gaps
     gaps: list = []

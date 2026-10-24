@@ -202,6 +202,8 @@ async def refresh_ticker(
     if edgar_result.financials:
         _persist_financials(ticker, edgar_result.financials)
         _persist_source_log(ticker, edgar_result.financials, reparsed=edgar_result.reparsed)
+        if edgar_result.reparsed:
+            gaps.extend(_flag_dives_after_reparse(ticker))
         # ADR-039: persist non-SEC provenance (data_source_tier, reporting
         # currency, FX) so the dive methodology panel + data_completeness
         # reflect Tier-3 sourcing. SEC rows keep the 'sec_edgar' default.
@@ -987,6 +989,17 @@ def _effective_tax_rate(net_income: float | None, tax: float | None) -> float:
     if etr < _ETR_CLAMP_LO or etr > _ETR_CLAMP_HI:
         return _STATUTORY_TAX_RATE
     return etr
+
+
+def _flag_dives_after_reparse(ticker: str) -> list[str]:
+    """DEC-46: a re-read supersedes every earlier dive of the ticker; returns the gap to report."""
+    from data.dive_staleness import flag_dives_after_reparse
+    from data.edgar_companyfacts import PARSER_VERSION
+
+    flagged = flag_dives_after_reparse(ticker, PARSER_VERSION)
+    if not flagged:
+        return []
+    return [f"{ticker}: {flagged} earlier deep dive(s) flagged stale (filings re-read); re-run"]
 
 
 def _persist_source_log(ticker: str, rows: list[Any], *, reparsed: bool = False) -> None:

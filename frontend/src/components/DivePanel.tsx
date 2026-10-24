@@ -125,6 +125,11 @@ export default function DivePanel({ initialTicker }: { initialTicker?: string })
               {view.company.sector} / {view.company.industry} · Cap ${((view.company.market_cap_usd || 0) / 1e9).toFixed(2)}B ·
               {" "}Stage: {view.stage.stage} · Run date: {view.run_date}
             </p>
+            {view.stale_reason && (
+              <div className="error-box" data-testid="dive-stale">
+                Stale dive: {view.stale_reason}. Re-run the dive before relying on these scores.
+              </div>
+            )}
             <p>
               Composite: <strong>{view.composite.score.toFixed(2)}/10</strong>{" "}
               <Badge label={view.composite.verdict} />{" "}
