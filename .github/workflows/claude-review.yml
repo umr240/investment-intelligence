@@ -57,4 +57,4 @@ jobs:
           anthropic_api_key: ${{ secrets.CLAUDE_REVIEW_ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}  # comments post as github-actions[bot]
           claude_args: |
-            --max-turns 15
+            --max-turns 30  # a lockfile review took 23 (#21); over the cap fails the job
