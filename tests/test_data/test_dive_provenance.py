@@ -84,27 +84,32 @@ def _runs(factory: sessionmaker[Session]) -> list[DeepDiveRun]:
         return list(s.execute(select(DeepDiveRun).order_by(DeepDiveRun.id)).scalars())
 
 
-def test_a_reparse_flags_every_earlier_dive_without_deleting(db: sessionmaker[Session]) -> None:
+def test_a_reparse_flags_dives_that_read_older_data_without_deleting(
+    db: sessionmaker[Session],
+) -> None:
     _seed(db, log_versions=[4, 4], dive_versions=[None, 3, 4])
-    assert staleness.flag_dives_after_reparse("LULU", 4) == 3
+    assert staleness.flag_dives_after_reparse("LULU", 4) == 2
     runs = _runs(db)
     assert len(runs) == 3
-    assert all("re-read by parser v4" in (r.stale_reason or "") for r in runs)
-    assert all("values not compared" in (r.stale_reason or "") for r in runs)
-    assert all(isinstance(r.stale_at, datetime) for r in runs)
+    for r in runs[:2]:
+        assert "re-read by parser v4" in (r.stale_reason or "")
+        assert "values not compared" in (r.stale_reason or "")
+        assert isinstance(r.stale_at, datetime)
+    assert runs[2].stale_reason is None  # read v4 data: a forced v4 re-read changes nothing
     assert runs[0].bull_narrative == "[]"
     assert staleness.flag_dives_after_reparse("LULU", 4) == 0  # already flagged: untouched
 
 
-def test_backfill_flags_dives_recorded_below_the_newest_parser(db: sessionmaker[Session]) -> None:
+def test_backfill_flags_only_dives_stored_before_dec_46(db: sessionmaker[Session]) -> None:
+    # Review of #25 (B): a dive stored later records a version and is the hook's to flag.
     _seed(db, log_versions=[None, 3, 3], dive_versions=[None, 2, 3])
-    assert staleness.flag_dives_read_by_older_parser("LULU") == 2
+    assert staleness.flag_dives_read_by_older_parser("LULU") == 1
     runs = _runs(db)
     assert (
         runs[0].stale_reason
         == "stored before filings were re-read by parser v3; values not compared"
     )
-    assert runs[1].stale_reason is not None
+    assert runs[1].stale_reason is None
     assert runs[2].stale_reason is None
     assert staleness.flag_dives_read_by_older_parser("LULU") == 0
 

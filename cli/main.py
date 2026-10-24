@@ -2578,7 +2578,7 @@ def export_deepdive(
         query = session.query(DeepDiveRun).filter_by(ticker=ticker.upper())
         if run_id is not None:
             query = query.filter_by(id=run_id)
-        run = query.order_by(DeepDiveRun.run_date.desc()).first()
+        run = query.order_by(DeepDiveRun.id.desc()).first()  # as the narrative gate does
 
         if not run:
             rprint(f"[red]No deep-dive run found for {ticker.upper()}.[/red]")

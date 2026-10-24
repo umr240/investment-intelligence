@@ -1,9 +1,9 @@
 """Flag deep dives stored before their filings were re-read by a newer parser (DEC-46).
 
 A refresh flags them itself once this code is in place; this script covers
-dives stored before it, by comparing each dive's recorded parser version with
-the newest in the ticker's filing log. Safe to re-run: already-flagged dives
-are skipped. It writes only `deepdive_runs.stale_reason` / `stale_at`, and
+only dives stored before it (no recorded parser version), once the ticker's
+filing log carries a version. Safe to re-run: already-flagged dives and dives
+stored since are skipped. It writes only `deepdive_runs.stale_reason` / `stale_at`, and
 deletes nothing.
 
     uv run python scripts/flag_stale_dives.py            # every ticker with a dive

@@ -61,17 +61,22 @@ def _flag(session: Session, ticker: str, reason: str, *extra: ColumnElement[bool
 
 
 def flag_dives_after_reparse(ticker: str, parser_version: int) -> int:
-    """Flag every earlier dive of a ticker whose filings were just re-read; returns the count."""
+    """Flag the ticker's dives that read data older than `parser_version`; returns the count.
+
+    A forced re-read by the same parser flags nothing: DEC-46 covers a parser fix.
+    """
     reason = (
         f"filings re-read by parser v{parser_version} on {datetime.now():%Y-%m-%d} "
         "after this dive; values not compared"
     )
     with get_session() as session:
-        return _flag(session, ticker, reason)
+        return _flag(
+            session, ticker, reason, func.coalesce(DeepDiveRun.parser_version, 0) < parser_version
+        )
 
 
 def flag_dives_read_by_older_parser(ticker: str) -> int:
-    """Backfill: flag dives recorded below the newest parser in the ticker's log."""
+    """Backfill for dives stored before DEC-46 (no recorded version); later ones are the hook's."""
     with get_session() as session:
         current = session.execute(
             select(func.max(FinancialSourceLog.parser_version)).where(
@@ -81,9 +86,7 @@ def flag_dives_read_by_older_parser(ticker: str) -> int:
         if current is None:
             return 0
         reason = f"stored before filings were re-read by parser v{current}; values not compared"
-        return _flag(
-            session, ticker, reason, func.coalesce(DeepDiveRun.parser_version, 0) < current
-        )
+        return _flag(session, ticker, reason, DeepDiveRun.parser_version.is_(None))
 
 
 def latest_dive_stale_reason(ticker: str, mode: str | None = None) -> str | None:
