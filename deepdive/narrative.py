@@ -60,6 +60,10 @@ class NarrativeUnavailableError(RuntimeError):
     """Raised when both providers fail (or are unconfigured)."""
 
 
+class NarrativeOnStaleDiveError(NarrativeUnavailableError):
+    """The latest dive's inputs were superseded (DEC-46); re-run the dive first."""
+
+
 def generate_narrative(
     view: ScorecardView,
     *,
@@ -70,6 +74,12 @@ def generate_narrative(
     `provider_pref` overrides settings.narrative_provider for a single call:
       "openai" | "anthropic" | "openai_only" | "anthropic_only"
     """
+    from data.dive_staleness import latest_dive_stale_reason
+
+    stale = latest_dive_stale_reason(view.ticker)
+    if stale:
+        raise NarrativeOnStaleDiveError(f"{view.ticker}: latest dive is stale ({stale})")
+
     pref = (provider_pref or settings.narrative_provider or "openai").lower()
     order = _provider_order(pref)
     if not order:

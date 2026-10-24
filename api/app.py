@@ -265,6 +265,8 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
         ).scalar_one_or_none()
         if run is None:
             raise HTTPException(404, f"No dive runs for {ticker}. POST /dive/{ticker} first.")
+        if run.stale_reason:  # DEC-46: a narrative on superseded inputs is withheld
+            return {"generated": False, "stale": True, "stale_reason": run.stale_reason}
         if not run.bull_narrative:
             return {"generated": False}
         risk_data = _json.loads(run.risk_factors)
@@ -286,7 +288,12 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
     Generates via deepdive/narrative.py's permitted call site, persists
     onto the latest DeepDiveRun via persist_narrative (same as `invest
     score-card --narrate`), and returns the fresh body."""
-    from deepdive.narrative import NarrativeUnavailableError, generate_narrative, persist_narrative
+    from deepdive.narrative import (
+        NarrativeOnStaleDiveError,
+        NarrativeUnavailableError,
+        generate_narrative,
+        persist_narrative,
+    )
     from deepdive.scorecard_view import load_scorecard_view
 
     ticker = ticker.upper()
@@ -296,6 +303,8 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
 
     try:
         narrative = generate_narrative(view, provider_pref=provider)
+    except NarrativeOnStaleDiveError as exc:
+        raise HTTPException(409, f"{exc}. Re-run the dive, then generate.") from exc
     except NarrativeUnavailableError as exc:
         raise HTTPException(503, str(exc)) from exc
     persist_narrative(narrative)

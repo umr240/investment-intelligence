@@ -574,6 +574,7 @@ async def run_tier1(
             auto_overlay_results=auto_overlay_results,
             pt_result=pt_result,
         )
+        _record_scorecard_view(ticker.upper(), mode or "default")
     except Exception as exc:    # noqa: BLE001
         import logging
         logging.getLogger(__name__).warning("dive persistence failed (%s): %s", ticker, exc)
@@ -655,6 +656,30 @@ def _alt_f5_score(
     return alt_score
 
 
+def _record_scorecard_view(ticker: str, mode: str) -> None:
+    """DEC-46: freeze the ScorecardView this dive produced onto its row, with its hash."""
+    import hashlib
+
+    from sqlalchemy import desc, select
+
+    from data.db import get_session
+    from data.models.schema import Company, DeepDiveRun
+    from deepdive.scorecard_view import load_scorecard_view
+
+    view = load_scorecard_view(ticker, mode=mode)
+    if view is None:
+        return
+    body = view.to_llm_context()
+    with get_session() as session:
+        run = session.execute(
+            select(DeepDiveRun).join(Company, Company.id == DeepDiveRun.company_id)
+            .where(Company.ticker == ticker).order_by(desc(DeepDiveRun.id)).limit(1)
+        ).scalar_one_or_none()
+        if run is not None:
+            run.scorecard_view_json = body
+            run.scorecard_view_sha256 = hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
 def _persist_dive_results(
     *, ticker: str, mode: str, tier: int,
     results: dict, unfeasible: dict, fetch_gaps: list[str],
@@ -677,6 +702,7 @@ def _persist_dive_results(
     from datetime import date as _date
 
     from data.db import get_session
+    from data.dive_staleness import fundamentals_parser_version, latest_10k_accession
     from data.models.schema import Company, DeepDiveRun, FrameworkScore
     from data.reader import CompanyDataReader
     from frameworks.composite import classify_company_stage, compute_composite_score
@@ -910,6 +936,8 @@ def _persist_dive_results(
             data_gaps_json=data_gaps_json,
             overlays_triggered_json=overlays_triggered_json,
             overlays_results_json=overlays_results_json,
+            parser_version=fundamentals_parser_version(session, ticker),
+            edgar_10k_accession=latest_10k_accession(session, ticker),
         )
         session.add(run)
 

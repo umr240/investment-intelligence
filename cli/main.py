@@ -872,6 +872,7 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
     warnings (hallucination flags) are surfaced loudly — the user sees them.
     """
     from deepdive.narrative import (
+        NarrativeOnStaleDiveError,
         NarrativeUnavailableError,
         generate_narrative,
         persist_narrative,
@@ -882,6 +883,10 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
 
     try:
         narrative = generate_narrative(view, provider_pref=provider_pref)  # type: ignore[arg-type]
+    except NarrativeOnStaleDiveError as e:
+        rprint(f"[yellow]Narrative withheld:[/yellow] {e}")
+        rprint(f"[dim]Re-run `invest dive {view.ticker}`, then --narrate.[/dim]")
+        return
     except NarrativeUnavailableError as e:
         rprint(f"[red]Narrative unavailable:[/red] {e}")
         rprint(
