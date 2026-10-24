@@ -2,9 +2,9 @@
 
 LULU's years end between Jan 28 and Feb 2, COST's between Aug 28 and Sep 3.
 Reading the raw calendar month dropped balance-sheet values (LULU total assets
-missing for 7 of 14 years) and gave two different years one label (COST FY2017
-and FY2018 both held the year ending 2017-09-03). Dates from the author DB,
-2026-10-24.
+missing in 6 of 10 stored years, 7 of 14 on a full re-parse) and gave two
+different years one label (COST FY2017 and FY2018 both held the year ending
+2017-09-03). Dates from the author DB, 2026-10-24.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ import pytest
 
 from data.edgar_companyfacts import (
     _derive_fiscal_period,
-    _fye_month_from_submissions,
+    fye_month_from_submissions,
     parse_companyfacts,
 )
 
@@ -65,13 +65,19 @@ def test_period_derivation(
         ("0831", 8),
         ("1003", 9),
         ("0630", 6),
+        ("0107", 12),
+        ("0108", 1),
+        ("0207", 1),
+        ("0208", 2),
+        ("1200", None),
+        ("1232", None),
         ("1302", None),
         ("", None),
         (None, None),
     ],
 )
 def test_fye_month_from_submissions(raw: str | None, month: int | None) -> None:
-    assert _fye_month_from_submissions(raw) == month
+    assert fye_month_from_submissions(raw) == month
 
 
 def _instant(val: float, end: str, accn: str, filed: str) -> dict[str, Any]:
@@ -159,3 +165,56 @@ def test_continuing_operations_cash_flow_is_a_fallback() -> None:
         if r.period == "annual"
     ]
     assert rows[0].operating_cash_flow == 3.3e9
+
+
+def test_adoption_date_instant_is_not_a_prior_year_end() -> None:
+    # ASC 842 balance "as of January 1, 2019" in a calendar filer's FY2019 10-K.
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "Revenues": {
+                    "units": {
+                        "USD": [_flow(1.0e9, "2018-01-01", "2018-12-31", "k-18", "2019-02-20")]
+                    }
+                },
+                "OperatingLeaseLiabilityNoncurrent": {
+                    "units": {"USD": [_instant(4.0e8, "2019-01-01", "k-19", "2020-02-20")]}
+                },
+            }
+        }
+    }
+    rows = [
+        r
+        for r in parse_companyfacts("X", payload, fiscal_year_end_month=12)
+        if r.period == "annual"
+    ]
+    assert [r.fiscal_year for r in rows] == [2018]
+    assert rows[0].total_debt is None
+
+
+def test_acquisition_date_instant_does_not_replace_the_quarter_end() -> None:
+    # KFS: a 10-K filed in 2021 carries an acquired business's 2019-03-01 balance.
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "Revenues": {
+                    "units": {
+                        "USD": [_flow(1.3e7, "2019-01-01", "2019-03-31", "q-19", "2020-04-09")]
+                    }
+                },
+                "Assets": {
+                    "units": {
+                        "USD": [
+                            _instant(4.05e8, "2019-03-31", "q-19", "2020-04-09"),
+                            _instant(2.2e7, "2019-03-01", "k-20", "2021-03-29"),
+                        ]
+                    }
+                },
+            }
+        }
+    }
+    rows = {
+        (r.fiscal_year, r.period): r
+        for r in parse_companyfacts("KFS", payload, fiscal_year_end_month=12)
+    }
+    assert rows[(2019, "Q1")].total_assets == 4.05e8

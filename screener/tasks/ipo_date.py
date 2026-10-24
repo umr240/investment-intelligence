@@ -25,6 +25,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from config.settings import settings
+from data.edgar_companyfacts import fye_month_from_submissions
 from data.models.schema import Company
 from data.rate_limit import TokenBucket
 from screener.tasks.base import FilterResult, RateLimitError
@@ -129,16 +130,7 @@ class IPODateTask:
             # the schema default of 12 even for off-calendar filers like
             # MSFT (June), AAPL (September), NVDA (January).
             sic_description = payload.get("sicDescription")
-            fye_raw = payload.get("fiscalYearEnd")
-            fye_month: int | None = None
-            if (
-                isinstance(fye_raw, str)
-                and len(fye_raw) == 4
-                and fye_raw.isdigit()
-            ):
-                m = int(fye_raw[:2])
-                if 1 <= m <= 12:
-                    fye_month = m
+            fye_month = fye_month_from_submissions(payload.get("fiscalYearEnd"))
             results.append(FilterResult(
                 cik=c.cik,
                 values={
