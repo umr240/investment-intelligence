@@ -108,6 +108,8 @@ that point, which the model never saw, fails.
    number times a scale of 1, 10³, 10⁶ or 10⁹, **exactly**, in `Decimal`: a
    value with more precision than the quote fails (119.4 and 119.5 both fail
    against `119`), while `$559.9 million` still gives 559,900,000.
+   A signal is a percentage when its unit is `pct` (`_EXTRACTION_TARGETS`;
+   `unit_map` at `:391-395`), and the percentage bullet below is checked first.
    - Scale 1, or a scale the quote states ("million", "$559.9M"): `verified`.
    - A scale stated only by the document ("in millions", "in thousands"
      anywhere in the source): `verified_table_scale`.
@@ -133,6 +135,7 @@ The verifier gives each outcome a ceiling:
 | `verified_table_scale` | kept | `medium` |
 | `scale_unconfirmed`, or `multiple_candidates` on any match | kept | `low` |
 | `quote_not_in_source`, `value_not_in_quote` | **dropped** (`None`) | `not_disclosed` |
+| no value returned (`value_numeric` is `None`) | — | `not_disclosed`, whatever band the model gave |
 
 Stored `extraction_confidence` = the lower of the model's band and the ceiling.
 The verifier checks that the number is in the quote; it cannot check that the
@@ -159,7 +162,7 @@ any signal whose `verification` is unset, so a hand-built result cannot reach
 the table. A test proves the refusal. The DEF 14A extractor takes the filing
 date and sets it as `as_of_date`, refusing to run without it (like the URL,
 before the call), so a later proxy writes a new row instead of overwriting the
-last one. The `/external-signals` postconditions
+last one. A re-run of the same filing follows the rule in §4. The `/external-signals` postconditions
 (`cli/skills/external_signals.py:217-236`) report verification counts instead of
 the 30-character length rule.
 
@@ -275,9 +278,16 @@ allow-list.
   honest. A rejected value stays visible as a `not_disclosed` row in
   `external_signals` with its quote, original value and reason, and can be
   re-checked; a wrong one stored as `high` is not noticed.
-- **A re-run of the same filing.** It replaces that filing's row. That is
-  safe because the verifier is deterministic over the same source; a different
-  filing gets its own row (§2.4).
+- **A re-run of the same filing.** The verifier is deterministic, but the
+  model's reply is not: a second run can return a sum where the first returned
+  the right cell. So a result whose value is dropped, or that has no value,
+  never replaces a row for the same filing whose value was kept; it is
+  reported instead. Otherwise the latest run wins, with the replaced row's
+  value and band copied to `model_value_numeric` / `model_confidence` first.
+  On the DEF 14A path a different filing gets its own row (§2.4).
+- **Exclusions in the number grammar.** A bare year-shaped table value
+  (`MRR 2025 1800`) or a negative printed as `(12)` is not parsed, so the row
+  is rejected. That errs toward a missing value, never a wrong one.
 - **Scale confusion.** "in thousands" for one table and "in millions" for
   another in the same filing would let `verified_table_scale` accept the wrong
   power. That is why it caps at `medium`.
@@ -301,6 +311,11 @@ allow-list.
 
 ## 6. Out of scope
 
+- The 8-K path's `as_of_date`, which is the skill's `period_end` argument and
+  defaults to a calendar-quarter guess from today
+  (`cli/skills/external_signals.py:124-136`), not the filing's own period. Two
+  8-Ks can share a row, and one 8-K run in two quarters gets two. Keying it on
+  the filing is a separate change.
 - Forced `tool_choice` on newer models (ADR-045 handles the narrative path; this
   path keeps `claude-sonnet-4-6` until ADR-047 compares models).
 - Extraction recall and the hand-labelled set (later, with ADR-047).
