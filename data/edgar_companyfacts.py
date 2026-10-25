@@ -431,9 +431,11 @@ def fye_month_from_submissions(raw: str | None) -> int | None:
     return (month - 2) % 12 + 1 if day <= 7 else month
 
 
-def _duration_end_dates(us_gaap: dict[str, Any]) -> frozenset[date]:
-    """End dates of every reported period of 14+ days: the filer's real period ends."""
+def _duration_end_dates(us_gaap: dict[str, Any]) -> tuple[frozenset[date], date | None]:
+    """End dates of every reported period of 14+ days (the filer's real period
+    ends), and the latest end of a year-long one."""
     ends: set[date] = set()
+    latest_annual: date | None = None
     for concept in us_gaap.values():
         for entries in concept.get("units", {}).values():
             for e in entries:
@@ -442,7 +444,9 @@ def _duration_end_dates(us_gaap: dict[str, Any]) -> frozenset[date]:
                     d = _parse_iso(e.get("end"))
                     if d is not None:
                         ends.add(d)
-    return frozenset(ends)
+                        if 340 <= span <= 380 and (latest_annual is None or d > latest_annual):
+                            latest_annual = d
+    return frozenset(ends), latest_annual
 
 
 def _nominal_period_end(d: date) -> date:
@@ -635,7 +639,11 @@ def parse_companyfacts(
     by_filing: dict[tuple[str, int, str], _FilingFacts] = {}
     # Every concept, unit and form, before the accession/form filters: a
     # re-parse that skips logged filings must still see their period ends.
-    period_ends = _duration_end_dates(us_gaap)
+    period_ends, latest_annual = _duration_end_dates(us_gaap)
+    if latest_annual is not None:
+        # The filer's own latest year end beats a stored month, which the old
+        # raw-month parser wrote as 2 for LULU's "0202" (review of #24).
+        fiscal_year_end_month = _nominal_period_end(latest_annual).month
 
     def _ingest(concept_name: str, field_name: str, unit_key: str) -> None:
         concept = us_gaap.get(concept_name)

@@ -237,3 +237,35 @@ def test_a_52_53_week_instant_with_no_matching_period_is_dropped() -> None:
         }
     }
     assert parse_companyfacts("LULU", payload, fiscal_year_end_month=1) == []
+
+
+def test_the_filer_s_own_year_end_beats_a_stale_stored_month() -> None:
+    # Universe rows written before the fix hold LULU's raw month (2, from "0202").
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "Revenues": {
+                    "units": {
+                        "USD": [
+                            _flow(9.6e9, "2023-01-30", "2024-01-28", "a-24", "2024-03-21"),
+                            _flow(10.6e9, "2024-01-29", "2025-02-02", "a-25", "2025-03-27"),
+                        ]
+                    }
+                },
+                "Assets": {
+                    "units": {
+                        "USD": [
+                            _instant(7.1e9, "2024-01-28", "a-24", "2024-03-21"),
+                            _instant(7.6e9, "2025-02-02", "a-25", "2025-03-27"),
+                        ]
+                    }
+                },
+            }
+        }
+    }
+    rows = {
+        r.fiscal_year: r.total_assets
+        for r in parse_companyfacts("LULU", payload, fiscal_year_end_month=2)
+        if r.period == "annual"
+    }
+    assert rows == {2024: 7.1e9, 2025: 7.6e9}
