@@ -759,7 +759,7 @@ def _persist_financials(ticker: str, rows: list[Any]) -> list[str]:
     with get_session() as session:
         company = session.query(Company).filter_by(ticker=ticker).first()
         if not company:
-            return
+            return []
 
         # Build existing-key set with one query
         existing_keys: set[tuple[int, str]] = {
