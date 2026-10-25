@@ -2,11 +2,11 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **ACCEPTED 2026-10-24.** Not yet implemented. |
 | **Phase** | Supplementary data (external signals) |
 | **Extends** | ADR-031 §4 (the external-signals channel), ADR-031-A1 (call-site allow-list) |
 | **Resolves** | Unverified LLM quotes and values stored as `high` confidence; broken provenance on the DEF 14A path |
-| **Order** | First (the user's ordering of 2026-10-24, recorded in `AI_QUALITY_PROPOSALS.md` §4); ADR-044's place not yet decided |
+| **Order** | First, then ADR-048, ADR-044, the ADR-047 baseline, ADR-045+046 (the user's ordering of 2026-10-24: DEC-45, `AI_QUALITY_PROPOSALS.md` §4) |
 | **Provenance** | Code reading and a check of every stored quote against its SEC source, 2026-10-24 |
 
 ---

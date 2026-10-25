@@ -1,6 +1,6 @@
 # AI Quality and Data Integrity — Proposed ADRs
 
-**Audited:** 2026-10-21 · **Data:** author DB snapshot of 2026-10-19 · **Status:** ADR-023-A1, ADR-054 and ADR-055 accepted 2026-10-21; the rest PROPOSED
+**Audited:** 2026-10-21 · **Data:** author DB snapshot of 2026-10-19 · **Status:** ADR-023-A1, ADR-054 and ADR-055 accepted 2026-10-21; ADR-057 accepted 2026-10-24; the rest PROPOSED
 
 This file is the entry point for review. It records what the audit measured,
 which proposals it supports, and the order to take them in. Each decision
@@ -84,27 +84,32 @@ do not match the code. That is the subject of ADR-023-A1.
 | ADR-054 | One verdict vocabulary; retire "initiate" — **accepted**, built in release Phase 6 | — |
 | ADR-055 | RAG and other rejected LLM techniques — **accepted** | — |
 | ADR-056 | Hosted read-only demo | public release, ADR-054 |
-| ADR-057 | External signals: verify before storing (added 2026-10-24) | — |
+| ADR-057 | External signals: verify before storing — **accepted** 2026-10-24 | — |
 
 ## 4. Suggested order
 
 Measure before changing, so every change has a before and an after.
 
-On 2026-10-24 the user put **ADR-057** (external-signals verification, zero
-tokens, no dependency) first, then ADR-048, the ADR-047 baseline and ADR-045+046.
-Where ADR-044 falls in that order is not yet decided.
+On 2026-10-24 the user set the order: **ADR-057** (external-signals
+verification, accepted that day), ADR-048, **ADR-044**, the ADR-047 baseline,
+then ADR-045+046. ADR-044 goes before the baseline because a 52/53-week parser
+bug found that day had dropped balance-sheet values and mislabelled fiscal
+years (34 of 67 dived tickers had a year without total assets; measured on the
+author DB and recorded in #24), so a baseline on unchecked data would measure
+the data, not the narrative.
 
-1. **ADR-044:** data contracts, then the backfill. Wrong data makes every later number wrong.
+1. **ADR-057:** verify external signals before storing them. Zero tokens, no dependency.
 2. **ADR-048:** the `llm_calls` table, so cost and latency are recorded from the first eval run.
-3. **ADR-047 (baseline):** run the golden set on today's narrative code. Expected to fail; that is the "before".
-4. **ADR-023-A1 and ADR-054:** settle the contract and the verdict labels.
-5. **ADR-045, then ADR-046:** grounded generation and the lint.
-6. **ADR-047 (re-run):** the "after".
-7. **ADR-049:** choose the model and cut cost, gated on step 6.
-8. **ADR-050, ADR-051:** feedback loop and MCP surface.
-9. **ADR-052:** only if step 6 leaves a gap worth an experiment.
-10. **ADR-053:** after the price-data decision.
-11. **ADR-056:** after the public release.
+3. **ADR-044:** data contracts, then the backfill. Wrong data makes every later number wrong.
+4. **ADR-047 (baseline):** run the golden set on today's narrative code. Expected to fail; that is the "before".
+5. **ADR-023-A1 and ADR-054:** settle the contract and the verdict labels (both accepted; ADR-054 is built).
+6. **ADR-045, then ADR-046:** grounded generation and the lint.
+7. **ADR-047 (re-run):** the "after".
+8. **ADR-049:** choose the model and cut cost, gated on step 7.
+9. **ADR-050, ADR-051:** feedback loop and MCP surface.
+10. **ADR-052:** only if step 7 leaves a gap worth an experiment.
+11. **ADR-053:** after the price-data decision.
+12. **ADR-056:** after the public release.
 
 ADR-055 can be accepted at any time.
 

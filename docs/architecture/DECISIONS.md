@@ -690,3 +690,20 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Date**: 2026-10-21
 **Decision**: RAG over filings or the lattice, LightRAG/GraphRAG, a vector database, LLM extraction into the data path, fine-tuning, and trading agents are not adopted. Each has a stated reopen condition backed by a measurement.
 **See**: `ADR-055-rejected-llm-techniques.md`.
+
+---
+
+## DEC-45 — External signals verified in code before they are stored
+
+**Date**: 2026-10-24
+**Decision**: A deterministic verifier checks every `/external-signals` quote and value before persistence and sets a confidence ceiling that only lowers the model's band. Unverified signals cannot be persisted; source URLs and filing dates are checked before the paid call; the DEF 14A `0.5` placeholder is removed. ADR-057 is first in the AI-quality order, followed by ADR-048, ADR-044, the ADR-047 baseline and ADR-045+046.
+**See**: `ADR-057-external-signals-verification.md`, `AI_QUALITY_PROPOSALS.md` §4.
+
+---
+
+## DEC-46 — Deep dives record their inputs; dives on superseded data are flagged, not deleted
+
+**Date**: 2026-10-24
+**Decision**: Each new deep dive records the parser version of the fundamentals it read, the 10-K accession it used, and the ScorecardView it scored (the JSON or its hash). A dive whose inputs have since been superseded, for example by a parser fix that re-read its filings, is flagged stale; it is never deleted. Narratives built on a flagged dive are excluded from use until re-run.
+**Context**: The 52/53-week parser fix of 2026-10-24 (#24) re-read every dived ticker's filings and changed values and fiscal-year labels for some of them, and no stored dive recorded which data it was computed from: `SELECT COUNT(*) FROM deepdive_runs WHERE edgar_10k_accession IS NOT NULL` returned 0 of 217 on the author DB that day.
+**See**: #25 (implementation); `PARSER_VERSION` in `data/edgar_companyfacts.py`; `DeepDiveRun` in `data/models/schema.py`.
