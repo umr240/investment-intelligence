@@ -705,5 +705,5 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 
 **Date**: 2026-10-24
 **Decision**: Each new deep dive records the parser version of the fundamentals it read, the 10-K accession it used, and the ScorecardView it scored (the JSON or its hash). A dive whose inputs have since been superseded, for example by a parser fix that re-read its filings, is flagged stale; it is never deleted. Narratives built on a flagged dive are excluded from use until re-run.
-**Context**: The 52/53-week parser fix of 2026-10-24 (parser version 3) re-read every dived ticker's filings and changed values and fiscal-year labels for some of them, and no stored dive recorded which data it was computed from (`edgar_10k_accession` was empty in all 217).
-
+**Context**: The 52/53-week parser fix of 2026-10-24 (#24) re-read every dived ticker's filings and changed values and fiscal-year labels for some of them, and no stored dive recorded which data it was computed from: `SELECT COUNT(*) FROM deepdive_runs WHERE edgar_10k_accession IS NOT NULL` returned 0 of 217 on the author DB that day.
+**See**: #25 (implementation); `PARSER_VERSION` in `data/edgar_companyfacts.py`; `DeepDiveRun` in `data/models/schema.py`.
