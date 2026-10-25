@@ -673,7 +673,11 @@ def parse_companyfacts(
                 continue
             start_date = _parse_iso(entry_start) if entry_start else None
             derived = _derive_fiscal_period(
-                end_date, start_date, fiscal_year_end_month, period_ends, form in _ANNUAL_FORMS
+                end_date,
+                start_date,
+                fiscal_year_end_month,
+                period_ends,
+                annual_form=form in _ANNUAL_FORMS,
             )
             if derived is None:
                 # Entry's end isn't a fiscal-period boundary — skip.
@@ -1215,7 +1219,8 @@ def _derive_fiscal_period(
     period_start: date | None,
     fye_month: int,
     period_ends: frozenset[date] | None = None,
-    annual_form: bool = True,
+    *,
+    annual_form: bool,
 ) -> tuple[int, str] | None:
     """
     Derive (fiscal_year, period) from an entry's calendar window using the
