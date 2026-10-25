@@ -116,3 +116,15 @@ def test_a_gap_year_inside_the_read_is_stamped(db: sessionmaker[Session]) -> Non
     _log(db, "gap", None, 2024)
     pipeline._persist_source_log("X", [_row("a", 2023), _row("b", 2025)], reparsed=True)
     assert pipeline._stale_parse_count("X") == 0
+
+
+def test_only_raised_filings_count_as_upgraded(db: sessionmaker[Session]) -> None:
+    # DEC-46: a same-parser --force re-read must not flag dives. Logs older than
+    # the refresh window keep their old version, so only raises are counted.
+    _log(db, "old", PARSER_VERSION - 1, 2015)
+    _log(db, "cur", PARSER_VERSION, 2024)
+    assert pipeline._persist_source_log("X", [_row("cur", 2024)], reparsed=True) == 0
+    assert pipeline._persist_source_log("X", [_row("new", 2025)], reparsed=True) == 0
+    _log(db, "prev", PARSER_VERSION - 1, 2023)
+    assert pipeline._persist_source_log("X", [_row("cur", 2024)], reparsed=True) == 0
+    assert pipeline._persist_source_log("X", [_row("prev", 2023)], reparsed=True) == 1

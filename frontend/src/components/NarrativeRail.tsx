@@ -74,7 +74,14 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
       </div>
 
       <div style={{ padding: "4px 20px 8px", overflow: "auto", flex: 1 }}>
-        {!narrative?.generated && (
+        {narrative?.stale && (
+          <div style={{ padding: "16px 0" }} data-testid="narrative-stale">
+            <p>Narrative withheld: this dive's inputs were superseded ({narrative.stale_reason}).</p>
+            <p className="dim">Re-run the dive, then generate a narrative.</p>
+          </div>
+        )}
+
+        {!narrative?.generated && !narrative?.stale && (
           <div style={{ padding: "16px 0" }}>
             <p className="dim">No narrative generated yet for this dive.</p>
             <button onClick={handleGenerate} disabled={genLoading}>

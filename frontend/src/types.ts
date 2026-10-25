@@ -63,6 +63,7 @@ export interface OverlayTriggerView {
 export interface ScorecardView {
   ticker: string;
   run_date: string;
+  stale_reason?: string | null;
   mode_used: string;
   company: CompanyHeader;
   stage: StageView;
@@ -164,6 +165,8 @@ export interface NarrativeAudit {
 
 export interface Narrative {
   generated: boolean;
+  stale?: boolean;
+  stale_reason?: string;
   run_id?: number;
   one_liner?: string;
   bull?: BullBearPoint[];
