@@ -266,8 +266,11 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
         ).scalar_one_or_none()
         if run is None:
             raise HTTPException(404, f"No dive runs for {ticker}. POST /dive/{ticker} first.")
-        if run.stale_reason:  # DEC-46: a narrative on superseded inputs is withheld
-            return {"generated": False, "stale": True, "stale_reason": run.stale_reason}
+        from data.dive_staleness import dive_withheld_reason
+
+        withheld = dive_withheld_reason(run)  # DEC-46/47
+        if withheld:
+            return {"generated": False, "stale": True, "stale_reason": withheld}
         if not run.bull_narrative:
             return {"generated": False}
         risk_data = _json.loads(run.risk_factors)
@@ -345,12 +348,16 @@ async def post_chat(ticker: str, message: str, provider: str | None = None) -> d
     """Explicit-action endpoint — one turn, real token spend. Mirrors
     `invest chat`'s persist-user-turn-first-then-call-then-persist-reply
     pattern exactly, so a failed LLM call still keeps the user's message."""
+    from data.dive_staleness import run_withheld_reason
     from deepdive.conversation import ChatTurn, generate_chat_response, load_conversation_history, persist_turn
     from deepdive.narrative import NarrativeUnavailableError
     from deepdive.scorecard_view import load_scorecard_view
 
     ticker = ticker.upper()
     run_id, mode = _latest_run_id(ticker)
+    withheld = run_withheld_reason(run_id)  # DEC-47: refuse before storing the user's turn
+    if withheld:
+        raise HTTPException(409, f"{ticker}: latest dive is stale ({withheld}). Re-run the dive.")
     view = load_scorecard_view(ticker, mode=mode)
     if view is None:
         raise HTTPException(404, f"ScorecardView for {ticker} could not be loaded.")
@@ -361,7 +368,11 @@ async def post_chat(ticker: str, message: str, provider: str | None = None) -> d
 
     try:
         result = generate_chat_response(
-            view, history + [ChatTurn(role="user", content=message)], message, provider_pref=provider,
+            view,
+            history + [ChatTurn(role="user", content=message)],
+            message,
+            run_id=run_id,
+            provider_pref=provider,
         )
     except NarrativeUnavailableError as exc:
         raise HTTPException(503, str(exc)) from exc

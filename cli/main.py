@@ -1077,9 +1077,17 @@ async def _chat_async(
                     f"Run [cyan]invest dive {ticker}[/cyan] first."
                 )
                 raise typer.Exit(code=1)
-        active_run_id = run.id
+        active_run_id = int(run.id)
         active_run_mode = run.mode
         active_run_date = run.run_date
+
+    from data.dive_staleness import run_withheld_reason
+
+    withheld = run_withheld_reason(active_run_id)  # DEC-47
+    if withheld:
+        rprint(f"[yellow]Chat withheld:[/yellow] run #{active_run_id} is stale ({withheld}).")
+        rprint(f"[dim]Re-run `invest dive {ticker}`, then chat.[/dim]")
+        raise typer.Exit(code=1)
 
     view = load_scorecard_view(ticker, mode=active_run_mode)
     if view is None:
@@ -1165,8 +1173,11 @@ async def _chat_async(
             try:
                 with console.status("[dim]thinking…[/dim]"):
                     result = generate_chat_response(
-                        view, history[:-1] + [ChatTurn(role="user", content=user_msg)],
-                        user_msg, provider_pref=provider_pref,
+                        view,
+                        history[:-1] + [ChatTurn(role="user", content=user_msg)],
+                        user_msg,
+                        run_id=active_run_id,
+                        provider_pref=provider_pref,
                     )
             except NarrativeUnavailableError as exc:
                 rprint(f"[red]LLM unavailable:[/red] {exc}")

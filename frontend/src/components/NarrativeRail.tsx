@@ -76,7 +76,7 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
       <div style={{ padding: "4px 20px 8px", overflow: "auto", flex: 1 }}>
         {narrative?.stale && (
           <div style={{ padding: "16px 0" }} data-testid="narrative-stale">
-            <p>Narrative withheld: this dive's inputs were superseded ({narrative.stale_reason}).</p>
+            <p>Narrative withheld: {narrative.stale_reason}.</p>
             <p className="dim">Re-run the dive, then generate a narrative.</p>
           </div>
         )}

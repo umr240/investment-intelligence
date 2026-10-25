@@ -670,7 +670,7 @@ def _record_scorecard_view(run_id: int, ticker: str, mode: str) -> None:
     from data.models.schema import DeepDiveRun
     from deepdive.scorecard_view import load_scorecard_view
 
-    view = load_scorecard_view(ticker, mode=mode)
+    view = load_scorecard_view(ticker, mode=mode, run_id=run_id)
     if view is None:
         raise RuntimeError("no scorecard view for the run just persisted")
     body = view.to_llm_context()
@@ -703,7 +703,11 @@ def _persist_dive_results(
     from datetime import date as _date
 
     from data.db import get_session
-    from data.dive_staleness import fundamentals_parser_version, latest_10k_accession
+    from data.dive_staleness import (
+        fundamentals_digest,
+        fundamentals_parser_version,
+        latest_10k_accession,
+    )
     from data.models.schema import Company, DeepDiveRun, FrameworkScore
     from data.reader import CompanyDataReader
     from frameworks.composite import classify_company_stage, compute_composite_score
@@ -939,6 +943,7 @@ def _persist_dive_results(
             overlays_results_json=overlays_results_json,
             parser_version=fundamentals_parser_version(session, ticker),
             edgar_10k_accession=latest_10k_accession(session, ticker),
+            inputs_sha256=fundamentals_digest(session, ticker),
         )
         session.add(run)
         session.flush()

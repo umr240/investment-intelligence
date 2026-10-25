@@ -707,3 +707,12 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Decision**: Each new deep dive records the parser version of the fundamentals it read, the 10-K accession it used, and the ScorecardView it scored (the JSON or its hash). A dive whose inputs have since been superseded, for example by a parser fix that re-read its filings, is flagged stale; it is never deleted. Narratives built on a flagged dive are excluded from use until re-run.
 **Context**: The 52/53-week parser fix of 2026-10-24 (#24) re-read every dived ticker's filings and changed values and fiscal-year labels for some of them, and no stored dive recorded which data it was computed from: `SELECT COUNT(*) FROM deepdive_runs WHERE edgar_10k_accession IS NOT NULL` returned 0 of 217 on the author DB that day.
 **See**: #25 (implementation); `PARSER_VERSION` in `data/edgar_companyfacts.py`; `DeepDiveRun` in `data/models/schema.py`.
+
+---
+
+## DEC-47 — A dive is stale when its inputs changed, not when the parser version did
+
+**Date**: 2026-10-25
+**Decision**: Each new deep dive records a SHA-256 digest of the parser-written fundamentals it read (prices, FX, split and filing-date columns excluded). A refresh that writes fundamentals flags the ticker's dives whose digest no longer matches, whatever the cause: a parser fix, a new 10-K or a restatement. Same digest, same narrative. A dive with no recorded digest, which is every dive stored before this decision, counts as changed: its narrative and chat stay withheld until it is re-run. The same rule applies to chat as to narratives.
+**Amends**: DEC-46 (which flagged on a parser re-read without comparing values).
+**See**: `data/dive_staleness.py`; migration `0005_dive_inputs_digest`.

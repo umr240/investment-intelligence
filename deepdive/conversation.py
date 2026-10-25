@@ -349,6 +349,7 @@ def generate_chat_response(
     history: list[ChatTurn],
     user_message: str,
     *,
+    run_id: int,
     provider_pref: str | None = None,
 ) -> ChatTurnResult:
     """Drive one assistant turn end-to-end.
@@ -360,6 +361,13 @@ def generate_chat_response(
     Validation is non-blocking — guard warnings come back on the result;
     it's the CLI's job to render them.
     """
+    from data.dive_staleness import run_withheld_reason
+    from deepdive.narrative import NarrativeOnStaleDiveError
+
+    withheld = run_withheld_reason(run_id)  # DEC-47: no chat on stale or unknown inputs
+    if withheld:
+        raise NarrativeOnStaleDiveError(f"dive {run_id} is stale ({withheld})")
+
     pref = (provider_pref or settings.narrative_provider or "openai").lower()
     order = _provider_order(pref)
     if not order:

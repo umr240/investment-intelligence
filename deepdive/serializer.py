@@ -31,8 +31,11 @@ def export_deepdive_markdown(run: DeepDiveRun, company_name: str = "") -> str:
         f"**Score:** {score_str} / 10  |  **Verdict:** {verdict.upper()}",
         "",
     ]
-    if run.stale_reason:
-        lines += [f"> **Stale:** {run.stale_reason}. Re-run the dive before relying on it.", ""]
+    from data.dive_staleness import dive_withheld_reason
+
+    withheld = dive_withheld_reason(run)
+    if withheld:
+        lines += [f"> **Stale:** {withheld}. Re-run the dive before relying on it.", ""]
 
     # EDGAR source
     if run.edgar_10k_accession:
@@ -113,7 +116,7 @@ def export_deepdive_markdown(run: DeepDiveRun, company_name: str = "") -> str:
     # per `deepdive/narrative_output.py:NarrativeBody`. Render the structure
     # rather than dumping raw JSON — caller can still inspect raw via the
     # DB columns directly.
-    if run.stale_reason and (run.bull_narrative or run.bear_narrative or run.risk_factors):
+    if withheld and (run.bull_narrative or run.bear_narrative or run.risk_factors):
         lines += ["", "## Narrative", "Withheld: it was built on inputs since superseded (DEC-46)."]
     else:
         if run.bull_narrative:
