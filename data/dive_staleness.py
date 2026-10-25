@@ -21,10 +21,12 @@ from sqlalchemy.orm import Session
 from data.db import get_session
 from data.models.schema import Company, DeepDiveRun, Financial, FinancialSourceLog
 
-# The values the parser writes onto a Financial row (data/pipeline.py
-# _apply_financial_row). Later refresh phases add split, FX and price-derived
-# columns, and filing dates move when a later filing repeats a figure: none of
-# those is in the digest, so prices moving never makes a dive stale.
+# What _apply_financial_row writes from the parser, raw values and the ratios
+# derived from them (data/pipeline.py), so a formula fix counts too. Later
+# refresh phases add split, FX and price-derived columns, and filing dates move
+# when a later filing repeats a figure: none of those is in the digest, so
+# prices moving never makes a dive stale. Inputs outside Financial (insiders,
+# prices, analyst coverage) are not covered.
 DIGEST_FIELDS: tuple[str, ...] = (
     "fiscal_year", "period", "period_start_date", "period_end_date",
     "revenue", "cost_of_revenue", "gross_profit", "operating_income", "operating_expenses",
@@ -36,6 +38,10 @@ DIGEST_FIELDS: tuple[str, ...] = (
     "short_term_investments", "accounts_receivable", "current_assets", "current_liabilities",
     "inventory", "shares_outstanding", "eps_diluted", "eps_basic", "dividends_paid",
     "share_repurchases",
+    "gross_margin", "roic", "pretax_roic", "roe", "roa", "gp_a", "net_margin",
+    "operating_margin", "fcf_margin", "rd_intensity", "asset_turnover", "debt_to_equity",
+    "net_debt", "debt_to_ebitda", "current_ratio", "interest_coverage", "accruals_ratio",
+    "sbc_pct_of_revenue", "goodwill_pct_of_assets",
 )  # fmt: skip
 
 UNRECORDED_REASON = "inputs not recorded (dive predates DEC-47)"
@@ -69,11 +75,12 @@ def fundamentals_digest(session: Session, ticker: str) -> str | None:
         select(*cols)
         .join(Company, Company.id == Financial.company_id)
         .where(Company.ticker == ticker)
-        .order_by(Financial.fiscal_year, Financial.period)
     ).all()
     if not rows:
         return None
-    body = json.dumps([list(r) for r in rows], default=str, separators=(",", ":"))
+    # Sorted here, not in SQL: SQLite and Postgres collate "Q1" and "annual" differently.
+    ordered = sorted((list(r) for r in rows), key=lambda r: (r[0], str(r[1])))
+    body = json.dumps(ordered, default=str, separators=(",", ":"))
     return hashlib.sha256(body.encode("utf-8")).hexdigest()
 
 

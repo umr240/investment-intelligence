@@ -1048,7 +1048,7 @@ async def _chat_async(
         load_conversation_history,
         persist_turn,
     )
-    from deepdive.narrative import NarrativeUnavailableError
+    from deepdive.narrative import NarrativeOnStaleDiveError, NarrativeUnavailableError
     from deepdive.scorecard_view import load_scorecard_view
 
     # Resolve the DeepDiveRun this conversation grounds in
@@ -1179,6 +1179,9 @@ async def _chat_async(
                         run_id=active_run_id,
                         provider_pref=provider_pref,
                     )
+            except NarrativeOnStaleDiveError as exc:  # flagged mid-session
+                rprint(f"[yellow]Chat withheld:[/yellow] {exc}. Re-run `invest dive {ticker}`.")
+                break
             except NarrativeUnavailableError as exc:
                 rprint(f"[red]LLM unavailable:[/red] {exc}")
                 continue

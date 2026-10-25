@@ -336,9 +336,12 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
 @app.get("/dive/{ticker}/chat")
 async def get_chat(ticker: str) -> list[dict[str, Any]]:
     """Free — reads persisted deep_dive_conversations turns, no LLM call."""
+    from data.dive_staleness import run_withheld_reason
     from deepdive.conversation import load_conversation_history
 
     run_id, _mode = _latest_run_id(ticker.upper())
+    if run_withheld_reason(run_id):  # DEC-47: stored replies are withheld like narratives
+        return []
     history = load_conversation_history(run_id)
     return [{"role": t.role, "content": t.content, "cost_usd": t.cost_usd} for t in history]
 
@@ -350,7 +353,7 @@ async def post_chat(ticker: str, message: str, provider: str | None = None) -> d
     pattern exactly, so a failed LLM call still keeps the user's message."""
     from data.dive_staleness import run_withheld_reason
     from deepdive.conversation import ChatTurn, generate_chat_response, load_conversation_history, persist_turn
-    from deepdive.narrative import NarrativeUnavailableError
+    from deepdive.narrative import NarrativeOnStaleDiveError, NarrativeUnavailableError
     from deepdive.scorecard_view import load_scorecard_view
 
     ticker = ticker.upper()
@@ -374,6 +377,8 @@ async def post_chat(ticker: str, message: str, provider: str | None = None) -> d
             run_id=run_id,
             provider_pref=provider,
         )
+    except NarrativeOnStaleDiveError as exc:  # flagged since the check above
+        raise HTTPException(409, f"{exc}. Re-run the dive.") from exc
     except NarrativeUnavailableError as exc:
         raise HTTPException(503, str(exc)) from exc
 

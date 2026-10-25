@@ -118,6 +118,47 @@ def test_the_digest_follows_parser_values_not_prices_or_filing_dates(
     assert _digest(db) != before
 
 
+def test_a_formula_fix_changes_the_digest(db: sessionmaker[Session]) -> None:
+    # Review of #28 (B3): derived ratios are read by frameworks directly.
+    _company(db, [9.6e9])
+    before = _digest(db)
+    with db() as s:
+        fin = s.execute(select(Financial)).scalars().one()
+        fin.roic = 0.12  # type: ignore[assignment]  # Column-style model
+        s.commit()
+    assert _digest(db) != before
+
+
+def test_every_writer_of_fundamentals_flags_changed_dives(
+    db: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Review of #28 (B1): the screener's FundamentalsTask calls _persist_financials directly.
+    import data.pipeline as pipeline
+    from data.edgar_fetcher import EdgarFinancialRow
+
+    @contextmanager
+    def session() -> Iterator[Session]:
+        s = db()
+        try:
+            yield s
+            s.commit()
+        finally:
+            s.close()
+
+    monkeypatch.setattr(pipeline, "get_session", session)
+    co = _company(db)
+    row = EdgarFinancialRow(ticker="LULU", fiscal_year=2024, period="annual", revenue=9.6e9)
+    row.period_end_date = date(2024, 1, 28)
+    row.total_assets = 7e9
+    assert pipeline._persist_financials("LULU", [row]) == []
+    _dive(db, co, _digest(db))
+    assert pipeline._persist_financials("LULU", [row]) == []  # same values again: not flagged
+    row.revenue = 9.7e9
+    assert pipeline._persist_financials("LULU", [row]) == [
+        "LULU: 1 earlier deep dive(s) flagged stale (fundamentals changed); re-run"
+    ]
+
+
 def test_only_dives_whose_inputs_changed_are_flagged_and_none_deleted(
     db: sessionmaker[Session],
 ) -> None:
@@ -301,6 +342,7 @@ def test_api_withholds_narrative_and_chat_on_a_dive_without_recorded_inputs(
     assert got == {"generated": False, "stale": True, "stale_reason": staleness.UNRECORDED_REASON}
     assert client.post("/dive/LULU/narrative").status_code == 409
     assert client.post("/dive/LULU/chat", params={"message": "why?"}).status_code == 409
+    assert client.get("/dive/LULU/chat").json() == []  # review of #28 (B2): history withheld too
     with db() as s:
         assert s.execute(select(DeepDiveConversation)).first() is None  # user turn not stored
 
