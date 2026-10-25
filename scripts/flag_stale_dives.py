@@ -3,8 +3,10 @@
 A refresh flags them itself once this code is in place; this script covers
 only dives stored before it (no recorded parser version), once the ticker's
 filing log carries a version. Safe to re-run: already-flagged dives and dives
-stored since are skipped. It writes only `deepdive_runs.stale_reason` / `stale_at`, and
-deletes nothing.
+stored since are skipped. One false positive remains: a dive stored after
+DEC-46 for a ticker with no logged filings records no version, so if that
+ticker later gains SEC filings this script would flag it. It writes only
+`deepdive_runs.stale_reason` / `stale_at`, and deletes nothing.
 
     uv run python scripts/flag_stale_dives.py            # every ticker with a dive
     uv run python scripts/flag_stale_dives.py LULU COST  # just these
