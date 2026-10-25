@@ -43,6 +43,7 @@ logger = logging.getLogger(__name__)
 
 # Forms that report fiscal-period fundamentals.
 # Amendments (/A) supersede prior filings via restatement handling below.
+_ANNUAL_FORMS: frozenset[str] = frozenset({"10-K", "10-K/A", "20-F", "20-F/A", "40-F", "40-F/A"})
 _FUNDAMENTAL_FORMS: frozenset[str] = frozenset({
     "10-K", "10-K/A",
     "10-Q", "10-Q/A",
@@ -433,7 +434,8 @@ def fye_month_from_submissions(raw: str | None) -> int | None:
 
 def _duration_end_dates(us_gaap: dict[str, Any]) -> tuple[frozenset[date], date | None]:
     """End dates of every reported period of 14+ days (the filer's real period
-    ends), and the latest end of a year-long one."""
+    ends), and the latest end of a year-long one in an annual filing. A 10-Q's
+    trailing-twelve-month column must not set the fiscal year end."""
     ends: set[date] = set()
     latest_annual: date | None = None
     for concept in us_gaap.values():
@@ -444,7 +446,11 @@ def _duration_end_dates(us_gaap: dict[str, Any]) -> tuple[frozenset[date], date 
                     d = _parse_iso(e.get("end"))
                     if d is not None:
                         ends.add(d)
-                        if 340 <= span <= 380 and (latest_annual is None or d > latest_annual):
+                        if (
+                            340 <= span <= 380
+                            and e.get("form") in _ANNUAL_FORMS
+                            and (latest_annual is None or d > latest_annual)
+                        ):
                             latest_annual = d
     return frozenset(ends), latest_annual
 
@@ -605,8 +611,8 @@ def parse_companyfacts(
     carries fy=2025 on its FY2024 prior-period comparatives, which produced
     INTA's FY2022/FY2023 duplicate-label bug).
 
-    Pass `fiscal_year_end_month` (1-12) — defaults to 12 (December year-end).
-    Caller must persist Company.fiscal_year_end_month and pass it here.
+    `fiscal_year_end_month` (1-12, default 12) is only a fallback: the month is
+    taken from the filer's latest year-long period in an annual filing.
 
     Process:
       1. Iterate facts.us-gaap.{concept}.units.{unit}.[entries]

@@ -269,3 +269,28 @@ def test_the_filer_s_own_year_end_beats_a_stale_stored_month() -> None:
         if r.period == "annual"
     }
     assert rows == {2024: 7.1e9, 2025: 7.6e9}
+
+
+def test_a_10q_trailing_year_does_not_set_the_year_end() -> None:
+    # Review of #24: a twelve-months-ended-June column in a 10-Q must not make a
+    # December filer's year end June.
+    ttm = _flow(4.1e9, "2024-07-01", "2025-06-30", "q-25", "2025-08-01")
+    ttm["form"] = "10-Q"
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "Revenues": {
+                    "units": {
+                        "USD": [_flow(4.0e9, "2024-01-01", "2024-12-31", "k-24", "2025-02-20"), ttm]
+                    }
+                },
+                "Assets": {"units": {"USD": [_instant(9.0e9, "2024-12-31", "k-24", "2025-02-20")]}},
+            }
+        }
+    }
+    rows = {
+        (r.fiscal_year, r.period): r
+        for r in parse_companyfacts("X", payload, fiscal_year_end_month=12)
+    }
+    assert rows[(2024, "annual")].revenue == 4.0e9
+    assert rows[(2024, "annual")].total_assets == 9.0e9
