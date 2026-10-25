@@ -51,7 +51,7 @@ def test_period_derivation(
     end: str, start: str | None, fyem: int, expected: tuple[int, str] | None
 ) -> None:
     s = date.fromisoformat(start) if start else None
-    assert _derive_fiscal_period(date.fromisoformat(end), s, fyem) == expected
+    assert _derive_fiscal_period(date.fromisoformat(end), s, fyem, annual_form=True) == expected
 
 
 @pytest.mark.parametrize(
@@ -222,10 +222,12 @@ def test_acquisition_date_instant_does_not_replace_the_quarter_end() -> None:
 
 def test_the_period_end_gate_decides_for_instants_before_the_24th() -> None:
     lulu_ye = date(2025, 2, 2)
-    assert _derive_fiscal_period(lulu_ye, None, 1, frozenset({lulu_ye})) == (2025, "annual")
-    assert _derive_fiscal_period(lulu_ye, None, 1, frozenset()) is None
+    ye = frozenset({lulu_ye})
+    assert _derive_fiscal_period(lulu_ye, None, 1, ye, annual_form=True) == (2025, "annual")
+    assert _derive_fiscal_period(lulu_ye, None, 1, frozenset(), annual_form=True) is None
     # A month-end instant does not need a matching period (HIMS 2018-12-31 stubs).
-    assert _derive_fiscal_period(date(2018, 12, 31), None, 12, frozenset()) == (2018, "annual")
+    month_end = _derive_fiscal_period(date(2018, 12, 31), None, 12, frozenset(), annual_form=True)
+    assert month_end == (2018, "annual")
 
 
 def test_a_52_53_week_instant_with_no_matching_period_is_dropped() -> None:
@@ -294,3 +296,43 @@ def test_a_10q_trailing_year_does_not_set_the_year_end() -> None:
     }
     assert rows[(2024, "annual")].revenue == 4.0e9
     assert rows[(2024, "annual")].total_assets == 9.0e9
+    assert (2025, "annual") not in rows  # the 10-Q column is not a fiscal year
+    assert all(r.revenue != 4.1e9 for r in rows.values())  # nor a year-to-date quarter
+
+
+def test_a_10q_year_on_the_year_end_still_counts() -> None:
+    # Annual comparatives inside a 10-Q end on the year end and match the 10-K.
+    q = _flow(4.0e9, "2024-01-01", "2024-12-31", "q-25", "2025-05-01")
+    q["form"] = "10-Q"
+    payload = {"facts": {"us-gaap": {"Revenues": {"units": {"USD": [q]}}}}}
+    rows = [r for r in parse_companyfacts("X", payload, fiscal_year_end_month=12)]
+    assert [(r.fiscal_year, r.period, r.revenue) for r in rows] == [(2024, "annual", 4.0e9)]
+
+
+def test_a_10q_trailing_year_does_not_corrupt_ytd_quarter_differencing() -> None:
+    # Review of #27: falling through to the quarter check would put a 365-day
+    # cash-flow value into Q2 (latest filing wins) and difference it as YTD.
+    def q(val: float, start: str, end: str, accn: str, filed: str, form: str) -> dict[str, Any]:
+        return {**_flow(val, start, end, accn, filed), "form": form}
+
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "NetCashProvidedByUsedInOperatingActivities": {
+                    "units": {
+                        "USD": [
+                            q(8e8, "2025-01-01", "2025-03-31", "q1", "2025-05-01", "10-Q"),
+                            q(2e9, "2025-01-01", "2025-06-30", "q2", "2025-08-01", "10-Q"),
+                            q(5e9, "2024-07-01", "2025-06-30", "q2a", "2025-09-01", "10-Q/A"),
+                        ]
+                    }
+                }
+            }
+        }
+    }
+    rows = {
+        (r.fiscal_year, r.period): r.operating_cash_flow
+        for r in parse_companyfacts("X", payload, fiscal_year_end_month=12)
+    }
+    assert rows[(2025, "Q1")] == 8e8
+    assert rows[(2025, "Q2")] == 1.2e9
