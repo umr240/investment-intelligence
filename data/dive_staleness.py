@@ -87,22 +87,26 @@ def fundamentals_digest(session: Session, ticker: str) -> str | None:
 def flag_dives_with_changed_inputs(ticker: str) -> int:
     """Flag the ticker's dives whose recorded digest differs from its fundamentals now."""
     with get_session() as session:
-        current = fundamentals_digest(session, ticker)
         company_id = session.execute(select(Company.id).where(Company.ticker == ticker)).scalar()
-        if current is None or company_id is None:
+        if company_id is None:
             return 0
-        runs = (
+        candidates = (
             session.execute(
                 select(DeepDiveRun).where(
                     DeepDiveRun.company_id == company_id,
                     DeepDiveRun.stale_reason.is_(None),
                     DeepDiveRun.inputs_sha256.is_not(None),
-                    DeepDiveRun.inputs_sha256 != current,
                 )
             )
             .scalars()
             .all()
         )
+        if not candidates:  # most screener tickers have no dive: skip the digest read
+            return 0
+        current = fundamentals_digest(session, ticker)
+        if current is None:
+            return 0
+        runs = [r for r in candidates if r.inputs_sha256 != current]
         now = datetime.now()
         for run in runs:
             run.stale_reason = f"fundamentals changed since this dive (refresh of {now:%Y-%m-%d})"
