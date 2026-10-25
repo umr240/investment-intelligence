@@ -294,3 +294,14 @@ def test_a_10q_trailing_year_does_not_set_the_year_end() -> None:
     }
     assert rows[(2024, "annual")].revenue == 4.0e9
     assert rows[(2024, "annual")].total_assets == 9.0e9
+    assert (2025, "annual") not in rows  # the 10-Q column is not a fiscal year
+    assert all(r.revenue != 4.1e9 for r in rows.values())  # nor a year-to-date quarter
+
+
+def test_a_10q_year_on_the_year_end_still_counts() -> None:
+    # Annual comparatives inside a 10-Q end on the year end and match the 10-K.
+    q = _flow(4.0e9, "2024-01-01", "2024-12-31", "q-25", "2025-05-01")
+    q["form"] = "10-Q"
+    payload = {"facts": {"us-gaap": {"Revenues": {"units": {"USD": [q]}}}}}
+    rows = [r for r in parse_companyfacts("X", payload, fiscal_year_end_month=12)]
+    assert [(r.fiscal_year, r.period, r.revenue) for r in rows] == [(2024, "annual", 4.0e9)]
