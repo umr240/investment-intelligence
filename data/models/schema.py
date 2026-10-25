@@ -746,6 +746,7 @@ class DeepDiveRun(Base):
     parser_version = Column(Integer)
     scorecard_view_json = Column(Text)  # ScorecardView.to_llm_context() at dive time
     scorecard_view_sha256 = Column(Text)
+    inputs_sha256 = Column(Text)  # DEC-47: digest of the fundamentals read; NULL = unknown
     stale_reason = Column(Text)
     stale_at = Column(DateTime)
     created_at = Column(DateTime, server_default=func.now())

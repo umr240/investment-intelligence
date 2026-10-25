@@ -200,12 +200,8 @@ async def refresh_ticker(
 
     # ── Phase 2: bulk persist Phase 1 results ─────────────────────────────
     if edgar_result.financials:
-        _persist_financials(ticker, edgar_result.financials)
-        upgraded = _persist_source_log(
-            ticker, edgar_result.financials, reparsed=edgar_result.reparsed
-        )
-        if upgraded:  # a same-parser --force re-read upgrades nothing and flags nothing
-            gaps.extend(_flag_dives_after_reparse(ticker))
+        gaps.extend(_persist_financials(ticker, edgar_result.financials))
+        _persist_source_log(ticker, edgar_result.financials, reparsed=edgar_result.reparsed)
         # ADR-039: persist non-SEC provenance (data_source_tier, reporting
         # currency, FX) so the dive methodology panel + data_completeness
         # reflect Tier-3 sourcing. SEC rows keep the 'sec_edgar' default.
@@ -755,14 +751,15 @@ def _probe_new_filings(ticker: str, known_accessions: frozenset[str]) -> str | N
 # ── Persistence (bulk patterns, single SELECT for dedup) ──────────────────
 
 
-def _persist_financials(ticker: str, rows: list[Any]) -> None:
+def _persist_financials(ticker: str, rows: list[Any]) -> list[str]:
+    """Upsert Financial rows, then flag dives whose inputs changed (DEC-47); returns gaps."""
     from data.edgar_fetcher import EdgarFinancialRow
     if not rows:
-        return
+        return []
     with get_session() as session:
         company = session.query(Company).filter_by(ticker=ticker).first()
         if not company:
-            return
+            return []
 
         # Build existing-key set with one query
         existing_keys: set[tuple[int, str]] = {
@@ -798,6 +795,10 @@ def _persist_financials(ticker: str, rows: list[Any]) -> None:
 
         if new_rows:
             session.add_all(new_rows)
+    # Every writer of digest fields comes through here, the screener's
+    # FundamentalsTask included (review of #28). A dive scoring while this
+    # runs records the new digest over old rows: a narrow race, left as is.
+    return _flag_dives_with_changed_inputs(ticker)
 
 
 def _apply_financial_row(obj: Financial, row: Any) -> None:
@@ -993,15 +994,16 @@ def _effective_tax_rate(net_income: float | None, tax: float | None) -> float:
     return etr
 
 
-def _flag_dives_after_reparse(ticker: str) -> list[str]:
-    """DEC-46: flag dives that read data older than the parser now in use; returns the gap."""
-    from data.dive_staleness import flag_dives_after_reparse
-    from data.edgar_companyfacts import PARSER_VERSION
+def _flag_dives_with_changed_inputs(ticker: str) -> list[str]:
+    """DEC-47: flag dives whose fundamentals this refresh changed; returns the gap to report."""
+    from data.dive_staleness import flag_dives_with_changed_inputs
 
-    flagged = flag_dives_after_reparse(ticker, PARSER_VERSION)
+    flagged = flag_dives_with_changed_inputs(ticker)
     if not flagged:
         return []
-    return [f"{ticker}: {flagged} earlier deep dive(s) flagged stale (filings re-read); re-run"]
+    return [
+        f"{ticker}: {flagged} earlier deep dive(s) flagged stale (fundamentals changed); re-run"
+    ]
 
 
 def _persist_source_log(ticker: str, rows: list[Any], *, reparsed: bool = False) -> int:

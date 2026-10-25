@@ -38,6 +38,8 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
     }
   }
 
+  const withheld = !!narrative?.stale; // DEC-47: chat follows the narrative's rule
+
   async function handleSend(message: string) {
     if (!message.trim()) return;
     setChatLoading(true);
@@ -76,7 +78,7 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
       <div style={{ padding: "4px 20px 8px", overflow: "auto", flex: 1 }}>
         {narrative?.stale && (
           <div style={{ padding: "16px 0" }} data-testid="narrative-stale">
-            <p>Narrative withheld: this dive's inputs were superseded ({narrative.stale_reason}).</p>
+            <p>Narrative withheld: {narrative.stale_reason}.</p>
             <p className="dim">Re-run the dive, then generate a narrative.</p>
           </div>
         )}
@@ -174,17 +176,18 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
       <div style={{ marginTop: "auto", padding: "16px 20px", borderTop: "2px solid var(--color-divider)" }}>
         <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 12 }}>
           {SUGGESTIONS.map((s) => (
-            <button key={s} className="chip-sug" onClick={() => handleSend(s)} disabled={chatLoading}>{s}</button>
+            <button key={s} className="chip-sug" onClick={() => handleSend(s)} disabled={chatLoading || withheld}>{s}</button>
           ))}
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <input
-            placeholder="Ask about this dive…" value={chatInput}
+            placeholder={withheld ? "Chat withheld: re-run the dive" : "Ask about this dive…"} value={chatInput}
+            disabled={withheld} data-testid="chat-input"
             onChange={(e) => setChatInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSend(chatInput); }}
             style={{ flex: 1 }}
           />
-          <button onClick={() => handleSend(chatInput)} disabled={chatLoading || !chatInput.trim()}>
+          <button onClick={() => handleSend(chatInput)} disabled={chatLoading || withheld || !chatInput.trim()}>
             {chatLoading ? "…" : "Send"}
           </button>
         </div>

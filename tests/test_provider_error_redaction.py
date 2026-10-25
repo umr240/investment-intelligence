@@ -31,6 +31,7 @@ def _openai_only(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(settings, "openai_api_key", "sk-dummy-test")
     # The DEC-46 stale-dive gate runs before any provider; keep it off the real DB.
     monkeypatch.setattr("data.dive_staleness.latest_dive_stale_reason", lambda _t: None)
+    monkeypatch.setattr("data.dive_staleness.run_withheld_reason", lambda _r: None)
 
 
 def _leaks(text: str) -> bool:
@@ -59,7 +60,7 @@ def test_chat_log_and_final_error_are_redacted(
         caplog.at_level(logging.WARNING),
         pytest.raises(narrative.NarrativeUnavailableError) as exc,
     ):
-        conversation.generate_chat_response(None, [], "q", provider_pref="openai_only")  # type: ignore[arg-type]
+        conversation.generate_chat_response(None, [], "q", run_id=1, provider_pref="openai_only")  # type: ignore[arg-type]
     assert "[redacted]" in str(exc.value)
     assert not _leaks(str(exc.value))
     assert not _leaks(caplog.text)

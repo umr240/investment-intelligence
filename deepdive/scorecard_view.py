@@ -208,11 +208,14 @@ class ScorecardView:
 # ── Public loader ────────────────────────────────────────────────────────
 
 
-def load_scorecard_view(ticker: str, *, mode: str | None = None) -> ScorecardView | None:
+def load_scorecard_view(
+    ticker: str, *, mode: str | None = None, run_id: int | None = None
+) -> ScorecardView | None:
     """Load the latest scorecard for `ticker` from the persisted run.
 
     `mode`: filter to a specific mode ('A'/'B'/'C'/'default'). When None,
-    picks the most-recent row regardless of mode.
+    picks the most-recent row regardless of mode. `run_id`: take overlays and
+    gaps from that run, not the most recent one.
 
     Returns None if no dive history exists for the ticker.
     """
@@ -236,12 +239,16 @@ def load_scorecard_view(ticker: str, *, mode: str | None = None) -> ScorecardVie
         if fs is None:
             return None
 
-        # Most-recent dive run for overlay triggers + fetch gaps
-        run = s.execute(
-            select(DeepDiveRun).where(DeepDiveRun.company_id == co.id)
-            .where(DeepDiveRun.run_date >= fs.run_date)
-            .order_by(desc(DeepDiveRun.run_date))
-        ).scalars().first()
+        # Overlay triggers + fetch gaps: the given run (a dive freezing its own
+        # view), else the most recent one.
+        if run_id is not None:
+            run = s.get(DeepDiveRun, run_id)
+        else:
+            run = s.execute(
+                select(DeepDiveRun).where(DeepDiveRun.company_id == co.id)
+                .where(DeepDiveRun.run_date >= fs.run_date)
+                .order_by(desc(DeepDiveRun.run_date))
+            ).scalars().first()
 
         # Latest annual for header context
         latest_annual = s.execute(

@@ -745,9 +745,12 @@ def persist_narrative(narrative: NarrativeOutput) -> bool:
         ).scalars().first()
         if run is None:
             return False
-        if run.stale_reason:  # flagged while the provider call ran (DEC-46)
+        from data.dive_staleness import dive_withheld_reason
+
+        withheld = dive_withheld_reason(run)  # e.g. flagged while the provider call ran
+        if withheld:
             raise NarrativeOnStaleDiveError(
-                f"{narrative.ticker}: latest dive is stale ({run.stale_reason}); not stored"
+                f"{narrative.ticker}: latest dive is stale ({withheld}); not stored"
             )
         run.bull_narrative = bull_json
         run.bear_narrative = bear_json
