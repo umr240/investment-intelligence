@@ -1,9 +1,11 @@
 """Fiscal-year-end month from a company's own stored annual periods.
 
 Rows parsed before the nominal-month fix (#24) keep the month the old
-raw-month parser stored ("0202" as 2). The month still labels earnings rows
-and the scorecard header, so it is corrected from the end date of each
-company's latest year-long annual row: real filing dates, no network.
+raw-month parser stored ("0202" as 2), and the scorecard header and data-gap
+messages show it. Candidates come from the end date of each company's latest
+year-long annual row (no network). A stored row can be a 10-Q's trailing
+twelve months mislabelled annual (AMZN's ending 2026-03-31), so every change
+is confirmed against SEC's submissions.json month before it is written.
 """
 
 from __future__ import annotations
@@ -40,3 +42,9 @@ def plan_fye_month_updates(session: Session) -> list[tuple[str, int | None, int]
         if stored != month:
             out.append((str(co.ticker), stored, month))
     return sorted(out)
+
+
+def confirmed_month(stored: int | None, derived: int, sec: int | None) -> int | None:
+    """The month to write: SEC's, when SEC states one and it differs from what is stored."""
+    del derived  # candidates only: a stored row can be a mislabelled trailing year
+    return sec if sec is not None and sec != stored else None

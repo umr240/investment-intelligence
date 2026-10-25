@@ -1,7 +1,10 @@
-"""Correct Company.fiscal_year_end_month from each company's latest annual period.
+"""Correct Company.fiscal_year_end_month, confirmed against SEC.
 
-Dry run by default: prints what would change. `--apply` writes only that
-column, so take a backup first. See data/fye_month.py for the rule.
+Candidates are companies whose latest year-long annual row implies a month
+other than the stored one (data/fye_month.py, no network). Each candidate's
+month is then read from SEC submissions.json and written only when SEC states
+one that differs from the stored value. Dry run by default; `--apply` writes
+only that column, so take a backup first.
 
     uv run python scripts/backfill_fye_month.py            # report
     uv run python scripts/backfill_fye_month.py --apply    # write
@@ -10,31 +13,49 @@ column, so take a backup first. See data/fye_month.py for the rule.
 from __future__ import annotations
 
 import sys
-from collections import Counter
+import time
 
 from sqlalchemy import select
 
+from config.settings import require_edgar_identity
 from data.db import get_session
-from data.fye_month import plan_fye_month_updates
+from data.edgar_companyfacts import fetch_filer_metadata
+from data.fye_month import confirmed_month, plan_fye_month_updates
 from data.models.schema import Company
 
 
 def main(argv: list[str]) -> int:
     apply = "--apply" in argv
+    identity = require_edgar_identity()
     with get_session() as session:
         plan = plan_fye_month_updates(session)
-        moves = Counter((old, new) for _t, old, new in plan)
-        print(f"{len(plan)} companies would change month")
-        for (old, new), n in moves.most_common(12):
-            print(f"  {old} -> {new}: {n}")
-        print("  e.g.", ", ".join(f"{t} {o}->{n}" for t, o, n in plan[:10]))
+        ciks = {
+            str(c.ticker): c.cik
+            for c in session.execute(
+                select(Company).where(Company.ticker.in_([t for t, _o, _d in plan]))
+            ).scalars()
+        }
+        writes: dict[str, int] = {}
+        unconfirmed: list[str] = []
+        for ticker, stored, derived in plan:
+            cik = ciks.get(ticker)
+            meta = fetch_filer_metadata(int(cik), identity) if cik else None
+            sec = (meta or {}).get("fiscal_year_end_month")
+            target = confirmed_month(stored, derived, sec)
+            if target is not None:
+                writes[ticker] = target
+            elif sec is None:
+                unconfirmed.append(ticker)
+            time.sleep(0.12)  # SEC fair access: ~8 requests a second
+        print(
+            f"{len(plan)} candidates; {len(writes)} confirmed by SEC; "
+            f"{len(unconfirmed)} with no SEC month (left as is)"
+        )
+        print("  e.g.", ", ".join(f"{t}->{m}" for t, m in list(writes.items())[:10]))
         if apply:
-            new_month = {t: n for t, _o, n in plan}
-            for co in session.execute(
-                select(Company).where(Company.ticker.in_(new_month))
-            ).scalars():
-                co.fiscal_year_end_month = new_month[str(co.ticker)]
-            print(f"applied to {len(new_month)} companies")
+            for co in session.execute(select(Company).where(Company.ticker.in_(writes))).scalars():
+                co.fiscal_year_end_month = writes[str(co.ticker)]
+            print(f"applied to {len(writes)} companies")
     return 0
 
 
