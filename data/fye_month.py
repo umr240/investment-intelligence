@@ -44,7 +44,10 @@ def plan_fye_month_updates(session: Session) -> list[tuple[str, int | None, int]
     return sorted(out)
 
 
-def confirmed_month(stored: int | None, derived: int, sec: int | None) -> int | None:
-    """The month to write: SEC's, when SEC states one and it differs from what is stored."""
-    del derived  # candidates only: a stored row can be a mislabelled trailing year
+def confirmed_month(stored: int | None, sec: int | None) -> int | None:
+    """The month to write: SEC's, when SEC states one and it differs from what is stored.
+
+    The month the stored rows imply only picks candidates: a stored row can be
+    a mislabelled trailing year.
+    """
     return sec if sec is not None and sec != stored else None

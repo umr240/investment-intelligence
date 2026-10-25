@@ -58,7 +58,7 @@ def test_a_company_without_a_year_long_annual_period_is_left_alone() -> None:
 def test_only_a_sec_stated_month_is_written() -> None:
     # Review of #29: AMZN's stored rows include a 10-Q trailing year ending
     # 2026-03-31, which implies March; SEC says December, as stored.
-    assert confirmed_month(stored=12, derived=3, sec=12) is None
-    assert confirmed_month(stored=2, derived=1, sec=1) == 1  # LULU-style, confirmed
-    assert confirmed_month(stored=12, derived=10, sec=9) == 9  # SEC wins over stored rows
-    assert confirmed_month(stored=12, derived=3, sec=None) is None  # no SEC month: left as is
+    assert confirmed_month(stored=12, sec=12) is None
+    assert confirmed_month(stored=2, sec=1) == 1  # LULU-style, confirmed
+    assert confirmed_month(stored=12, sec=9) == 9  # SEC wins over stored rows
+    assert confirmed_month(stored=12, sec=None) is None  # no SEC month: left as is

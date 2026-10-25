@@ -35,26 +35,33 @@ def main(argv: list[str]) -> int:
                 select(Company).where(Company.ticker.in_([t for t, _o, _d in plan]))
             ).scalars()
         }
-        writes: dict[str, int] = {}
-        unconfirmed: list[str] = []
-        for ticker, stored, derived in plan:
+        writes: dict[str, tuple[int | None, int]] = {}
+        sec_agrees: list[str] = []  # SEC states the stored month: the stored rows were wrong
+        unconfirmed: list[str] = []  # no SEC month (none stated, or the fetch failed)
+        for ticker, stored, _derived in plan:
             cik = ciks.get(ticker)
             meta = fetch_filer_metadata(int(cik), identity) if cik else None
             sec = (meta or {}).get("fiscal_year_end_month")
-            target = confirmed_month(stored, derived, sec)
+            target = confirmed_month(stored, sec)
             if target is not None:
-                writes[ticker] = target
+                writes[ticker] = (stored, target)
             elif sec is None:
                 unconfirmed.append(ticker)
+            else:
+                sec_agrees.append(ticker)
             time.sleep(0.12)  # SEC fair access: ~8 requests a second
         print(
-            f"{len(plan)} candidates; {len(writes)} confirmed by SEC; "
-            f"{len(unconfirmed)} with no SEC month (left as is)"
+            f"{len(plan)} candidates: {len(writes)} to write (SEC month differs from stored), "
+            f"{len(sec_agrees)} left (SEC confirms stored), {len(unconfirmed)} left (no SEC month)"
         )
-        print("  e.g.", ", ".join(f"{t}->{m}" for t, m in list(writes.items())[:10]))
+        # One line per write, old -> new: the undo list for this column.
+        for ticker, (stored, target) in sorted(writes.items()):
+            print(f"  write {ticker} {stored} -> {target}")
+        print("  SEC confirms stored:", " ".join(sorted(sec_agrees)))
+        print("  no SEC month:", " ".join(sorted(unconfirmed)))
         if apply:
             for co in session.execute(select(Company).where(Company.ticker.in_(writes))).scalars():
-                co.fiscal_year_end_month = writes[str(co.ticker)]
+                co.fiscal_year_end_month = writes[str(co.ticker)][1]
             print(f"applied to {len(writes)} companies")
     return 0
 
