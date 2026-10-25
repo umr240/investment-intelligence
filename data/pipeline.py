@@ -201,7 +201,11 @@ async def refresh_ticker(
     # ── Phase 2: bulk persist Phase 1 results ─────────────────────────────
     if edgar_result.financials:
         _persist_financials(ticker, edgar_result.financials)
-        _persist_source_log(ticker, edgar_result.financials, reparsed=edgar_result.reparsed)
+        upgraded = _persist_source_log(
+            ticker, edgar_result.financials, reparsed=edgar_result.reparsed
+        )
+        if upgraded:  # a same-parser --force re-read upgrades nothing and flags nothing
+            gaps.extend(_flag_dives_after_reparse(ticker))
         # ADR-039: persist non-SEC provenance (data_source_tier, reporting
         # currency, FX) so the dive methodology panel + data_completeness
         # reflect Tier-3 sourcing. SEC rows keep the 'sec_edgar' default.
@@ -989,22 +993,35 @@ def _effective_tax_rate(net_income: float | None, tax: float | None) -> float:
     return etr
 
 
-def _persist_source_log(ticker: str, rows: list[Any], *, reparsed: bool = False) -> None:
+def _flag_dives_after_reparse(ticker: str) -> list[str]:
+    """DEC-46: flag dives that read data older than the parser now in use; returns the gap."""
+    from data.dive_staleness import flag_dives_after_reparse
+    from data.edgar_companyfacts import PARSER_VERSION
+
+    flagged = flag_dives_after_reparse(ticker, PARSER_VERSION)
+    if not flagged:
+        return []
+    return [f"{ticker}: {flagged} earlier deep dive(s) flagged stale (filings re-read); re-run"]
+
+
+def _persist_source_log(ticker: str, rows: list[Any], *, reparsed: bool = False) -> int:
     """Tier-0 cache gate: record accession numbers we've already parsed.
 
     After a full re-read, every logged filing from the earliest fiscal year the
     read produced onwards is stamped current, including superseded ones and gap
     years that emit no row; otherwise the stale count would never reach zero.
-    Earlier years stay stale until a refresh covers them.
+    Earlier years stay stale until a refresh covers them. Returns how many
+    logged filings were raised to the current parser (new filings not counted).
     """
     from data.edgar_fetcher import EdgarFinancialRow
     if not rows:
-        return
+        return 0
     from data.edgar_companyfacts import PARSER_VERSION
 
     parsed = [r for r in rows if isinstance(r, EdgarFinancialRow) and r.accession_number]
     if not parsed:
-        return
+        return 0
+    upgraded = 0
     with get_session() as session:
         logged: dict[str, FinancialSourceLog] = {
             str(log.accession_number): log
@@ -1016,6 +1033,8 @@ def _persist_source_log(ticker: str, rows: list[Any], *, reparsed: bool = False)
         for row in parsed:
             log = logged.get(row.accession_number)
             if log is not None:
+                if log.parser_version is None or log.parser_version < PARSER_VERSION:
+                    upgraded += 1
                 # Re-read after a parser upgrade. Column-style models type this as Column[int].
                 log.parser_version = PARSER_VERSION  # type: ignore[assignment]
                 continue
@@ -1033,14 +1052,19 @@ def _persist_source_log(ticker: str, rows: list[Any], *, reparsed: bool = False)
         if new_logs:
             session.add_all(new_logs)
         if reparsed:
-            session.query(FinancialSourceLog).filter(
-                FinancialSourceLog.ticker == ticker,
-                # From the earliest year read: gap years inside the read have
-                # nothing left to repair and must not stay stale forever.
-                FinancialSourceLog.fiscal_year >= min(r.fiscal_year for r in parsed),
-                FinancialSourceLog.parser_version.is_(None)
-                | (FinancialSourceLog.parser_version < PARSER_VERSION),
-            ).update({"parser_version": PARSER_VERSION}, synchronize_session=False)
+            upgraded += (
+                session.query(FinancialSourceLog)
+                .filter(
+                    FinancialSourceLog.ticker == ticker,
+                    # From the earliest year read: gap years inside the read have
+                    # nothing left to repair and must not stay stale forever.
+                    FinancialSourceLog.fiscal_year >= min(r.fiscal_year for r in parsed),
+                    FinancialSourceLog.parser_version.is_(None)
+                    | (FinancialSourceLog.parser_version < PARSER_VERSION),
+                )
+                .update({"parser_version": PARSER_VERSION}, synchronize_session=False)
+            )
+    return upgraded
 
 
 def _persist_insiders_bulk(ticker: str, rows: list[Any], source: str = "edgar") -> None:

@@ -872,6 +872,7 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
     warnings (hallucination flags) are surfaced loudly — the user sees them.
     """
     from deepdive.narrative import (
+        NarrativeOnStaleDiveError,
         NarrativeUnavailableError,
         generate_narrative,
         persist_narrative,
@@ -882,6 +883,10 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
 
     try:
         narrative = generate_narrative(view, provider_pref=provider_pref)  # type: ignore[arg-type]
+    except NarrativeOnStaleDiveError as e:
+        rprint(f"[yellow]Narrative withheld:[/yellow] {e}")
+        rprint(f"[dim]Re-run `invest dive {view.ticker}`, then --narrate.[/dim]")
+        return
     except NarrativeUnavailableError as e:
         rprint(f"[red]Narrative unavailable:[/red] {e}")
         rprint(
@@ -976,8 +981,11 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         ))
 
     # Persist (best-effort — silent if no DeepDiveRun row).
-    if persist_narrative(narrative):
-        rprint("[dim](narrative persisted to deepdive_runs)[/dim]")
+    try:
+        if persist_narrative(narrative):
+            rprint("[dim](narrative persisted to deepdive_runs)[/dim]")
+    except NarrativeOnStaleDiveError as e:
+        rprint(f"[yellow]Narrative not stored:[/yellow] {e}")
 
 
 # ── Chat (Phase 5L — conversational dive) ────────────────────────────────
@@ -2570,7 +2578,7 @@ def export_deepdive(
         query = session.query(DeepDiveRun).filter_by(ticker=ticker.upper())
         if run_id is not None:
             query = query.filter_by(id=run_id)
-        run = query.order_by(DeepDiveRun.run_date.desc()).first()
+        run = query.order_by(DeepDiveRun.id.desc()).first()  # as the narrative gate does
 
         if not run:
             rprint(f"[red]No deep-dive run found for {ticker.upper()}.[/red]")
