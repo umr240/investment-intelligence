@@ -224,7 +224,12 @@ def fetch_yfinance_snapshot(ticker: str, price_history_years: int = 20) -> YFSna
     yticker = yf.Ticker(ticker)
     gaps: list[str] = []
 
-    info = _parse_info(ticker, yticker.info, gaps)
+    try:
+        raw_info = yticker.info
+    except Exception as exc:  # network or Yahoo error: a gap, not a failed refresh
+        gaps.append(f"{ticker}: yfinance .info unavailable ({type(exc).__name__})")
+        raw_info = {}
+    info = _parse_info(ticker, raw_info or {}, gaps)
     institutions = _parse_institutional_holders(ticker, yticker, gaps)
     insiders = _parse_insider_transactions(ticker, yticker, gaps)
     prices = _parse_price_history(ticker, yticker, min(price_history_years, 20), gaps)
