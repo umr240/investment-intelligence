@@ -557,6 +557,7 @@ def _parse_insider_transactions(
         return rows
     except Exception as exc:
         logger.debug("yfinance insider_transactions error (%s): %s", ticker, exc)
+        gaps.append(f"{ticker}: yfinance insider_transactions unavailable ({type(exc).__name__})")
         return []
 
 

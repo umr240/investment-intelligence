@@ -31,6 +31,7 @@ def test_an_unreachable_yahoo_gives_gaps_not_an_exception(monkeypatch: pytest.Mo
     snap = yfinance_client.fetch_yfinance_snapshot("GEV", 1)
     assert snap.info.ticker == "GEV" and snap.info.market_cap is None
     assert any("yfinance .info unavailable (ConnectionError)" in g for g in snap.gaps)
+    assert any("insider_transactions unavailable (ConnectionError)" in g for g in snap.gaps)
     assert snap.price_history == [] and snap.institutional_holders == []
 
 
