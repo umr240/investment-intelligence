@@ -204,8 +204,9 @@ def verify_signal(value: float | None, quote: str, unit: str, source_text: str) 
                 if n.scale is not None:
                     outcome = VERIFIED
                 elif s == 1:
-                    # "$5 – 6 billion", "$1.5 B": the scale may belong to this number.
-                    outcome = SCALE_UNCONFIRMED if scale_nearby else VERIFIED
+                    # "$5 – 6 billion", "$1.5 B": the scale may belong to this number; in a
+                    # document stated "in millions" a bare figure may be a table cell (§4).
+                    outcome = SCALE_UNCONFIRMED if scale_nearby or doc_scales else VERIFIED
                 elif s in doc_scales:
                     outcome = VERIFIED_TABLE_SCALE
                 else:

@@ -170,6 +170,10 @@ ACC = "0001773751-26-000060"
          "low"),
         ("or range", "ARR of $5 or 6 billion", "ARR of $5 or 6 billion", 5.0, "usd",
          "scale_unconfirmed", [], "high", "low"),
+        # Fifth round on #36: an unscaled figure in a document stated "in millions" may be a
+        # table cell, which ADR-057 §4 says is never high.
+        ("table cell unscaled", "Key metrics (in millions) Monthly Recurring Revenue $ 212",
+         "Monthly Recurring Revenue $ 212", 212.0, "usd", "scale_unconfirmed", [], "high", "low"),
         ("curly + nbsp", "Customers’ NRR was 118%", "Customers' NRR was 118%", 118.0, "pct",
          "verified", [], "high", "high"),
         ("no value", INTA, "", None, "pct", "no_value", [], "high", "not_disclosed"),
