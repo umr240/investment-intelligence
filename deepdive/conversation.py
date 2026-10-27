@@ -25,10 +25,13 @@ from __future__ import annotations
 import json
 import logging
 from dataclasses import dataclass
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from config.llm_prices import UnpricedModelError, require_price
 from config.settings import settings
+from deepdive.llm_calls import annotate_last, attempt_context, last_call_cost, recorded_call
 from deepdive.narrative import (
     NarrativeProvider,
     _provider_order,
@@ -95,27 +98,32 @@ class ChatTurn:
 # bounded as the conversation grows.
 HISTORY_WINDOW_TURNS = 8
 
-# Token pricing for cost estimation (USD per million tokens).
-# Conservative — Anthropic Sonnet 4.6 actual is $3/$15. OpenAI gpt-4o-mini
-# is much cheaper but tool-use reliability was lower in our 5j testing.
-_PRICING_USD_PER_M = {
-    "claude-sonnet-4-6": (3.0, 15.0),
-    "claude-haiku-4-5": (0.80, 4.0),
-    "gpt-4o-mini": (0.15, 0.60),
-    "gpt-4o": (2.50, 10.0),
-}
+# Bump on any change to _SYSTEM_PROMPT or ChatTurnOutput (ADR-048 §2.2).
+PROMPT_VERSION = 1
 
 
-def estimate_cost_usd(
-    model: str, prompt_tokens: int, completion_tokens: int,
-) -> float:
-    """Return turn cost in USD. Falls back to Sonnet pricing for unknown models."""
-    in_rate, out_rate = _PRICING_USD_PER_M.get(model, (3.0, 15.0))
-    return round(
-        prompt_tokens / 1_000_000 * in_rate
-        + completion_tokens / 1_000_000 * out_rate,
-        4,
+def _provider_model(provider: NarrativeProvider) -> str:
+    if provider == NarrativeProvider.OPENAI:
+        return settings.openai_narrative_model
+    return settings.anthropic_narrative_model
+
+
+def _recorded(provider: str, model: str) -> Any:
+    """The `llm_calls` record for one chat request (ADR-048)."""
+    return recorded_call(
+        call_site="chat",
+        provider=provider,
+        model=model,
+        prompt_version=PROMPT_VERSION,
+        system_prompt=_SYSTEM_PROMPT,
+        schema=ChatTurnOutput.model_json_schema(),
     )
+
+
+def estimate_cost_usd(model: str, prompt_tokens: int, completion_tokens: int) -> float:
+    """Turn cost from config/llm_prices.py; UnpricedModelError for a model with no row."""
+    price = require_price(model)
+    return round((prompt_tokens * price.input + completion_tokens * price.output) / 1_000_000, 4)
 
 
 # ── Validation ───────────────────────────────────────────────────────────
@@ -242,38 +250,40 @@ def _call_openai_chat(
     schema = ChatTurnOutput.model_json_schema()
     schema["additionalProperties"] = False
 
-    try:
-        resp = client.chat.completions.create(
-            model=model,
-            temperature=0.2,
-            max_tokens=2048,
-            messages=[
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": _build_user_message(view, history, user_message)},
-            ],
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "ChatTurnOutput",
-                    "schema": schema,
-                    "strict": True,
+    with _recorded("openai", model) as call:
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                temperature=0.2,
+                max_tokens=2048,
+                messages=[
+                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "user", "content": _build_user_message(view, history, user_message)},
+                ],
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "ChatTurnOutput",
+                        "schema": schema,
+                        "strict": True,
+                    },
                 },
-            },
-        )
-    except (RateLimitError, APIConnectionError, AuthenticationError) as e:
-        raise _ProviderError(f"openai transport: {type(e).__name__}: {e}") from e
-    except APIStatusError as e:
-        raise _ProviderError(f"openai status {e.status_code}: {e}") from e
+            )
+        except (RateLimitError, APIConnectionError, AuthenticationError) as e:
+            raise _ProviderError(f"openai transport: {type(e).__name__}: {e}") from e
+        except APIStatusError as e:
+            raise _ProviderError(f"openai status {e.status_code}: {e}") from e
 
-    raw = resp.choices[0].message.content
-    try:
-        body = ChatTurnOutput.model_validate_json(raw)
-    except Exception as e:
-        raise _ProviderError(f"openai content did not match ChatTurnOutput: {e}") from e
-    usage = getattr(resp, "usage", None)
-    pt = int(getattr(usage, "prompt_tokens", 0) or 0)
-    ct = int(getattr(usage, "completion_tokens", 0) or 0)
-    return body, pt, ct, model
+        call.response = resp
+        raw = resp.choices[0].message.content
+        try:
+            body = ChatTurnOutput.model_validate_json(raw)
+        except Exception as e:
+            raise _ProviderError(f"openai content did not match ChatTurnOutput: {e}") from e
+        usage = getattr(resp, "usage", None)
+        pt = int(getattr(usage, "prompt_tokens", 0) or 0)
+        ct = int(getattr(usage, "completion_tokens", 0) or 0)
+        return body, pt, ct, model
 
 
 def _call_anthropic_chat(
@@ -290,43 +300,45 @@ def _call_anthropic_chat(
     schema = ChatTurnOutput.model_json_schema()
     schema["additionalProperties"] = False
 
-    try:
-        resp = client.messages.create(
-            model=model,
-            max_tokens=2048,
-            system=_SYSTEM_PROMPT,
-            tools=[{
-                "name": "emit_chat_turn",
-                "description": "Emit one structured assistant turn for the conversational dive.",
-                "input_schema": schema,
-            }],
-            tool_choice={"type": "tool", "name": "emit_chat_turn"},
-            messages=[{
-                "role": "user",
-                "content": _build_user_message(view, history, user_message),
-            }],
-        )
-    except (RateLimitError, APIConnectionError) as e:
-        raise _ProviderError(f"anthropic transport: {type(e).__name__}: {e}") from e
-    except APIStatusError as e:
-        raise _ProviderError(f"anthropic status {e.status_code}: {e}") from e
+    with _recorded("anthropic", model) as call:
+        try:
+            resp = client.messages.create(
+                model=model,
+                max_tokens=2048,
+                system=_SYSTEM_PROMPT,
+                tools=[{
+                    "name": "emit_chat_turn",
+                    "description": "Emit one structured assistant turn for the conversational dive.",  # noqa: E501
+                    "input_schema": schema,
+                }],
+                tool_choice={"type": "tool", "name": "emit_chat_turn"},
+                messages=[{
+                    "role": "user",
+                    "content": _build_user_message(view, history, user_message),
+                }],
+            )
+        except (RateLimitError, APIConnectionError) as e:
+            raise _ProviderError(f"anthropic transport: {type(e).__name__}: {e}") from e
+        except APIStatusError as e:
+            raise _ProviderError(f"anthropic status {e.status_code}: {e}") from e
 
-    tool_input: dict | None = None
-    for block in resp.content:
-        if getattr(block, "type", None) == "tool_use":
-            tool_input = block.input    # type: ignore[attr-defined]
-            break
-    if tool_input is None:
-        raise _ProviderError("anthropic did not return a tool_use block")
-    try:
-        body = ChatTurnOutput.model_validate(tool_input)
-    except Exception as e:
-        raise _ProviderError(f"anthropic tool_input did not match ChatTurnOutput: {e}") from e
+        call.response = resp
+        tool_input: dict | None = None
+        for block in resp.content:
+            if getattr(block, "type", None) == "tool_use":
+                tool_input = block.input    # type: ignore[attr-defined]
+                break
+        if tool_input is None:
+            raise _ProviderError("anthropic did not return a tool_use block")
+        try:
+            body = ChatTurnOutput.model_validate(tool_input)
+        except Exception as e:
+            raise _ProviderError(f"anthropic tool_input did not match ChatTurnOutput: {e}") from e
 
-    usage = getattr(resp, "usage", None)
-    pt = int(getattr(usage, "input_tokens", 0) or 0)
-    ct = int(getattr(usage, "output_tokens", 0) or 0)
-    return body, pt, ct, model
+        usage = getattr(resp, "usage", None)
+        pt = int(getattr(usage, "input_tokens", 0) or 0)
+        ct = int(getattr(usage, "output_tokens", 0) or 0)
+        return body, pt, ct, model
 
 
 # ── Public entry point ───────────────────────────────────────────────────
@@ -377,20 +389,36 @@ def generate_chat_response(
             "ANTHROPIC_API_KEY in .env, or NARRATIVE_PROVIDER=...",
         )
 
-    last_err: Exception | None = None
+    # A session budget needs a price: an unpriced model is skipped, never guessed.
+    priced = []
     for provider in order:
         try:
-            if provider == NarrativeProvider.OPENAI:
-                body, pt, ct, model = _call_openai_chat(view, history, user_message)
-            else:
-                body, pt, ct, model = _call_anthropic_chat(view, history, user_message)
+            require_price(_provider_model(provider))
+            priced.append(provider)
+        except UnpricedModelError as exc:
+            logger.warning("Chat provider %s skipped: %s", provider.value, exc)
+    if not priced:
+        from deepdive.narrative import NarrativeUnavailableError
+        raise NarrativeUnavailableError("No chat provider has a priced model (llm_prices.py)")
+
+    last_err: Exception | None = None
+    for idx, provider in enumerate(priced):
+        try:
+            ticker = getattr(view, "ticker", None)
+            with attempt_context(ticker=ticker, run_id=run_id, attempt=idx + 1):
+                if provider == NarrativeProvider.OPENAI:
+                    body, pt, ct, model = _call_openai_chat(view, history, user_message)
+                else:
+                    body, pt, ct, model = _call_anthropic_chat(view, history, user_message)
         except _ProviderError as exc:
             logger.warning("Chat provider %s failed: %s", provider.value, _redact(str(exc)))
             last_err = exc
             continue
 
         warnings = validate_chat_turn(body, view)
-        cost = estimate_cost_usd(model, pt, ct)
+        annotate_last("warnings" if warnings else "ok", len(warnings))
+        recorded = last_call_cost()  # includes cached tokens; None if the row was not written
+        cost = recorded if recorded is not None else estimate_cost_usd(model, pt, ct)
         return ChatTurnResult(
             output=body,
             provider=provider.value,

@@ -3926,5 +3926,58 @@ def main() -> None:
         raise SystemExit(2) from None
 
 
+# ── LLM call records (ADR-048) ──────────────────────────────────────────────
+
+llm_app = typer.Typer(help="Read the recorded LLM calls (ADR-048). Free: no model is called.")
+app.add_typer(llm_app, name="llm")
+
+
+@llm_app.command("stats")
+def llm_stats(
+    days: int = typer.Option(30, "--days", help="Look back this many days."),
+) -> None:
+    """Calls, failures, latency and cost by call site, model and prompt version."""
+    from datetime import UTC, datetime, timedelta
+
+    from sqlalchemy import case, func, select
+
+    from data.db import get_session
+    from data.models.schema import LlmCall
+
+    since = datetime.now(UTC).replace(tzinfo=None) - timedelta(days=days)  # created_at is UTC
+    failed = func.sum(case((LlmCall.status != "ok", 1), else_=0))
+    ok_priced = func.sum(case((LlmCall.status == "ok", case((LlmCall.cost_usd.is_not(None), 1)))))
+    q = (
+        select(
+            LlmCall.call_site, LlmCall.model, LlmCall.prompt_version,
+            func.count(), failed, func.avg(LlmCall.latency_ms),
+            func.sum(LlmCall.cost_usd), func.count(LlmCall.cost_usd), ok_priced,
+        )
+        .where(LlmCall.created_at >= since)
+        .group_by(LlmCall.call_site, LlmCall.model, LlmCall.prompt_version)
+        .order_by(LlmCall.call_site, LlmCall.model, LlmCall.prompt_version)
+    )  # fmt: skip
+    with get_session() as session:
+        rows = session.execute(q).all()
+    if not rows:
+        rprint(f"No LLM calls recorded in the last {days} days.")
+        return
+    table = Table(title=f"LLM calls, last {days} days")
+    for col in ("Call site", "Model"):
+        table.add_column(col)
+    for col in ("Prompt v", "Calls", "Failed", "Avg latency", "Cost", "Per ok call"):
+        table.add_column(col, justify="right")
+    for site, model, version, n, n_failed, latency, cost, priced, ok_n in rows:
+        # Unpriced calls are counted, not costed; failed attempts cost nothing but are not calls.
+        per_call = f"${cost / ok_n:.4f}" if ok_n else "—"
+        unpriced = "" if priced == n else f" ({n - priced} unpriced)"
+        total = f"${cost:.4f}{unpriced}" if priced else "—"
+        table.add_row(
+            site, model, str(version), str(n), str(n_failed or 0),
+            f"{(latency or 0) / 1000:.1f}s", total, per_call,
+        )  # fmt: skip
+    console.print(table)
+
+
 if __name__ == "__main__":
     main()

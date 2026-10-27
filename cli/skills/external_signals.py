@@ -151,11 +151,13 @@ def external_signals(ctx: SkillContext) -> SkillResult:
             error_message=f"LLM extraction failed: {type(exc).__name__}: {exc}",
         )
 
-    # Compute the actual cost using the cost rate from ADR-031 §3.2
-    actual_cost = (
-        result.prompt_tokens * 3.00 / 1_000_000
-        + result.completion_tokens * 15.00 / 1_000_000
-    )
+    # The recorded call's cost (ADR-048); the price table if that row was not written.
+    from config.llm_prices import cost_usd
+    from deepdive.llm_calls import last_call_cost
+
+    recorded = last_call_cost()
+    priced = cost_usd(result.extracted_model, result.prompt_tokens, result.completion_tokens)
+    actual_cost = recorded if recorded is not None else (priced or 0.0)
     lines.append(
         f"  Anthropic call: {result.prompt_tokens} prompt + "
         f"{result.completion_tokens} completion = ${actual_cost:.4f}"

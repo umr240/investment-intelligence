@@ -2,7 +2,7 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **ACCEPTED 2026-10-27** (DEC-50). |
 | **Phase** | AI narrative layer — operations |
 | **Extends** | ADR-031 §3 (token budget), ADR-047 (evals need versioned prompts) |
 | **Resolves** | LLM cost, latency, failures and prompt changes are invisible |
@@ -32,8 +32,8 @@ Consequences seen in this audit:
 
 ### 2.1 One table for every LLM call
 
-`llm_calls` (new, additive migration) gets one row per attempt from both
-permitted call sites:
+`llm_calls` (new, additive migration) gets one row per attempt from every
+call site allow-listed in `tests/test_llm_call_sites.py` (three today):
 
 | Column group | Columns |
 |---|---|
@@ -41,7 +41,7 @@ permitted call sites:
 | Model | `provider`, `model`, `prompt_version`, `prompt_sha256` (system prompt + output schema) |
 | Usage | input, output, cache-write and cache-read tokens |
 | Outcome | `latency_ms`, `status`, `error_class`, `guard_status`, `warning_count` |
-| Cost | `cost_usd`, computed from a dated price table in `config/` |
+| Cost | `cost_usd`, computed from a dated price table in `config/`: rows copied from pydantic/genai-prices (MIT) with its commit and date, not a dependency (owner, 2026-10-27) |
 | Trace | provider request ID, `created_at` |
 
 Field names follow the OpenTelemetry GenAI semantic conventions, so an
@@ -49,7 +49,7 @@ exporter can be added later without renaming anything.
 
 ### 2.2 Prompt versioning
 
-- `PROMPT_VERSION` is a constant in `deepdive/narrative.py`, bumped by hand on any prompt or schema change.
+- `PROMPT_VERSION` is a constant in each call-site module (`deepdive/narrative.py`, `conversation.py`, `external_signals.py`), bumped by hand on any prompt or schema change.
 - The SHA catches unbumped edits: a hash change without a version bump fails a unit test.
 
 ### 2.3 Surfaces

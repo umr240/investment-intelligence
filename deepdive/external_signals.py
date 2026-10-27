@@ -34,11 +34,15 @@ from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import Any
 
+from config.llm_prices import require_price
 from config.settings import require_edgar_identity
+from deepdive.llm_calls import attempt_context, recorded_call
 from deepdive.signal_verifier import Verification, stored_band, verify_signal
 
 logger = logging.getLogger(__name__)
 
+# Bump on any change to either extractor's system prompt or tool schema (ADR-048 §2.2).
+PROMPT_VERSION = 1
 MODEL_TEXT_CHARS = 80_000  # the slice of a document sent to the model, and verified against
 _EDGAR_DOC_URL = re.compile(
     r"^https://www\.sec\.gov/Archives/edgar/data/0*\d+/(?P<acc>\d{18})/[^/?#]+$"
@@ -126,6 +130,18 @@ def _verify(signals: list[ExtractedSignal], source_text: str) -> None:
         sig.verification = v
 
 
+def _recorded(model: str, system_prompt: str, schema: dict[str, Any]) -> Any:
+    """The `llm_calls` record for one extraction request (ADR-048)."""
+    return recorded_call(
+        call_site="external_signals",
+        provider="anthropic",
+        model=model,
+        prompt_version=PROMPT_VERSION,
+        system_prompt=system_prompt,
+        schema=schema,
+    )
+
+
 def fetch_latest_earnings_8k_text(ticker: str, cik: str) -> tuple[str, str, str, str] | None:
     """Fetch the EX-99.1 earnings press release from the most recent 8-K.
 
@@ -189,6 +205,7 @@ def extract_signals_via_llm(
         raise RuntimeError("ANTHROPIC_API_KEY not set")
     client = anthropic.Anthropic(api_key=api_key)
     model = os.getenv("ANTHROPIC_EXTRACTION_MODEL", "claude-sonnet-4-6")
+    require_price(model)  # the skill's monthly ceiling needs a price: refuse before calling
 
     targets_listing = "\n".join(
         f"  - {t['name']} ({t['unit']}): {t['description']}" for t in _EXTRACTION_TARGETS
@@ -252,40 +269,42 @@ def extract_signals_via_llm(
         "additionalProperties": False,
     }
 
-    resp = client.messages.create(
-        model=model,
-        max_tokens=4096,
-        system=system_prompt,
-        tools=[{
-            "name": "emit_signals",
-            "description": "Emit the structured external signals extracted from the source text.",
-            "input_schema": tool_schema,
-        }],
-        tool_choice={"type": "tool", "name": "emit_signals"},
-        messages=[{"role": "user", "content": user_prompt}],
-    )
+    with attempt_context(ticker=ticker), _recorded(model, system_prompt, tool_schema) as call:
+        resp = client.messages.create(
+            model=model,
+            max_tokens=4096,
+            system=system_prompt,
+            tools=[{
+                "name": "emit_signals",
+                "description": "Emit the structured external signals extracted from the source text.",  # noqa: E501
+                "input_schema": tool_schema,
+            }],
+            tool_choice={"type": "tool", "name": "emit_signals"},
+            messages=[{"role": "user", "content": user_prompt}],
+        )
 
-    tool_input: dict | None = None
-    for block in resp.content:
-        if getattr(block, "type", "") == "tool_use" and block.name == "emit_signals":
-            tool_input = block.input
-            break
-    if tool_input is None:
-        raise RuntimeError("anthropic did not emit a tool_use block")
+        call.response = resp
+        tool_input: dict | None = None
+        for block in resp.content:
+            if getattr(block, "type", "") == "tool_use" and block.name == "emit_signals":
+                tool_input = block.input
+                break
+        if tool_input is None:
+            raise RuntimeError("anthropic did not emit a tool_use block")
 
-    target_unit = {t["name"]: t["unit"] for t in _EXTRACTION_TARGETS}
-    out_signals: list[ExtractedSignal] = []
-    for s in tool_input.get("signals", []):
-        out_signals.append(ExtractedSignal(
-            name=str(s["name"]),
-            value_numeric=s.get("value_numeric"),
-            value_text=s.get("value_text"),
-            unit=target_unit.get(str(s["name"]), ""),
-            as_of_date=period_end,
-            source_quote=str(s.get("source_quote") or ""),
-            confidence=str(s["confidence"]),
-        ))
-    _verify(out_signals, source_text)
+        target_unit = {t["name"]: t["unit"] for t in _EXTRACTION_TARGETS}
+        out_signals: list[ExtractedSignal] = []
+        for s in tool_input.get("signals", []):
+            out_signals.append(ExtractedSignal(
+                name=str(s["name"]),
+                value_numeric=s.get("value_numeric"),
+                value_text=s.get("value_text"),
+                unit=target_unit.get(str(s["name"]), ""),
+                as_of_date=period_end,
+                source_quote=str(s.get("source_quote") or ""),
+                confidence=str(s["confidence"]),
+            ))
+        _verify(out_signals, source_text)
 
     usage = getattr(resp, "usage", None)
     return ExtractionResult(
@@ -344,6 +363,7 @@ def extract_ceo_equity_via_llm(
         raise RuntimeError("ANTHROPIC_API_KEY not set")
     client = anthropic.Anthropic(api_key=api_key)
     model = os.getenv("ANTHROPIC_EXTRACTION_MODEL", "claude-sonnet-4-6")
+    require_price(model)  # the skill's monthly ceiling needs a price: refuse before calling
 
     system_prompt = (
         "You extract CEO/insider beneficial ownership % from SEC ownership "
@@ -410,44 +430,46 @@ def extract_ceo_equity_via_llm(
         "additionalProperties": False,
     }
 
-    resp = client.messages.create(
-        model=model,
-        max_tokens=2048,
-        system=system_prompt,
-        tools=[{
-            "name": "emit_signals",
-            "description": "Emit the extracted CEO ownership signals.",
-            "input_schema": tool_schema,
-        }],
-        tool_choice={"type": "tool", "name": "emit_signals"},
-        messages=[{"role": "user", "content": user_prompt}],
-    )
+    with attempt_context(ticker=ticker), _recorded(model, system_prompt, tool_schema) as call:
+        resp = client.messages.create(
+            model=model,
+            max_tokens=2048,
+            system=system_prompt,
+            tools=[{
+                "name": "emit_signals",
+                "description": "Emit the extracted CEO ownership signals.",
+                "input_schema": tool_schema,
+            }],
+            tool_choice={"type": "tool", "name": "emit_signals"},
+            messages=[{"role": "user", "content": user_prompt}],
+        )
 
-    tool_input: dict | None = None
-    for block in resp.content:
-        if getattr(block, "type", "") == "tool_use" and block.name == "emit_signals":
-            tool_input = block.input
-            break
-    if tool_input is None:
-        raise RuntimeError("anthropic did not emit a tool_use block")
+        call.response = resp
+        tool_input: dict | None = None
+        for block in resp.content:
+            if getattr(block, "type", "") == "tool_use" and block.name == "emit_signals":
+                tool_input = block.input
+                break
+        if tool_input is None:
+            raise RuntimeError("anthropic did not emit a tool_use block")
 
-    unit_map = {
-        "economic_equity_pct": "pct",
-        "voting_power_pct": "pct",
-        "aggregate_shares_beneficially_owned": "count",
-    }
-    out_signals: list[ExtractedSignal] = []
-    for s in tool_input.get("signals", []):
-        out_signals.append(ExtractedSignal(
-            name=str(s["name"]),
-            value_numeric=s.get("value_numeric"),
-            value_text=s.get("value_text"),
-            unit=unit_map.get(str(s["name"]), ""),
-            as_of_date=filing_date,
-            source_quote=str(s.get("source_quote") or ""),
-            confidence=str(s["confidence"]),
-        ))
-    _verify(out_signals, plain)
+        unit_map = {
+            "economic_equity_pct": "pct",
+            "voting_power_pct": "pct",
+            "aggregate_shares_beneficially_owned": "count",
+        }
+        out_signals: list[ExtractedSignal] = []
+        for s in tool_input.get("signals", []):
+            out_signals.append(ExtractedSignal(
+                name=str(s["name"]),
+                value_numeric=s.get("value_numeric"),
+                value_text=s.get("value_text"),
+                unit=unit_map.get(str(s["name"]), ""),
+                as_of_date=filing_date,
+                source_quote=str(s.get("source_quote") or ""),
+                confidence=str(s["confidence"]),
+            ))
+        _verify(out_signals, plain)
 
     usage = getattr(resp, "usage", None)
     return ExtractionResult(

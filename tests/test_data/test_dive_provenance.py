@@ -276,6 +276,7 @@ def _narrative() -> Any:
         model="m",
         prompt_tokens=1,
         completion_tokens=1,
+        cost_usd=None,
         fallback_used=False,
         fallback_reason="",
         status=SimpleNamespace(value="ok"),
