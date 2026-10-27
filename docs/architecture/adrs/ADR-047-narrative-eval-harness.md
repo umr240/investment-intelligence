@@ -2,7 +2,7 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **ACCEPTED 2026-10-28** (DEC-52), with the additions in §2.7. |
 | **Phase** | AI narrative layer — quality measurement |
 | **Extends** | ADR-035 (skill evaluation), ADR-023 §1.8 (test coverage) |
 | **Measures** | ADR-023-A1, ADR-045, ADR-046, ADR-049 |
@@ -26,6 +26,7 @@
 - Strata: established compounder, pre-profitability, recent IPO with unfeasible frameworks, EXCLUDE path, data-poor RESEARCH-ONLY, non-USD filer, spinoff, extreme winner, split-affected (CRWD).
 - Seeded failure cases for ADR-046 recall: outputs with known overclaims.
 - Split into train and test sets. Prompt work iterates on train only; the test score is the headline number.
+- Both splits live in this public repo (owner, 2026-10-28). Contamination is the cost: a future model may train on the test cases. Mitigations: every test-split file carries a canary string (the BIG-bench pattern), so a crawler that honours it skips the file and a model that reproduces it shows contamination; the test split is refreshed each quarter with dives dated after the candidate models' training cutoffs; the `Read` deny rule in `.claude/settings.json` keeps assistant sessions out of `test/`.
 
 ### 2.2 Graders — deterministic, no LLM
 
@@ -75,6 +76,13 @@ The first run on today's code is the baseline. It is expected to fail.
 
 - An LLM judge. A judge is a new call site, so it needs an amendment to ADR-031-A1 (and an entry in `tests/test_llm_call_sites.py`), and a judge must itself be validated against human labels first.
 
+### 2.7 Additions at acceptance (owner, 2026-10-28)
+
+1. **Versioned fixtures.** Each frozen view records the scorecard schema version, the composite formula version and its own SHA-256. Replay fails on a mismatch, so unifying the composite or changing when BEW runs (ARCHITECTURE_AUDIT.md) forces a re-export instead of comparing different inputs.
+2. **Live runs from the CLI only.** No API route starts an eval. The run prints its cost from `config/llm_prices.py` and asks for confirmation; a model without a price row is refused (ADR-048).
+3. **Eval calls are marked in `llm_calls`,** so `invest llm stats` and ADR-048's cost figures keep evaluation spend apart from real use.
+4. **Composer deferrals are recorded per case:** the lattice models `deepdive/mental_model_composer.py` dropped for budget. That is the measurement ADR-055 names before RAG over the lattice can reopen.
+
 ## 3. Inversion (mandatory)
 
 - **Overfitting 40 cases (Goodhart).** Mitigations: the train/test split, quarterly refresh of the set with real failures (ADR-050), and the test score as the headline.
@@ -85,6 +93,7 @@ The first run on today's code is the baseline. It is expected to fail.
 
 - **LLM-as-judge first:** rejected (§2.6).
 - **Hosted eval platforms:** new dependency, and scorecards leave the machine (SECURITY §2 egress). Exporting results later stays possible.
+- **Eval libraries (searched 2026-10-28):** Inspect (UK AISI; proven, 40 required packages) is the one to depend on if an LLM judge arrives (§2.6). pydantic-evals (cases, evaluators, comparable reports) is the closest fit; its shape is borrowed, not the package, which brings pydantic-ai and OpenTelemetry for seven deterministic graders. promptfoo is a Node toolchain; deepeval requires a telemetry client (`posthog`); openai/evals is inactive.
 - **Live LLM calls in CI:** rejected (§2.3).
 
 ## 5. Consequences
