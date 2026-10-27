@@ -8,7 +8,8 @@ scheduler.jobs), JSON out. No scoring logic, no persistence logic, and
 no schema-wrapping layer lives in this file — see ADR-040 §0.1 and §2.1
 for why that's a hard boundary, not just tidiness.
 
-Local-only (ADR-040 §0.4): binds 127.0.0.1, no auth in v1. Run with:
+Local-only (ADR-040 §0.4): binds 127.0.0.1, no auth in v1; other Host names and
+state-changing requests from other web origins are refused. Run with:
     uv run uvicorn api.app:app --reload --host 127.0.0.1 --port 8000
 
 ── Postgres foresight (ADR-040 addendum, 2026-08-09) ───────────────────────
@@ -44,26 +45,65 @@ applies to data-source tiers (ADR-022), applied here to the DB itself.
 from __future__ import annotations
 
 import dataclasses
-from datetime import date, datetime
+from collections.abc import Awaitable, Callable, MutableMapping
+from datetime import datetime
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 
 from config.settings import MissingEdgarIdentityError, settings
 
+Scope = MutableMapping[str, Any]
+Receive = Callable[[], Awaitable[MutableMapping[str, Any]]]
+Send = Callable[[MutableMapping[str, Any]], Awaitable[None]]
+ASGIApp = Callable[[Scope, Receive, Send], Awaitable[None]]
+
 app = FastAPI(title="Investment Intelligence — local control plane")
 
+_VITE_DEV = ("http://localhost:5173", "http://127.0.0.1:5173")
+_VITE_PREVIEW = ("http://localhost:4173", "http://127.0.0.1:4173")
+_UI_ORIGINS = frozenset(_VITE_DEV + _VITE_PREVIEW)
+_SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
+
+
+def _foreign_request(scope: Scope) -> bool:
+    """CORS only hides the response: a cross-site POST would still run, spend tokens or skip
+    a dangerous-skill confirmation. Browsers always send Origin on one; curl and the CLI don't."""
+    headers = Request(scope).headers
+    origin = headers.get("origin")
+    own = f"{scope['scheme']}://{headers.get('host', '')}"  # same-origin callers, e.g. /docs
+    trusted = origin in _UI_ORIGINS or origin == own
+    if scope["method"] not in _SAFE_METHODS:
+        return origin is not None and not trusted
+    # An <img> or link from another page (any other local port counts) sends a GET with no
+    # Origin, and GET /valuation writes. The UI's fetch() calls always carry Origin.
+    return headers.get("sec-fetch-site") in ("cross-site", "same-site") and not trusted
+
+
+class _ForeignOriginGuard:
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] == "http" and _foreign_request(scope):
+            refused = JSONResponse({"detail": "cross-site request refused"}, status_code=403)
+            await refused(scope, receive, send)
+            return
+        await self.app(scope, receive, send)
+
+
+app.add_middleware(_ForeignOriginGuard)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", "http://127.0.0.1:5173",  # Vite dev
-        "http://localhost:4173", "http://127.0.0.1:4173",  # Vite preview
-    ],
+    allow_origins=sorted(_UI_ORIGINS),
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Outermost: a DNS-rebound page reaches 127.0.0.1 under its own Host name.
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"])
 
 
 @app.exception_handler(MissingEdgarIdentityError)
