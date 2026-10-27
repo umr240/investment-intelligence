@@ -39,8 +39,11 @@ _SCALE_WORDS = {
     "thousand": Decimal(10**3), "k": Decimal(10**3),
     "million": Decimal(10**6), "m": Decimal(10**6),
     "billion": Decimal(10**9), "b": Decimal(10**9), "bn": Decimal(10**9),
-    "mm": Decimal(10**6), "trillion": Decimal(10**12), "tn": Decimal(10**12),
+    "mm": Decimal(10**6), "mn": Decimal(10**6), "mln": Decimal(10**6),
+    "trillion": Decimal(10**12), "tn": Decimal(10**12),
 }  # fmt: skip
+# Any scale word anywhere in a quote: an unscaled match beside one is never better than low.
+_SCALE_TOKEN = re.compile(r"\b(?:thousand|million|billion|trillion|bn|mm|mn|mln|tn|[kmb])s?\b")
 # "in millions", "(in US $ millions", "in thousands of U.S. dollars" (SHOP: "in us $ millions").
 _DOC_SCALE = re.compile(r"\bin (?:(?:us|u\.s\.|usd)\s?)?(?:\$\s?)?(thousands|millions|billions)\b")
 _DOC_SCALE_VALUE = {
@@ -57,7 +60,7 @@ _NUMBER = re.compile(
     r"(?<![\w.,])(?P<num>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)"
     r"(?P<close>\))?"
     r"(?:(?P<pct>\s?%|\s(?:percent)\b|\s?(?:bps?|basis points?)\b)"
-    r"|(?P<word>\s(?:thousand|million|billion|trillion)\b)"
+    r"|(?P<word>\s(?:thousand|million|billion|trillion|bn|mm|mn|mln|tn)s?\b)"
     r"|(?P<suffix>bn|mm|tn|[kmb])(?!-\d)\b)?"
 )
 _RANGE_JOIN = re.compile(r"^\s*(?:–|—|-|to)\s*$")
@@ -138,7 +141,8 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
                 value, bps = value / 100, True  # bps and basis points, in percentage points
         elif m.group("word") or suffix:
             unit = "currency"
-            scale = _SCALE_WORDS[(m.group("word") or suffix or "").strip()]
+            key = (m.group("word") or "").strip() or suffix or ""
+            scale = _SCALE_WORDS[key if key in _SCALE_WORDS else key[:-1]]  # plural: "billions"
         elif m.group("cur"):
             unit = "currency"
         else:
@@ -179,6 +183,7 @@ def verify_signal(value: float | None, quote: str, unit: str, source_text: str) 
         return Verification(VALUE_NOT_IN_QUOTE, _CEILING[VALUE_NOT_IN_QUOTE], quote_at=at)
 
     doc_scales = {_DOC_SCALE_VALUE[w] for w in _DOC_SCALE.findall(src)}
+    scale_nearby = _SCALE_TOKEN.search(q) is not None
     rank = {VERIFIED: 0, VERIFIED_TABLE_SCALE: 1, SCALE_UNCONFIRMED: 2}
     best: tuple[str, ParsedNumber] | None = None
     for n in numbers:
@@ -196,8 +201,11 @@ def verify_signal(value: float | None, quote: str, unit: str, source_text: str) 
             for s in scales:
                 if n.value * s != target:
                     continue
-                if s == 1 or n.scale is not None:
+                if n.scale is not None:
                     outcome = VERIFIED
+                elif s == 1:
+                    # "$5 – 6 billion", "$1.5 B": the scale may belong to this number.
+                    outcome = SCALE_UNCONFIRMED if scale_nearby else VERIFIED
                 elif s in doc_scales:
                     outcome = VERIFIED_TABLE_SCALE
                 else:
