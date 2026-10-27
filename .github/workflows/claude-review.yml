@@ -57,5 +57,7 @@ jobs:
           anthropic_api_key: ${{ secrets.CLAUDE_REVIEW_ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}  # comments post as github-actions[bot]
           # A lockfile review took 23 turns (#21); going over the cap fails the job.
+          # Sonnet, not the default Opus the runs used through 2026-10-27: review spend (owner).
           claude_args: |
+            --model claude-sonnet-5-5
             --max-turns 30
