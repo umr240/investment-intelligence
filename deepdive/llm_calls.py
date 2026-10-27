@@ -23,7 +23,9 @@ from config.llm_prices import cost_usd
 logger = logging.getLogger(__name__)
 
 _ATTEMPT: ContextVar[dict[str, Any] | None] = ContextVar("llm_attempt", default=None)
-_LAST: ContextVar[tuple[int, float | None] | None] = ContextVar("llm_last_call", default=None)
+# The latest call in this context, even when its row was not written (id None), so a
+# failed write never leaves an earlier call's cost or id to be read.
+_LAST: ContextVar[tuple[int | None, float | None] | None] = ContextVar("llm_last", default=None)
 
 
 def prompt_sha256(system_prompt: str, schema: dict[str, Any]) -> str:
@@ -96,36 +98,46 @@ def recorded_call(
         status, error = "error", _error_class(exc)
         raise
     finally:
-        latency_ms = int((time.perf_counter() - start) * 1000)
-        inp, out, cache_write, cache_read = token_usage(call.response)
-        cost = (
-            cost_usd(model, inp, out, cache_read, cache_write)
-            if call.response is not None
-            else 0.0  # no reply: nothing billed
-        )
-        ctx = _ATTEMPT.get() or {}
-        row = {
-            "ticker": ctx.get("ticker"),
-            "run_id": ctx.get("run_id"),
-            "attempt": ctx.get("attempt", 1),
-            "call_site": call_site,
-            "provider": provider,
-            "model": model,
-            "prompt_version": prompt_version,
-            "prompt_sha256": prompt_sha256(system_prompt, schema),
-            "input_tokens": inp,
-            "output_tokens": out,
-            "cache_write_tokens": cache_write,
-            "cache_read_tokens": cache_read,
-            "latency_ms": latency_ms,
-            "status": status,
-            "error_class": error,
-            "cost_usd": cost,
-            "request_id": getattr(call.response, "id", None),
-        }
-        row_id = _write(row)
-        if row_id is not None:
-            _LAST.set((row_id, cost))
+        _LAST.set((None, None))
+        try:
+            _record(call, call_site, provider, model, prompt_version, system_prompt, schema, start,
+                    status, error)  # fmt: skip
+        except Exception as exc:  # noqa: BLE001 - observability must never fail the call
+            logger.warning("llm call not recorded: %s", type(exc).__name__)
+
+
+def _record(
+    call: Call, call_site: str, provider: str, model: str, prompt_version: int,
+    system_prompt: str, schema: dict[str, Any], start: float, status: str, error: str | None,
+) -> None:  # fmt: skip
+    latency_ms = int((time.perf_counter() - start) * 1000)
+    inp, out, cache_write, cache_read = token_usage(call.response)
+    cost = (
+        cost_usd(model, inp, out, cache_read, cache_write)
+        if call.response is not None
+        else 0.0  # no reply: nothing billed
+    )
+    ctx = _ATTEMPT.get() or {}
+    row = {
+        "ticker": ctx.get("ticker"),
+        "run_id": ctx.get("run_id"),
+        "attempt": ctx.get("attempt", 1),
+        "call_site": call_site,
+        "provider": provider,
+        "model": model,
+        "prompt_version": prompt_version,
+        "prompt_sha256": prompt_sha256(system_prompt, schema),
+        "input_tokens": inp,
+        "output_tokens": out,
+        "cache_write_tokens": cache_write,
+        "cache_read_tokens": cache_read,
+        "latency_ms": latency_ms,
+        "status": status,
+        "error_class": error,
+        "cost_usd": cost,
+        "request_id": getattr(call.response, "id", None),
+    }
+    _LAST.set((_write(row), cost))
 
 
 def _write(row: dict[str, Any]) -> int | None:
@@ -152,7 +164,7 @@ def last_call_cost() -> float | None:
 def annotate_last(guard_status: str, warning_count: int) -> None:
     """Add the guard's verdict to the most recent recorded call in this context."""
     last = _LAST.get()
-    if last is not None:
+    if last is not None and last[0] is not None:
         _update(last[0], {"guard_status": guard_status, "warning_count": warning_count})
 
 

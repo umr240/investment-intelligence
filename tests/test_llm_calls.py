@@ -110,6 +110,8 @@ def test_cost_counts_cached_tokens_at_their_own_rate() -> None:
 
 def test_an_unpriced_model_has_no_cost_rather_than_a_guess() -> None:
     assert cost_usd("mystery-model", 1_000, 200) is None
+    assert price_for("gpt-4o-audio-preview") is None  # a variant, not a snapshot
+    assert price_for("claude-haiku-4-5-20251001") == PRICES["claude-haiku-4-5"]
 
 
 def test_token_usage_reads_both_providers() -> None:
@@ -155,6 +157,37 @@ def test_a_failed_attempt_and_its_fallback_are_both_recorded(
     assert (ok["guard_status"], ok["warning_count"]) == ("ok", 0)
     assert ok["cost_usd"] == cost_usd(settings.anthropic_narrative_model, 1_000, 200)
     assert out.cost_usd == ok["cost_usd"]
+
+
+def test_a_call_whose_row_was_not_written_is_still_the_last_call(
+    monkeypatch: pytest.MonkeyPatch, llm_rows: list[dict[str, Any]]
+) -> None:
+    # Verifier on #37: a failed write left the previous row's id and cost behind, so the
+    # guard verdict went to the wrong row and a chat turn was charged $0.
+    def write_once(row: dict[str, Any]) -> int | None:
+        if row["status"] == "ok":
+            return None  # "database is locked"
+        llm_rows.append(row)
+        return len(llm_rows)
+
+    monkeypatch.setattr(llm_calls, "_write", write_once)
+    out = _narrate(monkeypatch)
+    (failed,) = llm_rows
+    assert "guard_status" not in failed  # not annotated with the later call's verdict
+    assert out.cost_usd == cost_usd(settings.anthropic_narrative_model, 1_000, 200)
+
+
+def test_recording_never_fails_the_call(monkeypatch: pytest.MonkeyPatch) -> None:
+    def broken(*_a: Any, **_k: Any) -> float:
+        raise ValueError("bad usage object")
+
+    monkeypatch.setattr(llm_calls, "cost_usd", broken)
+    with llm_calls.recorded_call(
+        call_site="chat", provider="anthropic", model="m", prompt_version=1,
+        system_prompt="s", schema={},
+    ) as call:  # fmt: skip
+        call.response = SimpleNamespace(usage=None)
+    assert llm_calls.last_call_cost() is None
 
 
 def test_prompt_text_is_never_recorded(
@@ -275,5 +308,6 @@ def test_llm_stats(db: sessionmaker[Session]) -> None:
     _WRITE(_row(model="mystery-model", cost_usd=None))
     result = CliRunner().invoke(app, ["llm", "stats"], env={"COLUMNS": "200"})
     assert result.exit_code == 0, result.output
-    assert "claude-sonnet-4-6" in result.output and "$0.0060" in result.output
+    assert "claude-sonnet-4-6" in result.output and "Per ok call" in result.output
+    assert result.output.count("$0.0060") == 2  # total, and per successful call
     assert "mystery-model" in result.output and "—" in result.output

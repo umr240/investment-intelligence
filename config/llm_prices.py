@@ -10,6 +10,7 @@ no row. Long-context tiers are not copied: no call here sends 200k tokens.
 from __future__ import annotations
 
 import logging
+import re
 from dataclasses import dataclass
 from datetime import date
 
@@ -38,12 +39,16 @@ class UnpricedModelError(LookupError):
     """A model with no row in PRICES, refused where spend is budgeted."""
 
 
+# A dated snapshot of a priced model: "gpt-4o-mini-2024-07-18", "claude-haiku-4-5-20251001".
+_SNAPSHOT = re.compile(r"^(?P<base>.+)-(?:\d{4}-\d{2}-\d{2}|\d{8})$")
+
+
 def price_for(model: str) -> ModelPrice | None:
-    """The model's price row; dated snapshots ("gpt-4o-mini-2024-07-18") use the base row."""
+    """The model's row; a dated snapshot uses its base model's, any other variant none."""
     if model in PRICES:
         return PRICES[model]
-    base = max((m for m in PRICES if model.startswith(m + "-")), key=len, default=None)
-    return PRICES[base] if base else None
+    m = _SNAPSHOT.match(model)
+    return PRICES.get(m.group("base")) if m else None
 
 
 def require_price(model: str) -> ModelPrice:
