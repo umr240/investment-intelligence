@@ -742,3 +742,11 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Decision**: The owner accepted ADR-048. Every attempt at an allow-listed LLM call site writes one `llm_calls` row: tokens including cache tokens, latency, status and error class, guard status, cost and prompt version with a hash of the system prompt and schema; prompt text is never stored. Prices are rows copied from pydantic/genai-prices (MIT) at a named commit and date into `config/llm_prices.py`, not a dependency (SECURITY §5); a model with no row gets no cost rather than a guessed one, and the budgeted paths (chat, `/external-signals`) refuse it before the call. OpenTelemetry tracing libraries (OpenLLMetry, OpenInference) were considered and not adopted: they need a collector for three call sites; the table follows their GenAI field names instead.
 **See**: `ADR-048-llm-observability-and-prompt-versioning.md`; the borrow-before-building comparison in the PR.
 
+
+---
+
+## DEC-51 — ADR-044 accepted: data contracts are built here, in one result shape
+
+**Date**: 2026-10-27
+**Decision**: The owner accepted ADR-044 as a build. Each contract (C1–C8) counts failing units out of total units against a threshold that is the largest failing share allowed, or none for a reported-only contract, and every result stores up to 20 failing keys. Both patterns are borrowed: the failing fraction from Pointblank and Soda, the stored failing keys from Great Expectations and Soda. No library is adopted: the contracts are cross-table SQL and one Python comparison (C5), which these libraries' per-row table checks do not express, and Great Expectations brings 25 required packages for eight queries (SECURITY §5). Soda Core v4 is under the Elastic License 2.0 and has no SQLite connector; Pointblank is thinly proven and reads SQLite through Ibis.
+**See**: `ADR-044-data-contracts-on-refresh.md` §2.2; the borrow-before-building comparison in the PR.

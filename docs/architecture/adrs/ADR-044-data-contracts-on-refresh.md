@@ -2,7 +2,7 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **ACCEPTED 2026-10-27** (DEC-51). |
 | **Phase** | Data integrity |
 | **Extends** | ADR-022 (provenance), ADR-033 (source hierarchy), ADR-030-A2 (share basis) |
 | **Resolves** | Silent data failures that corrupted scores for a large part of the universe without any alarm |
@@ -51,25 +51,60 @@ today's value:
 
 Thresholds are constants reviewed through this ADR, not tuned in code.
 
-### 2.2 Where they run
+Measured again on the author DB, 2026-10-27, before the first backfill:
+C1 74.0% (4,825 of 6,518); C2 809 companies, 6 of them dived; C3 65 of the 69
+dived companies; C4 2,190 of 5,021 companies with quarterly share counts
+(quarterly rows carry no split factor, so every jump counts); C5 125; C6 5,444
+of 10,148 below 0.5; C7 7 of 7 runs; C8 not measurable until a Stage B
+completes.
+
+### 2.2 One result shape (borrowed)
+
+Every contract counts **failing units out of total units**: companies,
+screener runs, or frames filers. A threshold is the largest failing share
+allowed (C1: 0.05; "0" and "every" are 0.0), or none for a reported-only
+contract. The failing-fraction form follows Pointblank and Soda.
+
+Each result also stores **up to 20 failing keys** (tickers, or run ids for C7),
+as Great Expectations and Soda keep failing rows. A failed contract then names
+what to fix, and the backfill (§2.5) works from the full list.
+
+Definitions the table leaves open:
+
+- **C5:** a company is classified when the active policy's stored verdict
+  excludes it (`not_excluded()` is false) or confirms it (`eligible()`); its
+  classifier verdict is `classify(sector, industry)`. A verdict with
+  `source = 'override'` is the explicit override record. Under the `none`
+  policy nothing is classified and C5 has no units.
+- **C7:** a run is counted once it has finished: Stage C completed, a stage
+  failed, or a single-shot run with no stages.
+- **C8:** Stage B records the frames filers it built and how many resolved a
+  revenue concept in its stage state; C8 reads the latest completed Stage B.
+
+### 2.3 Where they run
 
 - **Per ticker, after `refresh_ticker`:** C1–C4 for that ticker. DB-only, so no network and no tokens. A violation becomes a `data_gaps` entry, consistent with CLAUDE.md rule 3.
 - **Universe-wide, on demand:** `invest data check` (new) runs all contracts and prints a table.
 - **After screener stages:** C5, C7, C8.
 - Results are persisted to a new table `data_contract_runs` (additive migration).
 
-### 2.3 No new dependency in v1
+### 2.4 No new dependency in v1
 
 `pandera` and Great Expectations were considered. Eight SQL metrics do not
-justify a dependency (SECURITY §5). Revisit past ~30 contracts.
+justify a dependency (SECURITY §5). Revisit past ~30 contracts. The 2026-10-27
+search (owner: build, borrow two patterns) also covered Pointblank (thinly
+proven; SQLite needs Ibis) and Soda Core (Elastic License 2.0, no SQLite);
+§2.2 takes their result shape, not their code.
 
-### 2.4 Backfill is a separate, explicit action
+### 2.5 Backfill is a separate, explicit action
 
 Contracts will fail on today's data until ~1,700 companies are refreshed with
 the fixed parsers. That refresh is network-heavy. It runs only on an explicit
-command (`invest data backfill --contract C1`, new), never automatically.
+command (`invest data backfill --contract C1`, new), never automatically. It
+refreshes the failing companies of a company contract (C1–C4), asks for
+confirmation first, and takes `--limit`.
 
-### 2.5 What this ADR does NOT decide
+### 2.6 What this ADR does NOT decide
 
 - Revenue concepts for banks, insurers and IFRS filers (the C1 exemption list starts empty and grows by review).
 - Final thresholds; they are set after the first backfill.
@@ -84,7 +119,7 @@ command (`invest data backfill --contract C1`, new), never automatically.
 
 ## 4. Alternatives considered
 
-- **pandera or Great Expectations:** rejected for v1 (§2.3).
+- **pandera or Great Expectations:** rejected for v1 (§2.4).
 - **dbt tests:** wrong tool for an ORM-owned SQLite schema.
 - **Status quo (hand discovery):** this ADR exists because of it.
 
