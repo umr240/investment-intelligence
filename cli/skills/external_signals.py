@@ -1,7 +1,7 @@
 """ADR-032 — /external-signals skill handler.
 
-Wraps `deepdive/external_signals.py` (the second permitted Anthropic call
-site per CLAUDE.md §"AI layer boundary" + ADR-031 §4.1) with:
+Wraps `deepdive/external_signals.py` (an LLM call site allow-listed in
+tests/test_llm_call_sites.py, ADR-031 §4.1) with:
 
   - Dangerous-skill confirmation gate (handled by runtime; only invoked
     when --confirm passed)
@@ -9,10 +9,9 @@ site per CLAUDE.md §"AI layer boundary" + ADR-031 §4.1) with:
   - Pre-flight: Company + CIK + 8-K availability
   - Workflow: fetch_latest_earnings_8k_text → extract_signals_via_llm →
     persist_extraction
-  - Postcondition: rows persisted; every disclosed row has verbatim
-    quote ≥30 chars; source URL resolves
-  - Shadow-mode verification: URL HEAD + quote-in-source check (does NOT
-    re-call Anthropic — verification is deterministic)
+  - Postcondition: rows persisted; every stored value passed the ADR-057
+    verifier (quote in the source the model saw, value in the quote), which
+    runs before persistence; counts per verification outcome are reported
 """
 from __future__ import annotations
 
@@ -162,8 +161,14 @@ def external_signals(ctx: SkillContext) -> SkillResult:
         f"{result.completion_tokens} completion = ${actual_cost:.4f}"
     )
 
-    n_persisted = persist_extraction(result)
+    report = persist_extraction(result)
+    n_persisted = report.persisted
     lines.append(f"  Persisted: {n_persisted} ExternalSignalRecord rows")
+    if report.kept_existing:
+        lines.append(
+            "  Kept earlier values (this run's were dropped or empty): "
+            + ", ".join(report.kept_existing)
+        )
 
     # ── Render extracted signals ──────────────────────────────────────────
     lines.append("")
@@ -177,6 +182,12 @@ def external_signals(ctx: SkillContext) -> SkillResult:
         lines.append(
             f"  {marker} {sig.name:18s} [{sig.confidence:14s}] {val:>16s} {sig.unit}"
         )
+        if sig.verification is not None and sig.model_value_numeric is not None:
+            flags = "".join(f" +{f}" for f in sig.verification.flags)
+            lines.append(
+                f"      check: {sig.verification.outcome}{flags} "
+                f"(model said {sig.model_value_numeric} [{sig.model_confidence}])"
+            )
         if sig.source_quote:
             quote = sig.source_quote[:160]
             lines.append(f'      quote: "{quote}"')
@@ -213,21 +224,27 @@ def external_signals(ctx: SkillContext) -> SkillResult:
             )
 
     # ── Postconditions ────────────────────────────────────────────────────
-    disclosed = [
-        s_ for s_ in result.signals if s_.confidence != "not_disclosed"
-    ]
     postconditions.append(PostCondition(
         name="rows_persisted",
         pass_=n_persisted >= 1,
         observed=n_persisted,
         expected=">=1",
     ))
-    postconditions.append(PostCondition(
-        name="every_disclosed_has_verbatim_quote",
-        pass_=all(len(s_.source_quote or "") >= 30 for s_ in disclosed),
-        observed=[(s_.name, len(s_.source_quote or "")) for s_ in disclosed],
-        expected="all len >=30 chars",
-    ))
+    outcomes: dict[str, int] = {}
+    for s_ in result.signals:
+        key = s_.verification.outcome if s_.verification else "unverified"
+        outcomes[key] = outcomes.get(key, 0) + 1
+    verified = PostCondition(
+        name="every_stored_value_verified",
+        pass_=all(
+            s_.verification is not None and s_.verification.kept
+            for s_ in result.signals
+            if s_.value_numeric is not None
+        ),
+        observed=outcomes,
+        expected="every stored value: verified / verified_table_scale / scale_unconfirmed",
+    )
+    postconditions.append(verified)
     postconditions.append(PostCondition(
         name="not_disclosed_rows_have_null_value",
         pass_=all(

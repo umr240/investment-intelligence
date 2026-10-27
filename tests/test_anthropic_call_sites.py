@@ -79,13 +79,21 @@ def test_chat(monkeypatch: pytest.MonkeyPatch) -> None:
     _assert_one_forced_tool_call("emit_chat_turn")
 
 
+_URL = "https://www.sec.gov/Archives/edgar/data/1/000000000126000001/x.htm"
+_ACC = "0000000001-26-000001"
+
+
 def test_external_signals() -> None:
     _FakeAnthropic.tool_input = {"signals": []}
-    external_signals.extract_signals_via_llm("TST", "text", "url", "acc", "label")
+    external_signals.extract_signals_via_llm("TST", "text", _URL, _ACC, "label")
     _assert_one_forced_tool_call("emit_signals")
 
 
 def test_ceo_equity() -> None:
+    from datetime import date
+
     _FakeAnthropic.tool_input = {"signals": []}
-    external_signals.extract_ceo_equity_via_llm("TST", "<p>x</p>", "url", "acc", "label", "CEO")
+    external_signals.extract_ceo_equity_via_llm(
+        "TST", "<p>x</p>", _URL, _ACC, "label", "CEO", filing_date=date(2026, 4, 28)
+    )
     _assert_one_forced_tool_call("emit_signals")

@@ -834,10 +834,10 @@ class ExternalSignalRecord(Base):
       - Every row carries a full audit trail: source URL, verbatim quote,
         extraction confidence, method, model. If the trail is missing, the
         value is missing (no silent fallback).
-      - extraction_method='llm_anthropic' rows are produced by the
-        deepdive/external_signals.py module — the second permitted Anthropic
-        call site after deepdive/narrative.py. Both live within the dive
-        layer; data/screener/framework layers remain LLM-free.
+      - extraction_method='llm_anthropic' rows are produced by
+        deepdive/external_signals.py, one of the call sites allow-listed in
+        tests/test_llm_call_sites.py; data/screener/framework layers remain
+        LLM-free. Each row passed deepdive/signal_verifier.py (ADR-057).
       - extraction_confidence is a categorical band, never a numeric score
         (no false precision).
 
@@ -865,6 +865,10 @@ class ExternalSignalRecord(Base):
     extraction_confidence = Column(Text, nullable=False)   # 'high' | 'medium' | 'low' | 'not_disclosed'
     extracted_at = Column(DateTime, server_default=func.now())
     extracted_model = Column(Text)             # e.g. 'claude-opus-4-7'
+    # ADR-057: the model's own band and value, and the verifier's outcome (JSON).
+    model_confidence = Column(Text)
+    model_value_numeric = Column(Float)
+    verification = Column(Text)
 
     company = relationship("Company")
 
