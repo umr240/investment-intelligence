@@ -61,6 +61,13 @@ a gitignored `CLAUDE.local.md`, which Claude Code also loads.
 - **Gates, not prompts.** A rule that matters is enforced by a test or a CI
   check (as `tests/test_llm_call_sites.py` enforces the LLM call sites). Where a
   rule can only live in prose, say so where it is stated.
+- **Borrow before building.** Before a non-trivial feature, search for a
+  proven open-source project that already does it (`gh search repos`, web
+  search). Proven means real dependents or production users, several active
+  contributors, and a release in the last ~12 months; stars don't count.
+  Report the top 1-3 with that evidence and a verdict (depend / fork / borrow
+  the pattern / build), then wait. Adding one follows SECURITY & PRIVACY §5.
+  Prose-only: no gate enforces this.
 
 ---
 
