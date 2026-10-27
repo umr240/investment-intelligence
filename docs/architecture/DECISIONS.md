@@ -716,3 +716,20 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Decision**: Each new deep dive records a SHA-256 digest of the fundamentals it read: the parser-written `Financial` values and the ratios derived from them (prices, FX, split and filing-date columns excluded; inputs outside `Financial`, such as insiders or analyst coverage, are not covered). Any write of fundamentals flags the ticker's dives whose digest no longer matches, whatever the cause: a parser or formula fix, a new filing (10-K or 10-Q) or a restatement. Same digest, same narrative. A dive with no recorded digest, which is every dive stored before this decision, counts as changed: its narrative and chat stay withheld until it is re-run. The same rule applies to chat as to narratives.
 **Amends**: DEC-46 (which flagged on a parser re-read without comparing values).
 **See**: `data/dive_staleness.py`; migration `0005_dive_inputs_digest`.
+
+---
+
+## DEC-48 — Orphaned and trailing-twelve-month annual rows deleted from the author DB
+
+**Date**: 2026-10-26
+**Decision**: The owner deleted 38 `financials` rows after a backup (`.backups/investment_intelligence-2026-10-26-pre-row-delete.db`, which still holds them). Two were orphans no current parser writes: ILMN "FY2026" (the year ending 2025-12-28, labelled a year late by the raw-month parser and now stored as FY2025) and MRVL FY2019 (an equity-only stub from parser v3). Thirty-six, in 31 undived companies, were annual rows ending off the company's year end with no revenue and no balance sheet: 10-Q trailing-twelve-month columns stored as fiscal years (e.g. AMZN 2025-04-01 to 2026-03-31), which #27 stops at the source. No dive's recorded inputs were affected: of the 33 companies (31 undived plus ILMN and MRVL), only ILMN and MRVL were ever dived (5 dives), and none of those dives has a recorded `inputs_sha256`, so all were already withheld under DEC-47.
+**Context**: The 38 row ids and the SQL are in the PR (#31). The check, run with the backup attached as `old`: `SELECT COUNT(*) FROM deepdive_runs WHERE inputs_sha256 IS NOT NULL AND company_id IN (SELECT company_id FROM old.financials WHERE id IN (<the 38 ids>))` returned 0.
+**See**: #24, #27, #31; `_derive_fiscal_period` in `data/edgar_companyfacts.py`.
+
+---
+
+## DEC-49 — Pre-IPO years stay data gaps; prospectuses are not read
+
+**Date**: 2026-10-26
+**Decision**: Years before a company's first 10-K (against Fiscal.ai across AAPL, NVDA, MSFT, UBER, LULU and HIMS: 6 field-gaps in 3 pre-IPO company-years, UBER FY2016-17 and HIMS FY2018) stay `data_gaps` entries. S-1/S-4 prospectus financials are not parsed: three company-years do not justify a new parser, and having a model read them would be LLM extraction into the data path, which DEC-44 rejects and coding rule 1 forbids (raw filing text in a prompt is SECURITY §3's concern too). "Recent IPO, insufficient history" is the correct output.
+**See**: the Fiscal.ai comparison in #24's description; DEC-44, `ADR-055-rejected-llm-techniques.md`.
