@@ -364,7 +364,7 @@ async def post_chat(ticker: str, message: str, provider: str | None = None) -> d
     view = load_frozen_scorecard_view(run_id)  # the view this dive saw, not today's
     if view is None:
         raise HTTPException(
-            409, f"{ticker}: dive {run_id} has no frozen view (predates DEC-46). Re-run the dive."
+            409, f"{ticker}: dive {run_id} has no readable frozen view (DEC-46). Re-run the dive."
         )
 
     history = load_conversation_history(run_id)

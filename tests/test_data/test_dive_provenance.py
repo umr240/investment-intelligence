@@ -7,6 +7,7 @@ only when its recorded fundamentals differ from today's, or were never recorded.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Generator, Iterator
 from contextlib import contextmanager
@@ -377,6 +378,14 @@ def _view(score: float) -> Any:
     )  # fmt: skip
 
 
+def _frozen(view: Any) -> dict[str, str]:
+    body = view.to_llm_context()
+    return {
+        "scorecard_view_json": body,
+        "scorecard_view_sha256": hashlib.sha256(body.encode()).hexdigest(),
+    }
+
+
 def test_a_frozen_view_rebuilds_to_the_same_json() -> None:
     from deepdive.scorecard_view import ScorecardView
 
@@ -385,6 +394,35 @@ def test_a_frozen_view_rebuilds_to_the_same_json() -> None:
     rebuilt = ScorecardView.from_dict(json.loads(body))
     assert rebuilt == view
     assert rebuilt.to_llm_context() == body
+    d = json.loads(body)
+    del d["frameworks"][0]["notes"], d["schema_version"]  # defaulted fields absent: still loads
+    assert ScorecardView.from_dict(d).frameworks[0].notes == ""
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    [
+        lambda d: d["company"].update(renamed_field=1),  # a field removed since the dive
+        lambda d: d["company"].pop("ticker"),  # a field added since, with no default
+    ],
+)
+def test_a_frozen_view_that_no_longer_fits_is_refused_not_raised(
+    db: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch, tamper: Any
+) -> None:
+    # Review of #32: schema drift must refuse the chat, not raise a 500.
+    import data.db
+    from deepdive.scorecard_view import load_frozen_scorecard_view
+
+    monkeypatch.setattr("deepdive.scorecard_view.get_session", data.db.get_session)
+    co = _company(db, [9.6e9])
+    d = json.loads(_view(6.5).to_llm_context())
+    tamper(d)
+    body = json.dumps(d)
+    sha = hashlib.sha256(body.encode()).hexdigest()
+    run = _dive(db, co, None, scorecard_view_json=body, scorecard_view_sha256=sha)
+    assert load_frozen_scorecard_view(run) is None
+    edited = _dive(db, co, None, **{**_frozen(_view(6.5)), "scorecard_view_sha256": "0" * 64})
+    assert load_frozen_scorecard_view(edited) is None  # body no longer matches its hash
 
 
 def test_chat_grounds_in_the_view_its_dive_froze_not_todays(
@@ -400,7 +438,7 @@ def test_chat_grounds_in_the_view_its_dive_froze_not_todays(
     monkeypatch.setattr("deepdive.scorecard_view.get_session", data.db.get_session)
     monkeypatch.setattr("deepdive.scorecard_view.load_scorecard_view", _no_call)
     co = _company(db, [9.6e9])
-    run = _dive(db, co, _digest(db), scorecard_view_json=_view(6.5).to_llm_context())
+    run = _dive(db, co, _digest(db), **_frozen(_view(6.5)))
     seen: dict[str, Any] = {}
 
     def fake_chat(view: Any, _h: Any, _m: str, *, run_id: int, provider_pref: Any = None) -> Any:
@@ -415,8 +453,26 @@ def test_chat_grounds_in_the_view_its_dive_froze_not_todays(
     assert client.post("/dive/LULU/chat", params={"message": "why?"}).status_code == 200
     assert seen == {"score": 6.5, "run_id": run}
 
-    _dive(db, co, _digest(db))  # recorded inputs, but no frozen view
+    bare = _dive(db, co, _digest(db))  # recorded inputs, but no frozen view
     assert client.post("/dive/LULU/chat", params={"message": "why?"}).status_code == 409
+    with db() as s:  # refused before the user's turn is stored
+        stored = select(DeepDiveConversation).where(DeepDiveConversation.deep_dive_run_id == bare)
+        assert s.execute(stored).first() is None
+
+
+def test_cli_chat_refuses_a_dive_without_a_frozen_view(
+    db: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from typer.testing import CliRunner
+
+    import data.db
+    from cli.main import app
+
+    monkeypatch.setattr("deepdive.scorecard_view.get_session", data.db.get_session)
+    _dive(db, _company(db, [9.6e9]), _digest(db))
+    result = CliRunner().invoke(app, ["chat", "LULU"], input="/exit\n", env={"COLUMNS": "200"})
+    assert result.exit_code == 1
+    assert "no readable frozen ScorecardView" in result.output
 
 
 def test_export_withholds_the_narrative_of_a_withheld_dive() -> None:

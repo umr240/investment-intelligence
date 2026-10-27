@@ -354,6 +354,8 @@ def _payload(profile: str | None, annuals: list[tuple[str, str]]) -> dict[str, A
         (_payload("1231", [("10-K", "2026-05-03")]), 4),  # CULP, 52/53-week
         (_payload(None, [("20-F", "2026-03-31")]), 3),  # BABA
         (_payload("1231", [("10-K/A", "2025-12-31"), ("10-K", "2026-09-30")]), 9),
+        (_payload("1231", [("10-K", "2025-12-31"), ("10-KT", "2026-06-30")]), 6),  # FY change
+        (_payload("1231", [("10-K", "2025-09-30"), ("20-F", "not-a-date")]), 9),
         (_payload("0630", []), 6),  # no annual filing yet: the profile field
         (_payload(None, [("10-K", "")]), None),
     ],
@@ -362,3 +364,15 @@ def test_the_fye_month_comes_from_the_latest_annual_report(
     payload: dict[str, Any], month: int | None
 ) -> None:
     assert fye_month_from_payload(payload) == month
+
+
+def test_filer_metadata_takes_the_month_from_the_filings(monkeypatch: pytest.MonkeyPatch) -> None:
+    # The refresh path writes this month to Company (data/pipeline.py:_persist_filer_metadata).
+    import data.api._retry as retry
+    from data.edgar_companyfacts import fetch_filer_metadata
+
+    body = _payload("1231", [("10-K", "2026-05-29")])
+    response = type("R", (), {"status_code": 200, "json": lambda self: body})()
+    monkeypatch.setattr(retry, "sec_get_with_retry", lambda *_a, **_k: response)
+    meta = fetch_filer_metadata(1040470, "test agent")
+    assert meta is not None and meta["fiscal_year_end_month"] == 5

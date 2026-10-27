@@ -26,6 +26,7 @@ LLM lives one layer up in `deepdive/narrative.py` and consumes this view.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass, field, asdict
 from datetime import date, datetime
@@ -386,11 +387,19 @@ def load_scorecard_view(
 
 
 def load_frozen_scorecard_view(run_id: int) -> ScorecardView | None:
-    """The view a dive froze onto its row (DEC-46); None if the dive predates freezing."""
+    """The view a dive froze onto its row (DEC-46); None if it has none, its hash does
+    not match, or it no longer fits the dataclasses (a later schema change)."""
     with get_session() as s:
         run = s.get(DeepDiveRun, run_id)
-        body = str(run.scorecard_view_json) if run is not None and run.scorecard_view_json else None
-    return ScorecardView.from_dict(json.loads(body)) if body else None
+        if run is None or not run.scorecard_view_json:
+            return None
+        body, sha = str(run.scorecard_view_json), run.scorecard_view_sha256
+    if sha != hashlib.sha256(body.encode("utf-8")).hexdigest():
+        return None
+    try:
+        return ScorecardView.from_dict(json.loads(body))
+    except (KeyError, TypeError, ValueError):
+        return None
 
 
 # ── Internals ─────────────────────────────────────────────────────────────

@@ -1091,7 +1091,7 @@ async def _chat_async(
 
     view = load_frozen_scorecard_view(active_run_id)  # the view this dive saw, not today's
     if view is None:
-        rprint(f"[red]Run #{active_run_id} has no frozen ScorecardView (predates DEC-46).[/red]")
+        rprint(f"[red]Run #{active_run_id} has no readable frozen ScorecardView (DEC-46).[/red]")
         rprint(f"[dim]Re-run `invest dive {ticker}`, then chat.[/dim]")
         raise typer.Exit(code=1)
 
