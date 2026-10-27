@@ -38,7 +38,8 @@ _SCALES = (Decimal(1), Decimal(10**3), Decimal(10**6), Decimal(10**9))
 _SCALE_WORDS = {
     "thousand": Decimal(10**3), "k": Decimal(10**3),
     "million": Decimal(10**6), "m": Decimal(10**6),
-    "billion": Decimal(10**9), "b": Decimal(10**9),
+    "billion": Decimal(10**9), "b": Decimal(10**9), "bn": Decimal(10**9),
+    "mm": Decimal(10**6), "trillion": Decimal(10**12), "tn": Decimal(10**12),
 }  # fmt: skip
 # "in millions", "(in US $ millions", "in thousands of U.S. dollars" (SHOP: "in us $ millions").
 _DOC_SCALE = re.compile(r"\bin (?:(?:us|u\.s\.|usd)\s?)?(?:\$\s?)?(thousands|millions|billions)\b")
@@ -55,9 +56,9 @@ _NUMBER = re.compile(
     r"(?P<neg>[-−–]\s?)?(?P<open>\()?(?P<cur>\$)?(?P<neg2>[-−])?\s?"
     r"(?<![\w.,])(?P<num>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)"
     r"(?P<close>\))?"
-    r"(?:(?P<pct>\s?%|\s(?:percent|bps|basis points)\b)"
-    r"|(?P<word>\s(?:thousand|million|billion)\b)"
-    r"|(?P<suffix>[kmb])(?!-\d)\b)?"
+    r"(?:(?P<pct>\s?%|\s(?:percent)\b|\s?(?:bps?|basis points?)\b)"
+    r"|(?P<word>\s(?:thousand|million|billion|trillion)\b)"
+    r"|(?P<suffix>bn|mm|tn|[kmb])(?!-\d)\b)?"
 )
 _RANGE_JOIN = re.compile(r"^\s*(?:–|—|-|to)\s*$")
 
@@ -70,6 +71,7 @@ class ParsedNumber:
     start: int
     end: int
     bps: bool = False  # written in basis points; value already in percentage points
+    unknown_unit: bool = False  # letters glued on that the grammar does not know ("2.0x")
 
 
 @dataclass
@@ -119,7 +121,10 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
         # A dash glued to the number just parsed joins a range ("120-125%", "10%-12%"); any
         # other dash is a sign ("NRR 118% -5%", "FY 2025 -5%"), erring toward a missing value.
         neg = m.group("neg")
-        joins = neg is not None and neg == neg.strip() and bool(out) and out[-1].end == start
+        joins = (
+            neg is not None and neg == neg.strip() and bool(out) and out[-1].end == start
+            and out[-1].value <= value  # a range ascends: "118%-5%" is a minus
+        )  # fmt: skip
         if joins:
             start = m.end("neg")
         if has_parens or m.group("neg2") or (m.group("neg") and not joins):
@@ -129,7 +134,7 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
         scale: Decimal | None = None
         if m.group("pct"):
             unit = "pct"
-            if "b" in m.group("pct"):
+            if "b" in m.group("pct"):  # "bp", "bps", "basis point(s)"
                 value, bps = value / 100, True  # bps and basis points, in percentage points
         elif m.group("word") or suffix:
             unit = "currency"
@@ -138,13 +143,18 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
             unit = "currency"
         else:
             unit = "bare"
-        out.append(ParsedNumber(value, unit, scale, start, m.end(), bps))
-    # A range ("120–125%") is two numbers; the first takes the second's unit.
+        unknown = re.match(r"[a-z]", quote[m.end() : m.end() + 1]) is not None
+        out.append(ParsedNumber(value, unit, scale, start, m.end(), bps, unknown))
+    # A range ("120–125%", "$5-6 billion") is two numbers; the first takes the second's
+    # unit and stated scale when it has none of its own.
     for i in range(len(out) - 1):
         a, b = out[i], out[i + 1]
-        if a.unit == "bare" and b.unit != "bare" and _RANGE_JOIN.match(quote[a.end : b.start]):
-            value = a.value / 100 if b.bps else a.value
-            out[i] = ParsedNumber(value, b.unit, b.scale, a.start, a.end, b.bps)
+        takes_unit = a.unit == "bare" and b.unit != "bare"
+        takes_scale = a.unit in ("bare", "currency") and a.scale is None and b.scale is not None
+        if (takes_unit or takes_scale) and _RANGE_JOIN.match(quote[a.end : b.start]):
+            value = a.value / 100 if b.bps and a.unit == "bare" else a.value
+            unit = b.unit if a.unit == "bare" else a.unit
+            out[i] = ParsedNumber(value, unit, b.scale, a.start, a.end, b.bps, a.unknown_unit)
     return out
 
 
@@ -193,6 +203,8 @@ def verify_signal(value: float | None, quote: str, unit: str, source_text: str) 
                 else:
                     outcome = SCALE_UNCONFIRMED
                 break
+        if outcome and n.unknown_unit:
+            outcome = SCALE_UNCONFIRMED  # an unrecognised unit may be a scale ("1.5bn" before bn)
         if outcome and (best is None or rank[outcome] < rank[best[0]]):
             best = (outcome, n)
     if best is None:
