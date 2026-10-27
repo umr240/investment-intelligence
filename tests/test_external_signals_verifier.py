@@ -122,6 +122,20 @@ ACC = "0001773751-26-000060"
          "verified", [], "high", "high"),
         ("rule number", "Under Rule 10b-5 of the Act", "Rule 10b-5", 10_000_000_000.0, "usd",
          "scale_unconfirmed", ["multiple_candidates"], "high", "low"),
+        # Confirmation round on #36: a spaced dash is a sign, a bps range converts both ends,
+        # and a K/M/B suffix states its scale (ADR-057 §2.1.2).
+        ("change column", "NRR 118% -5% year on year", "NRR 118% -5%", 5.0, "pct",
+         "value_not_in_quote", [], "high", "not_disclosed"),
+        ("year then minus", "FY 2025 -5%", "FY 2025 -5%", 5.0, "pct", "value_not_in_quote", [],
+         "high", "not_disclosed"),
+        ("bps range", "Take rate improved 50-75 bps", "Take rate improved 50-75 bps", 50.0, "pct",
+         "value_not_in_quote", [], "high", "not_disclosed"),
+        ("suffix scale wrong", "ARR reached 560M", "ARR reached 560M", 560.0, "usd",
+         "value_not_in_quote", [], "high", "not_disclosed"),
+        ("suffix scale right", "ARR reached 560M", "ARR reached 560M", 560_000_000.0, "usd",
+         "verified", [], "high", "high"),
+        ("table row", "revenue 1,350 -11%", "revenue 1,350 -11%", 1350.0, "pct",
+         "scale_unconfirmed", [], "high", "low"),
         ("curly + nbsp", "Customers’ NRR was 118%", "Customers' NRR was 118%", 118.0, "pct",
          "verified", [], "high", "high"),
         ("no value", INTA, "", None, "pct", "no_value", [], "high", "not_disclosed"),
@@ -146,7 +160,10 @@ def test_fixture(
         ("50 bps, 3 percent", [("0.5", "pct"), ("3", "pct")]),  # bps in percentage points
         ("-5% and −5% and $-5", [("-5", "pct"), ("-5", "pct"), ("-5", "currency")]),
         ("10%-12% and 120-125%", [("10", "pct"), ("12", "pct"), ("120", "pct"), ("125", "pct")]),
-        ("12m customers, Rule 10b-5", [("12", "bare"), ("10", "bare"), ("-5", "bare")]),
+        ("12m customers, Rule 10b-5", [("12", "currency"), ("10", "bare"), ("-5", "bare")]),
+        ("NRR 118% -5%", [("118", "pct"), ("-5", "pct")]),  # spaced dash: a sign
+        ("50-75 bps", [("0.5", "pct"), ("0.75", "pct")]),
+        ("revenue 1,350 -11%", [("1350", "bare"), ("-11", "pct")]),
         ("FY2025 Q1 2026 2,026", [("2026", "bare")]),
         ("120–125%", [("120", "pct"), ("125", "pct")]),
     ],
@@ -323,6 +340,14 @@ def test_persistence_recomputes_the_band_from_the_check(db: sessionmaker[Session
     es.persist_extraction(result)
     (row,) = _rows(db)
     assert (row.signal_value_numeric, row.extraction_confidence) == (None, "not_disclosed")
+
+
+def test_persistence_stores_the_value_that_was_checked(db: sessionmaker[Session]) -> None:
+    result = _result(559_900_000.0, "Total ARR was $559.9 million")
+    result.signals[0].value_numeric = 999.0  # edited after the check
+    es.persist_extraction(result)
+    (row,) = _rows(db)
+    assert (row.signal_value_numeric, row.extraction_confidence) == (559_900_000.0, "high")
 
 
 def test_an_unchecked_old_value_is_not_protected_by_the_rerun_rule(

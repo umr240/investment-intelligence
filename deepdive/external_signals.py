@@ -486,7 +486,9 @@ def persist_extraction(result: ExtractionResult) -> PersistReport:
             verification = sig.verification
             # Recomputed here, so a band or value edited after _verify cannot be stored.
             band = stored_band(sig.model_confidence or "not_disclosed", verification.ceiling)
-            value = sig.value_numeric if verification.kept and band != "not_disclosed" else None
+            # The value _verify checked (the model's), not one edited since.
+            kept = verification.kept and band != "not_disclosed"
+            value = sig.model_value_numeric if kept else None
             # Upsert on (company_id, signal_name, as_of_date)
             existing = s.execute(select(ExternalSignalRecord).where(
                 ExternalSignalRecord.company_id == c.id,

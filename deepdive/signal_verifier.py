@@ -52,12 +52,12 @@ _PERCENT_WORD = re.compile(r"%|\bpercent\b")
 # One number in a normalised (case-folded) quote: optional sign, "(" and "$", digits,
 # optional ")", optional unit or scale. The lookbehind skips digits inside words (Q1, FY2025).
 _NUMBER = re.compile(
-    r"(?P<neg>[-−]\s?)?(?P<open>\()?(?P<cur>\$)?(?P<neg2>[-−])?\s?"
+    r"(?P<neg>[-−–]\s?)?(?P<open>\()?(?P<cur>\$)?(?P<neg2>[-−])?\s?"
     r"(?<![\w.,])(?P<num>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)"
     r"(?P<close>\))?"
     r"(?:(?P<pct>\s?%|\s(?:percent|bps|basis points)\b)"
     r"|(?P<word>\s(?:thousand|million|billion)\b)"
-    r"|(?P<suffix>[kmb])\b)?"
+    r"|(?P<suffix>[kmb])(?!-\d)\b)?"
 )
 _RANGE_JOIN = re.compile(r"^\s*(?:–|—|-|to)\s*$")
 
@@ -69,6 +69,7 @@ class ParsedNumber:
     scale: Decimal | None  # stated by the quote itself ("million", "M"); None if not
     start: int
     end: int
+    bps: bool = False  # written in basis points; value already in percentage points
 
 
 @dataclass
@@ -115,19 +116,21 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
         except InvalidOperation:
             continue
         start = m.start()
-        # A hyphen right after a digit or % joins a range ("120-125%"); otherwise it is a sign.
-        joins = m.group("neg") is not None and re.search(r"[\d%]\s*$", quote[:start]) is not None
+        # A dash glued to the number just parsed joins a range ("120-125%", "10%-12%"); any
+        # other dash is a sign ("NRR 118% -5%", "FY 2025 -5%"), erring toward a missing value.
+        neg = m.group("neg")
+        joins = neg is not None and neg == neg.strip() and bool(out) and out[-1].end == start
         if joins:
             start = m.end("neg")
         if has_parens or m.group("neg2") or (m.group("neg") and not joins):
             value = -value
-        # K/M/B scale money only after "$" or a decimal: not "Rule 10b-5" or "12m customers".
-        suffix = m.group("suffix") if (m.group("cur") or "." in digits) else None
+        suffix = m.group("suffix")  # never before "-digit": "Rule 10b-5" (in the regex)
+        bps = False
         scale: Decimal | None = None
         if m.group("pct"):
             unit = "pct"
             if "b" in m.group("pct"):
-                value /= 100  # bps and basis points, in percentage points
+                value, bps = value / 100, True  # bps and basis points, in percentage points
         elif m.group("word") or suffix:
             unit = "currency"
             scale = _SCALE_WORDS[(m.group("word") or suffix or "").strip()]
@@ -135,12 +138,13 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
             unit = "currency"
         else:
             unit = "bare"
-        out.append(ParsedNumber(value, unit, scale, start, m.end()))
+        out.append(ParsedNumber(value, unit, scale, start, m.end(), bps))
     # A range ("120–125%") is two numbers; the first takes the second's unit.
     for i in range(len(out) - 1):
         a, b = out[i], out[i + 1]
         if a.unit == "bare" and b.unit != "bare" and _RANGE_JOIN.match(quote[a.end : b.start]):
-            out[i] = ParsedNumber(a.value, b.unit, b.scale, a.start, a.end)
+            value = a.value / 100 if b.bps else a.value
+            out[i] = ParsedNumber(value, b.unit, b.scale, a.start, a.end, b.bps)
     return out
 
 
