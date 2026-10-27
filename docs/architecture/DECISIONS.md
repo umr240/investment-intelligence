@@ -733,3 +733,12 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Date**: 2026-10-26
 **Decision**: Years before a company's first 10-K (against Fiscal.ai across AAPL, NVDA, MSFT, UBER, LULU and HIMS: 6 field-gaps in 3 pre-IPO company-years, UBER FY2016-17 and HIMS FY2018) stay `data_gaps` entries. S-1/S-4 prospectus financials are not parsed: three company-years do not justify a new parser, and having a model read them would be LLM extraction into the data path, which DEC-44 rejects and coding rule 1 forbids (raw filing text in a prompt is SECURITY §3's concern too). "Recent IPO, insufficient history" is the correct output.
 **See**: the Fiscal.ai comparison in #24's description; DEC-44, `ADR-055-rejected-llm-techniques.md`.
+
+---
+
+## DEC-50 — ADR-048 accepted: every LLM call is recorded, prices are copied with their source
+
+**Date**: 2026-10-27
+**Decision**: The owner accepted ADR-048. Every attempt at an allow-listed LLM call site writes one `llm_calls` row: tokens including cache tokens, latency, status and error class, guard status, cost and prompt version with a hash of the system prompt and schema; prompt text is never stored. Prices are rows copied from pydantic/genai-prices (MIT) at a named commit and date into `config/llm_prices.py`, not a dependency (SECURITY §5); a model with no row gets no cost rather than a guessed one, and the budgeted paths (chat, `/external-signals`) refuse it before the call. OpenTelemetry tracing libraries (OpenLLMetry, OpenInference) were considered and not adopted: they need a collector for three call sites; the table follows their GenAI field names instead.
+**See**: `ADR-048-llm-observability-and-prompt-versioning.md`; the borrow-before-building comparison in the PR.
+
