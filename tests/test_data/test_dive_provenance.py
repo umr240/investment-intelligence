@@ -469,10 +469,20 @@ def test_cli_chat_refuses_a_dive_without_a_frozen_view(
     from cli.main import app
 
     monkeypatch.setattr("deepdive.scorecard_view.get_session", data.db.get_session)
-    _dive(db, _company(db, [9.6e9]), _digest(db))
+    monkeypatch.setattr("deepdive.scorecard_view.load_scorecard_view", _no_call)
+    co = _company(db, [9.6e9])
+    older = _dive(db, co, _digest(db), **_frozen(_view(6.5)))
+    _dive(db, co, _digest(db))  # the latest dive has no frozen view
     result = CliRunner().invoke(app, ["chat", "LULU"], input="/exit\n", env={"COLUMNS": "200"})
     assert result.exit_code == 1
     assert "no readable frozen ScorecardView" in result.output
+
+    # Verifier on #32: --run-id grounds in that run's view, not the newest one of its mode.
+    result = CliRunner().invoke(
+        app, ["chat", "LULU", "--run-id", str(older)], input="/exit\n", env={"COLUMNS": "200"}
+    )
+    assert result.exit_code == 0, result.output
+    assert "composite 6.50" in result.output
 
 
 def test_export_withholds_the_narrative_of_a_withheld_dive() -> None:

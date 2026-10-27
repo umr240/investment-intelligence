@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 from dataclasses import dataclass, field, asdict
 from datetime import date, datetime
 from typing import Any
@@ -41,6 +42,8 @@ from data.models.schema import (
     Financial,
     FrameworkScore,
 )
+
+logger = logging.getLogger(__name__)
 
 
 # ── View dataclasses (the "contract" for both CLI + AI) ──────────────────
@@ -395,10 +398,12 @@ def load_frozen_scorecard_view(run_id: int) -> ScorecardView | None:
             return None
         body, sha = str(run.scorecard_view_json), run.scorecard_view_sha256
     if sha != hashlib.sha256(body.encode("utf-8")).hexdigest():
+        logger.warning("dive %s: frozen view does not match its stored hash", run_id)
         return None
     try:
         return ScorecardView.from_dict(json.loads(body))
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError) as exc:
+        logger.warning("dive %s: frozen view no longer fits ScorecardView: %r", run_id, exc)
         return None
 
 
