@@ -4,6 +4,7 @@ Claude Code configuration for this repository.
 
 | Path | What |
 |---|---|
+| `agents/pr-verifier.md` | Fresh-context PR verifier (CLAUDE.md "A fresh pair of eyes before the owner's"); runs in a Claude Code session, not on API credit |
 | `skills/` | Project-local skills: checklists over existing CLI commands (ADR-032; frontmatter contract in `skills/README.md`) |
 | `session-sweep.sh` | Session hooks: `start` (git orientation), `stop` (diff summary + ruff), `full` (ruff + mypy + pytest) |
 
