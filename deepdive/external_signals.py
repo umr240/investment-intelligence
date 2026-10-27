@@ -484,6 +484,9 @@ def persist_extraction(result: ExtractionResult) -> PersistReport:
         for sig in result.signals:
             assert sig.verification is not None
             verification = sig.verification
+            # Recomputed here, so a band or value edited after _verify cannot be stored.
+            band = stored_band(sig.model_confidence or "not_disclosed", verification.ceiling)
+            value = sig.value_numeric if verification.kept and band != "not_disclosed" else None
             # Upsert on (company_id, signal_name, as_of_date)
             existing = s.execute(select(ExternalSignalRecord).where(
                 ExternalSignalRecord.company_id == c.id,
@@ -497,18 +500,22 @@ def persist_extraction(result: ExtractionResult) -> PersistReport:
                     as_of_date=sig.as_of_date,
                 )
                 s.add(existing)
-            elif existing.signal_value_numeric is not None:
+            else:
                 same_filing = existing.source_accession == result.source_accession
-                if sig.value_numeric is None and same_filing:
+                checked_value = existing.signal_value_numeric is not None and existing.verification
+                if value is None and same_filing and checked_value:
                     report.kept_existing.append(sig.name)
                     continue
                 verification.replaced = {
                     "value": existing.signal_value_numeric,
                     "confidence": existing.extraction_confidence,
+                    "model_value": existing.model_value_numeric,
+                    "model_confidence": existing.model_confidence,
+                    "verification": existing.verification,
                     "accession": existing.source_accession,
                     "extracted_at": existing.extracted_at,
                 }
-            existing.signal_value_numeric = sig.value_numeric
+            existing.signal_value_numeric = value
             existing.signal_value_text = sig.value_text
             existing.signal_unit = sig.unit
             existing.source_url = result.source_url
@@ -516,7 +523,7 @@ def persist_extraction(result: ExtractionResult) -> PersistReport:
             existing.source_document = result.source_document
             existing.source_accession = result.source_accession
             existing.extraction_method = "llm_anthropic"
-            existing.extraction_confidence = sig.confidence
+            existing.extraction_confidence = band
             # Column-style model: mypy types these attributes as Column[...].
             existing.model_confidence = sig.model_confidence  # type: ignore[assignment]
             existing.model_value_numeric = sig.model_value_numeric  # type: ignore[assignment]

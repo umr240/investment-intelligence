@@ -49,10 +49,10 @@ _DOC_SCALE_VALUE = {
 }
 _PERCENT_WORD = re.compile(r"%|\bpercent\b")
 
-# One number in a normalised (case-folded) quote: optional "(" and "$", digits,
+# One number in a normalised (case-folded) quote: optional sign, "(" and "$", digits,
 # optional ")", optional unit or scale. The lookbehind skips digits inside words (Q1, FY2025).
 _NUMBER = re.compile(
-    r"(?P<open>\()?(?P<cur>\$)?\s?"
+    r"(?P<neg>[-−]\s?)?(?P<open>\()?(?P<cur>\$)?(?P<neg2>[-−])?\s?"
     r"(?<![\w.,])(?P<num>\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)"
     r"(?P<close>\))?"
     r"(?:(?P<pct>\s?%|\s(?:percent|bps|basis points)\b)"
@@ -114,19 +114,28 @@ def parse_numbers(quote: str) -> list[ParsedNumber]:
             value = Decimal(digits.replace(",", ""))
         except InvalidOperation:
             continue
-        if has_parens:
+        start = m.start()
+        # A hyphen right after a digit or % joins a range ("120-125%"); otherwise it is a sign.
+        joins = m.group("neg") is not None and re.search(r"[\d%]\s*$", quote[:start]) is not None
+        if joins:
+            start = m.end("neg")
+        if has_parens or m.group("neg2") or (m.group("neg") and not joins):
             value = -value
+        # K/M/B scale money only after "$" or a decimal: not "Rule 10b-5" or "12m customers".
+        suffix = m.group("suffix") if (m.group("cur") or "." in digits) else None
         scale: Decimal | None = None
         if m.group("pct"):
             unit = "pct"
-        elif m.group("word") or m.group("suffix"):
+            if "b" in m.group("pct"):
+                value /= 100  # bps and basis points, in percentage points
+        elif m.group("word") or suffix:
             unit = "currency"
-            scale = _SCALE_WORDS[(m.group("word") or m.group("suffix") or "").strip()]
+            scale = _SCALE_WORDS[(m.group("word") or suffix or "").strip()]
         elif m.group("cur"):
             unit = "currency"
         else:
             unit = "bare"
-        out.append(ParsedNumber(value, unit, scale, m.start(), m.end()))
+        out.append(ParsedNumber(value, unit, scale, start, m.end()))
     # A range ("120–125%") is two numbers; the first takes the second's unit.
     for i in range(len(out) - 1):
         a, b = out[i], out[i + 1]

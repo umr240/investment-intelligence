@@ -41,9 +41,9 @@ preconditions:
     into a triangulation run rather than a fresh extraction
 postconditions:
   - "1-N ExternalSignalRecord rows persisted with extraction_method=llm_anthropic"
-  - "Every persisted row has signal_name, extraction_confidence in {high, medium, low, not_disclosed}, source_url (resolves), source_quote (verbatim from source >=30 chars OR empty for not_disclosed), source_accession, extracted_model, extracted_at"
-  - "For confidence != not_disclosed rows: source_quote length >=30 chars (verbatim requirement from external_signals.py system prompt)"
-  - "For confidence = not_disclosed rows: signal_value_numeric IS NULL AND signal_value_text IS NULL (no fabrication)"
+  - "Every persisted row has signal_name, extraction_confidence in {high, medium, low, not_disclosed}, source_url (the filing's EDGAR document), source_quote, source_accession, extracted_model, extracted_at, verification"
+  - "Every stored value passed deepdive/signal_verifier.py before persistence (ADR-057): quote in the text the model saw, value in the quote; the stored band is the lower of the model's and the check's"
+  - "For confidence = not_disclosed rows: signal_value_numeric IS NULL (signal_value_text may say why, e.g. '<1% (*)')"
   - "skill_invocations row written with cost_usd populated (actual measured cost, not estimate)"
 side_effects:
   - "Anthropic token spend (~$0.022-$0.034 per invocation per ADR-031 sec 3.1 measurements; budget gate applies)"
@@ -66,7 +66,7 @@ mental_models:
   - first_principles
   - inversion
 shadow_mode_until: 2026-05-29
-version: 1.1.0
+version: 1.2.0
 last_reviewed: 2026-05-16
 implementation: cli/skills/external_signals.py
 composes:
@@ -78,6 +78,7 @@ composes:
 changelog:
   - "1.0.0 (2026-05-15): initial — LLM-supplementary extraction of NRR/GRR/ARR/GMV/take-rate from 8-K EX-99.1. dangerous: true (token spend); strict isolation from F1-F7 (writes external_signals only)."
   - "1.1.0 (2026-05-16): declare composes: per ADR-036 — depends on anthropic>=0.28 (the permitted call site) and edgartools>=2.0 (8-K fetching). Minor bump for additive metadata."
+  - "1.2.0 (2026-10-27): postconditions follow ADR-057 — every stored value is verified in code before persistence (counts per outcome reported), replacing the 30-character quote rule; not_disclosed rows may carry value_text."
 ---
 
 ## What this does

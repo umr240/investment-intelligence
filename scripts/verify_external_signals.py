@@ -16,6 +16,7 @@ Dry run by default; `--apply` writes, so back up first.
 
 from __future__ import annotations
 
+import json
 import sys
 import time
 from collections import Counter
@@ -113,7 +114,10 @@ def main(argv: list[str]) -> int:
                 rec: Any = row  # Column-style model: mypy types its attributes as Column[...]
                 rec.model_value_numeric, rec.model_confidence = value, rec.extraction_confidence
                 rec.signal_value_numeric, rec.extraction_confidence = kept, band
-                rec.verification = v.to_json()
+                record = json.loads(v.to_json())
+                if url != rec.source_url:  # §2.6: nothing is overwritten that is not first copied
+                    record["previous_source_url"] = rec.source_url
+                rec.verification = json.dumps(record, sort_keys=True)
                 rec.source_url = url
                 if rec.as_of_date is None and filed is not None:
                     rec.as_of_date = filed

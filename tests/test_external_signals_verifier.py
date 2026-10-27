@@ -111,6 +111,17 @@ ACC = "0001773751-26-000060"
         # Ranges, curly quotes and non-breaking spaces.
         ("range low end", "NRR of 120–125% expected", "NRR of 120–125%", 120.0, "pct", "verified",
          ["multiple_candidates"], "high", "low"),
+        # Local verifier on #36: a sign, bps and a stray suffix must not verify a wrong value.
+        ("minus sign", "NRR change was -5% this year", "NRR change was -5%", 5.0, "pct",
+         "value_not_in_quote", [], "high", "not_disclosed"),
+        ("unicode minus", "Operating margin −5%", "Operating margin −5%", -5.0, "pct", "verified",
+         [], "high", "high"),
+        ("bps is not percent", "Take rate expanded 50 bps", "Take rate expanded 50 bps", 50.0,
+         "pct", "value_not_in_quote", [], "high", "not_disclosed"),
+        ("bps in points", "Take rate expanded 50 bps", "Take rate expanded 50 bps", 0.5, "pct",
+         "verified", [], "high", "high"),
+        ("rule number", "Under Rule 10b-5 of the Act", "Rule 10b-5", 10_000_000_000.0, "usd",
+         "scale_unconfirmed", ["multiple_candidates"], "high", "low"),
         ("curly + nbsp", "Customers’ NRR was 118%", "Customers' NRR was 118%", 118.0, "pct",
          "verified", [], "high", "high"),
         ("no value", INTA, "", None, "pct", "no_value", [], "high", "not_disclosed"),
@@ -132,7 +143,10 @@ def test_fixture(
         ("(4) 15", [("15", "bare")]),
         ("(12.3) ($1,204)", [("-12.3", "bare"), ("-1204", "currency")]),
         ("$559.9 million and $2.1B", [("559.9", "currency"), ("2.1", "currency")]),
-        ("50 bps, 3 percent", [("50", "pct"), ("3", "pct")]),
+        ("50 bps, 3 percent", [("0.5", "pct"), ("3", "pct")]),  # bps in percentage points
+        ("-5% and −5% and $-5", [("-5", "pct"), ("-5", "pct"), ("-5", "currency")]),
+        ("10%-12% and 120-125%", [("10", "pct"), ("12", "pct"), ("120", "pct"), ("125", "pct")]),
+        ("12m customers, Rule 10b-5", [("12", "bare"), ("10", "bare"), ("-5", "bare")]),
         ("FY2025 Q1 2026 2,026", [("2026", "bare")]),
         ("120–125%", [("120", "pct"), ("125", "pct")]),
     ],
@@ -221,6 +235,17 @@ def test_def14a_without_a_filing_date_costs_no_call() -> None:
     assert _Fake.calls == []
 
 
+def test_def14a_checks_the_text_not_the_html() -> None:
+    # A quote spanning table cells exists only in the extracted text.
+    _Fake.reply = {"signals": [_sig("voting_power_pct", 87.73, "Andrew Dudum 87.73%")]}
+    r = es.extract_ceo_equity_via_llm(
+        "HIMS", "<tr><td>Andrew Dudum</td><td>87.73%</td></tr>", URL, ACC, "label", "CEO",
+        filing_date=date(2026, 4, 28),
+    )  # fmt: skip
+    assert r.signals[0].verification is not None
+    assert r.signals[0].verification.outcome == "verified"
+
+
 def test_def14a_star_cell_is_not_disclosed_with_text_not_a_placeholder() -> None:
     _Fake.reply = {"signals": [
         _sig("economic_equity_pct", None, "* Less than 1%.", "not_disclosed", value_text="<1% (*)"),
@@ -288,6 +313,35 @@ def test_a_hand_built_result_is_refused(db: sessionmaker[Session]) -> None:
     with pytest.raises(es.UnverifiedSignalError):
         es.persist_extraction(hand)
     assert _rows(db) == []
+
+
+def test_persistence_recomputes_the_band_from_the_check(db: sessionmaker[Session]) -> None:
+    result = _result(559_900_000.0, "Total ARR was $559.9 million")
+    sig = result.signals[0]
+    sig.verification = verify_signal(559_900_000.0, "GMV 100,743", "usd", "GMV 100,743")
+    sig.confidence = "high"  # edited after the check
+    es.persist_extraction(result)
+    (row,) = _rows(db)
+    assert (row.signal_value_numeric, row.extraction_confidence) == (None, "not_disclosed")
+
+
+def test_an_unchecked_old_value_is_not_protected_by_the_rerun_rule(
+    db: sessionmaker[Session],
+) -> None:
+    from data.models.schema import ExternalSignalRecord
+
+    with db() as s:  # a pre-ADR-057 row: value kept, never verified
+        s.add(ExternalSignalRecord(
+            company_id=1, signal_name="arr_usd", as_of_date=date(2026, 3, 31),
+            signal_value_numeric=600_000_000.0, source_accession=ACC,
+            extraction_method="llm_anthropic", extraction_confidence="high",
+        ))  # fmt: skip
+        s.commit()
+    report = es.persist_extraction(_result(600_000_000.0, "Total ARR was $559.9 million"))
+    assert report.kept_existing == []
+    (row,) = _rows(db)
+    assert (row.signal_value_numeric, row.extraction_confidence) == (None, "not_disclosed")
+    assert json.loads(row.verification)["replaced"]["value"] == 600_000_000.0
 
 
 def test_a_rerun_never_replaces_a_kept_value_with_a_dropped_one(db: sessionmaker[Session]) -> None:

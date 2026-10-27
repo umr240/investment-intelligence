@@ -1,6 +1,6 @@
 # Skill lineage — auto-generated, do not hand-edit
 
-> Regenerated: 2026-08-16. Source: each skill's `changelog:` frontmatter array. Regenerate via `invest skill lineage --rebuild`.
+> Regenerated: 2026-10-27. Source: each skill's `changelog:` frontmatter array. Regenerate via `invest skill lineage --rebuild`.
 
 Per ADR-034: this index is the chronological master view of every skill change. The frontmatter `changelog:` array on each individual skill remains the source of truth — this file is a derived index.
 
@@ -10,6 +10,7 @@ Per ADR-034: this index is the chronological master view of every skill change. 
 # Skill lineage — cross-skill chronological view
 # Newest first. Format: DATE  SKILL  VERSION  SUMMARY
 ────────────────────────────────────────────────────────────────────────────────────────────────────
+2026-10-27  external-signals         v1.2.0  postconditions follow ADR-057 — every stored value is verified in code before persistence (counts per outcome reported), replacing the 30-character quote rule; not_disclosed rows may carry value_text.
 2026-08-16  intrinsic-value          v2.0.0  MAJOR — adds the full Greenwald ladder (ADR-042, new valuation/greenwald/ package): asset reproduction value with goodwill excluded and R&D/SG&A capitalised, cycle-normalised earnings power with growth-capex added back, and the EPV-vs-AV franchise test. Adds the EPV applicability gate (the Greenwald analogue of ADR-030's maturity routing) plus a recent-regime EPV for inflecting filers. Adds cross-engine synthesis. Also fixed a second silent swallow: EPVResult.notes were computed then discarded. Breaking for consumers of the v1 single-engine output shape.
 2026-08-16  intrinsic-value          v1.0.0  initial. Wraps `invest iv` (new CLI surface). Authoring surfaced a live defect: the ADR-029 reverse-DCF gate still matched pre-ADR-030 tier labels ('A_gaap'/'B_pt_rescued'), so market-implied growth had been silently None for every classified ticker since 2026-05-14 — masked by a bare `except: pass`. Fixed in valuation/damodaran/intrinsic.py. Verified across NVDA, INTA, AAPL, BONEX.ST.
 2026-05-17  dive-complete            v1.1.1  docs — clarified that this skill does not invoke the narrative LLM layer (deterministic-only per permitted_anthropic_calls: [none]). Narrative is a separate explicit step via `invest score-card TICKER --narrate`. Body note added; workflow unchanged.
@@ -69,7 +70,7 @@ Per ADR-034: this index is the chronological master view of every skill change. 
 ```
 
 ```
-# external-signals  (current: v1.1.0)
+# external-signals  (current: v1.2.0)
   shadow_mode_until: 2026-05-29
   last_reviewed:     2026-05-16
 
@@ -77,8 +78,10 @@ Per ADR-034: this index is the chronological master view of every skill change. 
   ──────────────────────────────────────────────────────────────────────
   ○ 2026-05-15  v1.0.0
         initial — LLM-supplementary extraction of NRR/GRR/ARR/GMV/take-rate from 8-K EX-99.1. dangerous: true (token spend); strict isolation from F1-F7 (writes external_signals only).
-  ● 2026-05-16  v1.1.0
+  ○ 2026-05-16  v1.1.0
         declare composes: per ADR-036 — depends on anthropic>=0.28 (the permitted call site) and edgartools>=2.0 (8-K fetching). Minor bump for additive metadata.
+  ● 2026-10-27  v1.2.0
+        postconditions follow ADR-057 — every stored value is verified in code before persistence (counts per outcome reported), replacing the 30-character quote rule; not_disclosed rows may carry value_text.
 
 ```
 
@@ -98,10 +101,11 @@ Per ADR-034: this index is the chronological master view of every skill change. 
 
 ## Validation findings at last regeneration
 
-0 error(s), 3 warning(s).
+0 error(s), 4 warning(s).
 
 ### Warnings
 
 - **audit-completeness** — §3.4: shadow_mode_until=2026-05-29 is in the past — graduate to non-shadow + bump minor OR extend the window with rationale.
 - **dive-complete** — §3.4: shadow_mode_until=2026-05-29 is in the past — graduate to non-shadow + bump minor OR extend the window with rationale.
 - **external-signals** — §3.4: shadow_mode_until=2026-05-29 is in the past — graduate to non-shadow + bump minor OR extend the window with rationale.
+- **intrinsic-value** — §3.4: shadow_mode_until=2026-08-30 is in the past — graduate to non-shadow + bump minor OR extend the window with rationale.
