@@ -55,8 +55,9 @@ Measured again on the author DB, 2026-10-27, before the first backfill:
 C1 74.0% (4,825 of 6,518); C2 809 companies, 6 of them dived; C3 65 of the 69
 dived companies; C4 2,190 of 5,021 companies with quarterly share counts
 (quarterly rows carry no split factor, so every jump counts); C5 125; C6 5,444
-of 10,148 below 0.5; C7 7 of 7 runs; C8 not measurable until a Stage B
-completes.
+of 10,148 below 0.5 (5,449 with the 5 missing values); C7 4 of 4 finished runs
+(runs 2, 4 and 6 stopped after Stage A and are not counted); C8 not measurable
+until a Stage B completes.
 
 ### 2.2 One result shape (borrowed)
 
@@ -76,6 +77,7 @@ Definitions the table leaves open:
   classifier verdict is `classify(sector, industry)`. A verdict with
   `source = 'override'` is the explicit override record. Under the `none`
   policy nothing is classified and C5 has no units.
+- **C6:** a company with no `data_completeness` counts as below 0.5.
 - **C7:** a run is counted once it has finished: Stage C completed, a stage
   failed, or a single-shot run with no stages.
 - **C8:** Stage B records the frames filers it built and how many resolved a

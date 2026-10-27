@@ -269,9 +269,9 @@ def test_check_ticker_turns_violations_into_gaps(
     s.commit()
     gaps = contracts.check_ticker("GAPPY")
     assert gaps == [
-        "GAPPY: data contract C1 (block) failed: annual revenue present",
-        "GAPPY: data contract C2 (block) failed: quarterly rows present",
-        "GAPPY: data contract C3 (warn) failed: latest annual split factor known",
+        "GAPPY: data contract C1 (block) not met: annual revenue present",
+        "GAPPY: data contract C2 (block) not met: quarterly rows present",
+        "GAPPY: data contract C3 (warn) not met: latest annual split factor known",
     ]
     assert [(r["contract_id"], r["scope"], r["trigger"]) for r in contract_rows] == [
         (cid, "GAPPY", "refresh") for cid in ("C1", "C2", "C3", "C4")
@@ -279,7 +279,7 @@ def test_check_ticker_turns_violations_into_gaps(
 
 
 def test_screener_hook_never_raises(
-    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+    db: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
     def boom(*_a: Any, **_k: Any) -> Any:
         raise RuntimeError("db gone")
@@ -346,6 +346,8 @@ def test_data_check_rejects_unknown_and_non_ticker_contracts(db: sessionmaker[Se
 def test_backfill_covers_company_contracts_only(db: sessionmaker[Session]) -> None:
     out = _cli("backfill", "--contract", "C5")
     assert out.exit_code == 2 and "C1-C4" in out.output
+    assert _cli("backfill", "--contract", "C1,C2").exit_code == 2
+    assert _cli("backfill", "--contract", ",").exit_code == 2
 
 
 def test_backfill_refreshes_failing_tickers_after_confirmation(
@@ -387,3 +389,64 @@ def test_screener_stages_check_contracts_when_they_finish(
     assert calls == ["checked", "checked"]
     s.expire_all()
     assert [st.status for st in (a, b)] == ["completed", "failed"]  # written here, not elsewhere
+
+
+def test_stage_b_records_the_frames_counts_c8_reads(
+    s: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import asyncio
+    from types import SimpleNamespace
+
+    import data.db
+    import data.edgar_frames as edgar_frames
+    import screener.stages as stages
+    import screener.tier4_frames as tier4
+    from screener.tier4_frames import Tier4Snapshot
+
+    monkeypatch.setattr(stages, "get_session", data.db.get_session)
+    monkeypatch.setattr(stages, "check_after_screener_stage", lambda: None)
+    run = _screener_run(s, 0)
+    state = {"tier3_survivors": [{"ticker": "NVDA", "cik": 1}], "gate_funnel": {"T3_x": 1}}
+    s.add(ScreenerStage(screener_run_id=run, stage="A", status="completed",
+                        state_json=json.dumps(state)))  # fmt: skip
+    s.commit()
+
+    async def frames(*_a: Any, **_k: Any) -> dict[int, Any]:
+        return {}
+
+    snaps = {1: Tier4Snapshot(cik=1, revenue=5e9), 2: Tier4Snapshot(cik=2), 3: Tier4Snapshot(cik=3)}
+    monkeypatch.setattr(edgar_frames, "build_frames_universe_async", frames)
+    monkeypatch.setattr(tier4, "build_tier4_snapshots", lambda _f: snaps)
+    picked = [SimpleNamespace(ticker="NVDA", flags=[])]
+    monkeypatch.setattr(tier4, "evaluate_tier4", lambda _survivors, _s: picked)
+    monkeypatch.setattr(tier4, "rank_and_truncate", lambda results, _n: (results, [], []))
+    asyncio.run(stages.run_stage_b(run))
+    r = _run(s, "C8")
+    assert (r.failing, r.total) == (2, 3)
+
+
+def test_refresh_ticker_returns_contract_gaps(monkeypatch: pytest.MonkeyPatch) -> None:
+    import asyncio
+    from types import SimpleNamespace
+
+    import data.api.yfinance_client as yf
+    import data.pipeline as pipeline
+    import data.sources as sources
+    import data.sources.jurisdiction as jurisdiction
+    from frameworks.base import DataRequirement
+
+    async def fetch(*_a: Any, **_k: Any) -> Any:
+        return SimpleNamespace(gaps=[], financials=[])
+
+    empty = SimpleNamespace(gaps=[])
+    monkeypatch.setattr(sources, "resolve_source", lambda *_a: SimpleNamespace(fetch=fetch))
+    monkeypatch.setattr(jurisdiction, "jurisdiction_for", lambda _t: SimpleNamespace(regime="none"))
+    monkeypatch.setattr(yf, "fetch_yfinance_snapshot", lambda *_a: empty)
+    for name in ("_ensure_company_row", "_apply_adr018_reconciliation",
+                 "_compute_buyback_yields", "_record_share_split_basis",
+                 "_fetch_fmp_profile_safe", "_fetch_polygon_safe"):  # fmt: skip
+        monkeypatch.setattr(pipeline, name, lambda *_a, **_k: None)
+    monkeypatch.setattr(pipeline, "_persist_yfinance_snapshot", lambda *_a: [])
+    monkeypatch.setattr(contracts, "check_ticker", lambda t: [f"{t}: contract gap"])
+    gaps = asyncio.run(pipeline.refresh_ticker("ZZZ", requirement=DataRequirement()))
+    assert gaps == ["ZZZ: contract gap"]

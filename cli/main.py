@@ -2482,7 +2482,7 @@ def _contract_ids(contract: str | None) -> list[str] | None:
         return None
     ids = [c.strip().upper() for c in contract.split(",") if c.strip()]
     unknown = sorted(set(ids) - set(BY_ID))
-    if unknown:
+    if unknown or not ids:
         rprint(f"[red]Unknown contract {', '.join(unknown)}; known: {', '.join(BY_ID)}[/red]")
         raise typer.Exit(2)
     return ids
@@ -2544,7 +2544,11 @@ def data_backfill(
     from data.pipeline import refresh_ticker
     from frameworks.base import DataRequirement
 
-    (cid,) = _contract_ids(contract) or [""]
+    ids = _contract_ids(contract) or []
+    if len(ids) != 1:
+        rprint("[red]Backfill takes one contract.[/red]")
+        raise typer.Exit(2)
+    cid = ids[0]
     c = BY_ID[cid]
     if not c.per_ticker:
         rprint(f"[red]{cid} is not a company contract; backfill covers C1-C4.[/red]")

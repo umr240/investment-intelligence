@@ -246,11 +246,11 @@ def _c8_frames_revenue(session: Session, scope: str) -> Measurement:
     row: Any = session.execute(
         select(ScreenerStage.screener_run_id, ScreenerStage.state_json)
         .where(ScreenerStage.stage == "B", ScreenerStage.status == "completed")
-        .order_by(ScreenerStage.completed_at.desc(), ScreenerStage.id.desc())
+        .order_by(ScreenerStage.completed_at.desc().nulls_last(), ScreenerStage.id.desc())
         .limit(1)
     ).first()
     funnel = json.loads(row[1] or "{}").get("gate_funnel", {}) if row else {}
-    if row is None or "T4_frames_filers" not in funnel:
+    if row is None or not {"T4_frames_filers", "T4_frames_revenue"} <= funnel.keys():
         return Measurement(0, 0, [], "no completed Stage B has recorded frames counts")
     filers, resolved = int(funnel["T4_frames_filers"]), int(funnel["T4_frames_revenue"])
     # Frames filers are CIKs, mostly not stored companies: counted, not listed.
@@ -330,7 +330,7 @@ def check_ticker(ticker: str) -> list[str]:
         results = [evaluate(session, c, ticker) for c in CONTRACTS if c.per_ticker]
     record(results, "refresh")
     return [
-        f"{ticker}: data contract {r.contract.id} ({r.contract.severity}) failed: "
+        f"{ticker}: data contract {r.contract.id} ({r.contract.severity}) not met: "
         f"{r.contract.title.lower()}"
         for r in results
         if r.passed is False
