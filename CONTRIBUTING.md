@@ -89,9 +89,10 @@ review by mentioning `@claude` in a comment or review, for example
 `@claude please review this PR`. It runs `.github/workflows/claude-review.yml`
 on the repository's `GITHUB_TOKEN` with `contents: read`, so it can read the code
 and CI results and comment, but cannot push. Comments from people without write
-access do not trigger it. A run is capped (30 turns, 20 minutes), so a large PR
-may get a partial review. Its review is a second opinion; a maintainer still
-decides.
+access do not trigger it. A run uses Claude Sonnet 5.5 and is capped (30 turns,
+20 minutes), so a large PR may get a partial review. Each run is billed to the
+workflow's API key, so ask once the PR is ready, not after every fix. Its review
+is a second opinion; a maintainer still decides.
 
 ## Adding a framework signal
 
