@@ -460,6 +460,27 @@ def _nominal_period_end(d: date) -> date:
     return d.replace(day=1) - timedelta(days=1) if d.day <= 7 else d
 
 
+# A transition report ends on the new year end; it is never an annual row (_ANNUAL_FORMS).
+_YEAR_END_FORMS = _ANNUAL_FORMS | {"10-KT", "10-KT/A"}
+
+
+def fye_month_from_payload(payload: dict[str, Any]) -> int | None:
+    """Fiscal-year-end month from submissions.json: the latest annual or transition
+    report's period end, else the profile `fiscalYearEnd`, which goes stale (AEHR,
+    AMCR: "1231") and is absent for 20-F filers."""
+    recent = (payload.get("filings") or {}).get("recent") or {}
+    ends: list[date] = []
+    for form, d in zip(recent.get("form") or [], recent.get("reportDate") or [], strict=False):
+        if form in _YEAR_END_FORMS and d:
+            try:
+                ends.append(date.fromisoformat(d))
+            except ValueError:
+                continue
+    if ends:
+        return _nominal_period_end(max(ends)).month
+    return fye_month_from_submissions(payload.get("fiscalYearEnd"))
+
+
 def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
     """
     Fetch filer-level metadata from SEC submissions.json — small (~50-200KB)
@@ -472,8 +493,8 @@ def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
       - name (str | None)
       - tickers (list[str])
       - exchanges (list[str])
-      - fiscal_year_end (str | None)         e.g. "0630" — raw SEC value
-      - fiscal_year_end_month (int | None)   e.g. 6 — derived; 1-12 or None
+      - fiscal_year_end (str | None)         e.g. "0630" — raw profile value; can be stale
+      - fiscal_year_end_month (int | None)   e.g. 6 — fye_month_from_payload; 1-12 or None
       - sic (str | None)
       - sic_description (str | None)
 
@@ -498,7 +519,7 @@ def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
         return None
 
     fy_end_raw = data.get("fiscalYearEnd") or None
-    fy_end_month = fye_month_from_submissions(fy_end_raw)
+    fy_end_month = fye_month_from_payload(data)
 
     return {
         "cik": cik,

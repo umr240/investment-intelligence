@@ -26,7 +26,9 @@ LLM lives one layer up in `deepdive/narrative.py` and consumes this view.
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import logging
 from dataclasses import dataclass, field, asdict
 from datetime import date, datetime
 from typing import Any
@@ -40,6 +42,8 @@ from data.models.schema import (
     Financial,
     FrameworkScore,
 )
+
+logger = logging.getLogger(__name__)
 
 
 # ── View dataclasses (the "contract" for both CLI + AI) ──────────────────
@@ -167,6 +171,29 @@ class ScorecardView:
         """
         return json.dumps(self.to_dict(), indent=2, default=_json_default,
                           sort_keys=True)
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> ScorecardView:
+        """Inverse of to_dict over its JSON form (dates as ISO strings)."""
+        co = dict(d["company"])
+        for k in ("ipo_date", "latest_period_end"):
+            co[k] = date.fromisoformat(co[k]) if co.get(k) else None
+        return cls(
+            ticker=d["ticker"],
+            run_date=date.fromisoformat(d["run_date"]),
+            mode_used=d["mode_used"],
+            company=CompanyHeader(**co),
+            stage=StageView(**d["stage"]),
+            composite=CompositeView(**d["composite"]),
+            frameworks=[
+                FrameworkView(**{**f, "key_signals": [tuple(s) for s in f["key_signals"]]})
+                for f in d["frameworks"]
+            ],
+            overlay_triggers=[OverlayTriggerView(**t) for t in d["overlay_triggers"]],
+            fetch_data_gaps=list(d["fetch_data_gaps"]),
+            overlay_verdicts=dict(d.get("overlay_verdicts") or {}),
+            schema_version=d.get("schema_version", "1.0"),
+        )
 
     # ── Convenience views (for AI layer + ML feature pipelines) ──────────
 
@@ -360,6 +387,24 @@ def load_scorecard_view(
         fetch_data_gaps=fetch_data_gaps,
         overlay_verdicts=overlay_verdicts,
     )
+
+
+def load_frozen_scorecard_view(run_id: int) -> ScorecardView | None:
+    """The view a dive froze onto its row (DEC-46); None if it has none, its hash does
+    not match, or it no longer fits the dataclasses (a later schema change)."""
+    with get_session() as s:
+        run = s.get(DeepDiveRun, run_id)
+        if run is None or not run.scorecard_view_json:
+            return None
+        body, sha = str(run.scorecard_view_json), run.scorecard_view_sha256
+    if sha != hashlib.sha256(body.encode("utf-8")).hexdigest():
+        logger.warning("dive %s: frozen view does not match its stored hash", run_id)
+        return None
+    try:
+        return ScorecardView.from_dict(json.loads(body))
+    except (KeyError, TypeError, ValueError) as exc:
+        logger.warning("dive %s: frozen view no longer fits ScorecardView: %r", run_id, exc)
+        return None
 
 
 # ── Internals ─────────────────────────────────────────────────────────────

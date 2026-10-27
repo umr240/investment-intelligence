@@ -1049,7 +1049,7 @@ async def _chat_async(
         persist_turn,
     )
     from deepdive.narrative import NarrativeOnStaleDiveError, NarrativeUnavailableError
-    from deepdive.scorecard_view import load_scorecard_view
+    from deepdive.scorecard_view import load_frozen_scorecard_view
 
     # Resolve the DeepDiveRun this conversation grounds in
     with get_session() as db:
@@ -1089,9 +1089,10 @@ async def _chat_async(
         rprint(f"[dim]Re-run `invest dive {ticker}`, then chat.[/dim]")
         raise typer.Exit(code=1)
 
-    view = load_scorecard_view(ticker, mode=active_run_mode)
+    view = load_frozen_scorecard_view(active_run_id)  # the view this dive saw, not today's
     if view is None:
-        rprint(f"[red]ScorecardView for {ticker} could not be loaded.[/red]")
+        rprint(f"[red]Run #{active_run_id} has no readable frozen ScorecardView (DEC-46).[/red]")
+        rprint(f"[dim]Re-run `invest dive {ticker}`, then chat.[/dim]")
         raise typer.Exit(code=1)
 
     # Load prior conversation for this run

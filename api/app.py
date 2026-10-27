@@ -354,16 +354,18 @@ async def post_chat(ticker: str, message: str, provider: str | None = None) -> d
     from data.dive_staleness import run_withheld_reason
     from deepdive.conversation import ChatTurn, generate_chat_response, load_conversation_history, persist_turn
     from deepdive.narrative import NarrativeOnStaleDiveError, NarrativeUnavailableError
-    from deepdive.scorecard_view import load_scorecard_view
+    from deepdive.scorecard_view import load_frozen_scorecard_view
 
     ticker = ticker.upper()
-    run_id, mode = _latest_run_id(ticker)
+    run_id, _mode = _latest_run_id(ticker)
     withheld = run_withheld_reason(run_id)  # DEC-47: refuse before storing the user's turn
     if withheld:
         raise HTTPException(409, f"{ticker}: latest dive is stale ({withheld}). Re-run the dive.")
-    view = load_scorecard_view(ticker, mode=mode)
+    view = load_frozen_scorecard_view(run_id)  # the view this dive saw, not today's
     if view is None:
-        raise HTTPException(404, f"ScorecardView for {ticker} could not be loaded.")
+        raise HTTPException(
+            409, f"{ticker}: dive {run_id} has no readable frozen view (DEC-46). Re-run the dive."
+        )
 
     history = load_conversation_history(run_id)
     next_turn_index = len(history)
