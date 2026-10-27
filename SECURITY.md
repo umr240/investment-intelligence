@@ -39,9 +39,11 @@ reach those prompts.
 One opt-in path is the exception: the `/external-signals` extraction sends the
 text of an earnings release (8-K EX-99.1) or proxy statement (DEF 14A) to the
 model, marked as source data, after the operator confirms the run. Its results
-are stored apart from every score. It is the weakest point of this boundary:
-today the only check on a returned quote is its length, not that it appears in
-the source. Hardening it is the next planned work.
+are stored apart from every score. It is the weakest point of this boundary.
+Before a result is stored, code checks that each quote appears in the text the
+model saw and that each value is a number in its quote, drops a value that
+fails, and only ever lowers the model's confidence (ADR-057). It cannot tell
+whether a verbatim number is the metric that was asked for.
 
 This is a security property, not only an architectural preference. **Any other
 change that pipes raw filing text into a model prompt would be a

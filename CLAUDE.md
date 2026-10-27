@@ -629,12 +629,14 @@ architecture choice:
   construction and must stay that way — no future path may pipe raw filing
   text into a prompt as instructions.
 - The one existing exception: `deepdive/external_signals.py` (opt-in
-  `/external-signals`, `dangerous: true`) sends up to 80,000 characters of
-  8-K EX-99.1 or DEF 14A text to the model as delimited source data
-  (`external_signals.py:181-183`, `:335`), and persists only to
-  `external_signals`. Its quote check is length-only
-  (`cli/skills/external_signals.py:227`) and runs after persistence; hardening
-  it is the next planned work.
+  `/external-signals`, `dangerous: true`) sends up to `MODEL_TEXT_CHARS`
+  (80,000) characters of 8-K EX-99.1 or DEF 14A text to the model as delimited
+  source data, and persists only to `external_signals`. Before anything is
+  stored, `deepdive/signal_verifier.py` checks each reply (ADR-057): the quote
+  must be one substring of the text the model saw and the value a number in
+  it; a failing value is dropped and the stored band is the lower of the
+  model's and the check's. A verbatim number for the wrong metric still passes
+  (ADR-057 §4).
 - This is why the AI-layer boundary (allow-listed call sites, numeric inputs
   only, bar the exception above) is load-bearing beyond token cost.
 
