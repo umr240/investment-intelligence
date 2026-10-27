@@ -2475,6 +2475,119 @@ async def _data_gaps_async(ticker: str) -> None:
             rprint(f"  ⚠ {gap}")
 
 
+def _contract_ids(contract: str | None) -> list[str] | None:
+    from data.contracts import BY_ID
+
+    if not contract:
+        return None
+    ids = [c.strip().upper() for c in contract.split(",") if c.strip()]
+    unknown = sorted(set(ids) - set(BY_ID))
+    if unknown or not ids:
+        rprint(f"[red]Unknown contract {', '.join(unknown)}; known: {', '.join(BY_ID)}[/red]")
+        raise typer.Exit(2)
+    return ids
+
+
+@data_app.command("check")
+def data_check(
+    contract: str | None = typer.Option(None, "--contract", help="Only these, e.g. C1,C5."),
+    ticker: str | None = typer.Option(None, "--ticker", help="Check one ticker (C1-C4)."),
+) -> None:
+    """Run the data contracts over the DB and record the results (ADR-044). DB-only.
+
+    Exits 1 when a blocking contract fails.
+    """
+    from data.contracts import BY_ID, CONTRACTS, evaluate, evaluate_all, record
+    from data.db import get_session
+
+    ids = _contract_ids(contract)
+    with get_session() as session:
+        if ticker:
+            chosen = [BY_ID[i] for i in ids] if ids else [c for c in CONTRACTS if c.per_ticker]
+            if not_per_ticker := [c.id for c in chosen if not c.per_ticker]:
+                rprint(f"[red]{', '.join(not_per_ticker)} are not checked per ticker.[/red]")
+                raise typer.Exit(2)
+            results = [evaluate(session, c, ticker.upper()) for c in chosen]
+        else:
+            results = evaluate_all(session, ids)
+    record(results, "check")
+
+    table = Table(title="Data contracts (ADR-044)")
+    for col in ("Contract", "Scope", "Severity"):
+        table.add_column(col)
+    for col in ("Failing", "Of", "Share", "Allowed", "Result"):
+        table.add_column(col, justify="right")
+    table.add_column("Failing keys (first 5)")
+    for r in results:
+        share = "—" if r.share is None else f"{r.share:.1%}"
+        allowed = "reported" if r.threshold is None else f"{r.threshold:.0%}"
+        verdict = {True: "[green]pass[/green]", False: "[red]FAIL[/red]", None: "—"}[r.passed]
+        keys = ", ".join(r.sample[:5]) or (r.note or "")
+        table.add_row(
+            f"{r.contract.id} {r.contract.title}", r.scope, r.contract.severity,
+            str(r.failing), str(r.total), share, allowed, verdict, keys,
+        )  # fmt: skip
+    console.print(table)
+    if any(r.passed is False and r.contract.severity == "block" for r in results):
+        raise typer.Exit(1)
+
+
+@data_app.command("backfill")
+def data_backfill(
+    contract: str = typer.Option(..., "--contract", help="A company contract: C1-C4."),
+    limit: int | None = typer.Option(None, "--limit", help="Refresh at most this many."),
+    yes: bool = typer.Option(False, "--yes", help="Skip the confirmation."),
+) -> None:
+    """Refresh the companies failing a contract (ADR-044 §2.5). Network-heavy: SEC + yfinance."""
+    from data.contracts import ALL, BY_ID, evaluate, record
+    from data.db import get_session
+    from data.pipeline import refresh_ticker
+    from frameworks.base import DataRequirement
+
+    ids = _contract_ids(contract) or []
+    if len(ids) != 1:
+        rprint("[red]Backfill takes one contract.[/red]")
+        raise typer.Exit(2)
+    cid = ids[0]
+    c = BY_ID[cid]
+    if not c.per_ticker:
+        rprint(f"[red]{cid} is not a company contract; backfill covers C1-C4.[/red]")
+        raise typer.Exit(2)
+    scope = ALL if ALL in c.thresholds else next(iter(c.thresholds))
+    with get_session() as session:
+        before = evaluate(session, c, scope)
+    tickers = sorted(before.keys)[:limit]
+    if not tickers:
+        rprint(f"[green]{cid} ({scope}): nothing failing.[/green]")
+        return
+    rprint(
+        f"{cid} ({scope}): {before.failing} of {before.total} {c.unit} failing; "
+        f"refreshing {len(tickers)}: {', '.join(tickers[:10])}{' …' if len(tickers) > 10 else ''}"
+    )
+    if not yes and not typer.confirm("Fetch from SEC and yfinance for these?", default=False):
+        raise typer.Exit(1)
+    # Fundamentals only: the parser-version gate re-reads filings read by an older parser.
+    req = DataRequirement(
+        annual_years=DEFAULT_HISTORY_YEARS, quarterly_count=max(DEFAULT_HISTORY_YEARS, 8)
+    )
+    errors = 0
+    for i, t in enumerate(tickers, 1):
+        try:
+            asyncio.run(refresh_ticker(t, requirement=req))
+        except Exception as exc:  # noqa: BLE001 - one ticker's failure must not stop the rest
+            errors += 1
+            rprint(f"  [yellow]{t}: {type(exc).__name__}: {exc}[/yellow]")
+        if i % 25 == 0:
+            rprint(f"  {i}/{len(tickers)} refreshed")
+    with get_session() as session:
+        after = evaluate(session, c, scope)
+    record([after], "backfill")
+    rprint(
+        f"{cid} ({scope}): {before.failing} → {after.failing} of {after.total} failing; "
+        f"{errors} refresh errors"
+    )
+
+
 @data_app.command("plan")
 def data_plan(
     ticker: str = typer.Argument(...),
