@@ -272,6 +272,14 @@ async def refresh_ticker(
     except Exception as exc:
         logger.debug("share split basis (%s): %s", ticker, exc)
 
+    # ── Phase 5: data contracts C1–C4 over what was just persisted (ADR-044) ──
+    try:
+        from data.contracts import check_ticker
+
+        gaps.extend(check_ticker(ticker))
+    except Exception as exc:
+        logger.warning("data contracts (%s) not checked: %s", ticker, exc)
+
     logger.info("refresh_ticker: %s complete. %d gaps.", ticker, len(gaps))
     return gaps
 

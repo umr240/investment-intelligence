@@ -855,6 +855,29 @@ class LlmCall(Base):
     created_at = Column(DateTime, server_default=func.now(), index=True)
 
 
+class DataContractRun(Base):
+    """One data contract's result on one scope (ADR-044 §2.2): failing units of total.
+
+    `threshold` is the largest failing share allowed, NULL for a reported-only
+    contract; `passed` is NULL then too. `sample_json` holds up to 20 failing keys.
+    """
+
+    __tablename__ = "data_contract_runs"
+
+    id = Column(Integer, primary_key=True)
+    contract_id = Column(Text, nullable=False, index=True)  # C1..C8
+    scope = Column(Text, nullable=False)  # all | dived | a ticker
+    trigger = Column(Text, nullable=False)  # check | refresh | screener | backfill
+    severity = Column(Text, nullable=False)  # block | warn
+    failing = Column(Integer, nullable=False)
+    total = Column(Integer, nullable=False)
+    threshold = Column(Float)
+    passed = Column(Boolean)
+    sample_json = Column(Text, nullable=False)
+    note = Column(Text)
+    created_at = Column(DateTime, server_default=func.now(), index=True)  # UTC
+
+
 class ExternalSignalRecord(Base):
     """LLM-extracted or third-party-sourced signals — strictly isolated from
     the deterministic SEC-XBRL data path.

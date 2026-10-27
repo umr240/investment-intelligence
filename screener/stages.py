@@ -26,6 +26,7 @@ from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import Any, cast
 
+from data.contracts import check_after_screener_stage
 from data.db import get_session
 from data.models.api_models import ScreenerParams
 from data.models.schema import ScreenerRun, ScreenerStage
@@ -269,6 +270,9 @@ async def run_stage_b(run_id: int) -> StageBState:
         funnel["T4_frames_selected"] = len(selected)
         funnel["T4_frames_deferred"] = len(deferred)
         funnel["T4_frames_hard_failed"] = len(hard_failed)
+        # Universe-wide, not just the survivors: read by data contract C8 (ADR-044).
+        funnel["T4_frames_filers"] = len(snapshots)
+        funnel["T4_frames_revenue"] = sum(1 for s in snapshots.values() if s.revenue is not None)
 
         state = StageBState(
             selected_tickers=[r.ticker for r in selected],
@@ -503,6 +507,7 @@ def _complete_stage(stage_id: int, output_count: int, state: str) -> None:
         row.completed_at = datetime.now()
         row.output_count = output_count
         row.state_json = state
+    check_after_screener_stage()
 
 
 def _fail_stage(stage_id: int, error: str) -> None:
@@ -513,6 +518,7 @@ def _fail_stage(stage_id: int, error: str) -> None:
         row.status = "failed"
         row.completed_at = datetime.now()
         row.error = error[:5000]
+    check_after_screener_stage()
 
 
 def _load_state(run_id: int, stage: str) -> dict | None:

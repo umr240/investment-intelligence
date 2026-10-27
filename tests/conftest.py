@@ -72,6 +72,20 @@ def llm_rows(monkeypatch: pytest.MonkeyPatch) -> list[dict]:
     return rows
 
 
+@pytest.fixture(autouse=True)
+def contract_rows(monkeypatch: pytest.MonkeyPatch) -> list[dict]:
+    """Rows data contracts would record (ADR-044), kept in memory.
+
+    Refreshes and screener stages check contracts on whatever DB they read;
+    without this a test would write its results into the real database.
+    """
+    import data.contracts as contracts
+
+    rows: list[dict] = []
+    monkeypatch.setattr(contracts, "_write", rows.extend)
+    return rows
+
+
 # ── Database fixtures ─────────────────────────────────────────────────────────
 
 @pytest.fixture(scope="session")
