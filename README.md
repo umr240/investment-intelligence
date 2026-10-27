@@ -62,8 +62,9 @@ One opt-in path does send filing text to a model: the `/external-signals`
 extraction of metrics such as net revenue retention from earnings releases and
 proxy statements. It asks for confirmation before running, its results are
 stored apart from every framework score, and each value must come with a quote
-from the source — the quote's length is checked, but not yet that it actually
-appears there.
+from the source. Before anything is stored, code checks that the quote appears
+in the text the model saw and that the value is a number in it, and drops a
+value that fails.
 
 ## What the seven frameworks measure
 
