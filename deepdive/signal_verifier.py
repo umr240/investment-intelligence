@@ -44,13 +44,17 @@ _SCALE_WORDS = {
 }  # fmt: skip
 # Any scale word anywhere in a quote: an unscaled match beside one is never better than low.
 _SCALE_TOKEN = re.compile(r"\b(?:thousand|million|billion|trillion|bn|mm|mn|mln|tn|[kmb])s?\b")
-# "in millions", "(in US $ millions", "in thousands of U.S. dollars" (SHOP: "in us $ millions").
-_DOC_SCALE = re.compile(r"\bin (?:(?:us|u\.s\.|usd)\s?)?(?:\$\s?)?(thousands|millions|billions)\b")
+# How a document states a table scale: "in millions", "(in US $ millions" (SHOP), "amounts in
+# USD million", "in thousands of U.S. dollars", "($000s)", "(in 000's)", "($M)", "($mm)".
+_DOC_SCALE = re.compile(
+    r"\bin (?:(?:us|u\.s\.|usd)\s?)?(?:\$\s?)?(thousand|million|billion)s?\b"
+    r"|\bin (000)'?s\b|\(\$\s?(000)'?s?\)|\(\$\s?(mm|m|b)\)"
+)
 _DOC_SCALE_VALUE = {
-    "thousands": Decimal(10**3),
-    "millions": Decimal(10**6),
-    "billions": Decimal(10**9),
-}
+    "thousand": Decimal(10**3), "000": Decimal(10**3),
+    "million": Decimal(10**6), "m": Decimal(10**6), "mm": Decimal(10**6),
+    "billion": Decimal(10**9), "b": Decimal(10**9),
+}  # fmt: skip
 _PERCENT_WORD = re.compile(r"%|\bpercent\b")
 
 # One number in a normalised (case-folded) quote: optional sign, "(" and "$", digits,
@@ -182,7 +186,9 @@ def verify_signal(value: float | None, quote: str, unit: str, source_text: str) 
     if target is None:
         return Verification(VALUE_NOT_IN_QUOTE, _CEILING[VALUE_NOT_IN_QUOTE], quote_at=at)
 
-    doc_scales = {_DOC_SCALE_VALUE[w] for w in _DOC_SCALE.findall(src)}
+    doc_scales = {
+        _DOC_SCALE_VALUE[next(g for g in groups if g)] for groups in _DOC_SCALE.findall(src)
+    }
     scale_nearby = _SCALE_TOKEN.search(q) is not None
     rank = {VERIFIED: 0, VERIFIED_TABLE_SCALE: 1, SCALE_UNCONFIRMED: 2}
     best: tuple[str, ParsedNumber] | None = None

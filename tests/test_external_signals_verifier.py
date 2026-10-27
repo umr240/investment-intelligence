@@ -174,6 +174,12 @@ ACC = "0001773751-26-000060"
         # table cell, which ADR-057 §4 says is never high.
         ("table cell unscaled", "Key metrics (in millions) Monthly Recurring Revenue $ 212",
          "Monthly Recurring Revenue $ 212", 212.0, "usd", "scale_unconfirmed", [], "high", "low"),
+        ("header ($000s)", "Key metrics ($000s) MRR 212", "MRR 212", 212.0, "usd",
+         "scale_unconfirmed", [], "high", "low"),
+        ("header ($000s) right", "Key metrics ($000s) MRR 212", "MRR 212", 212_000.0, "usd",
+         "verified_table_scale", [], "high", "medium"),
+        ("header USD million", "(Amounts in USD million) MRR 212", "MRR 212", 212.0, "usd",
+         "scale_unconfirmed", [], "high", "low"),
         ("curly + nbsp", "Customers’ NRR was 118%", "Customers' NRR was 118%", 118.0, "pct",
          "verified", [], "high", "high"),
         ("no value", INTA, "", None, "pct", "no_value", [], "high", "not_disclosed"),
