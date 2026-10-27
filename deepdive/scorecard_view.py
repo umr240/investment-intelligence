@@ -168,6 +168,29 @@ class ScorecardView:
         return json.dumps(self.to_dict(), indent=2, default=_json_default,
                           sort_keys=True)
 
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> ScorecardView:
+        """Inverse of to_dict over its JSON form (dates as ISO strings)."""
+        co = dict(d["company"])
+        for k in ("ipo_date", "latest_period_end"):
+            co[k] = date.fromisoformat(co[k]) if co.get(k) else None
+        return cls(
+            ticker=d["ticker"],
+            run_date=date.fromisoformat(d["run_date"]),
+            mode_used=d["mode_used"],
+            company=CompanyHeader(**co),
+            stage=StageView(**d["stage"]),
+            composite=CompositeView(**d["composite"]),
+            frameworks=[
+                FrameworkView(**{**f, "key_signals": [tuple(s) for s in f["key_signals"]]})
+                for f in d["frameworks"]
+            ],
+            overlay_triggers=[OverlayTriggerView(**t) for t in d["overlay_triggers"]],
+            fetch_data_gaps=list(d["fetch_data_gaps"]),
+            overlay_verdicts=dict(d.get("overlay_verdicts") or {}),
+            schema_version=d.get("schema_version", "1.0"),
+        )
+
     # ── Convenience views (for AI layer + ML feature pipelines) ──────────
 
     def framework_signal_summaries(self) -> list[str]:
@@ -360,6 +383,14 @@ def load_scorecard_view(
         fetch_data_gaps=fetch_data_gaps,
         overlay_verdicts=overlay_verdicts,
     )
+
+
+def load_frozen_scorecard_view(run_id: int) -> ScorecardView | None:
+    """The view a dive froze onto its row (DEC-46); None if the dive predates freezing."""
+    with get_session() as s:
+        run = s.get(DeepDiveRun, run_id)
+        body = str(run.scorecard_view_json) if run is not None and run.scorecard_view_json else None
+    return ScorecardView.from_dict(json.loads(body)) if body else None
 
 
 # ── Internals ─────────────────────────────────────────────────────────────

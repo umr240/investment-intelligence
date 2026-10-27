@@ -460,6 +460,23 @@ def _nominal_period_end(d: date) -> date:
     return d.replace(day=1) - timedelta(days=1) if d.day <= 7 else d
 
 
+def fye_month_from_payload(payload: dict[str, Any]) -> int | None:
+    """Fiscal-year-end month from submissions.json: the latest annual report's period
+    end, else the profile `fiscalYearEnd`, which goes stale (AEHR, AMCR: "1231")."""
+    recent = (payload.get("filings") or {}).get("recent") or {}
+    ends = [
+        d
+        for f, d in zip(recent.get("form") or [], recent.get("reportDate") or [], strict=False)
+        if f in _ANNUAL_FORMS and d
+    ]
+    if ends:
+        try:
+            return _nominal_period_end(date.fromisoformat(max(ends))).month
+        except ValueError:
+            pass
+    return fye_month_from_submissions(payload.get("fiscalYearEnd"))
+
+
 def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
     """
     Fetch filer-level metadata from SEC submissions.json — small (~50-200KB)
@@ -473,7 +490,7 @@ def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
       - tickers (list[str])
       - exchanges (list[str])
       - fiscal_year_end (str | None)         e.g. "0630" — raw SEC value
-      - fiscal_year_end_month (int | None)   e.g. 6 — derived; 1-12 or None
+      - fiscal_year_end_month (int | None)   e.g. 6 — fye_month_from_payload; 1-12 or None
       - sic (str | None)
       - sic_description (str | None)
 
@@ -498,7 +515,7 @@ def fetch_filer_metadata(cik: int, identity: str) -> dict[str, Any] | None:
         return None
 
     fy_end_raw = data.get("fiscalYearEnd") or None
-    fy_end_month = fye_month_from_submissions(fy_end_raw)
+    fy_end_month = fye_month_from_payload(data)
 
     return {
         "cik": cik,

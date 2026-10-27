@@ -7,6 +7,7 @@ only when its recorded fundamentals differ from today's, or were never recorded.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Generator, Iterator
 from contextlib import contextmanager
 from datetime import date, datetime
@@ -345,6 +346,77 @@ def test_api_withholds_narrative_and_chat_on_a_dive_without_recorded_inputs(
     assert client.get("/dive/LULU/chat").json() == []  # review of #28 (B2): history withheld too
     with db() as s:
         assert s.execute(select(DeepDiveConversation)).first() is None  # user turn not stored
+
+
+def _view(score: float) -> Any:
+    from deepdive.scorecard_view import (
+        CompanyHeader,
+        CompositeView,
+        FrameworkView,
+        OverlayTriggerView,
+        ScorecardView,
+        StageView,
+    )
+
+    header: dict[str, Any] = {f: None for f in CompanyHeader.__dataclass_fields__}
+    header.update(ticker="LULU", name="lululemon", ipo_date=date(2007, 7, 27),
+                  latest_period_end=date(2026, 2, 1))  # fmt: skip
+    return ScorecardView(
+        ticker="LULU", run_date=date(2026, 10, 25), mode_used="default",
+        company=CompanyHeader(**header),
+        stage=StageView(stage="established", reasoning={"revenue": 9.6e9}),
+        composite=CompositeView(score=score, verdict="monitor", mode_resolved="B",
+                                weights_used={"F5": 0.5}, weights_renormalised=False),
+        frameworks=[FrameworkView(code="F5", title="Growth Quality", score=7.0, max_score=10.0,
+                                  verdict="partial", band="partial",
+                                  key_signals=[("ROIC", "31%")], data_gaps=[])],
+        overlay_triggers=[OverlayTriggerView(overlay_type="ICA", trigger_id="ICA-1",
+                                             condition="c", relevant_numbers={"x": 1},
+                                             framework_section="F5")],
+        fetch_data_gaps=["gap"], overlay_verdicts={"ICA": "no_change"},
+    )  # fmt: skip
+
+
+def test_a_frozen_view_rebuilds_to_the_same_json() -> None:
+    from deepdive.scorecard_view import ScorecardView
+
+    view = _view(6.5)
+    body = view.to_llm_context()
+    rebuilt = ScorecardView.from_dict(json.loads(body))
+    assert rebuilt == view
+    assert rebuilt.to_llm_context() == body
+
+
+def test_chat_grounds_in_the_view_its_dive_froze_not_todays(
+    db: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # CLAUDE.md: chat is grounded in the frozen ScorecardView of one dive; it loaded today's.
+    from fastapi.testclient import TestClient
+
+    import data.db
+    import deepdive.conversation as conversation
+    from api.app import app
+
+    monkeypatch.setattr("deepdive.scorecard_view.get_session", data.db.get_session)
+    monkeypatch.setattr("deepdive.scorecard_view.load_scorecard_view", _no_call)
+    co = _company(db, [9.6e9])
+    run = _dive(db, co, _digest(db), scorecard_view_json=_view(6.5).to_llm_context())
+    seen: dict[str, Any] = {}
+
+    def fake_chat(view: Any, _h: Any, _m: str, *, run_id: int, provider_pref: Any = None) -> Any:
+        seen.update(score=view.composite.score, run_id=run_id)
+        return SimpleNamespace(
+            output=SimpleNamespace(reply="r", numeric_claims=[]), guard_warnings=[],
+            provider="openai", model="m", prompt_tokens=1, completion_tokens=1, cost_usd=0.0,
+        )  # fmt: skip
+
+    monkeypatch.setattr(conversation, "generate_chat_response", fake_chat)
+    client = TestClient(app)
+    assert client.post("/dive/LULU/chat", params={"message": "why?"}).status_code == 200
+    assert seen == {"score": 6.5, "run_id": run}
+
+    _dive(db, co, _digest(db))  # recorded inputs, but no frozen view
+    assert client.post("/dive/LULU/chat", params={"message": "why?"}).status_code == 409
 
 
 def test_export_withholds_the_narrative_of_a_withheld_dive() -> None:

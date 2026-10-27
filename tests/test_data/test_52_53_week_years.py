@@ -16,6 +16,7 @@ import pytest
 
 from data.edgar_companyfacts import (
     _derive_fiscal_period,
+    fye_month_from_payload,
     fye_month_from_submissions,
     parse_companyfacts,
 )
@@ -336,3 +337,28 @@ def test_a_10q_trailing_year_does_not_corrupt_ytd_quarter_differencing() -> None
     }
     assert rows[(2025, "Q1")] == 8e8
     assert rows[(2025, "Q2")] == 1.2e9
+
+
+def _payload(profile: str | None, annuals: list[tuple[str, str]]) -> dict[str, Any]:
+    forms = ["10-Q", *[f for f, _ in annuals]]
+    dates = ["2026-08-01", *[d for _, d in annuals]]
+    return {"fiscalYearEnd": profile, "filings": {"recent": {"form": forms, "reportDate": dates}}}
+
+
+@pytest.mark.parametrize(
+    ("payload", "month"),
+    [
+        # SEC submissions.json, 2026-10-27: the profile field is stale or absent.
+        (_payload("1231", [("10-K", "2026-05-29"), ("10-K", "2025-05-30")]), 5),  # AEHR
+        (_payload("1231", [("10-K", "2026-06-30")]), 6),  # AMCR
+        (_payload("1231", [("10-K", "2026-05-03")]), 4),  # CULP, 52/53-week
+        (_payload(None, [("20-F", "2026-03-31")]), 3),  # BABA
+        (_payload("1231", [("10-K/A", "2025-12-31"), ("10-K", "2026-09-30")]), 9),
+        (_payload("0630", []), 6),  # no annual filing yet: the profile field
+        (_payload(None, [("10-K", "")]), None),
+    ],
+)
+def test_the_fye_month_comes_from_the_latest_annual_report(
+    payload: dict[str, Any], month: int | None
+) -> None:
+    assert fye_month_from_payload(payload) == month
