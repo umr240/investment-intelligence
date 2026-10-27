@@ -133,6 +133,7 @@ class NarrativeOutput(BaseModel):
     model: str
     prompt_tokens: int = 0
     completion_tokens: int = 0
+    cost_usd: float | None = None  # from config/llm_prices.py; None for an unpriced model
     fallback_used: bool = False
     fallback_reason: str = ""
     status: NarrativeStatus = NarrativeStatus.OK

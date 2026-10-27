@@ -33,6 +33,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from config.settings import settings
+from deepdive.llm_calls import annotate_last, attempt_context, last_call_cost, recorded_call
 from deepdive.mental_model_composer import (
     Archetype,
     CompositionResult,
@@ -51,6 +52,10 @@ from deepdive.narrative_output import (
 from deepdive.scorecard_view import ScorecardView
 
 logger = logging.getLogger(__name__)
+
+# Bump on any change to the system prompt or NarrativeBody schema (ADR-048 §2.2);
+# tests/test_llm_calls.py fails on a changed prompt hash without a bump.
+PROMPT_VERSION = 1
 
 
 # ── Public API ───────────────────────────────────────────────────────────
@@ -74,7 +79,7 @@ def generate_narrative(
     `provider_pref` overrides settings.narrative_provider for a single call:
       "openai" | "anthropic" | "openai_only" | "anthropic_only"
     """
-    from data.dive_staleness import latest_dive_stale_reason
+    from data.dive_staleness import latest_dive_stale_reason, latest_run_id
 
     stale = latest_dive_stale_reason(view.ticker)
     if stale:
@@ -90,11 +95,13 @@ def generate_narrative(
 
     last_err: Exception | None = None
     fallback_reason = ""
+    run_id = latest_run_id(view.ticker)
     for idx, provider in enumerate(order):
         try:
-            body, prompt_tok, completion_tok, model_id, fit_notes = _call_provider(
-                provider, view,
-            )
+            with attempt_context(ticker=view.ticker, run_id=run_id, attempt=idx + 1):
+                body, prompt_tok, completion_tok, model_id, fit_notes = _call_provider(
+                    provider, view,
+                )
         except _ProviderError as e:
             last_err = e
             # Provider errors can echo part of the API key; this text is logged
@@ -114,6 +121,7 @@ def generate_narrative(
         # blunt a signal that should mean a suspect number.
         status = NarrativeStatus.GUARD_FAILED if guard_warnings else NarrativeStatus.OK
         warnings = [*guard_warnings, *(f"formatting: {n}" for n in fit_notes)]
+        annotate_last("warnings" if guard_warnings else "ok", len(warnings))
 
         return NarrativeOutput(
             ticker=view.ticker,
@@ -122,6 +130,7 @@ def generate_narrative(
             model=model_id,
             prompt_tokens=prompt_tok,
             completion_tokens=completion_tok,
+            cost_usd=last_call_cost(),
             fallback_used=(idx > 0),
             fallback_reason=fallback_reason if idx > 0 else "",
             status=status,
@@ -185,6 +194,18 @@ def _provider_order(pref: str) -> list[NarrativeProvider]:
     return [p for p in out if not (p in seen or seen.add(p))]
 
 
+def _recorded(provider: str, model: str, system_prompt: str) -> Any:
+    """The `llm_calls` record for one narrative request (ADR-048)."""
+    return recorded_call(
+        call_site="narrative",
+        provider=provider,
+        model=model,
+        prompt_version=PROMPT_VERSION,
+        system_prompt=system_prompt,
+        schema=NarrativeBody.model_json_schema(),
+    )
+
+
 def _call_provider(
     provider: NarrativeProvider, view: ScorecardView,
 ) -> tuple[NarrativeBody, int, int, str, list[str]]:
@@ -219,47 +240,49 @@ def _call_openai(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, lis
     schema = NarrativeBody.model_json_schema()
     schema["additionalProperties"] = False  # strict mode requires this everywhere
 
-    try:
-        resp = client.chat.completions.create(
-            model=model,
-            temperature=0.2,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "NarrativeBody",
-                    "schema": _strict_schema(schema),
-                    "strict": True,
+    with _recorded("openai", model, system_prompt) as call:
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                temperature=0.2,
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "NarrativeBody",
+                        "schema": _strict_schema(schema),
+                        "strict": True,
+                    },
                 },
-            },
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-        )
-    except (RateLimitError, AuthenticationError, APIConnectionError) as e:
-        raise _ProviderError(f"openai transport: {type(e).__name__}: {e}") from e
-    except APIStatusError as e:
-        raise _ProviderError(f"openai status {e.status_code}: {e}") from e
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+            )
+        except (RateLimitError, AuthenticationError, APIConnectionError) as e:
+            raise _ProviderError(f"openai transport: {type(e).__name__}: {e}") from e
+        except APIStatusError as e:
+            raise _ProviderError(f"openai status {e.status_code}: {e}") from e
 
-    content = (resp.choices[0].message.content or "").strip()
-    if not content:
-        raise _ProviderError("openai returned empty content")
+        call.response = resp
+        content = (resp.choices[0].message.content or "").strip()
+        if not content:
+            raise _ProviderError("openai returned empty content")
 
-    try:
-        raw = json.loads(content)
-    except json.JSONDecodeError as e:
-        raise _ProviderError(f"openai returned invalid JSON: {e}") from e
+        try:
+            raw = json.loads(content)
+        except json.JSONDecodeError as e:
+            raise _ProviderError(f"openai returned invalid JSON: {e}") from e
 
-    raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBody)
-    try:
-        body = NarrativeBody.model_validate(raw)
-    except Exception as e:
-        raise _ProviderError(f"openai JSON did not match NarrativeBody: {e}") from e
+        raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBody)
+        try:
+            body = NarrativeBody.model_validate(raw)
+        except Exception as e:
+            raise _ProviderError(f"openai JSON did not match NarrativeBody: {e}") from e
 
-    usage = getattr(resp, "usage", None)
-    pt = int(getattr(usage, "prompt_tokens", 0) or 0)
-    ct = int(getattr(usage, "completion_tokens", 0) or 0)
-    return body, pt, ct, model, fit_notes
+        usage = getattr(resp, "usage", None)
+        pt = int(getattr(usage, "prompt_tokens", 0) or 0)
+        ct = int(getattr(usage, "completion_tokens", 0) or 0)
+        return body, pt, ct, model, fit_notes
 
 
 # ── Anthropic (fallback) ─────────────────────────────────────────────────
@@ -282,46 +305,48 @@ def _call_anthropic(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, 
     tool_schema = NarrativeBody.model_json_schema()
     tool_schema["additionalProperties"] = False
 
-    try:
-        # max_tokens=4096: empirically bull(5)+bear(5)+risks(8)+data_caveats can
-        # exceed 2048 with Sonnet's verbose tool-call reasoning, leaving the
-        # tool_input truncated mid-field. 4096 fits the worst case and is well
-        # under the model's output ceiling.
-        resp = client.messages.create(
-            model=model,
-            max_tokens=4096,
-            system=system_prompt,
-            tools=[{
-                "name": "emit_narrative",
-                "description": "Emit the structured bull/bear/risks narrative for the scorecard.",
-                "input_schema": tool_schema,
-            }],
-            tool_choice={"type": "tool", "name": "emit_narrative"},
-            messages=[{"role": "user", "content": user_prompt}],
-        )
-    except (RateLimitError, APIConnectionError) as e:
-        raise _ProviderError(f"anthropic transport: {type(e).__name__}: {e}") from e
-    except APIStatusError as e:
-        raise _ProviderError(f"anthropic status {e.status_code}: {e}") from e
+    with _recorded("anthropic", model, system_prompt) as call:
+        try:
+            # max_tokens=4096: empirically bull(5)+bear(5)+risks(8)+data_caveats can
+            # exceed 2048 with Sonnet's verbose tool-call reasoning, leaving the
+            # tool_input truncated mid-field. 4096 fits the worst case and is well
+            # under the model's output ceiling.
+            resp = client.messages.create(
+                model=model,
+                max_tokens=4096,
+                system=system_prompt,
+                tools=[{
+                    "name": "emit_narrative",
+                    "description": "Emit the structured bull/bear/risks narrative for the scorecard.",  # noqa: E501
+                    "input_schema": tool_schema,
+                }],
+                tool_choice={"type": "tool", "name": "emit_narrative"},
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+        except (RateLimitError, APIConnectionError) as e:
+            raise _ProviderError(f"anthropic transport: {type(e).__name__}: {e}") from e
+        except APIStatusError as e:
+            raise _ProviderError(f"anthropic status {e.status_code}: {e}") from e
 
-    tool_input: dict | None = None
-    for block in resp.content:
-        if getattr(block, "type", None) == "tool_use":
-            tool_input = block.input  # type: ignore[attr-defined]
-            break
-    if tool_input is None:
-        raise _ProviderError("anthropic did not return a tool_use block")
+        call.response = resp
+        tool_input: dict | None = None
+        for block in resp.content:
+            if getattr(block, "type", None) == "tool_use":
+                tool_input = block.input  # type: ignore[attr-defined]
+                break
+        if tool_input is None:
+            raise _ProviderError("anthropic did not return a tool_use block")
 
-    tool_input, fit_notes = _fit_to_declared_lengths(tool_input, NarrativeBody)
-    try:
-        body = NarrativeBody.model_validate(tool_input)
-    except Exception as e:
-        raise _ProviderError(f"anthropic tool_input did not match NarrativeBody: {e}") from e
+        tool_input, fit_notes = _fit_to_declared_lengths(tool_input, NarrativeBody)
+        try:
+            body = NarrativeBody.model_validate(tool_input)
+        except Exception as e:
+            raise _ProviderError(f"anthropic tool_input did not match NarrativeBody: {e}") from e
 
-    usage = getattr(resp, "usage", None)
-    pt = int(getattr(usage, "input_tokens", 0) or 0)
-    ct = int(getattr(usage, "output_tokens", 0) or 0)
-    return body, pt, ct, model, fit_notes
+        usage = getattr(resp, "usage", None)
+        pt = int(getattr(usage, "input_tokens", 0) or 0)
+        ct = int(getattr(usage, "output_tokens", 0) or 0)
+        return body, pt, ct, model, fit_notes
 
 
 def _fit_to_declared_lengths(
@@ -722,6 +747,7 @@ def persist_narrative(narrative: NarrativeOutput) -> bool:
                 "model": narrative.model,
                 "prompt_tokens": narrative.prompt_tokens,
                 "completion_tokens": narrative.completion_tokens,
+                "cost_usd": narrative.cost_usd,
                 "fallback_used": narrative.fallback_used,
                 "fallback_reason": narrative.fallback_reason,
                 "status": narrative.status.value,

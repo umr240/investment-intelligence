@@ -822,6 +822,39 @@ class FinancialSourceLog(Base):
     )
 
 
+class LlmCall(Base):
+    """One row per LLM call attempt from an allow-listed call site (ADR-048).
+
+    Prompt text is never stored, only `prompt_sha256` of the system prompt and
+    output schema. `input_tokens` excludes cached tokens; `cost_usd` comes from
+    config/llm_prices.py and is NULL for a model with no price row.
+    """
+
+    __tablename__ = "llm_calls"
+
+    id = Column(Integer, primary_key=True)
+    call_site = Column(Text, nullable=False, index=True)  # narrative | chat | external_signals
+    ticker = Column(Text, index=True)
+    run_id = Column(Integer)
+    attempt = Column(Integer, nullable=False)
+    provider = Column(Text, nullable=False)
+    model = Column(Text, nullable=False)
+    prompt_version = Column(Integer, nullable=False)
+    prompt_sha256 = Column(Text, nullable=False)
+    input_tokens = Column(Integer, nullable=False)
+    output_tokens = Column(Integer, nullable=False)
+    cache_write_tokens = Column(Integer, nullable=False)
+    cache_read_tokens = Column(Integer, nullable=False)
+    latency_ms = Column(Integer, nullable=False)
+    status = Column(Text, nullable=False)  # ok | error
+    error_class = Column(Text)
+    guard_status = Column(Text)  # ok | warnings, where the call site has a guard
+    warning_count = Column(Integer)
+    cost_usd = Column(Float)
+    request_id = Column(Text)
+    created_at = Column(DateTime, server_default=func.now(), index=True)
+
+
 class ExternalSignalRecord(Base):
     """LLM-extracted or third-party-sourced signals — strictly isolated from
     the deterministic SEC-XBRL data path.

@@ -142,3 +142,16 @@ def latest_dive_stale_reason(ticker: str, mode: str | None = None) -> str | None
             q = q.where(DeepDiveRun.mode == mode)
         run = session.execute(q.order_by(DeepDiveRun.id.desc()).limit(1)).scalars().first()
         return None if run is None else dive_withheld_reason(run)
+
+
+def latest_run_id(ticker: str) -> int | None:
+    """Id of the ticker's most recent dive; None if it has none."""
+    with get_session() as session:
+        run_id = session.execute(
+            select(DeepDiveRun.id)
+            .join(Company, Company.id == DeepDiveRun.company_id)
+            .where(Company.ticker == ticker.upper())
+            .order_by(DeepDiveRun.id.desc())
+            .limit(1)
+        ).scalar()
+        return int(run_id) if run_id is not None else None

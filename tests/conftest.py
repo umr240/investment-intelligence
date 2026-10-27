@@ -47,6 +47,31 @@ def _require_data(request: pytest.FixtureRequest) -> None:
         pytest.skip("database not migrated — run `invest db-init`, then a dive to populate it")
 
 
+@pytest.fixture(autouse=True)
+def llm_rows(monkeypatch: pytest.MonkeyPatch) -> list[dict]:
+    """Rows the LLM-call recorder would write (ADR-048), kept in memory.
+
+    Call sites run against fake clients in many tests; without this the recorder
+    would write those calls into the real database.
+    """
+    import deepdive.llm_calls as llm_calls
+
+    rows: list[dict] = []
+    llm_calls._LAST.set(None)  # a previous test's call must not be annotated here
+
+    def _capture(row: dict) -> int:
+        rows.append(row)
+        return len(rows)
+
+    def _update(row_id: int, fields: dict) -> None:
+        if 0 < row_id <= len(rows):
+            rows[row_id - 1].update(fields)
+
+    monkeypatch.setattr(llm_calls, "_write", _capture)
+    monkeypatch.setattr(llm_calls, "_update", _update)
+    return rows
+
+
 # ── Database fixtures ─────────────────────────────────────────────────────────
 
 @pytest.fixture(scope="session")

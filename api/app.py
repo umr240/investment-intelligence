@@ -327,6 +327,7 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
         "audit": {
             "provider": narrative.provider.value, "model": narrative.model,
             "prompt_tokens": narrative.prompt_tokens, "completion_tokens": narrative.completion_tokens,
+            "cost_usd": narrative.cost_usd,
             "fallback_used": narrative.fallback_used, "status": narrative.status.value,
         },
         "guard_warnings": list(narrative.guard_warnings),
