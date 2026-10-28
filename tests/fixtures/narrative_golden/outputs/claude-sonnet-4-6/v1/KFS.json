@@ -1,0 +1,260 @@
+{
+  "case_id": "KFS",
+  "view_sha256": "1be6f59d0d5c0a184936e60ef19fe4c99d2787e1149c46e09bcb23657c711114",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "KFS",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:53:09.386810Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11217,
+    "completion_tokens": 2776,
+    "cost_usd": 0.075291,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].numeric_claims[1]: claim value '23.42' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "risks[4]: grounded_in='F1' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "KFS scores a composite of 2.41 (exclude verdict) across four feasible frameworks, with negative ROIC, weak momentum, and absent platform signals outweighing a moderate revenue growth rate — the case for long-term ownership is not yet established.",
+      "bull": [
+        {
+          "headline": "Revenue growth trajectory provides a nascent foundation worth monitoring",
+          "detail": "F5 records a 3-year revenue CAGR of +13.1%, which is the single material positive in the scorecard. For an insurance holding company pivoting its business mix, sustained top-line expansion at this rate is a necessary (though far from sufficient) condition for eventual earnings power. The trajectory warrants observation across future annual filings before it can be credited as structural.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+13.1%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO equity stake at 5.47% creates meaningful principal-agent alignment",
+          "detail": "The CEO holds disclosed equity of 5.47% — a level that places personal wealth materially at risk alongside shareholders. This partially satisfies the Outsiders capital-allocator criterion of owner-operator skin in the game. The F5 signal codes this as 'high_equity_unconfirmed_founder.' Alignment at this level is a positive prior for capital-allocation discipline, though the 'unconfirmed founder' qualifier tempers confidence.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.47%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "FCF margin is positive, preserving optionality without immediate dilution risk",
+          "detail": "F5 records an FCF margin of +1.1% — thin but positive. In the context of a company generating revenue at this stage with negative ROIC, positive free cash flow avoids the most acute capital-structure risk: forced dilution or distressed refinancing. It is not a strength; it is the floor above which the thesis can be constructed.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+1.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Composite verdict is exclude at 2.41/10 — no feasible framework scores above partial",
+          "detail": "The stage-weighted composite of 2.41 reflects a scorecard where F2 scores 1.5 (fail), F4 scores 1.0 (fail), F5 scores 4.5 (partial), and F6 scores 1.0 (fail). Only F5 clears the fail band, and only marginally. No framework fires at strong_fit or moderate. This is a broad-front weakness, not an isolated miss — the thesis requires explanation of why four independent frameworks simultaneously underperform before the composite should be reconsidered.",
+          "framework_codes": [
+            "F2",
+            "F4",
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.41",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "1.5",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "1.0",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "4.5",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "1.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        },
+        {
+          "headline": "ROIC is negative at -0.4%, indicating capital destruction on an incremental basis",
+          "detail": "F5 records ROIC of -0.4%. Combined with a positive revenue CAGR, this pattern indicates that growth is being funded at a cost of capital exceeding the returns that growth generates — the structural precondition for value destruction over a multi-year hold. Until ROIC crosses and sustains above cost of capital, the compounding engine is running in reverse. This is the most consequential single signal in the scorecard.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-0.4%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Platform Dominator (F6) fails on every measurable dimension",
+          "detail": "F6 scores 1.0 with NRR and GRR both undisclosed, GP/A unavailable, and the Fahlenbrach signal false. The Rule of 40 of 23.42 falls materially below the conventional 40 threshold. Customer concentration is assessed as diversified (not scored negatively), but there is no positive platform or retention signal. For an insurance holding company, the absence of disclosed retention metrics is expected — but it means F6 contributes no evidence toward moat.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "23.42",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Price currently +29.2% above 52-week high; momentum framework is weakly negative",
+          "detail": "F2 scores 1.5 with the 12-1 momentum signal unavailable due to insufficient price anchors, and the PEAD signal reads mixed_recent_positive. The stock trading above its 52-week high is not inherently negative, but in the absence of confirmatory momentum data, it is not creditable either. The F2 data gap on price history (also limiting F7 entirely) means any momentum or mean-reversion inference is made with materially incomplete information.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.5",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+29.2%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay returns no_winner_pattern; extreme-compounder base rate does not apply",
+          "detail": "The Bessembinder Extreme Winners overlay scores no_winner_pattern. This rules out the tail-scenario argument that would justify holding through current weakness on the grounds of asymmetric upside. The absence of a BEW signal, combined with an exclude composite, closes the primary path by which a low-scoring stock could warrant position-sizing for long-duration compounding.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC remains negative across 2–3 additional annual filings. Sustained negative ROIC through a full business cycle would confirm structural capital destruction rather than transitional drag, constituting a thesis-break condition for any future hold.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Revenue CAGR of +13.1% must be evaluated for quality: if growth is funded by reserve releases, adverse loss-ratio trends, or premium volume from deteriorating underwriting segments, the headline CAGR is misleading. Watch combined-ratio and loss-ratio disclosures across annual filings.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Price-history gap limits F2 and eliminates F7 entirely (PSA-3 trigger). As price history accumulates toward the 12-year threshold, a full F7 run may materially revise the composite in either direction. Monitor whether F7 becomes feasible within the hold window.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "CEO equity stake at 5.47% is disclosed but founder status is unconfirmed. If management succession occurs or equity is significantly reduced via sales, the principal-agent alignment argument weakens. Monitor DEF 14A for equity ownership changes annually.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Analyst coverage is absent (F1 and F3 both unfeasible). This creates an information asymmetry where institutional-quality research on reserve adequacy, pricing-cycle positioning, and competitive dynamics is unavailable to the scorecard. Any thesis rests on a narrower evidence base than for covered peers.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Short-interest data is structurally thin (only 3 observations, below the 4-observation threshold for F4 signal). If short interest is elevated and declining — a historically positive signal — this cannot be confirmed. Monitor as additional observations accumulate.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Debt/EBITDA is uncalculable due to absent EBITDA. For an insurance holding company with subsidiary leverage, the inability to assess debt-service coverage is a material gap. If leverage is elevated relative to earnings power, FCF margin turns negative under stress.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "yfinance CEO name not found in companyOfficers: CEO identity and equity stake are sourced from an alternate data path; the 5.47% figure is treated as disclosed_exact but could not be cross-validated against the yfinance officer list.",
+        "yfinance short percent of float unavailable: F4 short-interest signals are based on fewer than four observations (3 recorded), below the threshold for a reliable decline signal. The short-interest conclusion is provisional.",
+        "yfinance institutional holders and heldPercentInstitutions unavailable: F4 13F holder-count delta is based on a single snapshot and cannot yet track accumulation or distribution trends — this data gap will resolve as future dives accumulate.",
+        "yfinance price history unavailable: F2 12-1 momentum is uncalculable; F7 Smart Beta Timing is entirely unfeasible (~5yr of price history vs. the 12yr requirement). All price-dependent signals are either missing or degraded.",
+        "yfinance earnings_dates empty: PEAD (post-earnings-announcement drift) signal is limited to partial data; the F2 PEAD reading of mixed_recent_positive should be treated with low confidence.",
+        "F2 momentum data gap: insufficient price anchors for the 12-1 momentum calculation specifically.",
+        "F4 options put/call ratio: no free-tier source available; skipped per project specification. This signal does not contribute to the F4 score.",
+        "F5 Debt/EBITDA: EBITDA is unavailable, leaving leverage assessment incomplete.",
+        "F6 GP/A: gross profit to assets ratio is unavailable; this signal could not be scored."
+      ]
+    }
+  },
+  "input_tokens": 11217,
+  "output_tokens": 2776,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 59984,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

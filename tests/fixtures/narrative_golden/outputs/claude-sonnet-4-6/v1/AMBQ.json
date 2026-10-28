@@ -1,0 +1,271 @@
+{
+  "case_id": "AMBQ",
+  "view_sha256": "2ba57a611934c21ae0c7ced0a94ef48c992aa0a9c4cce27bc98764e4f73b9a2d",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AMBQ",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:36:52.686056Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11842,
+    "completion_tokens": 3126,
+    "cost_usd": 0.082416,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "AMBQ is a pre-profitability semiconductor IP company with a partial BEW signal but a composite score of 3.2 that places it firmly in exclude territory across all three feasible frameworks, driven by top-decile asset growth, negative Rule of 40, and a short post-IPO history that forecloses most quantitative frameworks.",
+      "bull": [
+        {
+          "headline": "R&D-intensity at top tercile flags BEW-5 partial trigger: small-cap heavy-R&D Bessembinder candidate",
+          "detail": "Bessembinder's empirical finding concentrates equity wealth creation in ~4% of stocks — disproportionately small-cap, high-R&D names. BEW-5 fired on the combination of sub-$2B market cap and R&D intensity above the top-tercile threshold. This is a partial trigger only (idiosyncratic vol not yet computed), but the profile type is one that warrants monitoring over a multi-year hold horizon rather than immediate exclusion from the investable universe permanently.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "53.07%",
+              "field_path": "overlay_triggers.2.relevant_numbers.rd_intensity"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor economic ROIC diverges sharply from GAAP, indicating R&D/SG&A are being under-capitalised in book figures",
+          "detail": "ICA-5 reveals a gap of 131.35 percentage points between GAAP ROIC and Peters-Taylor adjusted ROIC, with the economic figure materially less negative than GAAP implies. For a semiconductor IP company where R&D is the primary economic asset, GAAP book-value understates the denominator substantially. The adjusted figure is still negative, but the direction and magnitude of the restatement confirm that intangible capital investment is real and accumulating — not pure cash burn.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "131.35pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-5.29%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-136.64%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with disclosed equity ownership provides incentive alignment uncommon at the IPO stage",
+          "detail": "CEO Fumihide Esaka is identified as a founder-CEO with a disclosed equity stake. Founder-operators with meaningful skin in the game behave differently from hired managers optimising short-term EPS metrics — a necessary (not sufficient) condition for the Outsiders capital-allocator profile. This is one qualitative positive in an otherwise weak quantitative scorecard; it warrants monitoring as the company approaches profitability.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.6%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Sloan high-quality earnings flag is True, indicating accruals quality is not degraded",
+          "detail": "F1 signals Sloan high-quality earnings as True, meaning the accruals component of reported earnings is not elevated. For a pre-profitability company, this is meaningful: it suggests the reported loss reflects real cash consumption rather than aggressive accrual manipulation. This is a floor-level quality observation, not a thesis driver, but it removes one common red flag for early-stage semiconductor companies.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Composite score of 3.2 — exclude verdict — across all three feasible frameworks",
+          "detail": "F1 scores 3.0 (weak/fail), F4 scores 3.0 (weak/fail), and F6 scores 2.0 (weak/fail). No feasible framework reaches a passing band. The composite of 3.2 is well below any threshold for constructive positioning. Four of seven frameworks are unfeasible due to insufficient post-IPO history, which means the composite is computed on a thin evidential base — uncertainty is compounded, not resolved, by the missing frameworks.",
+          "framework_codes": [
+            "F1",
+            "F4",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.2",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        },
+        {
+          "headline": "Top-decile asset growth triggers Cooper-Gulen-Schill 2008 disqualifier and caps F1 score",
+          "detail": "Asset growth above the top-decile threshold is one of the most robust and replicated negative return predictors in academic literature (Cooper-Gulen-Schill 2008). The F1 notes confirm this fired as a score cap. For a recent IPO, top-decile asset growth often reflects IPO-proceeds deployment — but the signal is treated mechanically and conservatively, as per framework design. This disqualifier will persist until asset growth normalises.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Rule of 40 of -4.67 signals revenue scale insufficient to offset burn at current growth rate",
+          "detail": "The Rule of 40 composite (growth rate + margin) of -4.67 is well below the 40 threshold that characterises viable SaaS/platform businesses, and below zero — meaning the company is neither growing fast enough nor margin-positive enough to compensate for either deficiency. Combined with undisclosed NRR and GRR, the revenue quality picture for F6 is opaque and weak.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-4.67",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Net loss of -$36.5M on revenue of $72.5M — pre-profitability stage with no near-term inflection visible in framework signals",
+          "detail": "The company reported a net loss nearly equal to half of total revenue. Pre-profitability is not disqualifying per se, but combined with the weak F6 platform signals, undisclosed retention metrics, and a Piotroski score of 5/9, there is no quantitative evidence in the available data that an inflection toward profitability is imminent. The burn rate relative to revenue scale is the core thesis-validation checkpoint.",
+          "framework_codes": [
+            "F1",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-$36,461,000",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$72,514,000",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "F4 EPS acceleration indeterminate — only 3 reported quarters; short interest data withheld",
+          "detail": "F4's two most informative signals — EPS acceleration and short interest — are both unavailable. EPS acceleration is marked '?' due to only 3 reported quarters; short interest is withheld (third-party data). The Fahlenbrach institutional-conviction signal is False. This makes F4 a noise score rather than a signal score, and the framework's 3.0 should be interpreted as absence of positive evidence rather than positive negative evidence.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the Peters-Taylor adjusted ROIC trajectory improves across the next 2-3 annual filings as R&D capital accumulates; if the economic ROIC does not trend toward breakeven as revenue scales, the intangible-capital thesis is not being validated.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor asset growth rate across the next 2 annual filings; if top-decile asset growth persists beyond IPO-proceeds deployment, it signals capital inefficiency rather than growth-stage investment and the Cooper-Gulen-Schill disqualifier will continue to suppress F1.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor Rule of 40 trajectory annually; if the composite remains below zero after 2-3 years of additional revenue scale, the platform economics thesis (F6) is not compressing losses as expected and the bear case on unit economics is strengthening.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "BEW-5 is a partial trigger only — idiosyncratic volatility has not been computed. Monitor whether a full BEW trigger fires once sufficient price history accumulates (~2 years post-IPO); absence of a full trigger materially weakens the extreme-winner case.",
+          "severity": "medium",
+          "grounded_in": "BEW-5"
+        },
+        {
+          "factor": "F4 and F2 are currently unfeasible or data-poor; the composite is computed on only 3 of 7 frameworks. As price history and quarterly earnings accumulate, these frameworks will become feasible and may materially revise the composite score in either direction. Watch for the first full feasibility window (~2027-2028).",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "NRR and GRR remain undisclosed; the absence of retention metrics means the F6 customer-quality foundation cannot be assessed. Monitor annual 10-K MD&A disclosures for any retention data; continued non-disclosure is itself an information-quality risk.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Customer concentration is disclosed but not quantified in the scorecard view. Semiconductor IP companies at the revenue scale here are typically dependent on a small number of design wins; monitor for any single-customer revenue concentration that could destabilise the revenue base.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Founder-CEO equity stake is present but at a level that could be substantially diluted through future equity raises required to fund ongoing losses. Monitor dilution trajectory and whether founder ownership remains above a meaningful threshold across subsequent capital raises.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "F4 EPS acceleration is indeterminate ('?') due to only 3 reported quarters of data; the signal will remain unavailable until at least one additional annual reporting cycle completes.",
+        "F4 options put/call ratio was skipped — no free-tier source available per project specification (Pan-Poteshman 2006); this signal contributes zero to the F4 score.",
+        "F4 short interest (current and peak) is withheld due to third-party data restrictions; this is a structural gap in the stealth-accumulation signal set.",
+        "F2, F3, F5, and F7 are entirely unfeasible due to insufficient post-IPO price and annual financial history; the composite is renormalised across only F1, F4, and F6, which increases the variance and reduces the reliability of the composite score.",
+        "Market cap is null in the scorecard view; BEW-5 partial trigger fired on R&D intensity alone, with idiosyncratic volatility not yet computed. The full BEW trigger requires market cap and volatility data.",
+        "PSA-3 fired because F7 is unfeasible due to recent listing; listing type is not confirmed, so the spinoff/demerger PSA workflow was not applied. This caveat stands until listing type is confirmed.",
+        "F6 NRR and GRR are not disclosed in the 10-K MD&A; both are treated as zero-point signals per framework design. This is a data absence, not a confirmed negative retention signal."
+      ]
+    }
+  },
+  "input_tokens": 11842,
+  "output_tokens": 3126,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 65007,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

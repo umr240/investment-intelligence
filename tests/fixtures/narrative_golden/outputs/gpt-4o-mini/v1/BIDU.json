@@ -1,0 +1,145 @@
+{
+  "case_id": "BIDU",
+  "view_sha256": "1fda86f21522581917141d17231c5860d321fb88a61ed640fcc9b5c738e2b082",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BIDU",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:41.828152Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8443,
+    "completion_tokens": 342,
+    "cost_usd": 0.001472,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].detail: number '18.458' not in scorecard whitelist (possible hallucination)",
+      "bull[0].detail: number '799' not in scorecard whitelist (possible hallucination)",
+      "bear[0].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F2' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F4' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F6' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point",
+      "risks[0]: grounded_in='F1' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "Baidu, Inc. lacks sufficient data for a robust investment thesis, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Strong revenue generation despite data gaps",
+          "detail": "Baidu reported a latest revenue of $18.458 billion and a net income of $799 million, indicating operational viability despite insufficient quarterly history for analysis.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$18.458B",
+              "field_path": "company.latest_revenue"
+            },
+            {
+              "value": "$799M",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Insufficient data for reliable analysis",
+          "detail": "All frameworks are deemed unfeasible due to a lack of quarterly history, limiting the ability to assess performance and trends effectively.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Overlay trigger indicates potential issues",
+          "detail": "The PSA-3 overlay suggests that Baidu is not a spinoff candidate, reflecting concerns about its structural positioning and market adaptability.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor for continued lack of quarterly data, which could hinder future assessments.",
+          "severity": "high",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Watch for any signs of operational decline or inability to adapt to market changes, as indicated by the PSA-3 overlay.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        }
+      ],
+      "data_caveats": [
+        "BIDU: data contract C2 (block) not met: quarterly rows present",
+        "BIDU: data contract C3 (warn) not met: latest annual split factor known"
+      ]
+    }
+  },
+  "input_tokens": 8443,
+  "output_tokens": 342,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 4820,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

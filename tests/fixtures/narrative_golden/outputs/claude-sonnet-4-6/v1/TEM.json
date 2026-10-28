@@ -1,0 +1,289 @@
+{
+  "case_id": "TEM",
+  "view_sha256": "9c8f4d0d96e0bbb25025be03f9ae7822c95a303602948dd980c02024bf887c8d",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "TEM",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:13:54.173421Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12099,
+    "completion_tokens": 3259,
+    "cost_usd": 0.085182,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[4].detail: number '13%' not in scorecard whitelist (possible hallucination)",
+      "bear[1].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Tempus AI is a high-velocity AI-in-healthcare data platform with a founder-dominated cap table, best-in-class retention, and a Rule of 40 well above threshold — but GAAP economics remain deeply negative, asset growth is top-decile, and momentum is adverse, leaving the composite at monitor until capital efficiency turns structurally positive.",
+      "bull": [
+        {
+          "headline": "Best-in-class NRR signals durable expansion within existing accounts",
+          "detail": "Net Revenue Retention of 126% indicates customers are materially expanding spend year-over-year — a structural quality signal for a platform business. Combined with a diversified customer base (no concentration flag), this suggests the core data-and-AI offering is embedding deeply into clinical workflows, creating switching-cost characteristics that widen with each integrated use case. This is the primary evidence for moat compounding.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "126.0%",
+              "field_path": "frameworks.5.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Rule of 40 above threshold signals growth-efficiency balance uncommon at this stage",
+          "detail": "A Rule of 40 score at the current level, achieved at pre-profitability stage, suggests the growth engine is not purely cash-burning but retains operating leverage characteristics. This is consistent with a platform business where incremental data and AI modules layer onto a fixed genomic and clinical-data infrastructure, improving marginal economics over time.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "64.61",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with substantial equity stake aligns long-term capital allocation",
+          "detail": "Eric Lefkofsky holds a disclosed exact ownership stake representing a dominant portion of his personal wealth, creating the incentive structure most associated with durable compounders in the Thorndike Outsiders framework. Founder-CEOs with concentrated equity tend to optimize for per-share intrinsic value over decades, not quarterly EPS. The F5 framework independently flags founder alignment as a positive signal.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "57.9",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "R&D intensity in near-sweet-spot band with a six-quarter positive surprise streak",
+          "detail": "R&D intensity signals meaningful investment in defensible knowledge capital without crossing into unproductive spend. The six-consecutive-quarter positive earnings surprise streak demonstrates that the business is consistently delivering above expectations — a PEAD signal with real informational content about execution quality. Patent portfolio of 230 patents adds a modest intangibles layer to the moat discussion.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+13.6%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "6 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            },
+            {
+              "value": "230",
+              "field_path": "frameworks.2.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor restatement narrows the ROIC gap substantially, flagging GAAP distortion",
+          "detail": "ICA-5 fires because the Peters-Taylor intangible-capital restatement produces an adjusted ROIC materially better than GAAP — a gap of over 109 percentage points driven by capitalising R&D and organisational SG&A rather than expensing them. For a company with R&D intensity above 13%, GAAP ROIC is structurally misleading. The adjusted figure remains negative but is directionally meaningful as the business scales its intangible asset base.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "109.17pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-5.54%",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "GAAP ROIC deeply negative; FCF margin substantially negative at current scale",
+          "detail": "ROIC of approximately -192% under GAAP signals the business is consuming capital far faster than it earns returns on it. Even under Peters-Taylor restatement the figure remains negative. FCF margin near -18% means the company is cash-burning at a meaningful rate relative to revenue. Until ROIC crosses positive territory on a sustained basis, the compounding thesis rests on future state, not observable present economics.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-191.6%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "-18.4%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Top-decile asset growth triggers Cooper-Gulen-Schill disqualifier; F1 score capped",
+          "detail": "Asset growth in the top decile is a well-documented empirical predictor of subsequent underperformance — the Cooper-Gulen-Schill 2008 finding — because it often reflects dilutive capital raises or acquisition-driven expansion that does not earn adequate returns. The F1 score is capped as a result. Combined with a Piotroski score of only 4/9 and zero open-market insider buyers over the last 90 days, the financial-health picture is materially impaired.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Adverse 12-1 momentum with recovery still well below 52-week high",
+          "detail": "Trailing 12-minus-1 momentum is negative, which is a systematic headwind in factor-based models. The stock remains materially off its 52-week high. Adverse momentum in a pre-profitability, high-beta-candidate AI name can reflect institutional de-risking or fundamental re-rating concerns that lag public disclosure — this signal warrants monitoring rather than dismissal.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-14.7%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+24.8%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "GRR not disclosed; gross margin data absent — structural visibility gaps",
+          "detail": "Gross Revenue Retention is undisclosed, which prevents assessment of gross churn against the impressive NRR headline. If NRR is buoyed by expansion from a narrowing retained base, the platform stickiness narrative weakens materially. Separately, gross margin data is unavailable for F1 and F3 trajectory analysis. These gaps are not trivially filled from public sources and represent genuine blind spots in the thesis.",
+          "framework_codes": [
+            "F3",
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Pre-profitability stage with net loss; recent IPO status limits historical pattern recognition",
+          "detail": "The company reported a net loss and is classified as pre-profitability. F7 is unfeasible due to insufficient annual history for the full Smart Beta Timing analysis. PSA-3 fires on recent listing — the post-IPO period is historically characterised by suppressed short interest, incomplete sell-side coverage, and anchoring to IPO price, all of which distort signal quality. The composite monitor verdict appropriately reflects this compressed information set.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-245028000.0",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC (GAAP and Peters-Taylor adjusted) improves over 2-3 consecutive annual filings. Sustained failure to converge toward positive adjusted ROIC as revenue scales would indicate the unit economics are structurally broken, not merely early-stage — a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "ICA-1"
+        },
+        {
+          "factor": "Monitor GRR disclosure in future 10-K MD&A filings. If disclosed GRR falls materially below NRR of 126%, the retention narrative rests on expansion from a churning base — a structural moat-validity concern for the Platform Dominator thesis.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor asset growth trajectory over the next 2 annual filings. Persistent top-decile asset growth without corresponding ROIC improvement signals capital misallocation — the canonical Cooper-Gulen-Schill value-destruction pattern. Watch for acquisition activity that inflates assets without earning returns.",
+          "severity": "high",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor whether the founder-CEO's capital allocation decisions (M&A, SBC, buybacks, debt capacity) remain consistent with Outsiders 8 traits across annual reports. Deterioration in insider alignment — disposition of the 57.9% equity stake, empire-building acquisitions, or compensation structure shifts — is an early warning of capital-allocator failure.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor the competitive response from large healthcare incumbents and Mag-7-adjacent AI platforms. The $1B-funded-challenger inversion is especially acute for AI-in-healthcare: clinical data network effects are the primary moat, and any well-funded competitor (Epic Systems, Microsoft Health, Google Health) with existing EHR distribution could replicate the data aggregation layer. Watch for partnership announcements that signal platform encroachment.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor FCF margin trajectory annually. Negative FCF at the current revenue base requires continued capital market access. A deterioration in credit conditions or equity market receptivity to pre-profitability AI names could constrain the burn runway before the business reaches self-funding. Watch debt issuance terms and dilution rate.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor the post-IPO price discovery process across years 1-3. PSA-3 fires on recent listing status — short interest, institutional positioning, and analyst coverage are in a structurally noisy phase. Adverse momentum is a monitoring signal, not an exit trigger, but a sustained deterioration in the PEAD signal (currently positive drift) across multiple quarters would warrant thesis reassessment.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Monitor gross margin disclosure. The absence of gross margin data in F1 and F3 prevents assessment of operating leverage trajectory. If gross margins are structurally low or declining as the business scales, the Rule of 40 and NRR signals may be misleading about intrinsic platform economics.",
+          "severity": "low",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "F1: Gross margin data is unavailable, preventing the O8 gross margin signal and GP/A (gross profit to assets) calculation. Both are scored as missing, which directionally suppresses the F1 output.",
+        "F3: Gross margin trajectory cannot be computed — zero annual observations with gross margin data are available. Average GM expansion is reported as None. This prevents assessment of operating leverage trend.",
+        "F4: Options put/call ratio is unavailable from free-tier sources; the Pan-Poteshman 2006 signal is skipped per project specification. Short interest figures are withheld as third-party data.",
+        "F5: GP/A ratio is unavailable, creating a gap in the Growth Quality capital efficiency assessment.",
+        "F6: GP/A ratio is unavailable, creating a gap in the Platform Dominator capital efficiency assessment. GRR (Gross Revenue Retention) is not disclosed in the 10-K MD&A, preventing gross churn analysis.",
+        "F7: Unfeasible due to insufficient annual filing history — the framework requires 10 years of annual data; only 5 years are available and the company has been listed approximately 1 year.",
+        "PSA-3: Listing type field is unpopulated, preventing determination of whether a spinoff/demerger PSA workflow applies. Months-since-listing is not resolved."
+      ]
+    }
+  },
+  "input_tokens": 12099,
+  "output_tokens": 3259,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 71454,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

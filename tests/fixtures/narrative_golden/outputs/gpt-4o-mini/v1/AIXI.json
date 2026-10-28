@@ -1,0 +1,151 @@
+{
+  "case_id": "AIXI",
+  "view_sha256": "672850263d49274204626a792ec9ffd0a76f917ec381c4c8c4a8d82e4e4df0a6",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AIXI",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:05.226689Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9101,
+    "completion_tokens": 376,
+    "cost_usd": 0.001591,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].detail: number '101' not in scorecard whitelist (possible hallucination)",
+      "bull[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F2' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F4' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F6' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "Xiao-I Corporation (AIXI) presents significant risks with no feasible frameworks to support a positive investment thesis.",
+      "bull": [
+        {
+          "headline": "Potential for High R&D Intensity",
+          "detail": "Xiao-I Corporation exhibits a high R&D intensity of 198.39%, indicating a strong commitment to innovation, which could lead to future growth if effectively managed.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "198.39%",
+              "field_path": "overlay_triggers.2.relevant_numbers.rd_intensity"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Lack of Historical Data",
+          "detail": "All frameworks are unfeasible due to insufficient quarterly and annual history, limiting the ability to assess performance and risks accurately.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Negative Net Income",
+          "detail": "The company reported a significant net loss of over $101 million, raising concerns about its financial health and sustainability in the pre-profitability stage.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$101,221,046",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic capital efficiency continues to diverge from GAAP ROIC, indicating potential structural issues in profitability.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any developments regarding the company's ability to transition from a recent IPO to a more stable financial footing, as it currently lacks sufficient annual history.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        }
+      ],
+      "data_caveats": [
+        "Insufficient quarterly history prevents feasibility of all frameworks (F1-F7).",
+        "No insider transactions found, limiting insights into management actions.",
+        "Short interest data and earnings dates are unavailable, affecting market sentiment analysis."
+      ]
+    }
+  },
+  "input_tokens": 9101,
+  "output_tokens": 376,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 15134,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

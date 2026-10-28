@@ -1,0 +1,161 @@
+{
+  "case_id": "KFS",
+  "view_sha256": "1be6f59d0d5c0a184936e60ef19fe4c99d2787e1149c46e09bcb23657c711114",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "KFS",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:50.397344Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8904,
+    "completion_tokens": 611,
+    "cost_usd": 0.001702,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Kingsway Financial Services Inc. shows weak momentum and growth quality signals, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Revenue Growth Signals Positive Trajectory",
+          "detail": "Kingsway Financial Services Inc. has demonstrated a revenue CAGR of +13.1% over the past three years, indicating a solid growth trajectory despite current challenges. This growth is a positive indicator of the company's ability to expand its market presence and potentially enhance shareholder value over time.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "13.1%",
+              "field_path": "frameworks.4.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Momentum Indicators",
+          "detail": "The momentum framework (F2) scores only 1.5, reflecting insufficient price anchors and a mixed recent PEAD signal. This weak momentum could hinder investor confidence and limit stock performance in the near term.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "29.2%",
+              "field_path": "frameworks.1.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "Growth Quality Concerns",
+          "detail": "The growth quality framework (F5) indicates a negative ROIC of -0.4%, suggesting that the company is not generating sufficient returns on its invested capital. This could raise concerns about the sustainability of its growth and overall financial health.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-0.4%",
+              "field_path": "frameworks.4.key_signals.2"
+            }
+          ]
+        },
+        {
+          "headline": "Data Gaps Impacting Analysis",
+          "detail": "Multiple data gaps exist, including missing short interest and institutional holdings data, which limit the ability to fully assess the company's market positioning and investor sentiment. These gaps may obscure critical insights necessary for informed decision-making.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Overlay Trigger PSA-3 Active",
+          "detail": "The active overlay trigger PSA-3 indicates that the company is not a spinoff candidate due to insufficient price history. This may limit the stock's appeal to certain investors looking for spinoff opportunities, potentially affecting liquidity and valuation.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for further deterioration in momentum signals, particularly if the PEAD signal remains mixed.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to disclose more comprehensive data to fill existing gaps, particularly regarding institutional holdings.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "KFS: yfinance CEO name not found in companyOfficers",
+        "KFS: yfinance shortPercentOfFloat unavailable",
+        "KFS: yfinance heldPercentInstitutions unavailable",
+        "KFS: yfinance institutional_holders unavailable",
+        "KFS: yfinance price history unavailable",
+        "KFS: yfinance earnings_dates empty"
+      ]
+    }
+  },
+  "input_tokens": 8904,
+  "output_tokens": 611,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 7249,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

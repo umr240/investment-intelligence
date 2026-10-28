@@ -1,0 +1,346 @@
+{
+  "case_id": "AAPL",
+  "view_sha256": "299372135acdc33d40982f3b5f5a678852b06102053dfc8d018757e6aaf761cd",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AAPL",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:31:56.494824Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11987,
+    "completion_tokens": 3922,
+    "cost_usd": 0.094791,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[4].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Apple is an exceptional-quality compounder trading at a significant valuation premium, warranting watchlist status until price-to-value convergence improves or the moat direction visibly strengthens.",
+      "bull": [
+        {
+          "headline": "Exceptional capital efficiency: GAAP ROIC and FCF margin both at elite levels",
+          "detail": "F5 signals a strong-fit verdict driven by a FCF margin and ROIC that sit well above typical large-cap thresholds. Debt/EBITDA is negligible, indicating that capital returns and reinvestment are funded organically rather than leveraged. CEO alignment is rated long-tenured, reinforcing the owner-operator disposition that sustains disciplined capital allocation over a decade-plus horizon. This profile — high free-cash conversion, minimal leverage, durable earnings — is the foundation of the hold-forever case.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.5",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+29.3%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+92.5%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.184",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Price momentum at 52-week high with positive post-earnings drift: market confirming thesis",
+          "detail": "F2 scores at the top of the strong-fit band. Twelve-minus-one momentum is solidly positive, the stock sits at its 52-week high, and the PEAD signal reads positive_drift — indicating earnings surprises are being absorbed constructively rather than sold. A seven-quarter earnings surprise streak (F3) reinforces that execution has been consistent enough to sustain upward revisions. Momentum at this scale, sustained across multiple quarters, is a statistical feature of the Bessembinder right-tail cohort.",
+          "framework_codes": [
+            "F2",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+23.4%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+0.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Steady gross-margin expansion signals durable pricing power and mix shift toward Services",
+          "detail": "F3 registers an average gross-margin expansion rate that is positive and sustained, reflecting the structural shift in revenue mix toward higher-margin software, services, and subscriptions. R&D intensity sits in the edge_band — sufficient to sustain the innovation engine without crowding out returns. A Piotroski score of 8/9 (F1) confirms broad-based fundamental health across profitability, leverage, and efficiency dimensions. Together these signals indicate the moat is not merely wide but is being actively reinforced through mix-shift compounding.",
+          "framework_codes": [
+            "F3",
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "173.4 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+8.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "BEW-2 trigger: quality + innovation trading rich is the signature of Bessembinder extreme-winner candidates",
+          "detail": "The BEW-2 overlay fired because F1 and F3 both clear the quality-and-innovation threshold while the valuation multiple is rich. Bessembinder's empirical finding is that the handful of stocks responsible for aggregate equity-market wealth creation are precisely those that appear expensive by conventional metrics while compounding at elite rates. BEW-2 does not confirm a winner pattern, but it flags that trimming or avoiding on valuation alone — in a name with this quality signature — carries meaningful opportunity cost if the thesis holds. The hold-forever framing is structurally correct for this profile.",
+          "framework_codes": [
+            "F1",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.83",
+              "field_path": "overlay_triggers.1.relevant_numbers.f1_score"
+            },
+            {
+              "value": "7.0",
+              "field_path": "overlay_triggers.1.relevant_numbers.f3_score"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue scale and diversified customer base reduce concentration risk typical of large-cap tech",
+          "detail": "Latest revenue stands at a scale that provides structural resilience: no single customer segment dominates, and the customer concentration signal reads diversified_base_case (F6). GP/A registers in the top-40-percentile proxy, confirming that asset productivity remains strong even at this scale. While the Revenue CAGR over three years is modest, the absolute cash generation implied by a near-30% FCF margin on that revenue base produces a compounding engine that is less dependent on top-line acceleration than on sustained unit-economics quality.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$416,161,000,000",
+              "field_path": "company.latest_revenue"
+            },
+            {
+              "value": "+1.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+29.3%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ICA-5: Peters-Taylor economic ROIC is 50 pp below GAAP ROIC — invested-capital base is materially understated by GAAP",
+          "detail": "The ICA-5 overlay flags a downward restatement: when R&D and 25% of SG&A are capitalised per Peters-Taylor (2017), the economic ROIC falls sharply from the GAAP figure to a level that, while still strong in absolute terms, is far less exceptional. This gap reflects the scale of Apple's intangible investment — brand, organisational capital, R&D — which GAAP expenses immediately. The implication is that the true capital intensity of sustaining the franchise is materially higher than GAAP suggests, and headline ROIC comparisons should be interpreted with this restatement in view.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "50.13pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.333",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "0.8343",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "F7 scores zero: valuation z-scores are deep in very_expensive territory across both EV/Rev and P/B",
+          "detail": "Both EV/Revenue and P/B z-scores land in the very_expensive band. The F7 note explicitly flags the Arnott/Asness academic dispute on z-score predictive power, and the framework carries only a 10% composite weight for exactly this reason. Nevertheless, at a z-score above 3 on EV/Revenue, the margin of safety is structurally thin — any compression in the multiple, earnings disappointment, or macro re-rating would remove a meaningful buffer. For a hold-forever position, entry price matters less than terminal moat; but the lack of valuation support means near-term returns will depend heavily on continued earnings growth, not multiple expansion.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.6.score"
+            },
+            {
+              "value": "3.031",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "2.017",
+              "field_path": "frameworks.6.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue CAGR over three years is low for a company priced at a significant growth premium",
+          "detail": "F5's three-year revenue CAGR sits at a level inconsistent with the implied growth expectations embedded in a very_expensive valuation multiple. The composite score of 6.73 reflects this tension: elite quality metrics coexist with growth deceleration that questions whether the TAM is approaching saturation in core hardware categories. The Rule of 40 score (F6) of 30.16 — below the conventional SaaS threshold — further suggests the blended growth-plus-profitability profile does not yet fully justify the premium multiple on a revenue-growth basis alone.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+1.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "6.73",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "30.16",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 fails: NRR and GRR undisclosed; platform-lock metrics cannot be confirmed from public filings",
+          "detail": "F6 scores in the fail band. Net Revenue Retention and Gross Revenue Retention are not disclosed, removing the ability to quantify customer retention economics — the key metric for evaluating whether the Services segment has SaaS-like stickiness or commodity-like churn. Absence of disclosure does not prove weak retention, but it does prevent the scorecard from crediting it. The Fahlenbrach insider-purchase signal did not fire. Until retention economics are disclosed or proxied, the platform-lock component of the thesis rests on qualitative inference rather than scorecard evidence.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        },
+        {
+          "headline": "No open-market insider buyers in the 90-day window; Sloan accrual quality flag raised",
+          "detail": "F1's key signals flag zero open-market insider buyers over the trailing 90 days and a Sloan high-quality accrual reading of False. The accrual quality flag suggests that a portion of reported earnings may be accrual-driven rather than cash-realised — a second-order concern given the strong FCF margin, but a signal worth monitoring across additional filings. The absence of open-market buying at current prices is consistent with the very_expensive valuation reading, and reduces one source of positive sentiment confirmation.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.83",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the Peters-Taylor economic ROIC gap (ICA-5) persists or widens across the next 2–3 annual filings. A stable or narrowing gap would confirm that intangible capital investment is being amortised at a pace consistent with the franchise; a widening gap would signal accelerating intangible-capital consumption that the GAAP income statement is obscuring.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor revenue CAGR trajectory annually. If the three-year CAGR does not recover from current low levels as hardware refresh cycles normalise, the premium multiple in F7 will require sustained Services-mix expansion to remain defensible. Thesis-break condition: CAGR remaining below the level implied by the current EV/Rev z-score for three or more consecutive annual filings without offsetting margin expansion.",
+          "severity": "high",
+          "grounded_in": "F7"
+        },
+        {
+          "factor": "Monitor the Sloan accrual quality signal across the next two annual filings. A single-period False reading is not a thesis-break, but two consecutive years of accrual-driven earnings growth without corresponding FCF expansion would warrant re-examination of earnings quality.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor whether F6 NRR/GRR disclosure materialises. If Apple's Services segment grows large enough to require retention metric disclosure under SEC MD&A standards, or if third-party estimates emerge, update the F6 assessment. Continued non-disclosure at increasing Services revenue share creates growing opacity in the segment most responsible for the margin-expansion thesis.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor F4 short-interest signals as they become available. The current partial score reflects data gaps (put/call ratio unavailable; short interest withheld). If stealth-accumulation signals reverse — short interest rising materially, EPS acceleration stalling — that is a thesis-validation checkpoint worth weighting.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Monitor gross-margin expansion rate (F3) annually. The current trajectory of sustained bps-per-year expansion supports the Services-mix thesis. If gross margin expansion decelerates to flat or negative across two consecutive years, the mix-shift narrative weakens and the innovation-compounder score should be reassessed.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "BEW-2 fired but the overlay verdict is no_winner_pattern — the quality-and-innovation threshold is met but extreme-winner confirmation is absent. Monitor over years 1–5 whether the compounding evidence (ROIC direction, FCF margin trajectory, revenue CAGR recovery) strengthens toward full BEW confirmation or weakens. A weakening pattern would reduce the Bessembinder right-tail probability estimate for this name.",
+          "severity": "low",
+          "grounded_in": "BEW-2"
+        },
+        {
+          "factor": "CEO equity ownership is flagged as parser_uncertain. Confirm the actual ownership stake from the DEF 14A directly. If ownership is materially lower than the reported figure, the incentive-alignment component of the F5 CEO-alignment signal weakens.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity ownership percentage (reported as 0.5%) carries a parser_uncertain state flag — the figure should be verified directly against the DEF 14A proxy filing before relying on it for incentive-alignment analysis.",
+        "F4 Stealth Accumulation is scored on incomplete data: the options put/call ratio was unavailable from free-tier sources and was skipped per project specification; short-interest figures (current and peak) were withheld as third-party data. The F4 partial score reflects these gaps and may change materially if complete data becomes available.",
+        "F6 Platform Dominator NRR and GRR are not_disclosed — Apple does not report segment-level retention metrics in its 10-K MD&A in the manner typical of SaaS businesses. Zero points were assigned for these signals per the framework's non-disclosure treatment, consistent with the F6 methodology note."
+      ]
+    }
+  },
+  "input_tokens": 11987,
+  "output_tokens": 3922,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 87081,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

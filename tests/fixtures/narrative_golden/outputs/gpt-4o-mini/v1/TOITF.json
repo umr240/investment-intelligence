@@ -1,0 +1,157 @@
+{
+  "case_id": "TOITF",
+  "view_sha256": "b21c47f2a205b864997b0b42d0ff63f5151eb7c9a673a7bdc90fb2d9b3d441c3",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "TOITF",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:20:20.407922Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9266,
+    "completion_tokens": 528,
+    "cost_usd": 0.00163,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "risks[2]: grounded_in='F1' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "Topicus.com Inc. exhibits weak momentum and partial growth quality, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Strong revenue growth signals potential",
+          "detail": "Topicus.com Inc. has demonstrated a revenue CAGR of +19.6%, indicating a robust growth trajectory. This suggests that the company is effectively expanding its market presence, which could be a positive indicator for long-term performance.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "19.6%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Healthy free cash flow margin",
+          "detail": "The company reports a free cash flow margin of +28.4%, reflecting strong operational efficiency and the ability to generate cash from its revenue. This is a critical factor for sustaining growth and funding future initiatives without relying heavily on external financing.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "28.4%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak momentum signals raise concerns",
+          "detail": "The momentum framework (F2) scores a 0.0, indicating significant weakness in price performance, with a 12-1 momentum of -36.9%. This suggests that the stock has not been performing well relative to its peers, which could deter potential investors.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-36.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Insufficient analyst coverage limits insights",
+          "detail": "The absence of analyst coverage (F1) restricts the availability of critical insights and evaluations that could inform investment decisions. This lack of coverage may lead to increased uncertainty regarding the company's future performance and market perception.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any signs of declining revenue growth or cash flow margins in upcoming reports",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to secure analyst coverage to enhance market visibility",
+          "severity": "medium",
+          "grounded_in": "F1"
+        }
+      ],
+      "data_caveats": [
+        "Insufficient analyst coverage prevents a full assessment of market sentiment and potential risks.",
+        "Only one earnings row reported for the momentum framework, limiting analysis of earnings trends.",
+        "No reported EPS acceleration data available for the stealth accumulation framework."
+      ]
+    }
+  },
+  "input_tokens": 8242,
+  "output_tokens": 528,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 10640,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

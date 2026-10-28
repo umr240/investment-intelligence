@@ -1,0 +1,316 @@
+{
+  "case_id": "NOW",
+  "view_sha256": "ce157ef52240e37985d58706f35022654c30b90aea4ffcf9cd2270ff3330b28a",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NOW",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:56:32.146049Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12077,
+    "completion_tokens": 3761,
+    "cost_usd": 0.092646,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[1].numeric_claims[1]: claim value '55.35' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "formatting: bear.0.headline trimmed from 150 to 140 chars"
+    ],
+    "body": {
+      "one_liner": "ServiceNow is a high-quality growth compounder with durable switching costs and best-in-class retention, but GAAP ROIC materially overstates true capital efficiency once intangible investment is capitalised, and aggressive asset growth limits near-term pre-discovery alpha; the thesis rests on sustained platform expansion and capital-allocation discipline over a multi-year hold.",
+      "bull": [
+        {
+          "headline": "Exceptional free-cash-flow margin and revenue CAGR underpin a high-quality growth profile",
+          "detail": "F5 scores strong_fit (8/10), anchored by a three-year revenue CAGR of +22.4% and an FCF margin of +31.1%. These metrics together confirm that growth is not being purchased at the expense of cash generation — a key distinction between durable compounders and growth-at-any-price names. The Debt/EBITDA of 0.635 adds balance-sheet resilience, leaving the platform positioned to invest through cycles without leveraged distress risk.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8/10",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+22.4%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+31.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "0.635",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Best-in-class gross revenue retention signals deep switching costs and platform stickiness",
+          "detail": "F6 records a GRR of 98.0% (best_in_class), indicating near-zero involuntary churn. For an enterprise workflow platform, this reflects structural switching costs: once ServiceNow is woven into IT service management and expanding departmental workflows, displacement requires budget, re-integration, and re-training costs that most enterprises will not absorb. The Rule of 40 score of 55.35 confirms the growth/profitability trade-off is firmly positive.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "98.0%",
+              "field_path": "frameworks.5.key_signals.2.1"
+            },
+            {
+              "value": "55.35",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation intensity sits in the R&D sweet spot with a sustained earnings-surprise streak",
+          "detail": "F3 scores strong_fit (7/10). R&D intensity of +22.3% falls in the 'sweet_spot' band — high enough to sustain platform differentiation, not so high as to suggest speculative burn. Seven consecutive quarters of positive earnings surprises indicate consistent execution against guidance, a signal of management credibility and forecast reliability that compounds reputational moat with enterprise buyers.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7/10",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "+22.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay flags moderate extreme-winner candidacy — sized, extended holds are structurally required",
+          "detail": "The Bessembinder Extreme Winners overlay returns 'moderate_winner_candidate.' Bessembinder's research establishes that wealth creation in equity markets is highly concentrated in a small fraction of stocks held for long durations. A moderate BEW signal does not guarantee inclusion in that cohort but indicates the platform's combination of high FCF margin, revenue compounding, and switching-cost moat places it in the reference class of companies that have historically produced outsized long-horizon returns. Early trimming on price strength would be structurally wealth-destroying at the portfolio level.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Long-tenured CEO with skin-in-the-game alignment signals durable capital-allocation discipline",
+          "detail": "F5 records CEO alignment as 'long_tenured.' William McDermott has operated with a multi-year strategic horizon, and CEO equity ownership of approximately 0.5% (noted as parser_uncertain) provides direct skin-in-the-game incentive. The Outsiders framework rewards CEOs who think in years, not quarters; the combination of tenure, equity ownership, and a balance sheet with Debt/EBITDA of 0.635 suggests capital is not being recklessly deployed.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            },
+            {
+              "value": "0.635",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Peters-Taylor restatement reveals a 24.65pp gap between GAAP and economic ROIC — true capital efficiency is substantially lower than…",
+          "detail": "ICA-5 flags that capitalising R&D and 25% of SG&A under Peters-Taylor methodology produces a non-GAAP ROIC of 12.26% versus a GAAP ROIC of 36.91% — a downward gap of 24.65 percentage points. The direction is 'downward' (economic < GAAP), meaning the invested-capital base is inflated by intangibles that GAAP expenses immediately. This is not a noise-level adjustment; it is the dominant lens for a business of ServiceNow's R&D intensity. The GAAP ROIC figure should not be used in isolation to conclude the business earns above-hurdle returns on capital.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "24.65pp",
+              "field_path": "overlay_triggers.2.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "12.26%",
+              "field_path": "overlay_triggers.2.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "36.91%",
+              "field_path": "overlay_triggers.2.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Top-decile asset growth triggers Cooper-Gulen-Schill disqualifier, capping F1 and suppressing pre-discovery alpha",
+          "detail": "F1 scores 3/10 (weak/fail). Asset growth has entered the top decile (>25% YoY), the threshold at which Cooper-Gulen-Schill (2008) documented systematic subsequent underperformance. The Piotroski score of 4/9 is middling, open-market insider purchases are zero, and GP/A is not strong. At this asset-growth rate, the balance sheet is expanding faster than the academic literature associates with positive forward returns — a headwind that may persist until growth normalises.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3/10",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum signal is negative on a 12-1 basis; the stock sits well below its 52-week high",
+          "detail": "F2 scores 4/10 (moderate/partial). The 12-1 momentum reading of -26.9% is firmly negative, and the stock is +13.5% from its 52-week low rather than approaching the high. While the PEAD signal is 'positive_drift', a deeply negative trailing-year momentum profile is an established return headwind over the near-to-medium term. This does not affect the 5-year thesis, but it is a condition to monitor: sustained negative price momentum in a high-quality compounder can be a market signal of emerging fundamental deterioration not yet visible in reported financials.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/10",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-26.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+13.5%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "NRR not disclosed; F6 scored on partial data, leaving net expansion dynamics opaque",
+          "detail": "F6 scores 5/10 (moderate/partial). Net Revenue Retention is not disclosed in the 10-K MD&A, meaning the expansion revenue component of the retention picture is unquantified. GRR of 98.0% confirms low churn but says nothing about upsell trajectory. For a platform whose thesis depends on expanding wallet share within its installed base, the absence of NRR disclosure creates a material blind spot in the retention analytics. The Fahlenbrach signal is also false, adding no positive insider-alignment signal on this dimension.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5/10",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "98.0%",
+              "field_path": "frameworks.5.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin has been contracting on average; platform moat must sustain pricing power to prevent margin erosion",
+          "detail": "F3's key signal for average gross margin expansion is -12.5 basis points per year — a slow but directionally negative trend. For a SaaS platform commanding premium enterprise pricing, even modest GM contraction warrants monitoring. If the trend reflects competitive pricing pressure or rising cost-of-revenue from AI infrastructure investment, the FCF margin profile that anchors the F5 bull case could come under pressure over the hold period. The direction of this derivative matters more than its current level.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-12.5 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor economic ROIC (currently 12.26% vs. GAAP 36.91%) converges toward or diverges from hurdle rates over the next 2-3 annual filings. Persistent divergence at this magnitude would indicate that reported capital efficiency is structurally overstated and that the compounding engine is weaker than the headline suggests. This is a thesis-validation checkpoint, not a price trigger.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for sustained gross margin contraction beyond the current -12.5 bps/yr trend. If AI infrastructure costs (GPU compute, inference costs embedded in Now Assist features) accelerate cost-of-revenue without equivalent pricing uplift, the FCF margin of 31.1% that underpins the F5 thesis could compress materially. Reconsider thesis if GM trend crosses into meaningful negative territory across 3+ consecutive annual periods.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor NRR disclosure trajectory. If ServiceNow begins disclosing NRR and it reveals net expansion below ~110%, the platform's wallet-share expansion story would be structurally weakened. Continued non-disclosure over multiple years is itself a signal worth tracking — best-in-class SaaS platforms with strong expansion dynamics typically disclose NRR.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Track asset growth normalisation. If asset growth remains in the top decile (>25% YoY) across 2-3 more annual periods without commensurate ROIC improvement, the Cooper-Gulen-Schill disqualifier in F1 would indicate capital is being deployed at sub-optimal rates. Thesis degradation, not a price exit, is the signal to act on.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor whether the -26.9% trailing momentum represents early-warning fundamental deterioration or mean-reversion in an expensive multiple. Over years 1-2 of the hold, if revenue CAGR decelerates materially below the current 22.4% three-year rate, the momentum signal may be anticipating a growth deceleration that the annual financials will subsequently confirm.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "CEO equity ownership is flagged as parser_uncertain (approximately 0.5%). If beneficial ownership filings clarify that equity alignment is materially lower, the capital-allocator conviction built into the F5 long_tenured signal would require reassessment. Monitor the next DEF 14A filing for confirmation.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "F4 options put/call ratio data is absent (no free-tier source). Stealth accumulation dynamics remain partially unobservable. If accessible in future periods, a shift toward elevated put/call ratios or rising short interest would be an early-warning signal of institutional thesis divergence.",
+          "severity": "low",
+          "grounded_in": "ICA-4"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity ownership (~0.5%) is flagged as parser_uncertain — the beneficial ownership figure should be verified against the most recent DEF 14A before relying on it for capital-allocator scoring.",
+        "F4 options put/call ratio is unavailable from free-tier sources and was skipped per project specification (Pan-Poteshman 2006); the stealth accumulation framework is scored on partial data only.",
+        "F7 (Smart Beta Timing) is unfeasible: the margin history crosses from loss to profit (-27.5% to +13.7%), and the available 11-year window is dominated by a pre-inflection regime the business has left; F7 is excluded from the composite entirely.",
+        "F6 Net Revenue Retention is not disclosed in the 10-K MD&A and is recorded as not_disclosed; zero points are awarded for this signal, and the net expansion dynamic of the installed base is unquantified.",
+        "Market cap, P/B ratio, P/E trailing, beta, and EV/EBITDA are null in the view; valuation-multiple-dependent signals (including the P/B leg of ICA-4) are partially unresolvable and the ICA-4 trigger fired on the non-null legs only."
+      ]
+    }
+  },
+  "input_tokens": 12077,
+  "output_tokens": 3761,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 80367,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

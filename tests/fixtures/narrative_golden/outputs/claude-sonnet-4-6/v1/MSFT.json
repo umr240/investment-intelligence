@@ -1,0 +1,286 @@
+{
+  "case_id": "MSFT",
+  "view_sha256": "8fc2b5df84e0f31d1a904d8bee36072979ac5e2407910d81635c2432131074d9",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "MSFT",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:55:11.756500Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11837,
+    "completion_tokens": 3355,
+    "cost_usd": 0.085836,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[3].numeric_claims[0]: claim value '37.98' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "bear[4].numeric_claims[0]: claim value '37.98' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "bull[1].detail: number '65' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Microsoft's composite watchlist verdict reflects a genuinely exceptional business — ROIC well above cost of capital, sustained revenue compounding, and durable multi-Power moat — but the intangible-capital restatement reveals that GAAP overstates economic capital efficiency by a material margin, and momentum/valuation signals together limit near-term factor tailwinds.",
+      "bull": [
+        {
+          "headline": "ROIC of 27.1% signals sustained economic value creation well above typical cost of capital",
+          "detail": "F5 records a GAAP ROIC of 27.1% alongside a three-year revenue CAGR of 16.1% and an FCF margin of 20.2%. Together these confirm a business whose growth is generating cash at scale — a combination rare at this revenue base. Even the Peters-Taylor economic ROIC (adjusted for intangible capital) remains above 20%, confirming the franchise earns well above hurdle even after full intellectual-capital capitalization.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "27.1%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "+16.1%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+20.2%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Multi-Power moat: switching costs, network effects, scale, and intangible capital compound simultaneously",
+          "detail": "Microsoft demonstrates Helmer's rarest configuration — at least four distinct Powers operating in parallel: switching costs (enterprise Azure/M365 stack), network economies (Teams, LinkedIn, developer ecosystems), scale economies (cloud infrastructure), and cornered resource (OpenAI partnership, proprietary training data). The $1B-funded-challenger inversion test fails against this combination: no single challenger can replicate all four simultaneously. Moat direction is widening as AI integration deepens lock-in across the installed base.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Positive PEAD drift and proximity to 52-week high corroborate underlying earnings quality",
+          "detail": "F2 scores strong_fit: the stock trades within 2.0% of its 52-week high and the PEAD signal reads positive_drift, consistent with earnings surprises being absorbed gradually rather than front-run. A seven-quarter consecutive earnings-surprise streak (F3) reinforces that consensus has persistently under-modelled execution quality. These signals together suggest the market is not pricing in extrapolated complacency.",
+          "framework_codes": [
+            "F2",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+2.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue scale and diversified customer base reduce concentration and single-customer disruption risk",
+          "detail": "F6 records a diversified_base_case customer-concentration signal against a latest revenue base of $331.8B. At this revenue scale, no single customer exit creates a material revenue event. Combined with the Rule of 40 score of 37.98 — near the canonical SaaS quality threshold — the business demonstrates durable unit economics despite its size.",
+          "framework_codes": [
+            "F6",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "37.98",
+              "field_path": "frameworks.5.key_signals.5.1"
+            },
+            {
+              "value": "$331.8B",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay classifies MSFT as a moderate_winner_candidate — sized, long-dated positions justified",
+          "detail": "The Bessembinder Extreme Winners overlay returns moderate_winner_candidate. Bessembinder's empirical finding is that a tiny fraction of stocks generate the preponderance of long-run market wealth creation; this overlay identifies companies whose structural profile is consistent with that cohort. The implication for the forever-hold stance is that trimming on price strength is the structurally wealth-destroying response — the appropriate action is sized positioning and extended hold.",
+          "framework_codes": [
+            "F5",
+            "F2"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ICA-5: Peters-Taylor economic ROIC trails GAAP ROIC by 15.76pp — intangible capital is material and understated by GAAP",
+          "detail": "Active overlay ICA-5 flags a 15.76 percentage-point gap between GAAP ROIC (36.19%) and Peters-Taylor economic ROIC (20.42%), direction downward. This means GAAP systematically understates the invested capital base by excluding capitalized R&D and organizational capital — the economic denominator is larger than the book denominator. The economic ROIC is still strong, but the gap is large enough that any GAAP-based capital-efficiency comparison will over-state Microsoft's true asset turns. This is structurally important for thesis-validation over the hold period.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "15.76pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "36.19%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "20.42%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "EV/Revenue at expensive z-score band limits valuation-driven upside; P/B signals are mixed",
+          "detail": "F7 records an EV/Revenue z-score of 0.818, placing it in the expensive band. The P/B z-score of -0.147 sits marginally below average — a mixed signal that does not provide a valuation cushion. At this scale, the stock must deliver durable compounding to justify the revenue multiple; any structural deceleration in Azure growth rates or AI monetisation timelines would compress valuation faster than underlying earnings might suggest.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.818",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "-0.147",
+              "field_path": "frameworks.6.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin is contracting modestly and R&D intensity is elevated without patent portfolio disclosure",
+          "detail": "F3 records average gross margin expansion of -19.6 bps/year — a slow but directionally negative signal for a software franchise where margin expansion is the canonical long-run value driver. R&D intensity stands at 10.7% with the portfolio in the near_sweet band, but no patent portfolio data is disclosed in the 10-K. The combination of GM contraction and opacity around IP durability is a monitoring flag rather than a thesis-break, but warrants watching across the 5-year hold.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-19.6 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+10.7%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment classified as no_alignment; Satya Nadella is not the founder and equity stake is not disclosed",
+          "detail": "F5 records CEO alignment as no_alignment. Nadella is not the founder, and the ceo_equity_pct field is not disclosed. Under the Outsiders 8-trait framework, skin-in-the-game is the most reliable predictor of capital-allocator quality over a multi-decade hold. Absence of disclosed ownership is not evidence of bad alignment — Nadella's track record is strong — but it means the thesis must rely on track-record inference rather than direct ownership-alignment evidence.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Rule of 40 score of 37.98 falls modestly below the canonical 40 threshold despite scale",
+          "detail": "F6 records a Rule of 40 score of 37.98 — just below the standard SaaS quality threshold of 40. At Microsoft's revenue scale, sustaining a 40+ score is increasingly difficult, but the marginal miss is worth monitoring: if growth decelerates faster than margins expand, the composite score will deteriorate in the same framework where NRR and GRR are already not disclosed, limiting visibility into retention-driven compounding.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "37.98",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor economic ROIC continues to diverge from GAAP ROIC over 2-3 additional annual filings. A widening gap (beyond the current 15.76pp) would indicate accelerating intangible-capital investment without proportionate economic return — a thesis-break condition for capital efficiency.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor gross margin trajectory over 3-5 annual filings. The current -19.6 bps/yr contraction is modest; sustained acceleration toward -50 bps/yr or worse across multiple years would signal structural mix-shift pressure (e.g., cloud hardware cost growth outpacing software-margin expansion) and would undermine the compounding thesis.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor CEO equity disclosure and capital allocation decisions (M&A price discipline, buyback timing). No disclosed equity stake means Outsiders-8 alignment cannot be verified from public filings. Watch for empire-building M&A (deals announced at premium multiples with EPS accretion framing rather than ROIC framing) as a capital-allocator failure signal.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor NRR and GRR disclosure. F6 records both as not_disclosed. If Microsoft moves to disclose these metrics (common SaaS practice) and they reveal net-retention deterioration, this would be a direct thesis-validation checkpoint for the switching-cost moat claim.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor Piotroski score trajectory. F1 currently scores 6/9 — moderate quality signal. If it deteriorates to 4 or below across two consecutive annual filings, this would indicate financial-condition weakening inconsistent with the quality-compounding thesis.",
+          "severity": "low",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor EV/Revenue z-score expansion. Already in the expensive band; if revenue growth decelerates materially (3-year CAGR falling below mid-single digits) while the EV/Revenue multiple remains elevated, the margin of safety in the valuation entry point is structurally absent.",
+          "severity": "medium",
+          "grounded_in": "F7"
+        },
+        {
+          "factor": "Monitor 13F institutional holder-count delta accumulation. F4 data gap (only 1 snapshot available) means stealth-accumulation and distribution signals cannot be assessed currently. A sustained multi-quarter decline in institutional holder count would be an early warning of smart-money thesis-revision.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "Earnings dates data was unavailable due to a timeout during the data fetch (yfinance earnings_dates); any PEAD or surprise-timing analysis dependent on exact dates carries reduced precision.",
+        "F4 institutional holder-count delta is based on only one snapshot — the stealth-accumulation signal cannot be directionally confirmed until multiple dives accumulate over time.",
+        "F4 options put/call ratio was not computed; no free-tier data source is available per project specification. Short interest figures are withheld as third-party data.",
+        "F5 Debt/EBITDA is listed as None due to absence of EBITDA in the data extract; leverage assessment relies on qualitative inference from FCF margin rather than a direct coverage ratio.",
+        "F6 NRR and GRR are not disclosed in the 10-K MD&A; retention-quality scoring receives zero points on these dimensions by convention, which may understate platform stickiness that is real but not publicly reported.",
+        "F3 patent portfolio is listed as not_disclosed in the 10-K; the innovation-quality signal rests on R&D intensity and surprise streak rather than IP-portfolio depth.",
+        "Market cap, EV/EBITDA, P/B ratio, P/E trailing, and beta are all null in the company record; F7 valuation signals are computed from z-score methodology using available EV/Revenue and P/B inputs, but certain ratio-dependent cross-checks cannot be performed."
+      ]
+    }
+  },
+  "input_tokens": 11837,
+  "output_tokens": 3355,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 73460,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}
