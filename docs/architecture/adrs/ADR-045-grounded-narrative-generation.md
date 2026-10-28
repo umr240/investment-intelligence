@@ -2,7 +2,7 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **ACCEPTED 2026-10-28** (DEC-53), with the amendments in §1 and §2.7. |
 | **Phase** | AI narrative layer |
 | **Extends** | ADR-023 §1.6 (anti-hallucination contract), ADR-023-A1 |
 | **Depends on** | ADR-054 (verdict vocabulary) for the verdict mapping |
@@ -29,8 +29,15 @@ Measured result:
 The numbers the model wrote were mostly right. It pointed at the wrong
 field. Index-based paths make that easy.
 
+The ADR-047 baseline (prompt v1, 2026-10-28) measured the same thing at
+scale. On the 30 train cases, Sonnet 4.6 cited the right value at the wrong
+list position 15 times and gpt-4o-mini 25 times; 23 of their 28 "possible
+hallucination" flags are numbers the view does contain (a window label, a
+scaled magnitude or a rounding). Guard pass rate on the test split: 45%
+(Sonnet 4.6), 36% (gpt-4o-mini).
+
 Also: `_call_anthropic` forces `tool_choice: {"type": "tool"}`. Newer models
-(Claude Opus 5.5, Claude Fable 5.1) reject forced tool choice with a 400, so
+(Claude Opus 5.5, Sonnet 5.5, Fable 5.1, Mythos 5.1) reject forced tool choice with a 400, so
 the current call shape blocks the model comparison in ADR-047.
 
 ## 2. Decision
@@ -77,6 +84,15 @@ and is capped at one.
 - Qualitative claim checks (ADR-046).
 - The pass-rate target (ADR-047).
 
+### 2.7 Amendments at acceptance (owner, 2026-10-28)
+
+1. **Transport (§2.4).** Anthropic uses `output_config.format` (JSON schema), not a tool: a narrative is a response, not a tool call. The schema sent to either provider carries no `minLength`, `maxLength`, `minimum` or `maximum`, which Anthropic rejects; lengths stay enforced after parsing.
+2. **IDs (§2.1).** A signal's ID is its framework code plus the slug of its label, e.g. `F6.rule_of_40`. A field with no value gets no ID, so a value withheld from the golden set never appears in an eval.
+3. **Per-request enum (§2.2).** Kept, though each company's schema differs and the provider compiles it on every call: it is what makes a wrong citation unrepresentable. G7 measures the latency cost; if it regresses badly, the fallback is a plain string checked by the guard.
+4. **Repair (§2.5).** The eval records first-attempt and post-repair grades separately; the first attempt is the headline. The repair's tokens count in G6.
+5. **Graders.** Replay picks the guard by the output's schema version, so v1 outputs keep their v1 grades. The prompt version becomes 2.
+6. **Eval discipline.** Prompt iteration runs on the train split only. The test split runs once per accepted prompt version.
+
 ## 3. Inversion (mandatory)
 
 - **Enum too large:** schema tokens grow with the field list. Mitigation: the ~80-ID cap, with only feasible frameworks included.
@@ -89,6 +105,7 @@ and is capped at one.
 - **Keep free text plus the guard (status quo):** 62% failure rate.
 - **Auto-correct values after generation:** hides errors instead of preventing them.
 - **More prompt instructions:** ADR-023 §1.3 already requires citation, and it is not enough.
+- **Structured-output libraries (searched 2026-10-28):** instructor (8.5M downloads/month, v1.17.0 Sept 2026, 100+ contributors) has the pattern §2.5 borrows, a retry that feeds validation errors back to the model, but both providers now enforce the schema themselves, so it is not worth a dependency at the call site. pydantic-ai is an agent framework, far more than one structured call. outlines' constrained decoding is for local models.
 
 ## 5. Consequences
 
