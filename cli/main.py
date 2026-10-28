@@ -4246,13 +4246,14 @@ def narrative_eval_run(
         raise typer.Exit(2)
     try:
         estimate = estimate_cost(cases, model)
+        worst = estimate_cost(cases, model, repairs=True)
     except UnpricedModelError as exc:
         rprint(f"[red]{exc}. Copy its price row first (ADR-048).[/red]")
         raise typer.Exit(2) from None
     rprint(
         f"{len(cases)} {split} cases on {chosen.value}/{model}, prompt v{PROMPT_VERSION}: "
         f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each); "
-        f"about ${2 * estimate:.2f} if every case uses its one repair (ADR-045 §2.5)"
+        f"about ${worst:.2f} if every case uses its one repair (ADR-045 §2.5)"
     )
     if not yes and not typer.confirm("Spend this?", default=False):
         raise typer.Exit(1)

@@ -149,7 +149,8 @@ def _generate(
             continue
 
         reply, warnings, cost = first, first_warnings, last_call_cost()
-        repair_notes: list[str] = []
+        repair_notes: list[str] = []  # a failed repair: not a grounding fault, not formatting
+        failed_repair_tokens = (0, 0)
         if first_warnings:  # §2.5: one repair, same provider, same request; never a second
             attempt += 1
             try:
@@ -165,29 +166,32 @@ def _generate(
             except _ProviderError as e:
                 reply, warnings = first, first_warnings
                 cost = None if cost is None else cost + (last_call_cost() or 0.0)
+                failed_repair_tokens = e.usage
                 repair_notes = [f"repair: {provider.value}: {_redact(str(e))}"]
         repaired = reply is not first
+        extra_pt, extra_ct = (
+            (reply.prompt_tokens, reply.completion_tokens) if repaired else failed_repair_tokens
+        )
 
         # Status reflects grounding faults only. A trim is cosmetic — surfacing
         # it is right, but letting it raise GUARD_FAILED would report
         # "numeric/citation validation failed" for an over-long headline and
         # blunt a signal that should mean a suspect number.
         status = NarrativeStatus.GUARD_FAILED if warnings else NarrativeStatus.OK
-        notes = [*reply.fit_notes, *repair_notes]
+
         return NarrativeOutput(
             ticker=view.ticker,
             generated_at=datetime.now(timezone.utc),
             provider=provider,
             model=reply.model,
-            prompt_tokens=first.prompt_tokens + (reply.prompt_tokens if repaired else 0),
-            completion_tokens=(
-                first.completion_tokens + (reply.completion_tokens if repaired else 0)
-            ),
+            prompt_tokens=first.prompt_tokens + extra_pt,
+            completion_tokens=first.completion_tokens + extra_ct,
             cost_usd=cost,
             fallback_used=(idx > 0),
             fallback_reason=fallback_reason if idx > 0 else "",
             status=status,
-            guard_warnings=[*warnings, *(f"formatting: {n}" for n in notes)],
+            guard_warnings=[*warnings, *(f"formatting: {n}" for n in reply.fit_notes),
+                            *repair_notes],  # fmt: skip
             schema_version=SCHEMA_V2,
             body=reply.body,
             rendered=render_body(reply.body, fields),
@@ -213,7 +217,15 @@ def _redact(text: str) -> str:
 
 
 class _ProviderError(RuntimeError):
-    """Marker for a provider-side failure that should trigger fallback."""
+    """Marker for a provider-side failure that should trigger fallback.
+
+    `usage` is (prompt, completion) tokens of a reply that came back but was unusable,
+    e.g. cut off at max_tokens: billed, so counted.
+    """
+
+    def __init__(self, message: str, usage: tuple[int, int] = (0, 0)) -> None:
+        super().__init__(message)
+        self.usage = usage
 
 
 def _provider_order(pref: str) -> list[NarrativeProvider]:
@@ -300,8 +312,9 @@ def _inline_refs(schema: dict[str, Any]) -> dict[str, Any]:
     def walk(node: Any) -> Any:
         if isinstance(node, dict):
             ref = node.get("$ref")
-            if isinstance(ref, str) and ref.startswith("#/$defs/"):
-                return walk(defs[ref.split("/")[-1]])
+            if isinstance(ref, str) and ref.startswith("#/$defs/"):  # keep its description
+                siblings = {k: v for k, v in node.items() if k != "$ref"}
+                return walk({**defs[ref.split("/")[-1]], **siblings})
             return {k: walk(v) for k, v in node.items() if k != "$defs"}
         if isinstance(node, list):
             return [walk(v) for v in node]
@@ -310,7 +323,7 @@ def _inline_refs(schema: dict[str, Any]) -> dict[str, Any]:
     return cast(dict[str, Any], walk(schema))
 
 
-def _repair_turns(repair: Repair | None) -> list[dict[str, str]]:
+def _repair_turns(repair: Repair | None) -> list[dict[str, Any]]:
     """The failed answer and the guard's warnings, as the next two turns (§2.5)."""
     if repair is None:
         return []
@@ -326,12 +339,14 @@ def _repair_turns(repair: Repair | None) -> list[dict[str, str]]:
     ]  # fmt: skip
 
 
-def _parse_reply(raw: Any, provider: str) -> tuple[NarrativeBodyV2, list[str]]:
+def _parse_reply(
+    raw: Any, provider: str, tokens: tuple[int, int]
+) -> tuple[NarrativeBodyV2, list[str]]:
     raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBodyV2)
     try:
         return NarrativeBodyV2.model_validate(raw), fit_notes
     except Exception as e:
-        raise _ProviderError(f"{provider} JSON did not match NarrativeBodyV2: {e}") from e
+        raise _ProviderError(f"{provider} JSON did not match NarrativeBodyV2: {e}", tokens) from e
 
 
 # ── OpenAI (primary) ─────────────────────────────────────────────────────
@@ -348,6 +363,7 @@ def _call_openai(
             OpenAI,
             RateLimitError,
         )
+        from openai.types.chat import ChatCompletionMessageParam
     except ImportError as e:
         raise _ProviderError(f"openai SDK not installed: {e}") from e
 
@@ -356,6 +372,11 @@ def _call_openai(
     system_prompt = _build_system_prompt()
     user_prompt = _build_user_prompt(view)
 
+    messages = cast(
+        "list[ChatCompletionMessageParam]",
+        [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt},
+         *_repair_turns(repair)],
+    )  # fmt: skip
     with _recorded("openai", model, system_prompt) as call:
         try:
             resp = client.chat.completions.create(
@@ -369,11 +390,7 @@ def _call_openai(
                         "strict": True,
                     },
                 },
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                    *_repair_turns(repair),
-                ],  # type: ignore[misc]  # plain role/content dicts
+                messages=messages,
             )
         except (RateLimitError, AuthenticationError, APIConnectionError) as e:
             raise _ProviderError(f"openai transport: {type(e).__name__}: {e}") from e
@@ -381,20 +398,20 @@ def _call_openai(
             raise _ProviderError(f"openai status {e.status_code}: {e}") from e
 
         call.response = resp
+        usage = getattr(resp, "usage", None)
+        tokens = (int(getattr(usage, "prompt_tokens", 0) or 0),
+                  int(getattr(usage, "completion_tokens", 0) or 0))  # fmt: skip
         content = (resp.choices[0].message.content or "").strip()
         if not content:
-            raise _ProviderError("openai returned empty content")
+            raise _ProviderError("openai returned empty content", tokens)
 
         try:
             raw = json.loads(content)
         except json.JSONDecodeError as e:
-            raise _ProviderError(f"openai returned invalid JSON: {e}") from e
+            raise _ProviderError(f"openai returned invalid JSON: {e}", tokens) from e
 
-        body, fit_notes = _parse_reply(raw, "openai")
-        usage = getattr(resp, "usage", None)
-        pt = int(getattr(usage, "prompt_tokens", 0) or 0)
-        ct = int(getattr(usage, "completion_tokens", 0) or 0)
-        return _Reply(body, pt, ct, model, fit_notes)
+        body, fit_notes = _parse_reply(raw, "openai", tokens)
+        return _Reply(body, *tokens, model, fit_notes)
 
 
 # ── Anthropic (fallback) ─────────────────────────────────────────────────
@@ -406,6 +423,7 @@ def _call_anthropic(
     try:
         import anthropic
         from anthropic import APIConnectionError, APIStatusError, RateLimitError
+        from anthropic.types import MessageParam, OutputConfigParam
     except ImportError as e:
         raise _ProviderError(f"anthropic SDK not installed: {e}") from e
 
@@ -414,6 +432,12 @@ def _call_anthropic(
     system_prompt = _build_system_prompt()
     user_prompt = _build_user_prompt(view)
 
+    output_config: OutputConfigParam = {
+        "format": {"type": "json_schema", "schema": _request_schema(view)}
+    }
+    messages = cast(
+        "list[MessageParam]", [{"role": "user", "content": user_prompt}, *_repair_turns(repair)]
+    )
     with _recorded("anthropic", model, system_prompt) as call:
         try:
             # Structured output, not a forced tool call: current models reject a forced
@@ -423,8 +447,8 @@ def _call_anthropic(
                 model=model,
                 max_tokens=8192,
                 system=system_prompt,
-                output_config={"format": {"type": "json_schema", "schema": _request_schema(view)}},
-                messages=[{"role": "user", "content": user_prompt}, *_repair_turns(repair)],  # type: ignore[list-item]
+                output_config=output_config,
+                messages=messages,
             )
         except (RateLimitError, APIConnectionError) as e:
             raise _ProviderError(f"anthropic transport: {type(e).__name__}: {e}") from e
@@ -432,19 +456,19 @@ def _call_anthropic(
             raise _ProviderError(f"anthropic status {e.status_code}: {e}") from e
 
         call.response = resp
+        usage = getattr(resp, "usage", None)
+        tokens = (int(getattr(usage, "input_tokens", 0) or 0),
+                  int(getattr(usage, "output_tokens", 0) or 0))  # fmt: skip
         if resp.stop_reason in ("max_tokens", "refusal"):
-            raise _ProviderError(f"anthropic stopped early: {resp.stop_reason}")
-        text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
+            raise _ProviderError(f"anthropic stopped early: {resp.stop_reason}", tokens)
+        text = "".join(getattr(b, "text", "") for b in resp.content if b.type == "text")
         try:
             raw = json.loads(text)
         except json.JSONDecodeError as e:
-            raise _ProviderError(f"anthropic returned invalid JSON: {e}") from e
+            raise _ProviderError(f"anthropic returned invalid JSON: {e}", tokens) from e
 
-        body, fit_notes = _parse_reply(raw, "anthropic")
-        usage = getattr(resp, "usage", None)
-        pt = int(getattr(usage, "input_tokens", 0) or 0)
-        ct = int(getattr(usage, "output_tokens", 0) or 0)
-        return _Reply(body, pt, ct, model, fit_notes)
+        body, fit_notes = _parse_reply(raw, "anthropic", tokens)
+        return _Reply(body, *tokens, model, fit_notes)
 
 
 def _fit_to_declared_lengths(

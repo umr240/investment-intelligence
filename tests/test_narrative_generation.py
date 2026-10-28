@@ -146,6 +146,10 @@ def test_a_repair_that_errors_keeps_the_first_answer(crwd: ScorecardView) -> Non
     out = _generate(crwd, INVENTED, "TRUNCATED")
     assert out.status == NarrativeStatus.GUARD_FAILED and out.first_attempt is None
     assert out.body.one_liner == "Revenue tripled to $77.7B."
+    # The cut-off repair was billed: its tokens count, and its note is not "formatting".
+    assert (out.prompt_tokens, out.completion_tokens) == (20_000, 4_000)
+    assert out.cost_usd == round(2 * cost_usd(MODEL, 10_000, 2_000), 6)  # type: ignore[operator]
+    assert not [w for w in out.guard_warnings if w.startswith("formatting: repair")]
     assert any(
         "repair: anthropic: anthropic stopped early: max_tokens" in w for w in out.guard_warnings
     )
@@ -166,6 +170,7 @@ def test_anthropic_gets_structured_output_with_this_views_ids(crwd: ScorecardVie
     schema = call["output_config"]["format"]["schema"]
     text = json.dumps(schema)
     assert "$ref" not in text and "$defs" not in text and '"maxLength"' not in text
+    assert "do not choose it" in schema["properties"]["verdict"]["description"]  # kept inlining
     ids = schema["properties"]["bull"]["items"]["properties"]["numeric_claims"]["items"]
     assert ids["properties"]["field_id"]["enum"] == list(crwd.citable_fields())
     assert schema["additionalProperties"] is False and set(schema["required"]) == set(
