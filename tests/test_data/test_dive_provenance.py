@@ -268,10 +268,11 @@ def test_chat_is_refused_on_a_withheld_dive(
 
 
 def _narrative() -> Any:
-    point = SimpleNamespace(model_dump=lambda: {"point": "x"})
+    sections = {"bull": [{"point": "x"}], "bear": [{"point": "x"}], "one_liner": "", "risks": [],
+                "data_caveats": []}  # fmt: skip
     return SimpleNamespace(
         ticker="LULU",
-        body=SimpleNamespace(bull=[point], bear=[point], one_liner="", risks=[], data_caveats=[]),
+        body=SimpleNamespace(model_dump=lambda mode: dict(sections)),
         provider=SimpleNamespace(value="openai"),
         model="m",
         prompt_tokens=1,

@@ -877,7 +877,13 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         generate_narrative,
         persist_narrative,
     )
-    from deepdive.narrative_output import NarrativeStatus
+    from deepdive.narrative_output import (
+        BearPoint,
+        BullPoint,
+        CasePoint,
+        NarrativeBodyV2,
+        NarrativeStatus,
+    )
 
     rprint("\n[bold cyan]AI Narrative[/bold cyan]  [dim](generating...)[/dim]")
 
@@ -905,15 +911,28 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
     rprint(audit)
 
     body = narrative.body
+    if isinstance(narrative.body, NarrativeBodyV2):  # show the filled-in copy (ADR-045)
+        if narrative.rendered is None:
+            raise ValueError(f"{narrative.ticker}: a v2 narrative must be rendered to be shown")
+        body = narrative.rendered
     rprint(Panel(
         f"[italic]{body.one_liner}[/italic]",
         title="[bold]Thesis[/bold]",
         border_style="cyan",
     ))
+    if isinstance(body, NarrativeBodyV2):
+        verdict_lines = [
+            f"[bold]{body.verdict.value}[/bold]. {body.verdict_reason}",
+            f"Owner-operator answer: {body.owner_operator_answer.value}  ·  "
+            f"Moat direction: {body.moat_direction.value}",
+            *(f"  · [dim]{t.field_id}[/dim]: {t.condition}" for t in body.triggers),
+        ]
+        rprint(Panel("\n".join(verdict_lines), title="[bold]Verdict[/bold]", border_style="cyan"))
 
     if body.bull:
         bull_lines: list[str] = []
-        for i, p in enumerate(body.bull, 1):
+        bull_points: list[BullPoint | BearPoint | CasePoint] = [*body.bull]
+        for i, p in enumerate(bull_points, 1):
             cites = (" [dim]" + ", ".join(p.framework_codes) + "[/dim]") if p.framework_codes else ""
             bull_lines.append(f"[bold]{i}. {p.headline}[/bold]{cites}")
             bull_lines.append(f"   {p.detail}")
@@ -922,7 +941,8 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
 
     if body.bear:
         bear_lines: list[str] = []
-        for i, p in enumerate(body.bear, 1):
+        bear_points: list[BullPoint | BearPoint | CasePoint] = [*body.bear]
+        for i, p in enumerate(bear_points, 1):
             cites = (" [dim]" + ", ".join(p.framework_codes) + "[/dim]") if p.framework_codes else ""
             bear_lines.append(f"[bold]{i}. {p.headline}[/bold]{cites}")
             bear_lines.append(f"   {p.detail}")
