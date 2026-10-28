@@ -240,6 +240,27 @@ def test_a_withheld_value_under_another_key_stops_the_export(db: sessionmaker[Se
         _collect(db)
 
 
+def test_a_withheld_value_copied_as_an_integer_also_stops_the_export(
+    db: sessionmaker[Session],
+) -> None:
+    leaky = _view("INTCOPY", cap=5e9)
+    leaky.stage.reasoning = {"cap_used": 5_000_000_000}
+    with db.begin() as s:  # commits on exit
+        _dive(s, leaky)
+    with pytest.raises(export.WithheldValueLeak, match="INTCOPY"):
+        _collect(db)
+
+
+def test_a_larger_number_containing_a_withheld_one_is_not_a_leak(
+    db: sessionmaker[Session],
+) -> None:
+    view = _view("BIGGER", cap=5e9)
+    view.stage.reasoning = {"revenue": 15e9, "assets": 50000000000}
+    with db.begin() as s:  # commits on exit
+        _dive(s, view)
+    assert [c.ticker for c in _collect(db)] == ["BIGGER"]
+
+
 def test_a_view_from_another_schema_version_is_not_exported(db: sessionmaker[Session]) -> None:
     old = _view("OLD")
     old.schema_version = "0.9"

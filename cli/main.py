@@ -4128,5 +4128,53 @@ def narrative_eval_export(
         rprint(f"[green]Wrote {len(paths)} files under {out}[/green]")
 
 
+@eval_app.command("replay")
+def narrative_eval_replay(
+    golden: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--golden"),
+    record: bool = typer.Option(False, "--record", help="Write grades.json; else compare."),
+) -> None:
+    """Re-grade every stored output against its case. Free: no model is called.
+
+    Exits 1 when a case or output no longer replays, or a grade differs from grades.json.
+    """
+    import json as _json
+
+    from deepdive.narrative_eval.export import TEST, TRAIN
+    from deepdive.narrative_eval.graders import (
+        VERDICT_GRADERS, grades_path, replay, serialise, summary,
+    )  # fmt: skip
+
+    result = replay(golden)
+    for line in result.drift:
+        rprint(f"[red]drift: {line}[/red]")
+    changed = []
+    for (model, version), by_case in sorted(result.grades.items()):
+        table = Table(title=f"{model}, prompt v{version}")
+        table.add_column("Split")
+        for col in ("Cases", *VERDICT_GRADERS, "Cost", "p50", "p95"):
+            table.add_column(col, justify="right")
+        for split in (TEST, TRAIN):
+            s = summary(by_case, result.splits, split)
+            rates = ["—" if s[g] is None else f"{s[g]:.0%}" for g in VERDICT_GRADERS]
+            cost = "—" if s["cost_per_narrative"] is None else f"${s['cost_per_narrative']:.4f}"
+            p50, p95 = (
+                "—" if s[k] is None else f"{s[k] / 1000:.1f}s"
+                for k in ("latency_p50_ms", "latency_p95_ms")
+            )
+            table.add_row(split, str(s["cases"]), *rates, cost, p50, p95)
+        console.print(table)
+        path, grades = grades_path(golden, model, version), serialise(by_case)
+        if record:
+            path.write_text(_json.dumps(grades, indent=2) + "\n", "utf-8")
+        elif not path.exists() or _json.loads(path.read_text("utf-8")) != grades:
+            changed.append(str(path))
+    for where in changed:
+        rprint(f"[red]grades differ from {where}; rerun with --record if intended[/red]")
+    if not result.grades:
+        rprint("No stored outputs to grade.")
+    if result.drift or changed:
+        raise typer.Exit(1)
+
+
 if __name__ == "__main__":
     main()
