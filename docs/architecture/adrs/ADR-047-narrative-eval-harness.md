@@ -43,7 +43,7 @@
 
 ### 2.3 Two modes
 
-- **Live (spends tokens, user-triggered):** `invest narrative eval --set golden --model <id>` (new). It prints the estimated cost and requires confirmation, the same discipline as `dangerous: true` skills (ADR-032 §2.4). Outputs are stored under `tests/fixtures/narrative_golden/outputs/<model>/<prompt_version>/`.
+- **Live (spends tokens, user-triggered):** `invest narrative eval run --provider <anthropic|openai> --model <id> [--split test|train|all]` (new; the provider is named because the narrative path is provider-specific, amended 2026-10-28 at S5). It prints the estimated cost and requires confirmation, the same discipline as `dangerous: true` skills (ADR-032 §2.4). Outputs are stored under `tests/fixtures/narrative_golden/outputs/<model>/<prompt_version>/`.
 - **Replay (zero tokens, CI gate):** CI re-grades stored outputs. A grader change, schema change or guard change that breaks stored outputs fails the build. CI never calls an LLM: lazy-load principle, cost, and no secrets in CI.
 
 ### 2.4 Comparison report
