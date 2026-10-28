@@ -46,8 +46,12 @@ STRATA = (
 # shortfall, even at listed 9yr, so the listed years decide.
 RECENT_IPO_YEARS = 3
 _LISTED = re.compile(r"listed (\d+)yr")
-# Header fields whose values come from yfinance (Yahoo terms may limit republishing them).
-YFINANCE_HEADER_FIELDS = ("market_cap_usd", "pe_trailing", "pb_ratio", "ev_ebitda", "beta")
+# Raw third-party values withheld from the public files (owner, 2026-10-28): Yahoo's header
+# figures and the short interest F4 reads from yfinance or Polygon. Values this project
+# computes from prices (momentum, z-scores) stay.
+WITHHELD_HEADER_FIELDS = ("market_cap_usd", "pe_trailing", "pb_ratio", "ev_ebitda", "beta")
+WITHHELD_SIGNALS = (("F4", "Short int (current)"), ("F4", "Short int (peak)"))
+WITHHELD = "withheld: third-party data"
 
 
 @dataclass(frozen=True)
@@ -57,9 +61,10 @@ class GoldenCase:
     dive_date: str
     split: str
     strata: tuple[str, ...]
-    body: str  # the frozen view exactly as the model saw it
+    body: str  # the public view: the frozen one with third-party values withheld
     view_sha256: str
-    yfinance_fields: tuple[str, ...]  # YFINANCE_HEADER_FIELDS this view has a value for
+    source_view_sha256: str  # the frozen view on the dive's row
+    withheld: tuple[str, ...]  # paths of the values withheld
 
     def fixture(self) -> dict[str, Any]:
         out: dict[str, Any] = {"canary": CANARY} if self.split == TEST else {}
@@ -73,8 +78,25 @@ class GoldenCase:
             "schema_version": ScorecardView.schema_version,
             "composite_version": COMPOSITE_VERSION,
             "view_sha256": self.view_sha256,
+            "source_view_sha256": self.source_view_sha256,
+            "withheld": list(self.withheld),
             "view": json.loads(self.body),
         }
+
+
+def withhold(view: ScorecardView) -> tuple[str, ...]:
+    """Blank the third-party values in place; the paths of those that had one."""
+    paths = []
+    for name in WITHHELD_HEADER_FIELDS:
+        if getattr(view.company, name) is not None:
+            setattr(view.company, name, None)
+            paths.append(f"company.{name}")
+    for fw in view.frameworks:
+        for i, (label, value) in enumerate(fw.key_signals):
+            if (fw.code, label) in WITHHELD_SIGNALS and value != WITHHELD:
+                fw.key_signals[i] = (label, WITHHELD)
+                paths.append(f"frameworks.{fw.code}.{label}")
+    return tuple(paths)
 
 
 def split_of(ticker: str) -> str:
@@ -140,8 +162,8 @@ def collect_cases(session: Session) -> list[GoldenCase]:
                 )
             )
         )
-        body = str(run.scorecard_view_json)
-        yf = tuple(f for f in YFINANCE_HEADER_FIELDS if getattr(view.company, f) is not None)
+        withheld = withhold(view)
+        body = view.to_llm_context()
         cases.append(
             GoldenCase(
                 ticker=view.ticker,
@@ -150,8 +172,9 @@ def collect_cases(session: Session) -> list[GoldenCase]:
                 split=split_of(view.ticker),
                 strata=strata_of(view, currency, {float(k) for k in factors}),
                 body=body,
-                view_sha256=str(run.scorecard_view_sha256),
-                yfinance_fields=yf,
+                view_sha256=hashlib.sha256(body.encode("utf-8")).hexdigest(),
+                source_view_sha256=str(run.scorecard_view_sha256),
+                withheld=withheld,
             )
         )
     return cases

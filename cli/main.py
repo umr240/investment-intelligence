@@ -4121,8 +4121,8 @@ def narrative_eval_export(
         missing = "[red]0[/red]"
         table.add_row(stratum, str(n[TRAIN] or missing), str(n[TEST] or missing))
     console.print(table)
-    with_yf = sum(bool(c.yfinance_fields) for c in cases)
-    rprint(f"{with_yf} of {len(cases)} views carry yfinance header values")
+    withheld = sum(len(c.withheld) for c in cases)
+    rprint(f"{withheld} third-party values withheld across {len(cases)} cases")
     if write:
         paths = write_cases(cases, out)
         rprint(f"[green]Wrote {len(paths)} files under {out}[/green]")

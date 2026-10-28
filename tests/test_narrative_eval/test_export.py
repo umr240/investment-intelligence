@@ -173,12 +173,42 @@ def test_fixture_is_stamped_and_only_test_cases_carry_the_canary(
     assert replay_mismatch(test) is None and replay_mismatch(train) is None
 
 
-def test_yfinance_header_values_are_counted(db: sessionmaker[Session]) -> None:
+def test_third_party_values_are_withheld_and_recorded(db: sessionmaker[Session]) -> None:
+    with_short = _view("WITH", cap=5e9)
+    with_short.frameworks[0].key_signals = [("12-1 momentum", "+34%")]
+    with_short.frameworks.append(
+        FrameworkView(
+            code="F4",
+            title="Stealth",
+            score=4.0,
+            max_score=10.0,
+            verdict="partial",
+            band="",
+            key_signals=[("Short int (current)", "3.1%"), ("EPS acceleration", "yes")],
+            data_gaps=[],
+        )  # fmt: skip
+    )
     with db.begin() as s:  # commits on exit
-        _dive(s, _view("WITH", cap=5e9))
+        frozen = _dive(s, with_short)
         _dive(s, _view("WITHOUT"))
-    got = {c.ticker: c.yfinance_fields for c in _collect(db)}
-    assert got == {"WITH": ("market_cap_usd",), "WITHOUT": ()}
+    by_ticker = {c.ticker: c for c in _collect(db)}
+    case = by_ticker["WITH"]
+    assert case.withheld == ("company.market_cap_usd", "frameworks.F4.Short int (current)")
+    assert by_ticker["WITHOUT"].withheld == ()
+    fixture = case.fixture()
+    view = fixture["view"]
+    assert view["company"]["market_cap_usd"] is None
+    assert view["frameworks"][1]["key_signals"] == [
+        ["Short int (current)", export.WITHHELD],
+        ["EPS acceleration", "yes"],
+    ]
+    assert view["frameworks"][0]["key_signals"] == [["12-1 momentum", "+34%"]]  # computed here
+    with db() as s:
+        stored = s.get(DeepDiveRun, frozen)
+        assert stored is not None
+        assert fixture["source_view_sha256"] == stored.scorecard_view_sha256
+    assert fixture["view_sha256"] != fixture["source_view_sha256"]
+    assert replay_mismatch(fixture) is None
 
 
 def test_coverage_names_missing_strata(
@@ -231,7 +261,7 @@ def test_cli_reports_and_writes_only_when_asked(db: sessionmaker[Session], tmp_p
     report = runner.invoke(app, args, env={"COLUMNS": "200"})
     assert report.exit_code == 0, report.output
     assert "1 cases" in report.output and "spinoff" in report.output
-    assert "1 of 1 views carry yfinance" in report.output
+    assert "1 third-party values withheld across 1 cases" in report.output
     assert not any(tmp_path.iterdir())
     wrote = runner.invoke(app, [*args, "--write"], env={"COLUMNS": "200"})
     assert wrote.exit_code == 0, wrote.output
