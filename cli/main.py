@@ -4092,5 +4092,41 @@ def llm_stats(
     console.print(table)
 
 
+narrative_app = typer.Typer(help="Narrative evaluation (ADR-047).")
+eval_app = typer.Typer(help="The golden set, its graders and replay. Nothing here calls a model.")
+narrative_app.add_typer(eval_app, name="eval")
+app.add_typer(narrative_app, name="narrative")
+
+
+@eval_app.command("export")
+def narrative_eval_export(
+    out: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--out"),
+    write: bool = typer.Option(False, "--write", help="Write cases; otherwise report only."),
+) -> None:
+    """Export each company's latest frozen dive view as a golden-set case. DB-only."""
+    from data.db import get_session
+    from deepdive.narrative_eval.export import (
+        TEST, TRAIN, collect_cases, coverage, write_cases,
+    )  # fmt: skip
+
+    with get_session() as session:
+        cases = collect_cases(session)
+    n_test = sum(c.split == TEST for c in cases)
+    rprint(f"{len(cases)} cases: {len(cases) - n_test} train, {n_test} test")
+    table = Table(title="Strata (ADR-047 §2.1)")
+    table.add_column("Stratum")
+    for col in (TRAIN, TEST):
+        table.add_column(col, justify="right")
+    for stratum, n in coverage(cases).items():
+        missing = "[red]0[/red]"
+        table.add_row(stratum, str(n[TRAIN] or missing), str(n[TEST] or missing))
+    console.print(table)
+    withheld = sum(len(c.withheld) for c in cases)
+    rprint(f"{withheld} third-party values withheld across {len(cases)} cases")
+    if write:
+        paths = write_cases(cases, out)
+        rprint(f"[green]Wrote {len(paths)} files under {out}[/green]")
+
+
 if __name__ == "__main__":
     main()

@@ -26,6 +26,7 @@
 - Strata: established compounder, pre-profitability, recent IPO with unfeasible frameworks, EXCLUDE path, data-poor RESEARCH-ONLY, non-USD filer, spinoff, extreme winner, split-affected (CRWD).
 - Seeded failure cases for ADR-046 recall: outputs with known overclaims.
 - Split into train and test sets. Prompt work iterates on train only; the test score is the headline number.
+- Raw third-party values are withheld from the public files (owner, 2026-10-28): the Yahoo header figures (market cap, P/E, P/B, EV/EBITDA, beta) and F4's short interest. Each case records what was withheld and the hash of the frozen view it came from; the model is evaluated on the public view.
 - Both splits live in this public repo (owner, 2026-10-28). Contamination is the cost: a future model may train on the test cases. Mitigations: every test-split file carries a canary string (the BIG-bench pattern), so a crawler that honours it skips the file and a model that reproduces it shows contamination; the test split is refreshed each quarter with dives dated after the candidate models' training cutoffs; the `Read` deny rule in `.claude/settings.json` keeps assistant sessions out of `test/`.
 
 ### 2.2 Graders — deterministic, no LLM
