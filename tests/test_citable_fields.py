@@ -34,9 +34,19 @@ def test_every_valued_field_gets_one_named_id(path: Path) -> None:
         if fw.is_unfeasible:
             assert ids == set()
             continue
-        valued = [label for label, v in fw.key_signals
-                  if v not in ("?", "None", "not_disclosed", WITHHELD)]  # fmt: skip
+        missing = ("?", "None", "not_disclosed", WITHHELD)  # anywhere in the text, not only whole
+        valued = [label for label, v in fw.key_signals if v and not any(m in v for m in missing)]
         assert ids == {f"{fw.code}.score"} | {f"{fw.code}.{cf.slug(x)}" for x in valued}
+    assert not [(i, f.value) for i, f in fields.items() if "None" in f.value or "?" in f.value]
+
+
+def test_a_missing_number_inside_a_unit_gets_no_id() -> None:
+    view = _train("TEM")
+    assert ("Avg GM expansion", "None bps/yr") in view.frameworks[2].key_signals
+    assert "F3.avg_gm_expansion" not in view.citable_fields()
+    for missing in ("None%", "?/9", "? qtrs", "?"):
+        view.frameworks[2].key_signals = [("Probe", missing)]
+        assert "F3.probe" not in view.citable_fields(), missing
 
 
 def test_crwd_cites_what_adr_045_found_miscited() -> None:
@@ -69,11 +79,20 @@ def test_withheld_and_missing_values_get_no_id() -> None:
     assert "F6.nrr_net_revenue_retention" not in ids  # not_disclosed
 
 
+def test_only_an_exactly_disclosed_ceo_stake_is_citable() -> None:
+    view = _train("AAPL")
+    assert view.company.ceo_equity_pct_state == "parser_uncertain"
+    assert "company.ceo_equity_pct" not in view.citable_fields()
+    view.company.ceo_equity_pct_state = "disclosed_exact"
+    assert view.citable_fields()["company.ceo_equity_pct"].value == "0.5%"
+
+
 @pytest.mark.parametrize(
     ("v", "unit", "text"),
     [
         (416161000000.0, "usd", "$416.2B"), (-162_500_000, "usd", "-$162.5M"),
-        (950_000, "usd", "$950,000"), (0.333, "fraction", "33.3%"), (0.5, "pct", "0.5%"),
+        (950_000, "usd", "$950,000"), (999.96e6, "usd", "$1.0B"),
+        (999_999.6, "usd", "$1.0M"), (0.333, "fraction", "33.3%"), (0.5, "pct", "0.5%"),
         (50.13, "pp", "50.13pp"), (9.9, "multiple", "9.9x"), (9.0, "score", "9/10"),
         (2025, "year", "2025"), (3.031, "number", "3.031"),
     ],
@@ -106,6 +125,8 @@ def test_the_cap_keeps_the_framework_fields_first() -> None:
     fields = view.citable_fields()
     assert len(fields) == cf.MAX_FIELDS and "F6.rule_of_40" in fields
     assert "ICA-9.n79" not in fields
+    view.overlay_triggers.reverse()
+    assert view.citable_fields() == fields  # which fields the cap drops does not move either
 
 
 def test_a_repeated_id_is_an_error_not_an_overwrite() -> None:

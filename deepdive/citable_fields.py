@@ -20,9 +20,10 @@ logger = logging.getLogger(__name__)
 
 MAX_FIELDS = 80  # ADR-045 §2.1; the largest of 73 live views had 58 (2026-10-28)
 
-# A field with no value gets no ID (§2.7 item 2). "withheld" is the golden set's
+# A field with no value gets no ID (§2.7 item 2): a missing number, even one the
+# formatter wrapped in a unit ("None bps/yr", "?/9"), or the golden set's
 # public-copy marker (`deepdive/narrative_eval/export.py` WITHHELD).
-_NO_VALUE = frozenset({"?", "None", "not_disclosed", ""})
+_NO_VALUE = re.compile(r"^(\?|None)(?![\w.])|^(not_disclosed|withheld\b)|^$")
 
 _COMPANY_UNITS = {
     "market_cap_usd": ("usd", "Market cap"),
@@ -35,6 +36,8 @@ _COMPANY_UNITS = {
     "beta": ("number", "Beta"),
     "ceo_equity_pct": ("pct", "CEO equity"),  # stored in percent (`cli/main.py` renders `{v}%`)
 }
+# A parser-uncertain CEO stake is not a fact to cite (`cli/main.py` marks it so).
+_CITABLE_CEO_STATE = "disclosed_exact"
 
 # Units of the numbers `overlays/detector.py` puts in `relevant_numbers`; the view
 # stores them bare. `threshold` means a different thing per trigger.
@@ -94,14 +97,16 @@ def build_citable_fields(view: ScorecardView) -> dict[str, CitableField]:
         add(f"{fw.code}.score", render(fw.score, "score"), "score", f"{fw.code} {fw.title} score")
     for fw in feasible:
         for label, value in fw.key_signals:
-            if value in _NO_VALUE or value.startswith("withheld"):
+            if _NO_VALUE.match(value):
                 continue
             add(f"{fw.code}.{slug(label)}", value, _signal_unit(value), label)
     for attr, (unit, label) in _COMPANY_UNITS.items():
         v = getattr(view.company, attr)
+        if attr == "ceo_equity_pct" and view.company.ceo_equity_pct_state != _CITABLE_CEO_STATE:
+            continue
         if v is not None:
             add(f"company.{attr}", render(v, unit), unit, label)
-    for trigger in view.overlay_triggers:
+    for trigger in sorted(view.overlay_triggers, key=lambda t: t.trigger_id):  # cap-stable
         for key, v in trigger.relevant_numbers.items():
             if isinstance(v, bool) or not isinstance(v, (int, float)):
                 continue
@@ -121,7 +126,7 @@ def render(v: Any, unit: str) -> str:
     if unit == "usd":
         sign, a = ("-" if x < 0 else ""), abs(x)
         for scale, suffix in ((1e12, "T"), (1e9, "B"), (1e6, "M")):
-            if a >= scale:
+            if round(a / scale, 1) >= 1:  # 999.96e6 is $1.0B, not $1000.0M
                 return f"{sign}${a / scale:.1f}{suffix}"
         return f"{sign}${a:,.0f}"
     if unit == "fraction":
