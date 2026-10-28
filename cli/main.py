@@ -4233,10 +4233,11 @@ def narrative_eval_run(
     )
     if not yes and not typer.confirm("Spend this?", default=False):
         raise typer.Exit(1)
-    failed = streak = 0
+    written = failed = streak = 0
     for i, case in enumerate(cases, 1):
         try:
             write_output(golden, run_case(case, chosen, model))
+            written += 1
             streak = 0
         except NarrativeUnavailableError as exc:
             failed += 1
@@ -4246,10 +4247,13 @@ def narrative_eval_run(
         if streak == MAX_CONSECUTIVE_FAILURES and i < len(cases):
             rprint(f"[red]Stopping: {streak} failures in a row. Rerun to resume.[/red]")
             break
+    not_run = len(cases) - written - failed
     rprint(
-        f"{len(cases) - failed} written, {failed} failed. Grade them with "
+        f"{written} written, {failed} failed, {not_run} not run. Grade them with "
         "`invest narrative eval replay --record`; actual spend is in `invest llm stats`."
     )
+    if not_run:
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

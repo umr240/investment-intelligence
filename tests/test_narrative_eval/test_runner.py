@@ -152,7 +152,7 @@ def test_cli_spends_only_after_confirmation_and_resumes(stubbed: list[Any], tmp_
     assert [c[0] for c in stubbed] == ["AAA"]  # test split only, by default
     second = _cli(*args, "--yes")
     assert [c[0] for c in stubbed] == ["AAA", "BBB"]  # AAA already had an output
-    assert "1 written, 0 failed" in second.output
+    assert "1 written, 0 failed, 0 not run" in second.output
     assert "Nothing to run" in _cli(*args, "--yes").output
 
 
@@ -241,3 +241,4 @@ def test_cli_stops_after_consecutive_failures(
     args = ["--provider", "anthropic", "--model", "claude-sonnet-4-6", "--golden", str(golden)]
     out = _cli(*args, "--yes")
     assert calls == ["AAA", "BBB", "CCC"] and "3 failures in a row" in out.output, out.output
+    assert "0 written, 3 failed, 2 not run" in out.output and out.exit_code == 1
