@@ -97,6 +97,27 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
           <>
             {narrative.one_liner && <p style={{ fontStyle: "italic", padding: "12px 0", borderBottom: "1px solid var(--color-divider)" }}>{narrative.one_liner}</p>}
 
+            {narrative.verdict && (
+              <div style={{ padding: "16px 0", borderBottom: "1px solid var(--color-divider)" }} data-testid="narrative-verdict">
+                <div className="mono dim" style={{ letterSpacing: ".1em", marginBottom: 8 }}>VERDICT</div>
+                <strong>{narrative.verdict}</strong>
+                {narrative.verdict_reason && <p style={{ fontSize: 13, lineHeight: 1.55, margin: "4px 0 6px" }}>{narrative.verdict_reason}</p>}
+                <p className="mono dim" style={{ margin: "4px 0" }}>
+                  Owner-operator answer: {narrative.owner_operator_answer ?? "—"} · Moat direction: {narrative.moat_direction ?? "—"}
+                </p>
+                {(narrative.triggers ?? []).length > 0 && (
+                  <div style={{ marginTop: 8 }}>
+                    <div className="mono dim" style={{ marginBottom: 4 }}>Triggers that would change it</div>
+                    {narrative.triggers!.map((t, i) => (
+                      <div key={i} style={{ fontSize: 13, margin: "2px 0" }}>
+                        <span className="cite" style={{ marginRight: 6 }}>{t.field_id}</span>{t.condition}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
             {(narrative.bull ?? []).length > 0 && (
               <div style={{ padding: "16px 0", borderBottom: "1px solid var(--color-divider)" }}>
                 <div className="mono dim" style={{ letterSpacing: ".1em", marginBottom: 8 }}>BULL CASE</div>

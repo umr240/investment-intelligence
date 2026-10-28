@@ -44,7 +44,9 @@ from deepdive.mental_model_composer import (
     select_models_for_dive,
 )
 from deepdive.narrative_output import (
+    SCHEMA_V2,
     NarrativeBody,
+    NarrativeBodyV2,
     NarrativeOutput,
     NarrativeProvider,
     NarrativeStatus,
@@ -749,30 +751,36 @@ def _strict_schema(schema: dict) -> dict:
 # ── Persistence helpers ──────────────────────────────────────────────────
 
 
+def shown_sections(narrative: NarrativeOutput) -> dict[str, Any]:
+    """The body a reader sees, JSON-ready: for v2 the rendered copy (ADR-045 §2.2)."""
+    if isinstance(narrative.body, NarrativeBodyV2):
+        if narrative.rendered is None:
+            raise ValueError(f"{narrative.ticker}: a v2 narrative must be rendered to be shown")
+        return {"schema_version": SCHEMA_V2, **narrative.rendered.model_dump(mode="json")}
+    return narrative.body.model_dump(mode="json")
+
+
 def persist_narrative(narrative: NarrativeOutput) -> bool:
     """Persist narrative onto the most-recent DeepDiveRun for the ticker.
 
     Stores body sections as JSON strings (keeps audit trail of guard
-    warnings + token usage). Returns True on success, False if no
-    DeepDiveRun exists yet for the ticker.
+    warnings + token usage). A v2 narrative stores its rendered copy, and the
+    model's own body under `_template` so it can be re-checked. Returns True on
+    success, False if no DeepDiveRun exists yet for the ticker.
     """
     from sqlalchemy import desc, select
 
     from data.db import get_session
     from data.models.schema import Company, DeepDiveRun
 
-    body = narrative.body
-    bull_json = json.dumps(
-        [p.model_dump() for p in body.bull], default=str,
-    )
-    bear_json = json.dumps(
-        [p.model_dump() for p in body.bear], default=str,
-    )
+    sections = shown_sections(narrative)
+    bull_json = json.dumps(sections.pop("bull"), default=str)
+    bear_json = json.dumps(sections.pop("bear"), default=str)
+    if isinstance(narrative.body, NarrativeBodyV2):
+        sections["_template"] = narrative.body.model_dump(mode="json")
     risk_json = json.dumps(
         {
-            "one_liner": body.one_liner,
-            "risks": [r.model_dump() for r in body.risks],
-            "data_caveats": list(body.data_caveats),
+            **sections,
             "_audit": {
                 "provider": narrative.provider.value,
                 "model": narrative.model,

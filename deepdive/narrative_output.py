@@ -12,9 +12,10 @@ The data-fetch / framework / overlay / screener paths remain LLM-free.
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import Enum, StrEnum
+from typing import Any, Literal, cast
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class NarrativeProvider(str, Enum):
@@ -118,6 +119,127 @@ class NarrativeBody(BaseModel):
     )
 
 
+# ── Schema v2 (ADR-045): the model cites field IDs, code renders the numbers ──
+
+SCHEMA_V2 = "2.0"
+
+
+class NarrativeVerdict(StrEnum):
+    """ADR-023 §1.4 labels: the mapped composite verdict (ADR-054, `config/verdicts.py`)."""
+
+    WATCHLIST_WITH_TRIGGERS = "WATCHLIST WITH TRIGGERS"
+    EXCLUDE_WITH_REASON = "EXCLUDE WITH REASON"
+    RESEARCH_ONLY = "RESEARCH-ONLY"
+
+
+class OwnerOperatorAnswer(StrEnum):
+    """Would an owner hold 100% of this business for ten years? (ADR-023-A1 row 2)"""
+
+    YES = "YES"
+    NO = "NO"
+    NOT_YET = "NOT_YET"
+
+
+class MoatDirection(StrEnum):
+    WIDENING = "WIDENING"
+    FLAT = "FLAT"
+    NARROWING = "NARROWING"
+    UNKNOWN = "UNKNOWN"
+
+
+class FieldCitation(BaseModel):
+    """A value the point relies on, by citable field ID; the model never writes the number."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    field_id: str = Field(..., description="An ID from the citable fields list, e.g. 'F5.roic'.")
+
+
+_PROSE = (
+    "Write every number as a placeholder naming a citable field, e.g. '{F5.roic}'; "
+    "code fills in the value. Never write a number yourself."
+)
+
+
+class CasePoint(BaseModel):
+    """One bull or bear point."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    headline: str = Field(..., max_length=140, description=_PROSE)
+    detail: str = Field(..., max_length=800, description=_PROSE)
+    framework_codes: list[str] = Field(
+        ..., description="F1..F7 codes that ground this point; only scored frameworks."
+    )
+    numeric_claims: list[FieldCitation] = Field(..., description="Fields this point relies on.")
+
+
+class RiskFactorV2(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    factor: str = Field(..., max_length=500, description=_PROSE)
+    severity: Literal["low", "medium", "high"]
+    grounded_in: str = Field(
+        ...,
+        description=(
+            "A scored framework code ('F4'), an overlay trigger ID ('BEW-3'), a citable "
+            "field ID, or a data gap. Required: no free-floating risks."
+        ),
+    )
+
+
+class Trigger(BaseModel):
+    """A condition on one field that would change the verdict."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    field_id: str = Field(..., description="The citable field the condition watches.")
+    condition: str = Field(..., max_length=300, description="What change in it would matter.")
+
+
+class NarrativeBodyV2(BaseModel):
+    """Schema v2 body. Holds placeholders as the model wrote them; `render_body` fills them in."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    one_liner: str = Field(..., max_length=400, description=_PROSE)
+    verdict: NarrativeVerdict = Field(
+        ..., description="The deterministic verdict you were given. Explain it; do not choose it."
+    )
+    verdict_reason: str = Field(..., max_length=600, description=_PROSE)
+    owner_operator_answer: OwnerOperatorAnswer
+    moat_direction: MoatDirection
+    bull: list[CasePoint] = Field(..., min_length=1, max_length=5)
+    bear: list[CasePoint] = Field(..., min_length=1, max_length=5)
+    risks: list[RiskFactorV2] = Field(..., max_length=8)
+    triggers: list[Trigger] = Field(..., max_length=8)
+    data_caveats: list[str] = Field(
+        ..., description="Plain-English restatement of the view's data gaps; one per gap."
+    )
+
+
+# Keywords Anthropic's structured outputs reject (ADR-045 §2.7 item 1); lengths are
+# enforced after parsing instead. `minItems` above 1 is rejected too; none is used.
+_UNSENT_KEYWORDS = frozenset({"minLength", "maxLength", "minimum", "maximum", "maxItems"})
+
+
+def narrative_json_schema_v2(field_ids: list[str]) -> dict[str, Any]:
+    """The v2 body schema for one request: field IDs are an enum of this view's (§2.2)."""
+    schema = NarrativeBodyV2.model_json_schema()
+
+    def strip(node: Any) -> Any:
+        if isinstance(node, dict):
+            return {k: strip(v) for k, v in node.items() if k not in _UNSENT_KEYWORDS}
+        if isinstance(node, list):
+            return [strip(v) for v in node]
+        return node
+
+    schema = cast(dict[str, Any], strip(schema))
+    for name in ("FieldCitation", "Trigger"):
+        schema["$defs"][name]["properties"]["field_id"]["enum"] = list(field_ids)
+    return schema
+
+
 class NarrativeOutput(BaseModel):
     """Full narrative envelope: body + provenance + validation status.
 
@@ -138,4 +260,22 @@ class NarrativeOutput(BaseModel):
     fallback_reason: str = ""
     status: NarrativeStatus = NarrativeStatus.OK
     guard_warnings: list[str] = Field(default_factory=list)
-    body: NarrativeBody
+    body: NarrativeBody | NarrativeBodyV2  # v2: as the model wrote it, placeholders and all
+    rendered: NarrativeBodyV2 | None = None  # v2 only: the body with values filled in
+
+    @model_validator(mode="before")
+    @classmethod
+    def _body_by_schema_version(cls, data: Any) -> Any:
+        """Parse the body as its schema version says, not by trying each shape."""
+        if isinstance(data, dict) and isinstance(data.get("body"), dict):
+            v2 = data.get("schema_version") == SCHEMA_V2
+            body_cls = NarrativeBodyV2 if v2 else NarrativeBody
+            data = {**data, "body": body_cls.model_validate(data["body"])}
+        return data
+
+    @model_validator(mode="after")
+    def _body_matches_schema_version(self) -> NarrativeOutput:
+        v2 = self.schema_version == SCHEMA_V2
+        if v2 != isinstance(self.body, NarrativeBodyV2) or (self.rendered is not None and not v2):
+            raise ValueError(f"body does not match schema_version {self.schema_version}")
+        return self

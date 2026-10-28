@@ -23,7 +23,15 @@ from config.llm_prices import cost_usd
 from config.verdicts import narrative_verdict
 from deepdive.narrative_eval.export import TEST, TRAIN, replay_mismatch
 from deepdive.narrative_guard import _walk_path, validate
-from deepdive.narrative_output import BearPoint, BullPoint, NarrativeOutput
+from deepdive.narrative_output import (
+    BearPoint,
+    BullPoint,
+    CasePoint,
+    FieldCitation,
+    NarrativeBodyV2,
+    NarrativeOutput,
+)
+from deepdive.narrative_render import prose, render_body
 from deepdive.scorecard_view import ScorecardView
 
 PASS, FAIL, NOT_MEASURED, MEASURED = "pass", "fail", "not_measured", "measured"
@@ -61,7 +69,10 @@ class Grade:
     value: float | None = None
 
 
-def _texts(out: NarrativeOutput) -> list[str]:
+def _texts(out: NarrativeOutput, view: ScorecardView) -> list[str]:
+    """Every text the reader sees: for v2, after the placeholders are filled in."""
+    if isinstance(out.body, NarrativeBodyV2):
+        return [t for _, t in prose(render_body(out.body, view.citable_fields()))]
     b = out.body
     texts = [b.one_liner, *b.data_caveats]
     points: list[BullPoint | BearPoint] = [*b.bull, *b.bear]
@@ -76,7 +87,7 @@ def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
     g1 = Grade("G1", PASS) if not warnings else Grade("G1", FAIL, f"{len(warnings)}: {warnings[0]}")
 
     expected = narrative_verdict(view.composite.verdict)
-    given = getattr(body, "verdict", None)
+    given = body.verdict.value if isinstance(body, NarrativeBodyV2) else None
     if given is None:
         g2 = Grade("G2", FAIL, "no verdict field (ADR-045 adds it)")
     elif given != expected:
@@ -85,8 +96,9 @@ def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
         g2 = Grade("G2", PASS)
 
     view_dict = view.to_dict()
+    fields = view.citable_fields()
     problems = []
-    sections: tuple[tuple[str, Sequence[BullPoint | BearPoint]], ...] = (
+    sections: tuple[tuple[str, Sequence[BullPoint | BearPoint | CasePoint]], ...] = (
         ("bull", body.bull),
         ("bear", body.bear),
     )
@@ -94,15 +106,19 @@ def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
         for i, p in enumerate(points):
             if len(p.framework_codes) + len(p.numeric_claims) < CITATION_FLOOR:
                 problems.append(f"{section}[{i}] cites nothing")
-            problems += [
-                f"{section}[{i}] cites missing field {c.field_path!r}"
-                for c in p.numeric_claims
-                if _walk_path(view_dict, c.field_path) is None
-            ]
+            for c in p.numeric_claims:
+                if isinstance(c, FieldCitation):
+                    cited, found = c.field_id, c.field_id in fields
+                else:
+                    cited, found = c.field_path, _walk_path(view_dict, c.field_path) is not None
+                if not found:
+                    problems.append(f"{section}[{i}] cites missing field {cited!r}")
+    # v2 text is checked after rendering, where any brace left is a placeholder that failed.
+    leftover = re.compile(r"[{}]") if isinstance(body, NarrativeBodyV2) else _PLACEHOLDER
     problems += [
         f"unrendered placeholder in {t[:40]!r}"
-        for t in _texts(out.narrative)
-        if _PLACEHOLDER.search(t)
+        for t in _texts(out.narrative, view)
+        if leftover.search(t) or _PLACEHOLDER.search(t)
     ]
     g3 = Grade("G3", FAIL, f"{len(problems)}: {problems[0]}") if problems else Grade("G3", PASS)
 

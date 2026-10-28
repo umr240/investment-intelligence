@@ -244,6 +244,11 @@ def _latest_run_id(ticker: str) -> tuple[int, str]:
         return run.id, run.mode
 
 
+# Keys a schema v2 narrative adds to `risk_factors` (ADR-045 §2.3).
+_NARRATIVE_V2_KEYS = ("schema_version", "verdict", "verdict_reason", "owner_operator_answer",
+                      "moat_direction", "triggers")  # fmt: skip
+
+
 @app.get("/dive/{ticker}/narrative")
 async def get_narrative(ticker: str) -> dict[str, Any]:
     """Reads whatever's already persisted on the latest DeepDiveRun —
@@ -283,6 +288,8 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
             "risks": risk_data.get("risks", []),
             "data_caveats": risk_data.get("data_caveats", []),
             "audit": risk_data.get("_audit", {}),
+            # Schema v2 only (ADR-045): absent from a v1 narrative.
+            **{k: risk_data[k] for k in _NARRATIVE_V2_KEYS if k in risk_data},
         }
 
 
@@ -297,6 +304,7 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
         NarrativeUnavailableError,
         generate_narrative,
         persist_narrative,
+        shown_sections,
     )
     from deepdive.scorecard_view import load_scorecard_view
 
@@ -316,14 +324,9 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
     except NarrativeOnStaleDiveError as exc:
         raise HTTPException(409, f"{exc}. Re-run the dive, then generate.") from exc
 
-    body = narrative.body
     return {
         "generated": True,
-        "one_liner": body.one_liner,
-        "bull": [p.model_dump() for p in body.bull],
-        "bear": [p.model_dump() for p in body.bear],
-        "risks": [r.model_dump() for r in body.risks],
-        "data_caveats": list(body.data_caveats),
+        **shown_sections(narrative),
         "audit": {
             "provider": narrative.provider.value, "model": narrative.model,
             "prompt_tokens": narrative.prompt_tokens, "completion_tokens": narrative.completion_tokens,
