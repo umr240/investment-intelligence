@@ -202,6 +202,9 @@ def test_refusal_names_what_would_waste_the_run(db: None, monkeypatch: pytest.Mo
     with get_session() as s:  # a DB still at 0008
         s.execute(text("ALTER TABLE llm_calls DROP COLUMN purpose"))
     assert "migration 0009" in str(runner.refusal(anthropic, "claude-sonnet-4-6"))
+    with get_session() as s:  # e.g. a mistyped sqlite path: an empty DB
+        s.execute(text("DROP TABLE llm_calls"))
+    assert "no llm_calls table" in str(runner.refusal(anthropic, "claude-sonnet-4-6"))
 
 
 def test_cli_refuses_before_the_estimate(stubbed: list[Any], tmp_path: Path) -> None:
@@ -209,3 +212,16 @@ def test_cli_refuses_before_the_estimate(stubbed: list[Any], tmp_path: Path) -> 
     out = _cli("--provider", "openai", "--model", "claude-sonnet-4-6", "--golden", str(golden))
     assert out.exit_code == 2 and "Not starting" in out.output
     assert "estimated" not in out.output and stubbed == []
+
+
+def test_cli_reports_nothing_to_run_before_any_refusal(
+    stubbed: list[Any], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from config.settings import settings
+
+    golden = _golden(tmp_path, (_view("AAA"), TEST))
+    args = ["--provider", "anthropic", "--model", "claude-sonnet-4-6", "--golden", str(golden)]
+    assert _cli(*args, "--yes").exit_code == 0
+    monkeypatch.setattr(settings, "anthropic_api_key", "")
+    out = _cli(*args, "--yes")
+    assert out.exit_code == 0 and "Nothing to run" in out.output, out.output

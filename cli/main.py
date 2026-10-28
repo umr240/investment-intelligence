@@ -4211,9 +4211,6 @@ def narrative_eval_run(
     except ValueError:
         rprint("[red]--provider is anthropic or openai.[/red]")
         raise typer.Exit(2) from None
-    if why := refusal(chosen, model):
-        rprint(f"[red]Not starting: {why}.[/red]")
-        raise typer.Exit(2)
     cases = [
         c for c in select_cases(golden, split)
         if not output_path(golden, model, PROMPT_VERSION, c["case_id"]).exists()
@@ -4221,6 +4218,9 @@ def narrative_eval_run(
     if not cases:
         rprint(f"Nothing to run: every {split} case has an output for {model} v{PROMPT_VERSION}.")
         return
+    if why := refusal(chosen, model):
+        rprint(f"[red]Not starting: {why}.[/red]")
+        raise typer.Exit(2)
     try:
         estimate = estimate_cost(cases, model)
     except UnpricedModelError as exc:
