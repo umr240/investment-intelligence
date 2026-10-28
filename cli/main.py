@@ -4101,7 +4101,7 @@ app.add_typer(narrative_app, name="narrative")
 @eval_app.command("export")
 def narrative_eval_export(
     out: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--out"),
-    write: bool = typer.Option(False, "--write", help="Write the case files; otherwise report only."),
+    write: bool = typer.Option(False, "--write", help="Write cases; otherwise report only."),
 ) -> None:
     """Export each company's latest frozen dive view as a golden-set case. DB-only."""
     from data.db import get_session
