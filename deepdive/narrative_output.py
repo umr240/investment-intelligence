@@ -263,19 +263,29 @@ class NarrativeOutput(BaseModel):
     body: NarrativeBody | NarrativeBodyV2  # v2: as the model wrote it, placeholders and all
     rendered: NarrativeBodyV2 | None = None  # v2 only: the body with values filled in
 
-    @model_validator(mode="before")
-    @classmethod
-    def _body_by_schema_version(cls, data: Any) -> Any:
-        """Parse the body as its schema version says, not by trying each shape."""
-        if isinstance(data, dict) and isinstance(data.get("body"), dict):
-            v2 = data.get("schema_version") == SCHEMA_V2
-            body_cls = NarrativeBodyV2 if v2 else NarrativeBody
-            data = {**data, "body": body_cls.model_validate(data["body"])}
-        return data
-
     @model_validator(mode="after")
     def _body_matches_schema_version(self) -> NarrativeOutput:
         v2 = self.schema_version == SCHEMA_V2
         if v2 != isinstance(self.body, NarrativeBodyV2) or (self.rendered is not None and not v2):
             raise ValueError(f"body does not match schema_version {self.schema_version}")
+        if (
+            self.rendered is not None
+            and isinstance(self.body, NarrativeBodyV2)
+            and _unrendered_parts(self.rendered) != _unrendered_parts(self.body)
+        ):
+            raise ValueError("rendered differs from body beyond its filled-in text")
         return self
+
+
+def _unrendered_parts(body: NarrativeBodyV2) -> dict[str, Any]:
+    """Everything rendering leaves as is: the guard's verdict on `body` covers `rendered`."""
+    d = body.model_dump()
+    for key in ("one_liner", "verdict_reason", "data_caveats"):
+        d.pop(key)
+    for point in (*d["bull"], *d["bear"]):
+        point.pop("headline"), point.pop("detail")
+    for risk in d["risks"]:
+        risk.pop("factor")
+    for trigger in d["triggers"]:
+        trigger.pop("condition")
+    return d

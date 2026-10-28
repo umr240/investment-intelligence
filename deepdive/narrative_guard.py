@@ -51,7 +51,7 @@ import re
 from typing import Any
 
 from config.verdicts import narrative_verdict
-from deepdive.narrative_output import NarrativeBody, NarrativeBodyV2, NarrativeVerdict
+from deepdive.narrative_output import NarrativeBody, NarrativeBodyV2
 from deepdive.scorecard_view import ScorecardView
 
 # Numbers the LLM might write: 12.4%, $2.1B, 0.85, 6/9, 1.2x, 4,500
@@ -153,10 +153,10 @@ def validate(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView) -> list
     return warnings
 
 
-# Prose where a literal number is a claim. Trigger conditions and risk factors
-# state thresholds the model proposes ("if FCF margin falls below 10%"), which
-# no view holds; v1 did not check risk text either.
-_CLAIM_PROSE = re.compile(r"^(one_liner|verdict_reason|(bull|bear)\[\d+\]\.(headline|detail))$")
+# A trigger condition states a threshold the model proposes ("falls below 10%"),
+# which no view holds; every other text is a claim, so a literal number in it must
+# be one the view holds (§2.2). v1 checked only the one-liner and the points.
+_PROPOSED_THRESHOLD = re.compile(r"^triggers\[\d+\]\.condition$")
 
 
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
@@ -180,7 +180,7 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
         if not unknown and re.search(r"[{}]", render_text(text, fields)):
             warnings.append(f"{path}: unrendered placeholder or stray brace")
         # 2. A literal number in a claim is a guard error unless the view holds it.
-        if _CLAIM_PROSE.match(path):
+        if not _PROPOSED_THRESHOLD.match(path):
             for tok, floats, unit in _extract_tokens_and_floats(PLACEHOLDER.sub(" ", text)):
                 if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
                     warnings.append(
@@ -206,8 +206,8 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
             f"verdict: '{body.verdict.value}' but the composite verdict "
             f"'{view.composite.verdict}' maps to '{expected}'"
         )
-    if body.verdict == NarrativeVerdict.WATCHLIST_WITH_TRIGGERS and not body.triggers:
-        warnings.append("triggers: empty, but the verdict is WATCHLIST WITH TRIGGERS")
+    if not body.triggers:  # what would flip it, for an exclude or research-only verdict too
+        warnings.append("triggers: empty; name what would change the verdict")
     warnings += [
         f"triggers[{i}]: '{t.field_id}' is not a citable field"
         for i, t in enumerate(body.triggers)

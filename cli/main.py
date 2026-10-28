@@ -910,7 +910,11 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
     audit += "[/dim]"
     rprint(audit)
 
-    body = narrative.rendered or narrative.body  # v2: placeholders filled in (ADR-045)
+    body = narrative.body
+    if isinstance(narrative.body, NarrativeBodyV2):  # show the filled-in copy (ADR-045)
+        if narrative.rendered is None:
+            raise ValueError(f"{narrative.ticker}: a v2 narrative must be rendered to be shown")
+        body = narrative.rendered
     rprint(Panel(
         f"[italic]{body.one_liner}[/italic]",
         title="[bold]Thesis[/bold]",

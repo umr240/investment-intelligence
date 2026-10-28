@@ -5,6 +5,7 @@ Run against the golden set's real CRWD train view; no model is called.
 
 from __future__ import annotations
 
+import copy
 import json
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -133,7 +134,11 @@ def test_a_clean_v2_body_passes_the_guard(crwd: ScorecardView) -> None:
         ({"bull": [_point("h", "d", ["F6"], ["F6.nrr"])]}, "'F6.nrr' is not a citable field"),
         ({"bull": [_point("h", "d", ["F7"], [])]}, "'F7' is unfeasible"),
         ({"verdict": "EXCLUDE WITH REASON"}, "maps to 'WATCHLIST WITH TRIGGERS'"),
-        ({"triggers": []}, "triggers: empty, but the verdict is WATCHLIST WITH TRIGGERS"),
+        ({"triggers": []}, "triggers: empty"),
+        ({"risks": [{"factor": "Revenue fell 47% in 2024.", "severity": "high",
+                     "grounded_in": "F5"}]}, "risks[0].factor: literal number '47%'"),
+        ({"data_caveats": ["Short interest of 12.5% is withheld."]},
+         "data_caveats[0]: literal number '12.5%'"),
         ({"triggers": [{"field_id": "F5.moat", "condition": "c"}]}, "triggers[0]: 'F5.moat'"),
         ({"risks": [{"factor": "f", "severity": "low", "grounded_in": "vibes"}]},
          "grounded_in='vibes'"),
@@ -147,11 +152,39 @@ def test_the_v2_guard_names_each_fault(
     assert any(warning in w for w in warnings), warnings
 
 
-def test_thresholds_the_model_proposes_are_not_claims(crwd: ScorecardView) -> None:
-    body = _body(risks=[{"factor": "FCF margin falls below 15% for two years.",
-                         "severity": "high", "grounded_in": "F5"}])  # fmt: skip
+def test_only_a_trigger_condition_may_propose_a_threshold(crwd: ScorecardView) -> None:
+    body = _body()
     assert body.triggers[0].condition == "turns positive and stays above 10%"
     assert validate(body, crwd) == []
+    for verdict in ("EXCLUDE WITH REASON", "RESEARCH-ONLY"):  # every verdict names its triggers
+        view = copy.deepcopy(crwd)
+        view.composite.verdict = "exclude" if verdict.startswith("EXCLUDE") else "research_only"
+        assert validate(_body(verdict=verdict), view) == []
+        assert validate(_body(verdict=verdict, triggers=[]), view) == [
+            "triggers: empty; name what would change the verdict"
+        ]
+
+
+def test_a_rendered_copy_must_be_the_body_with_its_text_filled_in(crwd: ScorecardView) -> None:
+    body = _body()
+    other = render_body(_body(moat_direction="WIDENING"), crwd.citable_fields())
+    with pytest.raises(ValueError, match="rendered differs from body"):
+        NarrativeOutput(ticker="CRWD", generated_at=datetime(2026, 10, 28),
+                        provider=NarrativeProvider.OPENAI, model="m", schema_version=SCHEMA_V2,
+                        body=body, rendered=other)  # fmt: skip
+
+
+def test_the_cli_refuses_to_print_an_unrendered_v2_narrative(
+    crwd: ScorecardView, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import cli.main as cli
+    import deepdive.narrative as narrative
+
+    unrendered = _narrative(crwd, rendered=False)
+    monkeypatch.setattr(narrative, "generate_narrative", lambda _v, provider_pref=None: unrendered)
+    monkeypatch.setattr(narrative, "persist_narrative", lambda _n: True)
+    with pytest.raises(ValueError, match="must be rendered"):
+        cli._render_narrative(crwd, None)
 
 
 def test_a_v1_body_still_gets_the_v1_guard(crwd: ScorecardView) -> None:
@@ -222,7 +255,7 @@ def test_a_v2_narrative_is_stored_rendered_with_its_template(
     assert persist_narrative(_narrative(crwd))
     with db() as s:
         run = s.execute(select(DeepDiveRun)).scalars().one()
-        bull, risk = json.loads(run.bull_narrative), json.loads(run.risk_factors)
+        bull, risk = json.loads(str(run.bull_narrative)), json.loads(str(run.risk_factors))
     assert bull[0]["detail"] == "FCF margin is +29.8% and Rule of 40 is 48.94."
     assert risk["_template"]["bull"][0]["detail"].endswith("{F6.rule_of_40}.")
     assert (risk["schema_version"], risk["verdict"]) == (SCHEMA_V2, "WATCHLIST WITH TRIGGERS")
@@ -235,9 +268,7 @@ def test_a_v2_narrative_is_stored_rendered_with_its_template(
     assert "_template" not in got and got["bull"][0]["numeric_claims"]
 
 
-def test_a_v1_narrative_is_stored_as_before(
-    db: sessionmaker[Session], crwd: ScorecardView
-) -> None:
+def test_a_v1_narrative_is_stored_as_before(db: sessionmaker[Session], crwd: ScorecardView) -> None:
     from data.models.schema import Company, DeepDiveRun
     from deepdive.narrative import persist_narrative
 
@@ -256,7 +287,7 @@ def test_a_v1_narrative_is_stored_as_before(
                                       body=body))  # fmt: skip
     with db() as s:
         run = s.execute(select(DeepDiveRun)).scalars().one()
-        risk = json.loads(run.risk_factors)
+        risk = json.loads(str(run.risk_factors))
     stored = {"headline": "h", "detail": "d", "framework_codes": [], "numeric_claims": []}
-    assert json.loads(run.bull_narrative) == [stored]
+    assert json.loads(str(run.bull_narrative)) == [stored]
     assert list(risk) == ["one_liner", "risks", "data_caveats", "_audit"]
