@@ -1,0 +1,228 @@
+{
+  "case_id": "BABA",
+  "view_sha256": "10f20cacde4fdfd5bdd775d58f54ffbc0ee4e814f60ab742602370215333b036",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BABA",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:39:23.119980Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11573,
+    "completion_tokens": 2316,
+    "cost_usd": 0.069459,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "BABA scores a composite of 1.62 — an \"exclude\" verdict driven by failed momentum, deteriorating gross-margin trend, absent ROIC data, and no institutional accumulation signal, despite intact operating cash flow and a diversified revenue base.",
+      "bull": [
+        {
+          "headline": "Positive OCF and GP/A strength — operating engine not broken",
+          "detail": "PSA-4 fires precisely because a low Piotroski score coexists with positive operating cash flow and a gross-profit-to-assets ratio in the top-40% proxy band. This combination — anomalous financial-signal weakness despite cash-generative operations — is the one pattern in the data suggesting the headline scorecard weakness may partly reflect data architecture limits rather than pure business deterioration.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "True",
+              "field_path": "overlay_triggers.1.relevant_numbers.gp_a_strong"
+            }
+          ]
+        },
+        {
+          "headline": "Zero net debt — Debt/EBITDA at 0.0 removes near-term solvency risk",
+          "detail": "F5 records Debt/EBITDA of 0.0, meaning the balance sheet carries no meaningful net funded debt relative to earnings. For a business operating inside significant regulatory and macro uncertainty, a clean balance sheet extends the runway for the thesis to resolve without a capital-structure forcing event.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue scale provides operational optionality — diversified customer base",
+          "detail": "F6 records a diversified-base-case customer-concentration reading. At the revenue scale visible in the filing, no single-customer dependency creates acute cliff risk. This breadth preserves strategic optionality across cloud, commerce, and logistics verticals — reducing the probability of a rapid revenue collapse scenario.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Momentum decisively negative — 12-1 momentum and PEAD both bearish",
+          "detail": "F2 scores zero. The 12-month-minus-1-month momentum signal reads deeply negative, and the post-earnings-announcement drift signal shows negative drift. Both are systematic signals that the market is continuously repricing the name downward, not recovering from a temporary dislocation. No momentum reversal evidence exists in the data.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-33.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin contracting — structural erosion, not a one-quarter event",
+          "detail": "F3 records average gross-margin expansion of −29.3 basis points per year. Over a 5-year hold this compounds into a meaningful structural headwind on unit economics. R&D intensity is present but the patent portfolio is not disclosed, and the earnings-surprise streak is zero quarters — meaning R&D investment has not yet translated into measurable product differentiation at the scorecard level.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-29.3 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "0 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "ROIC and FCF margin uncomputable — capital-efficiency picture opaque",
+          "detail": "F5 cannot produce ROIC or FCF margin due to missing source data. For a hold-forever thesis, the compounding thesis rests on reinvestment at high incremental returns; without ROIC, that pillar is unverifiable. Revenue CAGR of only +5.5% over three years, combined with unverifiable capital efficiency, fails to establish a compounding warrant.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+5.5%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Stealth-accumulation signal absent — no institutional smart-money footprint",
+          "detail": "F4 scores 0.5 out of 10. No EPS acceleration, no decline signal, and short-interest data withheld. The 13F holder-count delta is based on a single snapshot and is therefore unreliable. The absence of any institutional accumulation pattern means there is no informed-capital confirmation for a contrarian thesis.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5",
+              "field_path": "frameworks.3.score"
+            }
+          ]
+        },
+        {
+          "headline": "Non-founder CEO with undisclosed equity stake — capital-allocator alignment unverifiable",
+          "detail": "F5 records CEO alignment as 'no_alignment'. The CEO is not a founder, and equity ownership percentage is not disclosed. Applying the Outsiders 8 traits: skin-in-the-game is the first observable trait and is absent here. Without it, the other seven traits cannot be grounded in incentive alignment. This is a thesis-level weakness for a forever-hold frame.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether gross-margin contraction persists across 2–3 more annual filings. If the −29 bps/yr trend accelerates or extends beyond year 3 of the hold, it represents a structural unit-economics break, not cyclical noise.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor whether ROIC becomes computable in future filings. If FCF and invested-capital data remain unavailable across 2+ consecutive annual periods, the inability to verify the compounding thesis is itself a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor negative PEAD drift over the next 4–6 earnings cycles. Sustained post-earnings negative drift indicates the market is systematically receiving worse-than-expected fundamental news — a pattern inconsistent with a widening-moat thesis.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Monitor CEO capital-allocation decisions across the 5-year hold: M&A scale, buyback price discipline, SBC trajectory. Non-founder CEO with undisclosed equity stake is a flag; observable decisions over years 1–3 will determine whether this is a structural or transitional alignment gap.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 flags that F7 Smart Beta Timing is unfeasible due to insufficient annual filing history (only 2 periods available vs. 10 required). Monitor whether the F7 signal, once computable in future years, confirms or contradicts the current exclude verdict.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "PSA-4 anomaly: low Piotroski with positive OCF and GP/A strength. Watch whether this resolves bullishly (Piotroski improving as balance-sheet data fills in) or bearishly (OCF deteriorates to match the weak Piotroski). Resolution direction in years 1–2 is a material thesis checkpoint.",
+          "severity": "medium",
+          "grounded_in": "PSA-4"
+        }
+      ],
+      "data_caveats": [
+        "Fetch-layer: no unexplained share-count jump detected, but the data contract C4 warning is logged — share-count integrity cannot be fully confirmed from available data.",
+        "F1: four sub-signals missing — ROA year-over-year requires both periods (only one present), total assets absent, current assets/liabilities absent, and asset-turnover absent. Piotroski score of 3/9 is computed on an incomplete signal set and may understate or overstate true score.",
+        "F4: 13F holder-count delta is based on a single snapshot and cannot produce a reliable accumulation signal; options put/call ratio excluded per project spec (no free-tier source).",
+        "F5: FCF margin, ROIC, and GP/A are all uncomputed due to missing free-cash-flow and invested-capital data in the source filings. Growth-quality verdict is structurally incomplete.",
+        "Company-level: market cap, beta, P/E trailing, P/B ratio, and EV/EBITDA are all null — valuation-relative signals and risk-adjusted metrics cannot be produced for this run."
+      ]
+    }
+  },
+  "input_tokens": 11573,
+  "output_tokens": 2316,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 52214,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "case_id": "TOITF",
+  "view_sha256": "b21c47f2a205b864997b0b42d0ff63f5151eb7c9a673a7bdc90fb2d9b3d441c3",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "TOITF",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:14:50.153492Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11662,
+    "completion_tokens": 2560,
+    "cost_usd": 0.073386,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [
+      "formatting: bear.3.headline trimmed from 142 to 140 chars"
+    ],
+    "body": {
+      "one_liner": "Topicus.com displays genuinely strong unit economics — high FCF margin and solid ROIC — but the composite scores an exclude verdict driven by negative price momentum, thin stealth-accumulation signals, and a history too short for four of seven frameworks to render a verdict.",
+      "bull": [
+        {
+          "headline": "Exceptional FCF margin signals durable cash generation from a vertical-software acquisition model",
+          "detail": "F5 records a FCF margin of +28.4% — an unusually high level for a roll-up acquirer, suggesting that acquired verticals retain pricing power post-integration and do not require heavy maintenance capex. For a hold-forever thesis, durable free cash flow is the primary compounding mechanism; this level is consistent with a business whose targets have genuine switching costs embedded in mission-critical workflows.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+28.4%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "ROIC at +21.9% GAAP remains well above typical software roll-up peers, supporting compounding thesis",
+          "detail": "F5 GAAP ROIC of +21.9% indicates that acquired capital is being deployed at rates that, if sustained, compound book value meaningfully across a decade. Even under Peters-Taylor economic restatement (ICA-5), the adjusted ROIC of +15.0% remains above most capital-cost hurdles, indicating the intangible-capital adjustment reduces but does not destroy the return story.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+21.9%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.1503",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue CAGR of +19.6% over three years demonstrates organic + acquisition engine is scaling",
+          "detail": "F5 three-year revenue CAGR of +19.6% reflects a functioning acquisition-led growth model, consistent with the Topicus parent playbook. For a vertical-software compounder, sustained double-digit topline growth combined with high FCF conversion is the lollapalooza input — the business is not sacrificing margin to buy revenue. BEW overlay: moderate_winner_candidate, consistent with this profile.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+19.6%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Composite scores exclude; negative 12-1 momentum of -36.9% is a significant headwind against a hold-forever entry",
+          "detail": "F2 records 12-1 momentum of -36.9% with the price sitting +30.7% from the 52-week high — a configuration signalling a stock in drawdown without technical recovery. Under the hold-forever philosophy this is not an exit signal, but as a potential new entry it raises the question of whether structural deterioration (not noise) is driving the price. The PEAD signal is absent due to no reported earnings rows, eliminating one confirming or disconfirming signal.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-36.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+30.7%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ROIC restatement reveals a 5.43pp intangible-capital gap — economic efficiency materially lower than GAAP implies",
+          "detail": "ICA-5 overlay fires: the gap between GAAP ROIC (+20.5%) and Peters-Taylor adjusted ROIC (+15.0%) is 5.43 percentage points, directionally downward, meaning the invested-capital base is understated under GAAP when intangible capital (R&D and organisational capital from SG&A) is properly capitalised. For a software roll-up, where SG&A and integration costs drive organisational capital accumulation, this restatement is material — the headline ROIC overstates true capital efficiency.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.43pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.2047",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "0.1503",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "CEO not founder; equity stake not disclosed — capital allocator quality is unverifiable from available data",
+          "detail": "Robin Van Poelje is not the founder-CEO, and CEO equity as a percentage of shares outstanding is not disclosed (state: not_disclosed). The Outsiders 8 traits framework requires observable skin-in-the-game as the primary capital-allocator signal. Without it, the quality of acquisition discipline — the core of the Topicus model — cannot be independently verified. This is an unknown, not a confirmed negative, but it is a first-class gap in the thesis.",
+          "framework_codes": [
+            "F4",
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Four of seven frameworks unfeasible; only 4 years of annual history limits statistical confidence across every valuation and quality…",
+          "detail": "F1, F3, F6, and F7 are all unfeasible due to listing history of 4 years since the 2021 IPO. The composite is built on only three frameworks (F2, F4, F5) with renormalised weights, which materially reduces the evidential base. Base-rate reasoning requires sufficient history to distinguish durable compounders from early-stage anomalies; with 4 years, the favourable F5 signals could reflect post-listing honeymoon dynamics rather than proven cycle-through durability.",
+          "framework_codes": [
+            "F2",
+            "F4",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.13",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the ICA-5 intangible-capital gap widens across 2-3 more annual filings. A widening gap would indicate that acquisition pace is outrunning organisational capital absorption, eroding real economic ROIC below the GAAP headline and potentially signalling empire-building rather than disciplined capital allocation.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor CEO capital-allocation discipline over the next 2-3 annual reports: acquisition multiples paid, post-acquisition organic growth rates, and any shift toward revenue-at-any-cost behaviour. The non-founder CEO with undisclosed equity stake (F5 CEO alignment: no_alignment) is the primary thesis-break condition if Outsiders traits invert.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor whether the -36.9% 12-1 momentum reflects a structural deterioration in acquired-vertical unit economics or a market-wide de-rating of roll-up multiples. If two to three subsequent annual periods show declining FCF margin alongside continued negative momentum, the thesis warrants formal reconsideration.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Monitor whether F3 and F7 become feasible as annual history extends past the 5-year threshold (expected circa 2026-2027). If the Innovation Compounder and Smart Beta Timing frameworks render unfavourable verdicts once feasible, the current partial F5 score may be the ceiling rather than a floor.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Monitor EDGAR registration and insider Form 4 filings. The current inability to resolve TOITF on EDGAR and the absence of any insider transaction records means fraud and insider-selling signals are entirely dark. This is a transparency gap, not a confirmed risk, but it elevates monitoring priority for any governance red flags in alternative disclosure channels.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": [
+        "EDGAR could not resolve 'TOITF' — the CIK is unpopulated and no SEC filing data was ingested. All GAAP figures are sourced from non-EDGAR inputs; any XBRL-derived signals (e.g. ICA restatement) rely on an alternative SEC companyfacts path and cannot be cross-validated against EDGAR directly.",
+        "Short percentage of float is unavailable from the yfinance free tier — F4 short-interest signals are partially withheld and the Decline signal (False) rests on incomplete data.",
+        "No Form 4 insider transactions were found on EDGAR for TOITF — insider buying/selling behaviour is entirely unobservable, and CEO equity percentage is not disclosed.",
+        "F4 EPS acceleration and surprise-streak signals are absent because zero reported earnings rows were ingested — the stealth-accumulation framework score of 1.5 rests on a very narrow signal base.",
+        "F5 Debt/EBITDA is not computed (no EBITDA figure persisted), and buyback yield is absent (no market cap or share repurchases data). The F5 moderate band verdict and score of 6.0 therefore reflect only the revenue CAGR, FCF margin, ROIC, and CEO alignment signals.",
+        "F2 PEAD signal is absent due to zero reported earnings rows — post-earnings announcement drift cannot be assessed, leaving momentum scoring reliant solely on price-based signals."
+      ]
+    }
+  },
+  "input_tokens": 11662,
+  "output_tokens": 2560,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 55964,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

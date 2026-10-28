@@ -1,0 +1,192 @@
+{
+  "case_id": "ATGL",
+  "view_sha256": "34a6fb0a36935b8316a0a6cb6e4054ff23cb490c0db938a7405c00876c4f0d8a",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ATGL",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:37:38.558402Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11169,
+    "completion_tokens": 2143,
+    "cost_usd": 0.065652,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "ATGL is a pre-profitability micro-cap at an exclude composite verdict, with all seven analytical frameworks unfeasible due to insufficient history — the scorecard provides no quantitative basis for a thesis at this stage.",
+      "bull": [
+        {
+          "headline": "ICA restatement reveals intangible capitalisation lifts ROIC above raw GAAP level",
+          "detail": "The Peters-Taylor overlay (ICA-5) shows that capitalising R&D and a portion of SG&A closes part of the gap between economic and book efficiency. The upward direction of the adjustment indicates the business is investing in knowledge and organisational capital that GAAP expenses immediately. For a company this early in its lifecycle, the existence of capitalisable intangible spend is a necessary (though not sufficient) precondition for eventual ROIC improvement if the spending proves productive.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "48.37pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay flags extreme-winner candidate classification; merits monitoring once data history matures",
+          "detail": "The Bessembinder Extreme Winners overlay returned EXTREME_WINNER_CANDIDATE. Given Bessembinder's finding that a tiny fraction of listed equities account for the majority of aggregate market wealth creation, this flag warrants retention in a watchlist. However, the flag is purely structural at this stage — no framework scored it — and cannot be acted upon until sufficient operating history exists to validate the underlying business quality that would justify extreme-winner positioning.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "All seven frameworks unfeasible; scorecard is analytically blind — no quantitative thesis is supportable",
+          "detail": "F1 through F6 are blocked by insufficient quarterly history (one quarter available vs. four to eight required). F7 is blocked by insufficient annual history and a three-year listing age. With zero feasible frameworks, the composite score of 0.5 carries no informational content — it is a default placeholder, not a signal. The exclude verdict is the only defensible output given this data vacuum.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.5",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Company is loss-making with a net loss that substantially exceeds its annual revenue",
+          "detail": "Latest fiscal year net income is deeply negative while revenue remains at a very early-stage level. The ratio of losses to revenue signals that the business is far from operating leverage inflection. For a pre-profitability stage company, the path to self-funding is not yet visible in the available data, and the absence of market cap data prevents any valuation-based assessment of whether the market is pricing in a credible recovery trajectory.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-9049044.0",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "950541.0",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC deeply negative; Peters-Taylor adjustment narrows but does not cure the deficit",
+          "detail": "GAAP ROIC stands at approximately -174%, and even after Peters-Taylor intangible capitalisation the adjusted figure remains approximately -126%. The 48pp ICA adjustment is informative about the direction of intangible investment but does not move the business into economically productive territory. Both legs of the ROIC calculation are deeply negative, and no multi-year trend is available to assess trajectory.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-1.7417",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "-1.258",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "CEO equity stake undisclosed; capital allocator quality cannot be assessed",
+          "detail": "CEO equity ownership is flagged as not_disclosed. This eliminates one of the most reliable signals of long-term alignment — skin in the game. Without a quantified ownership stake, the Outsiders eight-trait framework cannot score the CEO on the most important dimension (ownership economics), and the incentive-structure lens produces only uncertainty. The CEO is not the founder, compounding this gap.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "No insider transaction data and no earnings dates available; monitoring infrastructure is impaired",
+          "detail": "EDGAR Form 4 filings returned no insider transactions, and earnings date data is absent. Both are early-warning monitoring inputs. Without Form 4 flow, any change in management conviction cannot be observed. Without earnings dates, systematic monitoring of operating progress is manual. These are not thesis-break signals in isolation, but they reduce the quality of ongoing surveillance for a pre-profitability name requiring active monitoring.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether revenue scale trajectory over the next 2-3 annual filings is sufficient to achieve operating leverage before cash reserves are exhausted. A prolonged loss burn at current revenue levels without capital raises or revenue inflection would constitute a thesis-break condition for any future position.",
+          "severity": "high",
+          "grounded_in": "stage.stage"
+        },
+        {
+          "factor": "Monitor whether the Peters-Taylor intangible capital investment (the 48pp ICA adjustment) is translating into measurable revenue or gross margin expansion over successive annual filings. If R&D and SG&A spend continues at scale without revenue lift, the intangible capitalisation argument collapses and GAAP ROIC becomes the correct signal.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor whether CEO equity stake is disclosed in future DEF 14A filings. Persistent non-disclosure of ownership for a Nasdaq-listed company is an anomaly worth tracking; it removes a key capital-allocator quality signal indefinitely.",
+          "severity": "medium",
+          "grounded_in": "company.ceo_equity_pct_state"
+        },
+        {
+          "factor": "Monitor whether Form 4 insider transaction data becomes available on EDGAR over the next 12-24 months. Absence of any insider filing activity for a three-year-old listed company is structurally unusual and warrants periodic EDGAR verification.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "PSA-3 flags the recent IPO (36 months since listing) with listing type unconfirmed. Monitor whether any spinoff or demerger provenance becomes clear in future filings, as this could materially alter the operating history interpretation and unlock F7 analysis earlier than the standard 10-year threshold.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "BEW extreme-winner classification is a structural flag requiring validation against future framework scores. Monitor whether F1-F6 feasibility unlocks over the next 1-2 years as quarterly history accumulates, and whether resulting scores justify the BEW classification. A BEW flag unsupported by framework scores at maturity should be downgraded.",
+          "severity": "medium",
+          "grounded_in": "overlay_verdicts.BEW"
+        }
+      ],
+      "data_caveats": [
+        "ATGL: yfinance earnings_dates is empty — no forward or historical earnings date data is available; systematic earnings-cycle monitoring is not possible from this data source.",
+        "ATGL: no Form 4 insider transactions found on EDGAR — insider buying/selling signals are entirely absent; management conviction cannot be tracked via transaction flow.",
+        "All seven frameworks (F1-F7) returned unfeasible verdicts due to insufficient operating history — F1/F2/F4/F5 require four quarters of data and have one; F3/F6 require eight quarters and have one; F7 requires ten years of annual history and has five, with only three years since listing. No framework scores were computed."
+      ]
+    }
+  },
+  "input_tokens": 11169,
+  "output_tokens": 2143,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 45852,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

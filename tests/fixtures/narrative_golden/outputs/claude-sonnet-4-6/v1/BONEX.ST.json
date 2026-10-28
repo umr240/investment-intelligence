@@ -1,0 +1,212 @@
+{
+  "case_id": "BONEX.ST",
+  "view_sha256": "669a2ea585fed86edc4a97c6419d509827fefbba7530ba791763dd818c361e0b",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BONEX.ST",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:42:13.912095Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 10942,
+    "completion_tokens": 2150,
+    "cost_usd": 0.065076,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Bonesupport is a profitable, debt-free MedTech compounder with exceptional ROIC and revenue momentum, but thin framework coverage and CEO misalignment cap conviction at monitor status.",
+      "bull": [
+        {
+          "headline": "Exceptional ROIC signals durable structural advantage in a niche MedTech segment",
+          "detail": "ROIC of +46.4% is a high-threshold signal of genuine economic moat — very few MedTech businesses sustain returns at this level. Combined with a clean balance sheet (Debt/EBITDA of 0.0), the company retains full capital-allocation optionality without leverage risk diluting future compounding. This is the profile of a business with pricing power and low marginal cost of incremental revenue.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+46.4%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Three-year revenue CAGR of +52.9% demonstrates genuine commercial scaling, not mean-reversion noise",
+          "detail": "A revenue CAGR at this magnitude, sustained over three years, moves beyond one-off cycle effects and into a structural growth pattern. FCF margin of +18.7% confirms the growth is cash-generative, not an accounting artefact — the company is converting incremental revenue into free cash at a healthy rate, reducing the risk that growth is being bought at the cost of unit economics.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+52.9%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+18.7%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum framework scores strong_fit with PEAD positive drift signal at 52-week high",
+          "detail": "F2 scores in the strong band. The stock sits at its 52-week high and exhibits post-earnings announcement drift in the positive direction, a well-documented anomaly associated with institutional underreaction to earnings. This is a consistency signal with the fundamental growth picture, not a contrarian setup — price and fundamentals are aligned.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+0.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "CEO alignment flagged as no_alignment — skin-in-the-game signal absent",
+          "detail": "F5 explicitly records 'no_alignment' on CEO alignment, and CEO equity percentage is not disclosed in available data. Capital allocators without meaningful personal equity exposure face structurally different incentive landscapes than owner-operators. For a business compounding at high ROIC, this raises the question of whether the current allocation discipline reflects institutional design or an individual's judgment — and whether it persists through management transitions.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Composite verdict is monitor, not actionable: only 2 of 7 frameworks are feasible",
+          "detail": "The composite score of 6.72 rests on only F2 and F5 — five frameworks are unfeasible due to data gaps (insufficient quarterly history, no insider transactions, no short-interest data, insufficient annual history). A two-framework composite is structurally less reliable than a full seven-framework read. The lollapalooza of converging signals that would justify high conviction is simply not assessable with current data.",
+          "framework_codes": [
+            "F2",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.72",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "12-month momentum is negative at -8.9% despite PEAD drift — divergence warrants monitoring",
+          "detail": "The 12-1 momentum signal reads -8.9%, a notable divergence from the positive PEAD drift and 52-week-high positioning. Negative trailing momentum in a business with strong fundamentals can indicate either a correction opportunity or early-stage deterioration in market expectations. The signal is ambiguous without the short-interest and institutional holder data that F4 would provide.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-8.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "FY2025 data is triage-grade only — fundamental signals cannot be treated as thesis-grade",
+          "detail": "The most recent fiscal year financials (FY2025, including latest revenue and net income) are sourced from Tier-3 (yfinance), beyond ESEF index coverage. The pipeline explicitly flags these as triage-grade, not thesis-grade. The headline growth and profitability numbers carry meaningful data-quality uncertainty. ROIC and FCF margin derived from these inputs inherit that uncertainty.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether CEO alignment improves: watch for disclosed equity ownership, insider purchase announcements, or compensation restructuring toward long-duration equity in DEF 14A equivalent filings. Persistent no_alignment through 2-3 more annual filings is a capital-allocator quality flag worth escalating.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor whether ROIC sustains at current levels across 2-3 more annual filings. Reversion from elevated ROIC toward industry mean is the dominant failure mode for high-ROIC compounders; a single-year read is insufficient for trend confirmation.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 overlay fired: F7 is unfeasible due to insufficient annual history (6 years vs. 10 required) despite 9 years since listing. The long-cycle earnings power of this business cannot be evaluated against a full market cycle. Watch for F7 eligibility as annual history accumulates.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Monitor whether FCF margin holds as the business scales. High-growth MedTech businesses frequently see margin compression as sales-force scaling, R&D investment, and regulatory costs absorb incremental revenue. Sustained FCF margin contraction over multiple periods would challenge the compounding thesis.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Negative 12-1 momentum (-8.9%) is a watch signal: if it persists or deepens while PEAD drift fades in subsequent earnings cycles, the momentum framework's strong_fit verdict would degrade. Re-score F2 after next earnings event.",
+          "severity": "low",
+          "grounded_in": "F2"
+        }
+      ],
+      "data_caveats": [
+        "FY2025 financials (latest revenue, net income, and derived metrics including ROIC and FCF margin) are sourced from yfinance (Tier-3) because the ESEF index for Swedish issuers has not yet indexed FY2025 filings. These figures are triage-grade, not thesis-grade.",
+        "Five quarterly periods are available from yfinance (Tier-3 supplemental); the ESEF regime has no quarterly filing requirement. Annual rows are filing-grade; quarterly rows carry higher uncertainty.",
+        "Short interest data is unavailable (yfinance shortPercentOfFloat not populated), rendering F4 (Stealth Accumulation) unfeasible.",
+        "Institutional holder data is unavailable from yfinance, removing a secondary signal on accumulation behaviour.",
+        "Insider transaction data is structurally unavailable: Nasdaq Stockholm issuers do not file SEC Form 4, and no equivalent SE-regime insider transaction history is persisted. F1 (Pre-Discovery Alpha) is unfeasible as a result.",
+        "CEO equity percentage is not disclosed in available data; the no_alignment flag in F5 reflects this absence, not confirmed non-ownership."
+      ]
+    }
+  },
+  "input_tokens": 10942,
+  "output_tokens": 2150,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 47187,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

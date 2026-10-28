@@ -1,0 +1,161 @@
+{
+  "case_id": "PHOE",
+  "view_sha256": "50bbbf667506834312554ec6e2322d734e3f0c6684f951f7192a37962483f2bb",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PHOE",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:19:16.370075Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8915,
+    "completion_tokens": 487,
+    "cost_usd": 0.001553,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[0].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F2' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F4' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F6' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point",
+      "bear[2].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "Phoenix Asia Holdings Limited (PHOE) is currently excluded from consideration due to insufficient data and recent IPO status.",
+      "bull": [
+        {
+          "headline": "Potential for Future Growth",
+          "detail": "Despite current limitations, PHOE operates in the construction sector, which may present growth opportunities as market conditions improve. The company's recent IPO could position it for future capital influx and operational scaling.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Moderate Winner Candidate Status",
+          "detail": "PHOE has been identified as a moderate winner candidate under the Bessembinder Extreme Winners framework, indicating potential for significant long-term performance despite current challenges.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Insufficient Historical Data",
+          "detail": "PHOE's recent IPO status limits the availability of historical financial data, rendering all frameworks unfeasible for analysis. This lack of data hinders the ability to assess the company's performance and potential accurately.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Negative Net Income",
+          "detail": "The company reported a negative net income of -$1,200,960 for the latest fiscal year, indicating ongoing financial challenges that need to be addressed for future profitability.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-1200960.0",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Economic Capital Efficiency Divergence",
+          "detail": "There is a significant divergence between economic capital efficiency and GAAP metrics, with a downward gap of 149.13 percentage points. This suggests potential issues in how the company is managing its intangible assets and overall capital efficiency.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "149.13",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor for continued negative net income over the next few fiscal years, as this could indicate deeper operational issues.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Watch for any signs of improving financial metrics that could validate the investment thesis, particularly as the company matures post-IPO.",
+          "severity": "medium",
+          "grounded_in": "company.ipo_date"
+        }
+      ],
+      "data_caveats": [
+        "PHOE: yfinance earnings_dates empty",
+        "PHOE: no Form 4 insider transactions found on EDGAR"
+      ]
+    }
+  },
+  "input_tokens": 7891,
+  "output_tokens": 487,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 7887,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

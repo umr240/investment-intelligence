@@ -24,6 +24,7 @@ from deepdive.scorecard_view import ScorecardView
 
 EST_OUTPUT_TOKENS = 3_800  # ADR-047 §2.4: measured output per narrative
 CHARS_PER_TOKEN = 4  # rough; the figure is shown as an estimate
+MAX_CONSECUTIVE_FAILURES = 3  # a billing or auth error fails every case; stop, rerun resumes
 
 
 # The model families each provider serves; a mismatch would fail every case after confirming.
@@ -36,6 +37,7 @@ _PROVIDER_MODELS = {
 def refusal(provider: NarrativeProvider, model: str) -> str | None:
     """Why a run cannot start, checked before any estimate or spend; None if it can."""
     from sqlalchemy import inspect
+    from sqlalchemy.exc import NoSuchTableError
 
     from config.settings import settings
     from data.db import get_session
@@ -48,7 +50,10 @@ def refusal(provider: NarrativeProvider, model: str) -> str | None:
         return f"no {provider.value.upper()}_API_KEY is set"
     # Without the column every llm_calls write fails: the spend would leave no record (§2.7 item 3).
     with get_session() as session:
-        columns = {c["name"] for c in inspect(session.get_bind()).get_columns("llm_calls")}
+        try:
+            columns = {c["name"] for c in inspect(session.get_bind()).get_columns("llm_calls")}
+        except NoSuchTableError:
+            return "the database has no llm_calls table: check DATABASE_URL"
     if "purpose" not in columns:
         return "llm_calls has no purpose column: run `alembic upgrade head` (migration 0009) first"
     return None

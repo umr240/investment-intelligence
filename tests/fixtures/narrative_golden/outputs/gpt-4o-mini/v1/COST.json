@@ -1,0 +1,162 @@
+{
+  "case_id": "COST",
+  "view_sha256": "499d0f0d9f7fffe49a75f79f7a3d853412385d8a270b036f65f7d605cabd10bc",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "COST",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:53.593663Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9339,
+    "completion_tokens": 528,
+    "cost_usd": 0.001641,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[0]: field_path 'overlay_triggers.0.gap_pp' does not exist in view"
+    ],
+    "body": {
+      "one_liner": "Costco Wholesale Corporation is on the watchlist due to mixed signals across key frameworks.",
+      "bull": [
+        {
+          "headline": "Strong revenue growth and ROIC metrics.",
+          "detail": "Costco demonstrates a robust revenue CAGR of +7.8% and an impressive ROIC of +45.1%, indicating strong operational efficiency and growth potential. These metrics suggest a solid foundation for long-term value creation, despite some mixed signals in other areas.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+7.8%",
+              "field_path": "frameworks.4.key_signals.0"
+            },
+            {
+              "value": "+45.1%",
+              "field_path": "frameworks.4.key_signals.2"
+            }
+          ]
+        },
+        {
+          "headline": "Positive momentum signals.",
+          "detail": "The momentum framework shows a recent 12-1 momentum of +1.0% and a slight increase of +4.3% from the 52-week high, indicating a potential upward trend in investor sentiment and stock performance.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+1.0%",
+              "field_path": "frameworks.1.key_signals.0"
+            },
+            {
+              "value": "+4.3%",
+              "field_path": "frameworks.1.key_signals.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak innovation signals.",
+          "detail": "Costco's innovation framework scores poorly with a score of 1.0, indicating challenges in maintaining a competitive edge through innovation. The average GM expansion is negative, suggesting potential issues in cost management or pricing power.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.2 bps/yr",
+              "field_path": "frameworks.2.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Concerns over capital efficiency divergence.",
+          "detail": "The ICA overlay indicates a significant divergence between economic and GAAP ROIC, with a gap of 17.88 percentage points. This suggests that Costco's economic capital efficiency is materially lower than reported, raising concerns about the sustainability of its returns.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "17.88pp",
+              "field_path": "overlay_triggers.0.gap_pp"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for further deterioration in innovation metrics, as a sustained low score could indicate long-term competitive challenges.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "COST: ceo_equity_pct parser_uncertain — see logs"
+      ]
+    }
+  },
+  "input_tokens": 8315,
+  "output_tokens": 528,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 5329,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

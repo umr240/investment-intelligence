@@ -1,0 +1,330 @@
+{
+  "case_id": "SNOW",
+  "view_sha256": "07e7d4551f9cceb372dbcb4f8a28f01093711957ddb895fd61e5a9a29d242887",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SNOW",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:11:33.522301Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12135,
+    "completion_tokens": 4021,
+    "cost_usd": 0.09672,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[1].numeric_claims[1]: claim value '53.08' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "formatting: bear.1.headline trimmed from 146 to 140 chars"
+    ],
+    "body": {
+      "one_liner": "Snowflake is a pre-profitability cloud-data platform with best-in-class innovation and retention signals but structurally negative GAAP ROIC that Peters-Taylor restatement materially softens, warranting watchlist status until capital-efficiency trajectory confirms the innovation-compounder thesis over a 5-year minimum hold.",
+      "bull": [
+        {
+          "headline": "Innovation Compounder score is the highest feasible framework reading, anchored by R&D intensity and a 7-quarter surprise streak",
+          "detail": "F3 scores the portfolio's maximum feasible band at strong_fit. Gross-margin expansion of 162.9 bps per year, R&D intensity of 42.0% in the near-sweet band, and a defensible patent portfolio of 1,050 patents together form a durable intangible-capital stack. The 7-consecutive-quarter positive-surprise streak is a signal of systematic under-promise / over-deliver discipline, not one-off variance.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "162.9 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+42.0%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            },
+            {
+              "value": "1,050",
+              "field_path": "frameworks.2.key_signals.4.1"
+            },
+            {
+              "value": "9.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        },
+        {
+          "headline": "Net Revenue Retention of 126% is best-in-class and is the single clearest moat-direction signal in the scorecard",
+          "detail": "F6 records NRR at 126%, rated best_in_class. At this level, existing cohorts expand faster than churn erases them — the revenue base compounds without requiring net-new customer acquisition to sustain growth. Paired with a Rule of 40 score of 53.08 and a diversified customer base, this is the closest observable proxy to a widening switching-cost / data-gravity moat. The moat direction here is widening, not flat.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "126.0%",
+              "field_path": "frameworks.5.key_signals.1.1"
+            },
+            {
+              "value": "53.08",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor restatement closes most of the GAAP ROIC gap, reclassifying intangible spend as economically real capital investment",
+          "detail": "ICA-5 flags a 63.93 percentage-point upward divergence between Peters-Taylor non-GAAP ROIC and GAAP ROIC. The adjusted ROIC is 2.21% vs GAAP's deeply negative reading, using only 10-K XBRL data with no SBC or restructuring add-backs (ADR-021 §4.1). For a company spending 42% of revenue on R&D, GAAP mechanically expensed the largest economic asset. The restatement doesn't make ROIC great; it makes the trajectory legible.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "63.93pp",
+              "field_path": "overlay_triggers.2.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "2.21%",
+              "field_path": "overlay_triggers.2.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-167.2%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue CAGR of 31.4% with a 22.0% FCF margin demonstrates growth quality that separates Snowflake from unprofitable-growth peers",
+          "detail": "F5 records a 3-year revenue CAGR of 31.4% alongside a positive FCF margin of 22.0% — an unusual combination at this growth rate. It shows the platform can self-fund operations even while absorbing elevated R&D. Zero financial leverage (Debt/EBITDA of 0.0) means the FCF generation compounds equity without servicing risk. The composite pre-profitability stage classification reflects GAAP net income, not cash economics.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+31.4%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+22.0%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum is strong across both trend and PEAD signals, consistent with a moderate Bessembinder extreme-winner candidate profile",
+          "detail": "F2 scores strong_fit at 7.0/10. The 12-1 momentum reading is +24.1%, the stock sits +11.8% from its 52-week high, and the PEAD signal is positive_drift — indicating the market continues to revise estimates upward after earnings. The BEW overlay returns moderate_winner_candidate. Bessembinder's evidence suggests extreme winners require sized positions and extended holds; trimming on price strength would be structurally wealth-destroying at the portfolio level.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+24.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+11.8%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "GAAP ROIC of -167.2% signals that at reported capital intensity, the business has not yet demonstrated economic value creation",
+          "detail": "F5 records GAAP ROIC at -167.2%. Even after Peters-Taylor restatement the adjusted figure is only 2.21% — barely above zero. The ICA-1 trigger fires because R&D intensity of 42.0% far exceeds the 10% threshold, meaning the GAAP measure is distorted, but the adjusted figure still does not confirm robust capital efficiency. The thesis requires ROIC improvement as the growth rate moderates; that improvement is not yet confirmed in the data.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-167.2%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "+42.0%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment is flagged as no_alignment; non-founder CEO with 0.5% equity and parser-uncertain ownership state adds capital-allocator…",
+          "detail": "F5 records CEO alignment as no_alignment. Sridhar Ramaswamy is not the founder. The reported equity stake of 0.5% carries a parser_uncertain state flag, meaning the actual figure may differ. Against the Outsiders 8-trait lens, a hired CEO without demonstrated owner-level skin-in-the-game is structurally more likely to optimise for revenue-growth optics than for per-share intrinsic value. This is a monitoring condition for years 1–5, not a thesis-break in isolation.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Piotroski score of 5/9 and zero open-market insider buyers leave the F1 signal in moderate territory with no insider-demand confirmation",
+          "detail": "F1 scores 5.33/10 with a Piotroski reading of 5/9 — mid-range, not distressed, but not signalling financial-statement improvement momentum. Critically, 90-day open-market insider buyers are zero. For a pre-profitability platform at this scale, zero insider buying means insiders are not personally backstopping the thesis with capital at current prices. GP/A strong is False, consistent with a business whose cost structure has not yet scaled to produce accounting-level asset efficiency.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            },
+            {
+              "value": "5.33",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        },
+        {
+          "headline": "GRR not disclosed; F6 Platform Dominator scores only partial despite best-in-class NRR, leaving gross churn unobservable",
+          "detail": "F6 scores 5.0/10 — partial — in part because Gross Revenue Retention is not_disclosed. NRR of 126% is an expansion-net metric; without GRR, the underlying gross churn rate is unobservable. A platform with high expansion from a small cohort but rising gross churn in older cohorts could produce an NRR figure that looks strong while the foundation erodes. The Fahlenbrach signal is False, adding further moderate caution on institutional-governance alignment.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "126.0%",
+              "field_path": "frameworks.5.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Cloud hyperscaler competition (Lunch-Eating Test) is the primary structural threat to Snowflake's data-platform moat over the 5-year hold",
+          "detail": "Snowflake's core workload — multi-cloud data warehousing and analytics — sits inside the highest-revenue-per-engineer-hour categories for AWS (Redshift/Athena), Google (BigQuery), and Azure (Synapse). These are not passive incumbents; each has rationally committed to defending cloud data with bundling, pricing, and native integration advantages that a $1B-funded challenger could not replicate but that a Mag-7-scale incumbent already has. The composite score of 6.81 / watchlist verdict reflects this structural overhang.",
+          "framework_codes": [
+            "F3",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.81",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor adjusted ROIC (currently 2.21%) moves toward a sustainable positive trajectory over 2–3 more annual filings. If it fails to improve as revenue growth decelerates, the intangible-capital restatement thesis loses its forward-looking support and the F5 partial verdict may harden into a structural failure.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor CEO capital-allocation decisions across M&A, share issuance, and SBC intensity. The no_alignment signal in F5 and non-founder status require watching whether management behaviour over years 1–3 exhibits Outsiders-style per-share value discipline or revenue-optics empire-building. A structural shift toward the latter would be a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor NRR trajectory across annual filings. A sustained decline from the current 126.0% best-in-class level — particularly if GRR remains undisclosed — would signal cohort-level churn acceleration that the headline NRR figure would mask until the trend is well-established. Crossing below 110% over 2+ consecutive years would be a moat-narrowing signal.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor hyperscaler bundling moves (AWS, Google, Azure) that embed data-warehousing natively into cloud commitments at discounted or zero marginal cost. If multi-cloud data gravity shifts to native offerings, Snowflake's switching-cost moat narrows structurally. Watch for NRR compression coinciding with any major hyperscaler pricing announcement.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "F4 options put/call ratio is missing due to no free-tier source (per PROJECT_SPEC §F4). Without this signal, the stealth-accumulation picture is incomplete. Monitor whether future filings or accessible sources reveal options-market sentiment divergence from the positive PEAD and momentum signals in F2.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Monitor gross margin expansion rate. The current 162.9 bps/yr average is the primary evidence that scale leverage is accruing. If expansion stalls or reverses over 2 consecutive years — particularly as compute costs associated with AI workloads intensify — the F3 Innovation Compounder score would need to be revisited.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "PSA-3 flags the recent-listing context: with fewer than the full 10-year history required for F7, the Smart Beta Timing framework is unfeasible. This means the scorecard lacks a long-cycle valuation anchor. Monitor as the listed history extends; the composite weights will shift when F7 becomes feasible.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Asset growth is in the bottom decile per F1, which could reflect aggressive intangible expensing rather than asset-base deterioration. Watch whether bottom-decile asset growth persists as the ICA overlay would predict for an R&D-heavy intangible compounder, or instead signals capital consumption without proportionate asset build.",
+          "severity": "low",
+          "grounded_in": "F1"
+        }
+      ],
+      "data_caveats": [
+        "F4 Stealth Accumulation: options put/call ratio is unavailable — no free-tier source exists per PROJECT_SPEC §F4 (Pan-Poteshman 2006). Short interest current and peak figures are withheld as third-party data. The F4 score of 6.0 is therefore based on the available subset of signals only.",
+        "F6 Platform Dominator: Gross Revenue Retention (GRR) is not disclosed in the 10-K MD&A. The framework notes this is treated as not_disclosed and assigned zero points on that signal, consistent with the F6 customer_concentration semantics. The F6 score should be interpreted as a lower bound.",
+        "ICA-4 trigger: the P/B ratio is null in the scorecard (market_cap_usd is also null). The ICA-4 condition referencing P/B > 4.0 therefore cannot be fully evaluated; the trigger fired on the R&D intensity and GP/A components alone.",
+        "PSA-3 overlay: listing_type and months_since_listing are unpopulated. The spinoff/demerger PSA workflow was evaluated and returned not_a_spinoff_candidate; the overlay fired solely on F7 unfeasibility due to insufficient annual history (9 years available, 10 required).",
+        "CEO equity stake of 0.5% carries a parser_uncertain state flag; the true ownership figure may differ from what is reported in this scorecard.",
+        "IPO date carries a parser_uncertain state flag. Market cap and beta are null, limiting several ratio-dependent checks across frameworks."
+      ]
+    }
+  },
+  "input_tokens": 12135,
+  "output_tokens": 4021,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 85535,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

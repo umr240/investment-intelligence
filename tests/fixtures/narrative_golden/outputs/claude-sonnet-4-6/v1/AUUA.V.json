@@ -1,0 +1,230 @@
+{
+  "case_id": "AUUA.V",
+  "view_sha256": "56372085c152b5e6eb22c2471bfca5d1173bd1269930c5601bb3f607a7484c9d",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AUUA.V",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:38:30.885983Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 10801,
+    "completion_tokens": 2484,
+    "cost_usd": 0.069663,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].detail: number '10' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Aluula Composites is a pre-profitability micro-cap textile innovator with a strong revenue growth trajectory but negative FCF and ROIC, a thin feasible-framework base, and material data gaps that make conviction-building premature at this stage.",
+      "bull": [
+        {
+          "headline": "Revenue CAGR of +42.1% signals genuine product-market traction in a niche composites segment",
+          "detail": "F5 records a 3-year revenue CAGR of +42.1%, a rate that — if sustained — suggests Aluula's ultra-light laminate materials are being adopted at an accelerating pace. At the pre-profitability stage, the critical question is whether growth is being pulled by repeat customers (switching-cost durability) or pushed by promotional spend. The CAGR itself cannot answer that, but it establishes that the top-line engine is running.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+42.1%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Zero financial leverage preserves optionality through the path to profitability",
+          "detail": "F5 records Debt/EBITDA of 0.0, meaning the company is not amplifying its operating losses with interest obligations. For a pre-profitability business with negative FCF, a clean balance sheet is not a trivial data point — it extends the runway before dilutive equity raises become necessary and preserves strategic flexibility. This is the one structural financial attribute working clearly in the bull direction.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive 12-month price momentum and proximity above the 52-week high suggest market awareness is building",
+          "detail": "F2 records 12-1 momentum of +23.2% and a position +24.7% above the 52-week high — the stock is making new highs, not recovering from a trough. For a micro-cap on a junior exchange with no analyst coverage, sustained price appreciation above the prior high is often an early signal that informed buyers are accumulating ahead of broader discovery. The weak F2 score (3/10) reflects the absence of PEAD data, not a contradiction of the momentum signal itself.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+23.2%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+24.7%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative FCF margin and negative ROIC mean the business is destroying capital at current scale",
+          "detail": "F5 records FCF margin of -18.4% and ROIC of -10.9%. A company compounding revenue at +42% while burning free cash flow at -18.4% margin is in a race: can it reach unit-economic breakeven before requiring dilutive capital? The negative ROIC means invested capital is not yet earning its cost — the business is pre-profitability in a structurally meaningful sense, not merely in a near-term timing sense. The composite verdict of 'monitor' reflects this tension precisely.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-18.4%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "-10.9%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Only 2 of 7 frameworks are feasible; the composite rests on a narrow evidential base",
+          "detail": "Five of seven frameworks are unfeasible at this stage: F1 (no analyst coverage), F3 and F6 (insufficient quarterly history — only 6 quarters vs. 8 required), F4 (no short-interest history), and F7 (only 5 annual years vs. 10 required; listed 3 years). The composite score of 3.25 is renormalised across only F2 and F5, both of which score 3/10 (fail band). This is the epistemically honest problem: not enough data exists yet to evaluate most dimensions of business quality.",
+          "framework_codes": [
+            "F2",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.25",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.4.score"
+            }
+          ]
+        },
+        {
+          "headline": "CEO is not the founder and equity alignment is undisclosed — capital-allocator quality is opaque",
+          "detail": "F5 records CEO alignment as 'no_alignment', and the view confirms CEO equity percentage state is 'not_disclosed'. Ms. Sage Berryman is not the founder. For a pre-profitability business where the path to value creation depends almost entirely on capital-allocation decisions over the next 3-5 years, the inability to assess management skin-in-the-game is a material blind spot, not a missing data field to ignore. The Outsiders 8 traits cannot be scored without this input.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Net loss of ~$1.6M on ~$7.9M revenue confirms the unit-economics gap is not cosmetic",
+          "detail": "Latest net income is -$1,610,691 against latest revenue of $7,873,221 — a loss margin that, combined with the -18.4% FCF margin, indicates the company is not yet close to operating leverage inflection. For a textile manufacturer selling into performance/composites markets, achieving profitability requires either volume-driven fixed-cost absorption or pricing power sufficient to expand gross margin. Neither can be confirmed from current data.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-$1,610,691",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$7,873,221",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether FCF margin and ROIC continue deteriorating or stabilise over the next 2-3 annual filings. If ROIC remains deeply negative as revenue scales, the thesis that growth is value-creating — not value-destroying — is broken. This is the primary thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor whether the company requires dilutive equity issuance before reaching FCF breakeven. Given negative FCF margin and no disclosed market cap, the size of any future raise relative to existing shareholders is unquantifiable but structurally real. A large dilutive raise at a distressed price would constitute a capital-allocator failure event.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 overlay is active: the company has only 42 months of listing history and 5 years of annual data. As quarterly and annual history accumulates, F3, F6, and F7 will become feasible and may substantially revise the composite verdict in either direction. Reassess when 8 quarters of data are available.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "CEO equity alignment is not disclosed. Monitor DEF 14A equivalents (SEDAR Management Information Circular) at each annual filing cycle. If equity ownership by the CEO remains undisclosed or is revealed to be negligible, the capital-allocator quality assumption embedded in the thesis should be marked as unverified.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Insider transaction data is unavailable for TSX Venture issuers under SEDAR jurisdiction. Monitor for SEDI filings (Canadian insider-reporting equivalent) as a substitute signal for whether insiders are accumulating or distributing. Sustained insider selling at current prices would be an early-warning signal.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "F2 momentum signal is positive but the PEAD component is absent (zero reported earnings rows). When the company begins reporting earnings events with sufficient history, the PEAD signal will either confirm or contradict the price momentum. A negative PEAD reading on first availability would weaken the F2 thesis.",
+          "severity": "low",
+          "grounded_in": "F2"
+        }
+      ],
+      "data_caveats": [
+        "Short interest data is unavailable for AUUA.V (yfinance shortPercentOfFloat not populated), rendering F4 (Stealth Accumulation) permanently unfeasible until an alternative data source is persisted.",
+        "Insider transaction data is unavailable — TSX Venture issuers file under SEDAR/SEDI (Canadian regime), not SEC Form 4. CEO equity percentage is not disclosed. Capital-allocator alignment cannot be assessed quantitatively.",
+        "F2 (Momentum): PEAD signal is absent because zero earnings rows have been reported. The framework score of 3/10 reflects this gap; the momentum sub-signals are present but the PEAD sub-signal contributes nothing.",
+        "F5 (Growth Quality): Buyback yield cannot be calculated — neither market cap nor share repurchases data is persisted, so this component of the F5 score is missing."
+      ]
+    }
+  },
+  "input_tokens": 10801,
+  "output_tokens": 2484,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 52309,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -4194,6 +4194,7 @@ def narrative_eval_run(
     from config.llm_prices import UnpricedModelError
     from deepdive.narrative import PROMPT_VERSION, NarrativeUnavailableError
     from deepdive.narrative_eval.runner import (
+        MAX_CONSECUTIVE_FAILURES,
         estimate_cost,
         output_path,
         refusal,
@@ -4211,9 +4212,6 @@ def narrative_eval_run(
     except ValueError:
         rprint("[red]--provider is anthropic or openai.[/red]")
         raise typer.Exit(2) from None
-    if why := refusal(chosen, model):
-        rprint(f"[red]Not starting: {why}.[/red]")
-        raise typer.Exit(2)
     cases = [
         c for c in select_cases(golden, split)
         if not output_path(golden, model, PROMPT_VERSION, c["case_id"]).exists()
@@ -4221,6 +4219,9 @@ def narrative_eval_run(
     if not cases:
         rprint(f"Nothing to run: every {split} case has an output for {model} v{PROMPT_VERSION}.")
         return
+    if why := refusal(chosen, model):
+        rprint(f"[red]Not starting: {why}.[/red]")
+        raise typer.Exit(2)
     try:
         estimate = estimate_cost(cases, model)
     except UnpricedModelError as exc:
@@ -4232,18 +4233,27 @@ def narrative_eval_run(
     )
     if not yes and not typer.confirm("Spend this?", default=False):
         raise typer.Exit(1)
-    failed = 0
+    written = failed = streak = 0
     for i, case in enumerate(cases, 1):
         try:
             write_output(golden, run_case(case, chosen, model))
+            written += 1
+            streak = 0
         except NarrativeUnavailableError as exc:
             failed += 1
+            streak += 1
             rprint(f"  [yellow]{case['case_id']}: {exc}[/yellow]")
         rprint(f"  {i}/{len(cases)} {case['case_id']}")
+        if streak == MAX_CONSECUTIVE_FAILURES and i < len(cases):
+            rprint(f"[red]Stopping: {streak} failures in a row. Rerun to resume.[/red]")
+            break
+    not_run = len(cases) - written - failed
     rprint(
-        f"{len(cases) - failed} written, {failed} failed. Grade them with "
+        f"{written} written, {failed} failed, {not_run} not run. Grade them with "
         "`invest narrative eval replay --record`; actual spend is in `invest llm stats`."
     )
+    if not_run:
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

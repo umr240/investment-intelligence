@@ -1,0 +1,174 @@
+{
+  "case_id": "SOLV",
+  "view_sha256": "2d2057ee36eeabc8f014674538d54cca2f5d4ba40e7a3d6a7486368822ef1213",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SOLV",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:20:00.820714Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9419,
+    "completion_tokens": 548,
+    "cost_usd": 0.001665,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].numeric_claims[0]: claim value '0' does not match view value '('90d open-market buyers', '0')' at 'frameworks.0.key_signals.2'",
+      "bull[1].detail: number '1.556' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Monitor Solventum Corporation's performance as it navigates a complex market landscape with mixed signals.",
+      "bull": [
+        {
+          "headline": "Strong Momentum Signal",
+          "detail": "The company exhibits a robust momentum score of 8.0, indicating a positive price drift of +27.3% over the last 12 months, suggesting favorable market sentiment and potential for continued upward movement.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+27.3%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Earnings Growth",
+          "detail": "Solventum's latest net income stands at $1.556 billion, reflecting its ability to generate substantial profits, which is a positive indicator for long-term sustainability and growth potential.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$1.556B",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Eroding Gross Margins",
+          "detail": "The company has reported an average gross margin contraction of -142.8 bps per year, indicating potential challenges in maintaining profitability as costs may be rising faster than revenues.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-142.8 bps/yr",
+              "field_path": "frameworks.2.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "CEO Alignment Concerns",
+          "detail": "Current analysis shows no alignment of the CEO's interests with shareholders, which could lead to decisions that do not prioritize long-term value creation for investors.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Lack of Market Engagement",
+          "detail": "The absence of open-market buyers (0) suggests a lack of investor confidence or interest, which may hinder stock performance and limit capital inflow.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any significant changes in CEO equity ownership or alignment with shareholder interests.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Keep an eye on gross margin trends; continued declines may indicate deeper operational issues.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the current analysis.",
+        "F4 signals are limited due to insufficient historical data for comprehensive analysis.",
+        "F5 buyback yield data is not available, impacting the assessment of capital allocation efficiency."
+      ]
+    }
+  },
+  "input_tokens": 8395,
+  "output_tokens": 548,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 5026,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

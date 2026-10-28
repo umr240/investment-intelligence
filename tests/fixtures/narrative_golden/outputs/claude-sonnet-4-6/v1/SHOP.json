@@ -1,0 +1,326 @@
+{
+  "case_id": "SHOP",
+  "view_sha256": "340223a67583d68182a635d5add93d2208f040f009a4969a834c88e916ad3cc4",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SHOP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:10:07.965365Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11861,
+    "completion_tokens": 3593,
+    "cost_usd": 0.089478,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[1].numeric_claims[0]: claim value '47.5' does not match view value 'True' at 'frameworks.5.key_signals.5.1'"
+    ],
+    "body": {
+      "one_liner": "Shopify is a high-quality compounder with a strong growth-and-profitability profile (composite 6.9/10), but intangible-capital restatement reveals meaningfully lower economic ROIC than GAAP suggests, and several framework signals remain only partial — warranting a watchlist stance with active monitoring of moat durability and capital efficiency.",
+      "bull": [
+        {
+          "headline": "Exceptional growth-quality fundamentals: high-teen FCF margin, 19% GAAP ROIC, zero leverage, founder-CEO",
+          "detail": "F5 scores 8.5/10 (strong_fit): revenue CAGR of +27.3% over 3 years, FCF margin of +17.7%, GAAP ROIC of +19.2%, and debt/EBITDA of 0.0 — a rare combination of growth, profitability, and balance-sheet integrity. Tobias Lutke's founder-aligned classification reinforces Outsiders-style capital stewardship: over 6% equity ownership creates durable skin-in-the-game incentives. This profile is the central pillar of the hold-forever case.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.5/10",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+27.3%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+17.7%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+19.2%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "6.175%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Rule of 40 at 47.5 confirms the growth-profitability trade-off is favourable at scale",
+          "detail": "F6 captures a Rule of 40 score of 47.5 — above the conventional threshold — alongside a GP/A band in the top 40th percentile proxy and a diversified customer base. The Fahlenbrach founder signal fires positive. These signals collectively indicate that Shopify's platform economics are not deteriorating as the business scales, a key durability condition for a platform compounder thesis.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "47.5",
+              "field_path": "frameworks.5.key_signals.5.1"
+            },
+            {
+              "value": "6.0/10",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        },
+        {
+          "headline": "Piotroski 7/9 and Sloan high-quality accruals signal financial statement integrity",
+          "detail": "F1 returns 6.17/10 with a Piotroski score of 7/9 and the Sloan accrual quality flag set to True — indicating that reported earnings are substantially backed by cash flows rather than accrual inflation. Asset growth is in the low-positive band, reducing the risk of empire-building dilution. These signals reduce the probability of accounting-quality deterioration that would undermine the long-term compounding thesis.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "6.17/10",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        },
+        {
+          "headline": "Moderate-winner BEW candidate: profile warrants a sized, extended hold position",
+          "detail": "The BEW overlay resolves to moderate_winner_candidate. Bessembinder's research establishes that extreme compounding in equity returns is concentrated in a small subset of stocks, and under-sizing or premature trimming of those positions is the dominant source of portfolio wealth destruction. A composite of 6.9/10 with an F5 strong_fit and a founder-CEO with substantial equity is the profile base rate for multi-year compounders — the hold-forever default is structurally supported.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.9",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "PEAD positive drift and proximity to 52-week high suggest market is not pricing in deterioration",
+          "detail": "F2 (Momentum, 6.0/10) shows a positive post-earnings announcement drift signal alongside a price sitting near the 52-week high (+3.0% from peak). The trailing 12-1 momentum reads at -12.9%, indicating near-term price softness that has not broken the longer-term uptrend. For a long-horizon holder, this pattern is consistent with re-accumulation rather than distribution — not an actionable signal but not a warning sign either.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.0/10",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-12.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+3.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Peters-Taylor economic ROIC of 9.6% is materially below GAAP ROIC of 15.2% — capital efficiency is overstated",
+          "detail": "The ICA-5 overlay fires on a 5.56pp gap between GAAP ROIC (15.19%) and Peters-Taylor-adjusted ROIC (9.63%), directionally downward. Once R&D and 25% of SG&A are capitalised as economically durable assets, the invested capital base expands substantially — compressing the true return on invested capital. For a business spending over 13% of revenue on R&D, this restatement is not cosmetic. The hold thesis must be grounded in the economic ROIC trajectory, not the GAAP figure.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.56pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "9.63%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "15.19%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "+13.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin has contracted an average of 91 bps/year — scale is not producing margin expansion",
+          "detail": "F3 (Innovation Compounder, 4.0/10) flags average gross margin expansion of -91.0 bps/year. This is contrary to the expectation for a platform business: scale should widen margins via operating leverage on fixed infrastructure. Sustained margin contraction at the gross level may reflect merchant solutions mix-shift toward lower-margin payments and logistics, or competitive pricing pressure on subscription tiers. This is the most important second-order signal to monitor across the next several annual filings.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.0/10",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "-91.0 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "NRR and GRR not publicly disclosed — retention quality of the merchant base is unobservable",
+          "detail": "F6 records NRR and GRR as not_disclosed. For a platform business, net and gross revenue retention are the single most important metrics for assessing whether the installed base is expanding or eroding. Their absence from 10-K MD&A means the compounding thesis rests on revenue CAGR and Rule of 40 without confirmation that cohort-level economics are sound. A challenger displacing existing merchants would show up in these metrics first — and they are currently blind.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "F4 partially blind: options flow absent, short data withheld — stealth accumulation signal is degraded",
+          "detail": "F4 scores 4.5/10 with no Form 4 insider transactions found on EDGAR, no open-market buyers in the 90-day window, and both short interest (current and peak) withheld due to third-party data restrictions. The options put/call ratio was skipped due to data availability. The decline signal does not fire and EPS acceleration is characterised as net_increase_with_dips, but the overall F4 read is structurally incomplete. Institutional behaviour and insider conviction signals cannot be assessed.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.5/10",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "F7 (Smart Beta Timing) unfeasible — only 7 annual periods available; cycle-calibrated valuation anchor absent",
+          "detail": "PSA-3 fires: F7 requires 10 annual periods; Shopify's public listing (May 2015) provides only 7. This means the cycle-aware valuation timing framework is entirely absent from the composite. The composite score of 6.9/10 is therefore weighted across F1–F6 only, with F5 carrying 37.5% of the weight. Absence of F7 removes the single framework most likely to flag overvaluation relative to historical trading ranges — a material blind spot given the growth premium embedded in the price.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.9",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "0.375",
+              "field_path": "composite.weights_used.F5"
+            },
+            {
+              "value": "137",
+              "field_path": "overlay_triggers.1.relevant_numbers.months_since_listing"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor economic ROIC (currently 9.6%) converges toward or diverges further from GAAP ROIC over 2–3 more annual filings. Sustained divergence above 3pp implies the business is deploying intangible capital at sub-optimal rates — a thesis-break condition if economic ROIC trends below cost of capital.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor gross margin trajectory across next 3 annual filings. If the -91 bps/year contraction trend continues without an offsetting mix-shift explanation (e.g. payments volume growing faster than subscription, with explicit margin disclosure), it signals structural pricing pressure or adverse mix that undermines platform compounding.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor whether Shopify begins disclosing NRR/GRR in 10-K MD&A. Persistent non-disclosure of retention metrics for a merchant platform prevents assessment of cohort-level economics and is a structural information gap in the moat validation process.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor the Rule of 40 score across annual filings as revenue growth moderates at scale. A sustained decline below the 40 threshold would signal that the growth-profitability trade-off is deteriorating, weakening the platform compounder thesis.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor for any reversion in founder-CEO alignment: dilutive share issuance patterns, SBC acceleration relative to revenue growth, or reduction in Lutke's economic ownership below current levels. Capital allocator drift is a Buffett/Thorndike thesis-break condition.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor whether Form 4 insider transaction data becomes available on EDGAR. Current absence of insider open-market purchases (0 buyers in the 90-day window) combined with no Form 4 activity leaves conviction signals from management unverifiable.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Monitor for F4 options put/call data becoming available. Current PSA-3 trigger reflects F7 data immaturity (137 months since listing, still short of the 10-year requirement). As the history window extends, F7 will become feasible and may materially alter the composite — watch for cycle-valuation signals when F7 activates.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        }
+      ],
+      "data_caveats": [
+        "No Form 4 insider transactions were found on EDGAR for SHOP; insider conviction and open-market purchase signals are unverifiable for this run.",
+        "F4 options put/call ratio was not computed — no free-tier data source was available per project specification; the F4 stealth-accumulation signal is structurally incomplete.",
+        "F5 buyback yield could not be computed — market cap and share repurchase data were not persisted; capital return signals via buyback are absent.",
+        "F6 NRR and GRR are recorded as not_disclosed — Shopify's 10-K MD&A does not report these retention metrics; cohort-level revenue quality is unobservable from public filings.",
+        "F7 (Smart Beta Timing) is unfeasible due to insufficient annual history (7 periods available; 10 required); the cycle-calibrated valuation timing signal is entirely absent from the composite for this run."
+      ]
+    }
+  },
+  "input_tokens": 11861,
+  "output_tokens": 3593,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 74767,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

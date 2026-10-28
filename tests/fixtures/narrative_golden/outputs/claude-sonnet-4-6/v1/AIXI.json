@@ -1,0 +1,209 @@
+{
+  "case_id": "AIXI",
+  "view_sha256": "672850263d49274204626a792ec9ffd0a76f917ec381c4c8c4a8d82e4e4df0a6",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AIXI",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:35:47.657945Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11386,
+    "completion_tokens": 2652,
+    "cost_usd": 0.073938,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "AIXI (Xiao-I Corporation) is a pre-profitability, data-scarce micro-cap software name where every quantitative framework is unfeasible, the composite scores at the floor, and the only actionable signals are structural red flags from intangible-capital restatement and a speculative Bessembinder partial trigger — the evidence base does not support a hold thesis at this time.",
+      "bull": [
+        {
+          "headline": "BEW-5 partial trigger: extreme R&D intensity flags a non-zero tail-outcome probability",
+          "detail": "BEW-5 fires on the combination of sub-$2B market cap and R&D intensity materially above the top-tercile threshold. The R&D intensity reading is among the highest possible, consistent with a company directing nearly all revenue back into knowledge creation. Bessembinder's empirical work establishes that the extreme right tail of wealth creation is disproportionately populated by exactly this profile — pre-profitability, high-intangible-investment firms. This is a partial trigger only (idiosyncratic vol not computed), so conviction is low, but the tail probability is non-zero.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "1.9839",
+              "field_path": "overlay_triggers.2.relevant_numbers.rd_intensity"
+            }
+          ]
+        },
+        {
+          "headline": "AI/NLP software sector provides a plausible TAM ceiling if the platform finds durable differentiation",
+          "detail": "Xiao-I operates in prepackaged software with an AI/NLP orientation. The sector-level TAM is structurally large. For a name this early-stage, the ceiling is not the binding constraint — the moat and capital allocator questions are. No quantitative moat signal is available, but the sector framing at least removes 'TAM too small' as an immediate disqualifier. This bull point is entirely qualitative and speculative; it is included only to represent the honest upside scenario that the BEW partial trigger implies.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "All seven quantitative frameworks unfeasible — composite scores at exclusion floor",
+          "detail": "F1 through F7 are all unfeasible due to insufficient quarterly and annual history (IPO March 2023, listed 43 months). With zero feasible frameworks, the composite score of 0.25 is a floor reading, not an analytical verdict. No signal on momentum, growth quality, innovation compounding, stealth accumulation, platform dominance, or valuation timing is computable. The exclusion verdict is structurally driven by absence of evidence, not presence of disconfirming evidence — but the effect on actionability is identical.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.25",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ROIC restatement reveals economic capital destruction far exceeding GAAP losses",
+          "detail": "ICA-5 fires on a downward intangible-capital adjustment of 45.53 percentage points: GAAP ROIC of -43.93% becomes a Peters-Taylor adjusted ROIC of -89.46% once R&D and SG&A are properly capitalised into the invested-capital base. The direction is downward — economic capital efficiency is materially worse than GAAP suggests. For a software company where intangible capital is the primary asset, this restatement is the more economically honest picture. Capital is being destroyed at a severe rate relative to the economic asset base.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "45.53pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-43.93%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "-89.46%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue base is minimal relative to net losses — cash burn is structurally unsustainable without external capital",
+          "detail": "Latest reported revenue is approximately $12.3M against a net loss of approximately $101.2M — a loss magnitude roughly eight times revenue. For a pre-profitability software firm, this ratio implies a survival dependency on continued external capital raises. Dilution risk to existing holders is therefore a structural feature of the thesis, not a tail risk. No market cap is available to size this against enterprise value.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$12,327,684",
+              "field_path": "company.latest_revenue"
+            },
+            {
+              "value": "-$101,221,046",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "CEO equity stake undisclosed; founder-CEO flag is false — capital allocator quality unverifiable",
+          "detail": "CEO Mingqu Lin is not the founder, and equity ownership percentage is not disclosed. No Form 4 insider transactions are available on EDGAR. The Thorndike Outsiders framework requires skin-in-the-game as a first-order screen; it cannot be passed here. A hired, non-founder manager with no observable equity stake and no disclosed comp structure in a capital-intensive, loss-making software company is the precise inversion of Outsiders traits. Capital allocator quality is entirely opaque.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "PSA-3 fires but confirms no spinoff structure — recent-IPO illiquidity and opacity persist",
+          "detail": "PSA-3 triggers because F7 is unfeasible due to recent listing (43 months since IPO, March 2023). The PSA workflow confirms this is not a spinoff or demerger candidate, removing that potential valuation catalyst. The name carries all the structural opacity of a recent small-cap Nasdaq listing: limited filing history, no earnings date cadence available, no short-interest data — making independent probabilistic assessment extremely difficult.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "43",
+              "field_path": "overlay_triggers.1.relevant_numbers.months_since_listing"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether capital raises (equity or debt) accelerate dilution over the next 2-3 annual filings. A net loss roughly eight times revenue implies near-term survival dependence on external financing. If dilution compounds without corresponding revenue scaling, the thesis break condition is met structurally, not merely financially.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Monitor whether Peters-Taylor adjusted ROIC narrows toward GAAP ROIC over 2-3 more annual filings. A sustained or widening 45pp+ divergence between economic and GAAP capital returns signals that intangible investments are not converting to durable assets — the software moat-building thesis fails if this gap does not compress.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor CEO equity ownership disclosure across future DEF 14A filings. Non-founder, undisclosed-stake leadership at a capital-intensive pre-profitability firm is the Outsiders inversion. If compensation structures are disclosed and reveal EPS/revenue-only incentives without equity alignment, the capital allocator thesis breaks.",
+          "severity": "high",
+          "grounded_in": "company.ceo_equity_pct_state"
+        },
+        {
+          "factor": "Monitor whether quantitative frameworks become feasible as quarterly history accumulates. All seven frameworks are currently unfeasible. Until at least F1, F2, F4, or F5 become computable (requires 4 quarters of filed data), no momentum, growth quality, or stealth-accumulation signal can be evaluated. Reconsidering thesis before frameworks are feasible is premature.",
+          "severity": "medium",
+          "grounded_in": "composite.score"
+        },
+        {
+          "factor": "Monitor R&D conversion efficiency as filing history grows. BEW-5 fires on R&D intensity alone — the highest-intensity reading possible. High R&D intensity is only a BEW signal if it converts into scalable product advantage; if it reflects cost structure without product leverage, it is simply cash burn with a favourable label.",
+          "severity": "medium",
+          "grounded_in": "BEW-5"
+        },
+        {
+          "factor": "Monitor revenue trajectory across next 3 annual filings for evidence of scaling. The current revenue base is minimal. A software platform that does not demonstrate compounding revenue growth as intangible capital matures has no compounding mechanism — the TAM ceiling is irrelevant if the base does not grow.",
+          "severity": "medium",
+          "grounded_in": "company.latest_revenue"
+        },
+        {
+          "factor": "Monitor for Form 4 insider transaction filings on EDGAR. Total absence of insider transaction data at this stage is informative — no observable alignment signal exists. Any future insider purchases would be a meaningful positive Bayesian update; further absence compounds the capital allocator concern.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": [
+        "Short interest as a percentage of float is unavailable (yfinance shortPercentOfFloat not returned); short-side sentiment and potential squeeze dynamics cannot be assessed.",
+        "Earnings dates cadence is empty (yfinance earnings_dates returned no data); forward reporting schedule and beat/miss history are unverifiable.",
+        "No Form 4 insider transactions were found on EDGAR; CEO and insider equity ownership and transaction history are entirely opaque, precluding any capital allocator alignment assessment.",
+        "Market capitalisation is null in the view; enterprise value, EV/EBITDA, P/B, and trailing P/E are all unavailable, making any valuation-based framework inoperable in addition to the history-based infeasibility already flagged.",
+        "Idiosyncratic volatility is not yet computed for the BEW-5 trigger (noted as partial); the Bessembinder extreme-winner signal is therefore incomplete and carries lower confidence than a full trigger would."
+      ]
+    }
+  },
+  "input_tokens": 11386,
+  "output_tokens": 2652,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 59370,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -152,7 +152,7 @@ def test_cli_spends_only_after_confirmation_and_resumes(stubbed: list[Any], tmp_
     assert [c[0] for c in stubbed] == ["AAA"]  # test split only, by default
     second = _cli(*args, "--yes")
     assert [c[0] for c in stubbed] == ["AAA", "BBB"]  # AAA already had an output
-    assert "1 written, 0 failed" in second.output
+    assert "1 written, 0 failed, 0 not run" in second.output
     assert "Nothing to run" in _cli(*args, "--yes").output
 
 
@@ -202,6 +202,9 @@ def test_refusal_names_what_would_waste_the_run(db: None, monkeypatch: pytest.Mo
     with get_session() as s:  # a DB still at 0008
         s.execute(text("ALTER TABLE llm_calls DROP COLUMN purpose"))
     assert "migration 0009" in str(runner.refusal(anthropic, "claude-sonnet-4-6"))
+    with get_session() as s:  # e.g. a mistyped sqlite path: an empty DB
+        s.execute(text("DROP TABLE llm_calls"))
+    assert "no llm_calls table" in str(runner.refusal(anthropic, "claude-sonnet-4-6"))
 
 
 def test_cli_refuses_before_the_estimate(stubbed: list[Any], tmp_path: Path) -> None:
@@ -209,3 +212,33 @@ def test_cli_refuses_before_the_estimate(stubbed: list[Any], tmp_path: Path) -> 
     out = _cli("--provider", "openai", "--model", "claude-sonnet-4-6", "--golden", str(golden))
     assert out.exit_code == 2 and "Not starting" in out.output
     assert "estimated" not in out.output and stubbed == []
+
+
+def test_cli_reports_nothing_to_run_before_any_refusal(
+    stubbed: list[Any], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from config.settings import settings
+
+    golden = _golden(tmp_path, (_view("AAA"), TEST))
+    args = ["--provider", "anthropic", "--model", "claude-sonnet-4-6", "--golden", str(golden)]
+    assert _cli(*args, "--yes").exit_code == 0
+    monkeypatch.setattr(settings, "anthropic_api_key", "")
+    out = _cli(*args, "--yes")
+    assert out.exit_code == 0 and "Nothing to run" in out.output, out.output
+
+
+def test_cli_stops_after_consecutive_failures(
+    stubbed: list[Any], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+
+    def broke(view: ScorecardView, provider: NarrativeProvider, model: str) -> NarrativeOutput:
+        calls.append(view.ticker)
+        raise narrative.NarrativeUnavailableError("credit balance is too low")
+
+    monkeypatch.setattr(narrative, "generate_eval_narrative", broke)
+    golden = _golden(tmp_path, *((_view(t), TEST) for t in ("AAA", "BBB", "CCC", "DDD", "EEE")))
+    args = ["--provider", "anthropic", "--model", "claude-sonnet-4-6", "--golden", str(golden)]
+    out = _cli(*args, "--yes")
+    assert calls == ["AAA", "BBB", "CCC"] and "3 failures in a row" in out.output, out.output
+    assert "0 written, 3 failed, 2 not run" in out.output and out.exit_code == 1
