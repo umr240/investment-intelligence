@@ -4095,7 +4095,7 @@ def llm_stats(
 
 
 narrative_app = typer.Typer(help="Narrative evaluation (ADR-047).")
-eval_app = typer.Typer(help="The golden set, its graders and replay. Nothing here calls a model.")
+eval_app = typer.Typer(help="The golden set, graders and replay; only `run` calls a model.")
 narrative_app.add_typer(eval_app, name="eval")
 app.add_typer(narrative_app, name="narrative")
 
@@ -4196,6 +4196,7 @@ def narrative_eval_run(
     from deepdive.narrative_eval.runner import (
         estimate_cost,
         output_path,
+        refusal,
         run_case,
         select_cases,
         write_output,
@@ -4210,6 +4211,9 @@ def narrative_eval_run(
     except ValueError:
         rprint("[red]--provider is anthropic or openai.[/red]")
         raise typer.Exit(2) from None
+    if why := refusal(chosen, model):
+        rprint(f"[red]Not starting: {why}.[/red]")
+        raise typer.Exit(2)
     cases = [
         c for c in select_cases(golden, split)
         if not output_path(golden, model, PROMPT_VERSION, c["case_id"]).exists()

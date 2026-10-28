@@ -26,6 +26,34 @@ EST_OUTPUT_TOKENS = 3_800  # ADR-047 §2.4: measured output per narrative
 CHARS_PER_TOKEN = 4  # rough; the figure is shown as an estimate
 
 
+# The model families each provider serves; a mismatch would fail every case after confirming.
+_PROVIDER_MODELS = {
+    NarrativeProvider.ANTHROPIC: re.compile(r"^claude-"),
+    NarrativeProvider.OPENAI: re.compile(r"^(gpt-|o\d)"),
+}
+
+
+def refusal(provider: NarrativeProvider, model: str) -> str | None:
+    """Why a run cannot start, checked before any estimate or spend; None if it can."""
+    from sqlalchemy import inspect
+
+    from config.settings import settings
+    from data.db import get_session
+
+    if not _PROVIDER_MODELS[provider].match(model):
+        return f"{model} is not a {provider.value} model"
+    anthropic = provider == NarrativeProvider.ANTHROPIC
+    key = settings.anthropic_api_key if anthropic else settings.openai_api_key
+    if not key:
+        return f"no {provider.value.upper()}_API_KEY is set"
+    # Without the column every llm_calls write fails: the spend would leave no record (§2.7 item 3).
+    with get_session() as session:
+        columns = {c["name"] for c in inspect(session.get_bind()).get_columns("llm_calls")}
+    if "purpose" not in columns:
+        return "llm_calls has no purpose column: run `alembic upgrade head` (migration 0009) first"
+    return None
+
+
 def select_cases(golden: Path, split: str) -> list[dict[str, Any]]:
     """The cases of one split, or both ("all"), in case-id order."""
     splits = (TRAIN, TEST) if split == "all" else (split,)

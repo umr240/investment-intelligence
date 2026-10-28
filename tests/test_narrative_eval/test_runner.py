@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import pytest
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 import deepdive.narrative as narrative
 import deepdive.narrative_eval.runner as runner
@@ -37,7 +42,32 @@ def _fake_narrative(
 
 
 @pytest.fixture
-def stubbed(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, str, str]]:
+def db(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    """An in-memory DB at the current schema, with keys set: what `refusal` checks."""
+    from config.settings import settings
+    from data.models.schema import Base
+
+    engine = create_engine("sqlite://", poolclass=StaticPool)
+    Base.metadata.create_all(engine)
+    factory = sessionmaker(bind=engine)
+
+    @contextmanager
+    def session() -> Iterator[Session]:
+        s = factory()
+        try:
+            yield s
+        finally:
+            s.close()
+
+    monkeypatch.setattr("data.db.get_session", session)
+    monkeypatch.setattr(settings, "anthropic_api_key", "sk-ant-dummy-test")
+    monkeypatch.setattr(settings, "openai_api_key", "sk-dummy-test")
+    yield
+    engine.dispose()
+
+
+@pytest.fixture
+def stubbed(monkeypatch: pytest.MonkeyPatch, db: None) -> list[tuple[str, str, str]]:
     calls: list[tuple[str, str, str]] = []
 
     def fake(view: ScorecardView, provider: NarrativeProvider, model: str) -> NarrativeOutput:
@@ -156,3 +186,26 @@ def test_eval_narrative_uses_the_given_model_once_and_skips_the_staleness_check(
     with pytest.raises(narrative.NarrativeUnavailableError):
         narrative.generate_eval_narrative(_view(), NarrativeProvider.OPENAI, "gpt-4o")
     assert seen == [(NarrativeProvider.OPENAI, "gpt-4o", "eval")]  # no fallback provider
+
+
+def test_refusal_names_what_would_waste_the_run(db: None, monkeypatch: pytest.MonkeyPatch) -> None:
+    from config.settings import settings
+    from data.db import get_session
+
+    anthropic, openai = NarrativeProvider.ANTHROPIC, NarrativeProvider.OPENAI
+    assert runner.refusal(anthropic, "claude-sonnet-4-6") is None
+    assert runner.refusal(openai, "gpt-4o-mini") is None
+    assert "not a openai model" in str(runner.refusal(openai, "claude-sonnet-4-6"))
+    assert "not a anthropic model" in str(runner.refusal(anthropic, "gpt-4o"))
+    monkeypatch.setattr(settings, "openai_api_key", "")
+    assert "OPENAI_API_KEY" in str(runner.refusal(openai, "gpt-4o-mini"))
+    with get_session() as s:  # a DB still at 0008
+        s.execute(text("ALTER TABLE llm_calls DROP COLUMN purpose"))
+    assert "migration 0009" in str(runner.refusal(anthropic, "claude-sonnet-4-6"))
+
+
+def test_cli_refuses_before_the_estimate(stubbed: list[Any], tmp_path: Path) -> None:
+    golden = _golden(tmp_path, (_view("AAA"), TEST))
+    out = _cli("--provider", "openai", "--model", "claude-sonnet-4-6", "--golden", str(golden))
+    assert out.exit_code == 2 and "Not starting" in out.output
+    assert "estimated" not in out.output and stubbed == []

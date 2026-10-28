@@ -165,7 +165,7 @@ def replay(golden: Path) -> Replay:
         key = (out.model, out.prompt_version)
         if (path.parent.parent.name, path.parent.name) != (out.model, f"v{out.prompt_version}"):
             drift.append(f"{path}: says {out.model} v{out.prompt_version}")
-        elif out.case_id in grades[key]:
+        elif key in grades and out.case_id in grades[key]:
             drift.append(f"{path}: a second output for {out.case_id}")
         elif case is None:
             drift.append(f"{path}: no case {out.case_id!r}")

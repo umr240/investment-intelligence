@@ -221,6 +221,18 @@ def test_replay_reports_misfiled_duplicate_and_orphaned_outputs(tmp_path: Path) 
     assert any("gone-model" in d and "no outputs left" in d for d in drift)
 
 
+def test_an_orphaned_grades_file_is_reported_even_when_an_output_lost_its_case(
+    tmp_path: Path,
+) -> None:
+    gone = _view("GONE")
+    golden = _golden(tmp_path, _out(_body(), gone), cases=[])
+    (graders.grades_path(golden, "claude-sonnet-4-6", 1)).write_text("{}")
+    result = replay(golden)
+    assert any("no case 'GONE'" in d for d in result.drift)
+    assert any("no outputs left" in d for d in result.drift)
+    assert result.grades == {}
+
+
 def test_p95_is_the_nearest_rank() -> None:
     view = _view()
     by_case = {f"C{i:02d}": grade(view, _out(_body(), view, latency=i)) for i in range(1, 32)}
