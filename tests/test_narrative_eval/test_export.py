@@ -22,6 +22,7 @@ from deepdive.scorecard_view import (
     CompanyHeader,
     CompositeView,
     FrameworkView,
+    OverlayTriggerView,
     ScorecardView,
     StageView,
 )
@@ -188,16 +189,35 @@ def test_third_party_values_are_withheld_and_recorded(db: sessionmaker[Session])
             data_gaps=[],
         )  # fmt: skip
     )
+    # The shapes real views carry copies in (frameworks/composite.py, overlays/detector.py).
+    with_short.stage.reasoning = {"market_cap_usd": 5e9, "net_income_positive": True}
+    with_short.overlay_triggers = [
+        OverlayTriggerView(
+            overlay_type="ICA", trigger_id="ICA-4", condition="", framework_section="F5",
+            relevant_numbers={"pb_ratio": 3.1, "current_ev_revenue": 7.2, "roic": 0.2},
+        )
+    ]  # fmt: skip
     with db.begin() as s:  # commits on exit
         frozen = _dive(s, with_short)
         _dive(s, _view("WITHOUT"))
     by_ticker = {c.ticker: c for c in _collect(db)}
     case = by_ticker["WITH"]
-    assert case.withheld == ("company.market_cap_usd", "frameworks.F4.Short int (current)")
+    assert sorted(case.withheld) == [
+        "company.market_cap_usd",
+        "frameworks.F4.Short int (current)",
+        "overlay_triggers[0].relevant_numbers.current_ev_revenue",
+        "overlay_triggers[0].relevant_numbers.pb_ratio",
+        "stage.reasoning.market_cap_usd",
+    ]
     assert by_ticker["WITHOUT"].withheld == ()
     fixture = case.fixture()
     view = fixture["view"]
     assert view["company"]["market_cap_usd"] is None
+    assert view["stage"]["reasoning"] == {"market_cap_usd": None, "net_income_positive": True}
+    assert view["overlay_triggers"][0]["relevant_numbers"] == {
+        "pb_ratio": None, "current_ev_revenue": None, "roic": 0.2,
+    }  # fmt: skip
+    assert "5000000000" not in case.body
     assert view["frameworks"][1]["key_signals"] == [
         ["Short int (current)", export.WITHHELD],
         ["EPS acceleration", "yes"],
@@ -209,6 +229,24 @@ def test_third_party_values_are_withheld_and_recorded(db: sessionmaker[Session])
         assert fixture["source_view_sha256"] == stored.scorecard_view_sha256
     assert fixture["view_sha256"] != fixture["source_view_sha256"]
     assert replay_mismatch(fixture) is None
+
+
+def test_a_withheld_value_under_another_key_stops_the_export(db: sessionmaker[Session]) -> None:
+    leaky = _view("LEAKY", cap=5e9)
+    leaky.stage.reasoning = {"cap_used": 5e9}
+    with db.begin() as s:  # commits on exit
+        _dive(s, leaky)
+    with pytest.raises(export.WithheldValueLeak, match="LEAKY"):
+        _collect(db)
+
+
+def test_a_view_from_another_schema_version_is_not_exported(db: sessionmaker[Session]) -> None:
+    old = _view("OLD")
+    old.schema_version = "0.9"
+    with db.begin() as s:  # commits on exit
+        _dive(s, old)
+        _dive(s, _view("CURRENT"))
+    assert [c.ticker for c in _collect(db)] == ["CURRENT"]
 
 
 def test_coverage_names_missing_strata(
