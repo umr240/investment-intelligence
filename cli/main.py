@@ -4168,8 +4168,8 @@ def narrative_eval_replay(
             path.write_text(_json.dumps(grades, indent=2) + "\n", "utf-8")
         elif not path.exists() or _json.loads(path.read_text("utf-8")) != grades:
             changed.append(str(path))
-    for path in changed:
-        rprint(f"[red]grades differ from {path}; rerun with --record if intended[/red]")
+    for where in changed:
+        rprint(f"[red]grades differ from {where}; rerun with --record if intended[/red]")
     if not result.grades:
         rprint("No stored outputs to grade.")
     if result.drift or changed:
