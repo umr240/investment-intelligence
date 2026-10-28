@@ -4194,6 +4194,7 @@ def narrative_eval_run(
     from config.llm_prices import UnpricedModelError
     from deepdive.narrative import PROMPT_VERSION, NarrativeUnavailableError
     from deepdive.narrative_eval.runner import (
+        MAX_CONSECUTIVE_FAILURES,
         estimate_cost,
         output_path,
         refusal,
@@ -4232,14 +4233,19 @@ def narrative_eval_run(
     )
     if not yes and not typer.confirm("Spend this?", default=False):
         raise typer.Exit(1)
-    failed = 0
+    failed = streak = 0
     for i, case in enumerate(cases, 1):
         try:
             write_output(golden, run_case(case, chosen, model))
+            streak = 0
         except NarrativeUnavailableError as exc:
             failed += 1
+            streak += 1
             rprint(f"  [yellow]{case['case_id']}: {exc}[/yellow]")
         rprint(f"  {i}/{len(cases)} {case['case_id']}")
+        if streak == MAX_CONSECUTIVE_FAILURES and i < len(cases):
+            rprint(f"[red]Stopping: {streak} failures in a row. Rerun to resume.[/red]")
+            break
     rprint(
         f"{len(cases) - failed} written, {failed} failed. Grade them with "
         "`invest narrative eval replay --record`; actual spend is in `invest llm stats`."

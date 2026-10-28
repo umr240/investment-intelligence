@@ -225,3 +225,19 @@ def test_cli_reports_nothing_to_run_before_any_refusal(
     monkeypatch.setattr(settings, "anthropic_api_key", "")
     out = _cli(*args, "--yes")
     assert out.exit_code == 0 and "Nothing to run" in out.output, out.output
+
+
+def test_cli_stops_after_consecutive_failures(
+    stubbed: list[Any], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+
+    def broke(view: ScorecardView, provider: NarrativeProvider, model: str) -> NarrativeOutput:
+        calls.append(view.ticker)
+        raise narrative.NarrativeUnavailableError("credit balance is too low")
+
+    monkeypatch.setattr(narrative, "generate_eval_narrative", broke)
+    golden = _golden(tmp_path, *((_view(t), TEST) for t in ("AAA", "BBB", "CCC", "DDD", "EEE")))
+    args = ["--provider", "anthropic", "--model", "claude-sonnet-4-6", "--golden", str(golden)]
+    out = _cli(*args, "--yes")
+    assert calls == ["AAA", "BBB", "CCC"] and "3 failures in a row" in out.output, out.output

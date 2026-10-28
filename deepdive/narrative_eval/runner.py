@@ -24,6 +24,7 @@ from deepdive.scorecard_view import ScorecardView
 
 EST_OUTPUT_TOKENS = 3_800  # ADR-047 §2.4: measured output per narrative
 CHARS_PER_TOKEN = 4  # rough; the figure is shown as an estimate
+MAX_CONSECUTIVE_FAILURES = 3  # a billing or auth error fails every case; stop, rerun resumes
 
 
 # The model families each provider serves; a mismatch would fail every case after confirming.
