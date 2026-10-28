@@ -4062,13 +4062,14 @@ def llm_stats(
     ok_priced = func.sum(case((LlmCall.status == "ok", case((LlmCall.cost_usd.is_not(None), 1)))))
     q = (
         select(
-            LlmCall.call_site, LlmCall.model, LlmCall.prompt_version,
+            LlmCall.call_site, func.coalesce(LlmCall.purpose, "use"), LlmCall.model,
+            LlmCall.prompt_version,
             func.count(), failed, func.avg(LlmCall.latency_ms),
             func.sum(LlmCall.cost_usd), func.count(LlmCall.cost_usd), ok_priced,
         )
         .where(LlmCall.created_at >= since)
-        .group_by(LlmCall.call_site, LlmCall.model, LlmCall.prompt_version)
-        .order_by(LlmCall.call_site, LlmCall.model, LlmCall.prompt_version)
+        .group_by(LlmCall.call_site, LlmCall.purpose, LlmCall.model, LlmCall.prompt_version)
+        .order_by(LlmCall.call_site, LlmCall.purpose, LlmCall.model, LlmCall.prompt_version)
     )  # fmt: skip
     with get_session() as session:
         rows = session.execute(q).all()
@@ -4076,24 +4077,25 @@ def llm_stats(
         rprint(f"No LLM calls recorded in the last {days} days.")
         return
     table = Table(title=f"LLM calls, last {days} days")
-    for col in ("Call site", "Model"):
+    for col in ("Call site", "Purpose", "Model"):
         table.add_column(col)
     for col in ("Prompt v", "Calls", "Failed", "Avg latency", "Cost", "Per ok call"):
         table.add_column(col, justify="right")
-    for site, model, version, n, n_failed, latency, cost, priced, ok_n in rows:
+    # Eval runs (ADR-047) are their own rows, so real-use cost is never mixed with them.
+    for site, purpose, model, version, n, n_failed, latency, cost, priced, ok_n in rows:
         # Unpriced calls are counted, not costed; failed attempts cost nothing but are not calls.
         per_call = f"${cost / ok_n:.4f}" if ok_n else "—"
         unpriced = "" if priced == n else f" ({n - priced} unpriced)"
         total = f"${cost:.4f}{unpriced}" if priced else "—"
         table.add_row(
-            site, model, str(version), str(n), str(n_failed or 0),
+            site, purpose, model, str(version), str(n), str(n_failed or 0),
             f"{(latency or 0) / 1000:.1f}s", total, per_call,
         )  # fmt: skip
     console.print(table)
 
 
 narrative_app = typer.Typer(help="Narrative evaluation (ADR-047).")
-eval_app = typer.Typer(help="The golden set, its graders and replay. Nothing here calls a model.")
+eval_app = typer.Typer(help="The golden set, graders and replay; only `run` calls a model.")
 narrative_app.add_typer(eval_app, name="eval")
 app.add_typer(narrative_app, name="narrative")
 
@@ -4174,6 +4176,74 @@ def narrative_eval_replay(
         rprint("No stored outputs to grade.")
     if result.drift or changed:
         raise typer.Exit(1)
+
+
+@eval_app.command("run")
+def narrative_eval_run(
+    provider: str = typer.Option(..., "--provider", help="anthropic or openai."),
+    model: str = typer.Option(..., "--model", help="Must have a row in config/llm_prices.py."),
+    split: str = typer.Option("test", "--split", help="test, train or all."),
+    limit: int | None = typer.Option(None, "--limit", help="At most this many cases."),
+    golden: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--golden"),
+    yes: bool = typer.Option(False, "--yes", help="Skip the confirmation."),
+) -> None:
+    """Generate one narrative per golden-set case. SPENDS TOKENS, after a priced confirmation.
+
+    Cases that already have an output for this model and prompt version are skipped.
+    """
+    from config.llm_prices import UnpricedModelError
+    from deepdive.narrative import PROMPT_VERSION, NarrativeUnavailableError
+    from deepdive.narrative_eval.runner import (
+        estimate_cost,
+        output_path,
+        refusal,
+        run_case,
+        select_cases,
+        write_output,
+    )
+    from deepdive.narrative_output import NarrativeProvider
+
+    if split not in ("test", "train", "all"):
+        rprint("[red]--split is test, train or all.[/red]")
+        raise typer.Exit(2)
+    try:
+        chosen = NarrativeProvider(provider.lower())
+    except ValueError:
+        rprint("[red]--provider is anthropic or openai.[/red]")
+        raise typer.Exit(2) from None
+    if why := refusal(chosen, model):
+        rprint(f"[red]Not starting: {why}.[/red]")
+        raise typer.Exit(2)
+    cases = [
+        c for c in select_cases(golden, split)
+        if not output_path(golden, model, PROMPT_VERSION, c["case_id"]).exists()
+    ][:limit]  # fmt: skip
+    if not cases:
+        rprint(f"Nothing to run: every {split} case has an output for {model} v{PROMPT_VERSION}.")
+        return
+    try:
+        estimate = estimate_cost(cases, model)
+    except UnpricedModelError as exc:
+        rprint(f"[red]{exc}. Copy its price row first (ADR-048).[/red]")
+        raise typer.Exit(2) from None
+    rprint(
+        f"{len(cases)} {split} cases on {chosen.value}/{model}, prompt v{PROMPT_VERSION}: "
+        f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each)"
+    )
+    if not yes and not typer.confirm("Spend this?", default=False):
+        raise typer.Exit(1)
+    failed = 0
+    for i, case in enumerate(cases, 1):
+        try:
+            write_output(golden, run_case(case, chosen, model))
+        except NarrativeUnavailableError as exc:
+            failed += 1
+            rprint(f"  [yellow]{case['case_id']}: {exc}[/yellow]")
+        rprint(f"  {i}/{len(cases)} {case['case_id']}")
+    rprint(
+        f"{len(cases) - failed} written, {failed} failed. Grade them with "
+        "`invest narrative eval replay --record`; actual spend is in `invest llm stats`."
+    )
 
 
 if __name__ == "__main__":

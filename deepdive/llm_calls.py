@@ -36,10 +36,19 @@ def prompt_sha256(system_prompt: str, schema: dict[str, Any]) -> str:
 
 @contextmanager
 def attempt_context(
-    *, ticker: str | None = None, run_id: int | None = None, attempt: int = 1
+    *,
+    ticker: str | None = None,
+    run_id: int | None = None,
+    attempt: int = 1,
+    purpose: str | None = None,
 ) -> Iterator[None]:
-    """What a `recorded_call` inside belongs to: one attempt of a fallback loop."""
-    token = _ATTEMPT.set({"ticker": ticker, "run_id": run_id, "attempt": attempt})
+    """What a `recorded_call` inside belongs to: one attempt of a fallback loop.
+
+    `purpose` is "eval" for an ADR-047 eval run, None for real use.
+    """
+    token = _ATTEMPT.set(
+        {"ticker": ticker, "run_id": run_id, "attempt": attempt, "purpose": purpose}
+    )
     try:
         yield
     finally:
@@ -122,6 +131,7 @@ def _record(
         "ticker": ctx.get("ticker"),
         "run_id": ctx.get("run_id"),
         "attempt": ctx.get("attempt", 1),
+        "purpose": ctx.get("purpose"),
         "call_site": call_site,
         "provider": provider,
         "model": model,
@@ -153,6 +163,12 @@ def _write(row: dict[str, Any]) -> int | None:
     except Exception as exc:  # noqa: BLE001 - observability must never fail the call
         logger.warning("llm_calls row not written: %s", type(exc).__name__)
         return None
+
+
+def last_call_id() -> int | None:
+    """Row id of the most recent recorded call in this context; None if it was not written."""
+    last = _LAST.get()
+    return last[0] if last else None
 
 
 def last_call_cost() -> float | None:

@@ -59,16 +59,16 @@ def _body(*, claim_path: str = "composite.score", codes: list[str] | None = None
     )
 
 
-def _out(body: NarrativeBody, view: ScorecardView, *, cost: float | None = 0.004,
+def _out(body: NarrativeBody, view: ScorecardView, *, recorded: float | None = None,
          latency: int = 2500, model: str = "claude-sonnet-4-6") -> EvalOutput:  # fmt: skip
     narrative = NarrativeOutput(
         ticker=view.ticker, generated_at=datetime(2026, 10, 28),
-        provider=NarrativeProvider.ANTHROPIC, model=model, body=body,
+        provider=NarrativeProvider.ANTHROPIC, model=model, body=body, cost_usd=recorded,
     )  # fmt: skip
     sha = hashlib.sha256(view.to_llm_context().encode()).hexdigest()
     return EvalOutput(
         case_id=view.ticker, view_sha256=sha, model=model, prompt_version=1, narrative=narrative,
-        input_tokens=12_000, output_tokens=3_800, latency_ms=latency, cost_usd=cost,
+        input_tokens=12_000, output_tokens=3_800, latency_ms=latency,
     )  # fmt: skip
 
 
@@ -84,7 +84,7 @@ def test_todays_narrative_shape_passes_g1_g3_and_fails_g2_g5_by_construction() -
     ]  # fmt: skip
     assert "ADR-045" in got["G2"].detail and "ADR-046" in got["G4"].detail
     assert got["G5"].detail == "missing verdict, owner_operator_answer, moat_direction, triggers"
-    assert (got["G6"].status, got["G6"].value) == (MEASURED, 0.004)
+    assert (got["G6"].status, got["G6"].value) == (MEASURED, 0.093)  # 12k x $3 + 3.8k x $15 per M
     assert (got["G7"].status, got["G7"].value) == (MEASURED, 2500.0)
 
 
@@ -109,6 +109,9 @@ def test_g2_compares_with_the_mapped_deterministic_verdict() -> None:
         ({"codes": [], "claim_path": ""}, "cites missing field"),
         ({"detail": "Revenue grew {{revenue_growth}}."}, "unrendered placeholder"),
         ({"detail": "Margin TBD."}, "unrendered placeholder"),
+        ({"detail": "Growth was {{ revenue growth }}."}, "unrendered placeholder"),
+        ({"detail": "[TICKER] compounds."}, "unrendered placeholder"),
+        ({"detail": "Moat: todo."}, "unrendered placeholder"),
     ],
 )
 def test_g3_fails_on_missing_or_unrendered_citations(kwargs: dict[str, Any], problem: str) -> None:
@@ -136,7 +139,17 @@ def test_g5_passes_once_the_contract_fields_are_filled() -> None:
 
 def test_g6_is_not_measured_for_an_unpriced_model() -> None:
     view = _view()
-    assert _by_id(grade(view, _out(_body(), view, cost=None)))["G6"].status == NOT_MEASURED
+    assert _by_id(grade(view, _out(_body(), view, model="mystery-model")))["G6"].status == (
+        NOT_MEASURED
+    )
+
+
+def test_g6_prices_the_tokens_and_flags_a_different_recorded_cost() -> None:
+    view = _view()
+    agrees = _by_id(grade(view, _out(_body(), view, recorded=0.093)))["G6"]
+    differs = _by_id(grade(view, _out(_body(), view, recorded=0.004)))["G6"]
+    assert agrees.value == differs.value == 0.093
+    assert "recorded" not in agrees.detail and "narrative recorded $0.004000" in differs.detail
 
 
 # ── Replay ─────────────────────────────────────────────────────────────────
@@ -172,7 +185,7 @@ def test_replay_grades_each_output_against_its_case(tmp_path: Path) -> None:
     assert set(by_case) == {"AAA", "BBB"}
     s = summary(by_case, result.splits, TEST)
     assert (s["cases"], s["G1"], s["G2"], s["G4"]) == (1, 1.0, 0.0, None)
-    assert (s["cost_per_narrative"], s["latency_p50_ms"]) == (0.004, 2500.0)
+    assert (s["cost_per_narrative"], s["latency_p50_ms"]) == (0.093, 2500.0)
 
 
 def test_replay_reports_drift(tmp_path: Path) -> None:
@@ -186,6 +199,45 @@ def test_replay_reports_drift(tmp_path: Path) -> None:
     assert any("composite" in d for d in drift)
     assert any("different view of AAA" in d for d in drift)
     assert any("no case 'GONE'" in d for d in drift)
+
+
+def test_replay_reports_misfiled_duplicate_and_orphaned_outputs(tmp_path: Path) -> None:
+    a = _view("AAA")
+    golden = _golden(tmp_path, cases=[(a, TRAIN)])
+    out = _out(_body(), a)
+    wrong_dir = golden / "outputs" / "other-model" / "v1"
+    wrong_dir.mkdir(parents=True)
+    (wrong_dir / "AAA.json").write_text(out.model_dump_json())
+    right_dir = golden / "outputs" / out.model / "v1"
+    right_dir.mkdir(parents=True)
+    (right_dir / "AAA.json").write_text(out.model_dump_json())
+    (right_dir / "AAA-copy.json").write_text(out.model_dump_json())
+    orphan = golden / "outputs" / "gone-model" / "v1"
+    orphan.mkdir(parents=True)
+    (orphan / graders.GRADES_FILE).write_text("{}")
+    drift = replay(golden).drift
+    assert any("other-model" in d and "says claude-sonnet-4-6 v1" in d for d in drift)
+    assert any("a second output for AAA" in d for d in drift)
+    assert any("gone-model" in d and "no outputs left" in d for d in drift)
+
+
+def test_an_orphaned_grades_file_is_reported_even_when_an_output_lost_its_case(
+    tmp_path: Path,
+) -> None:
+    gone = _view("GONE")
+    golden = _golden(tmp_path, _out(_body(), gone), cases=[])
+    (graders.grades_path(golden, "claude-sonnet-4-6", 1)).write_text("{}")
+    result = replay(golden)
+    assert any("no case 'GONE'" in d for d in result.drift)
+    assert any("no outputs left" in d for d in result.drift)
+    assert result.grades == {}
+
+
+def test_p95_is_the_nearest_rank() -> None:
+    view = _view()
+    by_case = {f"C{i:02d}": grade(view, _out(_body(), view, latency=i)) for i in range(1, 32)}
+    s = summary(by_case, dict.fromkeys(by_case, TEST), TEST)
+    assert s["latency_p95_ms"] == 30.0  # ceil(0.95 x 31) = 30th of 31
 
 
 def test_cli_replay_records_then_holds_grades(tmp_path: Path) -> None:
