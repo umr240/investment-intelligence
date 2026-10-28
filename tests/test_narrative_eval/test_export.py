@@ -251,6 +251,17 @@ def test_a_withheld_value_copied_as_an_integer_also_stops_the_export(
         _collect(db)
 
 
+def test_a_withheld_value_ending_a_sentence_still_stops_the_export(
+    db: sessionmaker[Session],
+) -> None:
+    leaky = _view("PERIOD", cap=5e9)
+    leaky.stage.reasoning = {"note": "cap 5000000000."}
+    with db.begin() as s:  # commits on exit
+        _dive(s, leaky)
+    with pytest.raises(export.WithheldValueLeak, match="PERIOD"):
+        _collect(db)
+
+
 def test_a_larger_number_containing_a_withheld_one_is_not_a_leak(
     db: sessionmaker[Session],
 ) -> None:

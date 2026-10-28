@@ -853,6 +853,7 @@ class LlmCall(Base):
     cost_usd = Column(Float)
     request_id = Column(Text)
     created_at = Column(DateTime, server_default=func.now(), index=True)
+    purpose = Column(Text)  # "eval" for an ADR-047 eval run; NULL for real use (0009 appends it)
 
 
 class DataContractRun(Base):
