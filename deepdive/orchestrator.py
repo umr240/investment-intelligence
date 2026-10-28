@@ -733,11 +733,7 @@ def _persist_dive_results(
         auto_overlay_results or {},
         original_f5_verdict=getattr(results.get("F5"), "verdict", None),
     )
-    composite = (
-        round(min((composite_pre_overlays or 0.0) + overlay_bonus, 10.0), 4)
-        if composite_pre_overlays is not None
-        else None
-    )
+    composite = _apply_overlay_bonus(composite_pre_overlays, overlay_bonus)
     verdict = composite_out.verdict
 
     # ── Dual composite (ADR-021): GAAP vs Peters-Taylor non-GAAP ─────────
@@ -761,11 +757,7 @@ def _persist_dive_results(
                 alt_score_map, mode=mode, stage=stage.stage,
             )
             composite_non_gaap_pre_overlays = alt_out.score
-            composite_non_gaap = (
-                round(min((alt_out.score or 0.0) + overlay_bonus, 10.0), 4)
-                if alt_out.score is not None
-                else None
-            )
+            composite_non_gaap = _apply_overlay_bonus(alt_out.score, overlay_bonus)
 
     composite_gaap = composite       # alias for return clarity
 
@@ -971,6 +963,11 @@ BEW_BONUS_MODERATE = 0.25
 TOTAL_OVERLAY_BONUS_CAP = 1.0
 
 _VERDICT_RANK = {"fail": 0, "partial": 1, "strong_fit": 2}
+
+
+def _apply_overlay_bonus(composite: float | None, bonus: float) -> float | None:
+    """The dive composite: framework composite plus the capped bonus, clamped at 10."""
+    return None if composite is None else round(min(composite + bonus, 10.0), 4)
 
 
 def _compute_overlay_composite_bonus(

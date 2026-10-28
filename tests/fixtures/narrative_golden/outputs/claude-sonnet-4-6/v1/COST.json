@@ -1,0 +1,289 @@
+{
+  "case_id": "COST",
+  "view_sha256": "499d0f0d9f7fffe49a75f79f7a3d853412385d8a270b036f65f7d605cabd10bc",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "COST",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:43:27.796331Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11778,
+    "completion_tokens": 3400,
+    "cost_usd": 0.086334,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[3].detail: number '303' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Costco is a structurally sound retail compounder with an exceptional GAAP ROIC and a fortress balance sheet, but the Peters-Taylor intangible-capital restatement reveals a materially lower economic return on capital, the stock trades at a significant valuation premium, and the composite lands at watchlist — warranting close monitoring of capital efficiency and price rather than immediate action.",
+      "bull": [
+        {
+          "headline": "Exceptional GAAP ROIC signals genuine capital efficiency in a structurally low-margin industry",
+          "detail": "F5 records a GAAP ROIC of 45.1%, extraordinary for a large-format retailer. Debt/EBITDA of 0.0x signals a fortress balance sheet, eliminating refinancing risk and preserving optionality for reinvestment. Revenue CAGR of 7.8% over three years demonstrates that scale is not yet a ceiling — the membership model drives consistent top-line compounding above the inflation rate in the core consumer-defensive sector.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "45.1%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "+7.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Best-in-class membership retention anchors a durable, self-reinforcing revenue base",
+          "detail": "F6 records a GRR (Gross Revenue Retention) of 92.3% classified as best-in-class. For a non-SaaS retailer, this proxy metric captures the stickiness of the membership fee model — a classic switching-cost and habitual-purchasing moat. Members who renew annually fund the low-margin merchandise model and create a structurally recurring revenue layer that pure merchandise retailers entirely lack. This is the core Power: Scale Economies compounded by habitual lock-in.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "92.3%",
+              "field_path": "frameworks.5.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "High-quality earnings confirmed by Sloan accrual screen and strong GP/A",
+          "detail": "F1 returns Sloan high quality = True and GP/A strong = True, indicating that reported earnings are cash-backed rather than accrual-inflated and that gross profit per unit of assets is in the top tier. A Piotroski score of 6/9 places the financial health signal firmly in the moderate band with no acute distress flags. These signals collectively support the thesis that reported profitability is not an artefact of aggressive accounting.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "EPS trajectory is strictly monotonically accelerating — a rare quality signal at this revenue scale",
+          "detail": "F4 flags EPS acceleration as strict_monotonic, meaning consecutive fiscal periods have shown uninterrupted earnings-per-share acceleration. At a revenue base approaching $303 billion, sustaining and accelerating earnings growth per share is a high-bar achievement that reflects both operating leverage and disciplined share-count management. This is consistent with a capital allocator deploying cash into high-conviction buybacks rather than dilutive acquisitions.",
+          "framework_codes": [
+            "F4",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$303,154,000,000",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "Price near 52-week highs with positive PEAD signal confirms market is not yet pricing deterioration",
+          "detail": "F2 registers the stock within 4.3% of its 52-week high and the PEAD (post-earnings announcement drift) signal is mixed with recent positive bias. Twelve-minus-one momentum is positive at +1.0%. These signals, taken together, indicate that institutional accumulation has not reversed and that the market is not embedding an earnings-deterioration thesis in price action — supportive of holding through short-term noise.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+4.3%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "+1.0%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Peters-Taylor restatement collapses economic ROIC by 17.9 percentage points — intangible capital is large and hidden",
+          "detail": "The ICA-5 overlay fires on a downward gap of 17.88 percentage points between GAAP ROIC (30.97%) and Peters-Taylor adjusted ROIC (13.09%). This restatement capitalises R&D (15%/yr amortisation) and 25% of SG&A as organisational capital (20%/yr amortisation) — consistent with Eisfeldt-Papanikolaou. For a membership-driven retailer with heavy brand and process investment flowing through SG&A, this restatement is economically informative: the true capital base is substantially larger than the GAAP balance sheet reports, and returns on that larger base are materially lower than headlines suggest.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "17.88pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "30.97%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "13.09%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation is significantly extended — EV/Revenue z-score at 1.37 flags very expensive on a relative basis",
+          "detail": "F7 scores 1/10 with an EV/Revenue z-score of 1.373 (band: very_expensive) and a P/B z-score of 0.841 (band: expensive). Both multiples sit well above historical norms. With a composite score of 5.11, the business quality does not currently justify this premium in a framework that weights valuation meaningfully. The margin of safety is thin: any operational shortfall, macro headwind, or mean-reversion in multiples compresses the forward return distribution sharply.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.373",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "0.841",
+              "field_path": "frameworks.6.key_signals.2.1"
+            },
+            {
+              "value": "5.11",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "FCF margin of 3.1% is thin for a premium-valued compounder — cash conversion limits reinvestment optionality",
+          "detail": "F5 records an FCF margin of 3.1%, consistent with the structural reality of warehouse retail but creating a tension: the stock is priced for a capital-light compounder while the cash flow profile resembles an operationally intensive infrastructure business. Sustained high capex (new warehouses, supply chain) and the thin FCF margin constrain the magnitude of organic capital return or reinvestment that can drive per-share compounding at the rate the multiple implies.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+3.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin is eroding — average GM expansion of -1.2 bps/yr signals gradual pricing pressure or mix shift",
+          "detail": "F3 shows average gross margin expansion of -1.2 basis points per year. While the absolute magnitude is small, the direction matters for a thesis premised on durable pricing power and membership value. Moat direction analysis requires attention to whether this erosion is structural (competitive pricing discipline to protect member value proposition) or represents genuine pressure. The former is tolerable; the latter is a moat-narrowing signal.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.2 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment is flagged as no_alignment — equity ownership signal is parser-uncertain, reducing confidence in Outsiders profile",
+          "detail": "F5 flags CEO alignment as no_alignment for Ron Vachris, a non-founder CEO. The ceo_equity_pct of 0.5% carries a parser_uncertain state flag, meaning the actual ownership is unreliable in this dataset. A non-founder CEO with ambiguous low equity ownership introduces capital-allocator risk: without skin-in-the-game beyond salary and near-term options, the incentive structure may not perfectly align with the decade-long compounding horizon that the hold philosophy requires.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the Peters-Taylor economic ROIC of 13.09% continues to diverge downward from GAAP ROIC across 2-3 additional annual filings. If the gap widens further — indicating accelerating SG&A capitalisation relative to operating returns — the thesis that Costco is a high-return-on-capital compounder requires reassessment. Widening divergence would signal that incremental invested capital earns below the rate embedded in the current multiple.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for gross margin trajectory reversal. The current -1.2 bps/yr average expansion rate is modest but directionally negative. If three or more consecutive annual filings show accelerating GM contraction — beyond the intentional 'treasure hunt' low-price strategy — it would indicate either competitive encroachment on the merchandise model or structural deflation in the membership value proposition.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor membership renewal rates (GRR proxy currently 92.3%) across annual reporting cycles. A sustained decline below 90% over two or more periods would indicate the switching-cost and habitual-purchasing moat is narrowing — the primary structural defence for the valuation premium. This is a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Track EPS acceleration trend (currently strict_monotonic). A deceleration or reversal of the EPS acceleration pattern across two consecutive fiscal years, combined with declining ROIC, would signal operational leverage is fading and the reinvestment engine is slowing. This is a prerequisite monitoring item before the 5-year reconsideration window opens.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "CEO capital-allocation quality requires active monitoring over the hold period. Ron Vachris is a non-founder CEO with a parser-uncertain equity stake. Watch DEF 14A filings for: (a) acquisitive M&A not aligned with the warehouse model; (b) buybacks executed at or above the current elevated EV/Revenue multiple; (c) SG&A or headcount bloat inconsistent with Outsiders-style discipline. Any sustained inversion of two or more Thorndike traits is a watch escalation signal.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Valuation compression risk: F7 EV/Revenue z-score of 1.373 places COST in the very_expensive band. While valuation alone is not an exit signal per hold philosophy, a significant multiple re-rating (e.g., driven by interest-rate normalisation or sector rotation) would suppress forward returns for years even if business fundamentals hold. Monitor whether the composite score improves to warrant the multiple, rather than acting on price movement itself.",
+          "severity": "medium",
+          "grounded_in": "F7"
+        },
+        {
+          "factor": "F4 options put/call ratio data is absent (no free-tier source), limiting visibility into derivatives-market sentiment that could signal institutional hedging or informed short positioning. This data gap should be revisited if a free or low-cost source becomes available, particularly if the momentum signal in F2 deteriorates.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity ownership (ceo_equity_pct = 0.5%) carries a parser_uncertain state — the exact figure could not be confirmed from parsed filings. Treat CEO alignment signals in F5 with reduced confidence until manually verified from the latest DEF 14A proxy filing.",
+        "F4 options put/call ratio is absent: no free-tier data source was available per project specification. This limits the completeness of the Stealth Accumulation framework's sentiment signal; the F4 score of 5.5 reflects this gap."
+      ]
+    }
+  },
+  "input_tokens": 11778,
+  "output_tokens": 3400,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 73867,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

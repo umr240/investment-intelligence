@@ -1,0 +1,1806 @@
+{
+  "AAPL": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[4].detail: number '90' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11987 in, 3922 out, 0 cache read, 0 cache write",
+      "value": 0.094791
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 87081.0
+    }
+  ],
+  "ADBE": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bull[3].detail: number '50' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11860 in, 3343 out, 0 cache read, 0 cache write",
+      "value": 0.085725
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 71182.0
+    }
+  ],
+  "ADP": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11768 in, 3145 out, 0 cache read, 0 cache write",
+      "value": 0.082479
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 64464.0
+    }
+  ],
+  "AIXI": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "2: bull[1] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11386 in, 2652 out, 0 cache read, 0 cache write",
+      "value": 0.073938
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 59370.0
+    }
+  ],
+  "AMBQ": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11842 in, 3126 out, 0 cache read, 0 cache write",
+      "value": 0.082416
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 65007.0
+    }
+  ],
+  "ATGL": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "3: bull[1] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11169 in, 2143 out, 0 cache read, 0 cache write",
+      "value": 0.065652
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 45852.0
+    }
+  ],
+  "AUUA.V": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[1].detail: number '10' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "10801 in, 2484 out, 0 cache read, 0 cache write",
+      "value": 0.069663
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 52309.0
+    }
+  ],
+  "BABA": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11573 in, 2316 out, 0 cache read, 0 cache write",
+      "value": 0.069459
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 52214.0
+    }
+  ],
+  "BFLY": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "3: bear[1].numeric_claims[1]: claim value '2.51' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12304 in, 3723 out, 0 cache read, 0 cache write",
+      "value": 0.092757
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 79561.0
+    }
+  ],
+  "BIDU": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "4: bull[0] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "10585 in, 1983 out, 0 cache read, 0 cache write",
+      "value": 0.0615
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 43987.0
+    }
+  ],
+  "BONEX.ST": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "10942 in, 2150 out, 0 cache read, 0 cache write",
+      "value": 0.065076
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 47187.0
+    }
+  ],
+  "COST": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[3].detail: number '303' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11778 in, 3400 out, 0 cache read, 0 cache write",
+      "value": 0.086334
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 73867.0
+    }
+  ],
+  "CRWD": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bull[2].numeric_claims[3]: claim value '+29.8%' does not match view value '-11.6%' at 'frameworks.4.key_signals.2.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11920 in, 3800 out, 0 cache read, 0 cache write",
+      "value": 0.09276
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 80652.0
+    }
+  ],
+  "CSGP": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[1].numeric_claims[1]: claim value '22.47' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11186 in, 3159 out, 0 cache read, 0 cache write",
+      "value": 0.080943
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 66813.0
+    }
+  ],
+  "DNOPF": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11652 in, 2557 out, 0 cache read, 0 cache write",
+      "value": 0.073311
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 58053.0
+    }
+  ],
+  "ENVX": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[2].detail: number '90' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12183 in, 3303 out, 0 cache read, 0 cache write",
+      "value": 0.086094
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 71812.0
+    }
+  ],
+  "FIG": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "4: bull[0].numeric_claims[0]: claim value '64.28' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11983 in, 3443 out, 0 cache read, 0 cache write",
+      "value": 0.087594
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 72825.0
+    }
+  ],
+  "GEV": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bear[1].numeric_claims[1]: claim value '18.71' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11467 in, 3766 out, 0 cache read, 0 cache write",
+      "value": 0.090891
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 84412.0
+    }
+  ],
+  "ILMN": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bear[1].numeric_claims[1]: claim value '20.77' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12357 in, 4096 out, 0 cache read, 0 cache write",
+      "value": 0.098511
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 86878.0
+    }
+  ],
+  "KFS": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bear[2].numeric_claims[1]: claim value '23.42' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11217 in, 2776 out, 0 cache read, 0 cache write",
+      "value": 0.075291
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 59984.0
+    }
+  ],
+  "LICN": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[1].headline: number '27' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "2: bear[3] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11149 in, 2294 out, 0 cache read, 0 cache write",
+      "value": 0.067857
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 48880.0
+    }
+  ],
+  "MSFT": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "3: bull[3].numeric_claims[0]: claim value '37.98' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11837 in, 3355 out, 0 cache read, 0 cache write",
+      "value": 0.085836
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 73460.0
+    }
+  ],
+  "NOW": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[1].numeric_claims[1]: claim value '55.35' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12077 in, 3761 out, 0 cache read, 0 cache write",
+      "value": 0.092646
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 80367.0
+    }
+  ],
+  "NTES": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: risks[1]: grounded_in='F7' does not match any framework, overlay trigger, data gap, or view field",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "3: bull[0] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "10403 in, 1679 out, 0 cache read, 0 cache write",
+      "value": 0.056394
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 40492.0
+    }
+  ],
+  "NTIP": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11478 in, 2498 out, 0 cache read, 0 cache write",
+      "value": 0.071904
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 48957.0
+    }
+  ],
+  "NVDA": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[1].detail: number '35' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12305 in, 3714 out, 0 cache read, 0 cache write",
+      "value": 0.092625
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 79117.0
+    }
+  ],
+  "OFAL": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: risks[0]: grounded_in='F1' does not match any framework, overlay trigger, data gap, or view field",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "1: bear[4] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11179 in, 2306 out, 0 cache read, 0 cache write",
+      "value": 0.068127
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 47926.0
+    }
+  ],
+  "OUST": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[3].numeric_claims[1]: claim value '14.17' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12031 in, 3632 out, 0 cache read, 0 cache write",
+      "value": 0.090573
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 78617.0
+    }
+  ],
+  "PATH": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[4].numeric_claims[0]: claim value '34.52' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11807 in, 3656 out, 0 cache read, 0 cache write",
+      "value": 0.090261
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 80375.0
+    }
+  ],
+  "PAYC": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bear[2].numeric_claims[1]: claim value '28.83' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11806 in, 3772 out, 0 cache read, 0 cache write",
+      "value": 0.091998
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 76709.0
+    }
+  ],
+  "PHOE": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: risks[5]: grounded_in='F5' does not match any framework, overlay trigger, data gap, or view field",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "2: bull[0] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11180 in, 2438 out, 0 cache read, 0 cache write",
+      "value": 0.07011
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 53431.0
+    }
+  ],
+  "PLTR": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "3: bull[2].numeric_claims[0]: claim value '103.12' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11848 in, 4064 out, 0 cache read, 0 cache write",
+      "value": 0.096504
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 84629.0
+    }
+  ],
+  "QCOM": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[4].numeric_claims[0]: claim value '-0.289' does not match view value 'expensive' at 'frameworks.6.key_signals.1.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11914 in, 3474 out, 0 cache read, 0 cache write",
+      "value": 0.087852
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 72133.0
+    }
+  ],
+  "SERV": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bear[3].numeric_claims[1]: claim value '-4388.9' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12213 in, 3655 out, 0 cache read, 0 cache write",
+      "value": 0.091464
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 78413.0
+    }
+  ],
+  "SHOP": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[1].numeric_claims[0]: claim value '47.5' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11861 in, 3593 out, 0 cache read, 0 cache write",
+      "value": 0.089478
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 74767.0
+    }
+  ],
+  "SNOW": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bull[1].numeric_claims[1]: claim value '53.08' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12135 in, 4021 out, 0 cache read, 0 cache write",
+      "value": 0.09672
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 85535.0
+    }
+  ],
+  "SOLV": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11872 in, 3222 out, 0 cache read, 0 cache write",
+      "value": 0.083946
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 69156.0
+    }
+  ],
+  "TEM": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "2: bull[4].detail: number '13%' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "12099 in, 3259 out, 0 cache read, 0 cache write",
+      "value": 0.085182
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 71454.0
+    }
+  ],
+  "TOITF": [
+    {
+      "grader": "G1",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11662 in, 2560 out, 0 cache read, 0 cache write",
+      "value": 0.073386
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 55964.0
+    }
+  ],
+  "VHI.TO": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[0].detail: number '90' not in scorecard whitelist (possible hallucination)",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "pass",
+      "detail": "",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11207 in, 2639 out, 0 cache read, 0 cache write",
+      "value": 0.073206
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 57267.0
+    }
+  ],
+  "VLTO": [
+    {
+      "grader": "G1",
+      "status": "fail",
+      "detail": "1: bear[1].numeric_claims[1]: claim value '24.4' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "value": null
+    },
+    {
+      "grader": "G2",
+      "status": "fail",
+      "detail": "no verdict field (ADR-045 adds it)",
+      "value": null
+    },
+    {
+      "grader": "G3",
+      "status": "fail",
+      "detail": "1: bear[3] cites nothing",
+      "value": null
+    },
+    {
+      "grader": "G4",
+      "status": "not_measured",
+      "detail": "claim lint not built (ADR-046)",
+      "value": null
+    },
+    {
+      "grader": "G5",
+      "status": "fail",
+      "detail": "missing verdict, owner_operator_answer, moat_direction, triggers",
+      "value": null
+    },
+    {
+      "grader": "G6",
+      "status": "measured",
+      "detail": "11907 in, 3462 out, 0 cache read, 0 cache write",
+      "value": 0.087651
+    },
+    {
+      "grader": "G7",
+      "status": "measured",
+      "detail": "",
+      "value": 75637.0
+    }
+  ]
+}

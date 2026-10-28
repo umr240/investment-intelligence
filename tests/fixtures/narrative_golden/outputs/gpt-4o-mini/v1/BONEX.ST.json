@@ -1,0 +1,162 @@
+{
+  "case_id": "BONEX.ST",
+  "view_sha256": "669a2ea585fed86edc4a97c6419d509827fefbba7530ba791763dd818c361e0b",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BONEX.ST",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:48.246681Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8683,
+    "completion_tokens": 534,
+    "cost_usd": 0.001546,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F4' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F6' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "Monitor BONEX.ST as it shows strong momentum and growth quality signals but faces data gaps.",
+      "bull": [
+        {
+          "headline": "Strong Momentum Signal",
+          "detail": "The company exhibits a strong momentum score of 7.0, indicating positive price action and a favorable trend in recent performance. This is supported by a positive drift in the PEAD signal and a stable position relative to its 52-week high.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "Impressive Revenue Growth",
+          "detail": "With a 3-year revenue CAGR of 52.9%, BONEX.ST demonstrates robust growth quality, indicating strong operational performance and market demand for its products.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "52.9%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "CEO Alignment Lacking",
+          "detail": "The company lacks alignment with its CEO, which may pose risks to strategic decision-making and long-term shareholder interests. This absence of alignment could impact the company's growth trajectory and operational efficiency.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "no_alignment",
+              "field_path": "frameworks.4.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Data Gaps Affecting Analysis",
+          "detail": "Significant data gaps exist, including the absence of insider transaction history and reliance on tier-3 data sources for recent financials. This limits the reliability of the current analysis and necessitates caution in decision-making.",
+          "framework_codes": [
+            "F1",
+            "F3",
+            "F4",
+            "F6",
+            "F7"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor for continued revenue growth and profitability in future filings to validate the thesis.",
+          "severity": "medium",
+          "grounded_in": "frameworks.4.key_signals.0.1"
+        },
+        {
+          "factor": "Watch for any deterioration in momentum indicators that could signal a reversal in performance trends.",
+          "severity": "medium",
+          "grounded_in": "frameworks.1.score"
+        },
+        {
+          "factor": "Keep an eye on potential changes in CEO alignment that could impact strategic direction and shareholder value.",
+          "severity": "high",
+          "grounded_in": "frameworks.4.key_signals.4.1"
+        }
+      ],
+      "data_caveats": [
+        "Recent periods are unavailable at Tier-1B due to indexing lag; FY2025 sourced from tier-3 data, treat as triage-grade.",
+        "Five quarterly periods supplemented from tier-3 sources; annual rows remain filing-grade.",
+        "Insider transactions are unavailable as Nasdaq Stockholm issuers do not file SEC Form 4."
+      ]
+    }
+  },
+  "input_tokens": 7659,
+  "output_tokens": 534,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6405,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

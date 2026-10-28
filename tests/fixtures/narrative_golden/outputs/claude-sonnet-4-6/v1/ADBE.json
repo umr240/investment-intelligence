@@ -1,0 +1,317 @@
+{
+  "case_id": "ADBE",
+  "view_sha256": "827905c012dbbde5b4947d9cf3a2dda8a33a37163b758575e7fd39c7a9ebeede",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ADBE",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:33:43.784750Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11860,
+    "completion_tokens": 3343,
+    "cost_usd": 0.085725,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[3].detail: number '50' not in scorecard whitelist (possible hallucination)",
+      "bear[3].detail: number '50' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Adobe's exceptional FCF generation and ROIC are partially an accounting artefact — Peters-Taylor intangible-capital restatement reveals a meaningful gap — but the business still clears a high quality bar; the composite watchlist verdict reflects depressed momentum, not structural deterioration.",
+      "bull": [
+        {
+          "headline": "Exceptional cash economics: FCF margin above 40% with near-zero leverage",
+          "detail": "F5 scores strong_fit driven by a FCF margin that leaves most software peers behind and a Debt/EBITDA that is effectively negligible. Combined with a three-year revenue CAGR in the double digits, the business is self-funding at scale — a core compounding prerequisite under Buffett's hold framework.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+40.8%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "0.112",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "+10.5%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC of 56.5% signals deep competitive advantage, even after intangible restatement",
+          "detail": "Even adjusting downward by the Peters-Taylor gap flagged in ICA-5, economic ROIC remains at a level that materially exceeds most software benchmarks. High and sustained ROIC is the empirical fingerprint of switching-cost and intangible-asset moats (Helmer: Switching Costs + Process Power); the direction of the derivative — whether this is widening or eroding — is the key variable to monitor over the hold period.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+56.5%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.3484",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Fundamental quality high: Piotroski 7/9, shrinking asset base, Sloan accrual quality confirmed",
+          "detail": "F1 strong_fit is grounded in improving balance-sheet fundamentals (Piotroski 7/9), disciplined capital deployment (asset base shrinking — bottom decile by Cooper-Gulen-Schill), and clean earnings (Sloan high quality = True), alongside top-decile gross profitability per Novy-Marx. The absence of recent insider buying is a gap in the full pre-discovery archetype but does not negate the fundamental signals.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "7.17",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation z-scores in very_cheap band across both EV/Rev and P/B dimensions",
+          "detail": "F7 scores maximum, with both EV/Revenue and Price-to-Book z-scores in the very_cheap band. For a business with ROIC materially above cost of capital and a Rule-of-40 above 50, historically cheap relative multiples create an asymmetric setup — the left tail (multiple compression) is limited when you are already at the bottom of the z-score distribution. Note the academic dispute cited in F7 notes; this signal is intentionally weighted at 0.10 in the composite.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.989",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "-1.018",
+              "field_path": "frameworks.6.key_signals.2.1"
+            },
+            {
+              "value": "51.98",
+              "field_path": "frameworks.5.key_signals.4.1"
+            },
+            {
+              "value": "10.0",
+              "field_path": "frameworks.6.score"
+            }
+          ]
+        },
+        {
+          "headline": "Earnings surprise streak of 7 consecutive quarters signals disciplined guidance management",
+          "detail": "F3 records a 7-quarter positive PEAD surprise streak. Sustained beats against forward estimates indicate either conservative guidance culture or structural demand visibility — both are qualitative signals consistent with the switching-cost moat hypothesis. Average gross margin expansion of 53 bps per year adds to the compounding quality narrative.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            },
+            {
+              "value": "53.0 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Peters-Taylor restatement reveals 18.84pp ROIC gap — intangible capital is larger than GAAP acknowledges",
+          "detail": "ICA-5 fires because economic ROIC (Peters-Taylor capitalisation of R&D as knowledge capital and 25% of SG&A as organisational capital) sits materially below GAAP ROIC. The direction is downward: economic capital efficiency is lower than GAAP implies because the invested-capital base is inflated by intangibles GAAP expenses. This does not negate the moat, but owners should hold economic ROIC — not GAAP ROIC — as the true efficiency signal.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "18.84pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.5367",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "0.3484",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum signal is a clear fail: 12-1 momentum of -30.1%, still 26% off 52-week high",
+          "detail": "F2 scores 3.0 (fail band). Price-based momentum is the most liquid signal of shifting market perception. A drawdown of this magnitude against a backdrop of otherwise strong fundamentals signals either macro-driven multiple compression or a market forming a negative view on growth durability that the fundamentals have not yet confirmed. The PEAD signal is positive_drift — post-earnings buying exists — but the trend-level signal is clearly negative.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-30.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+26.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "No insider buying in the open-market window — zero 90-day buyers despite the drawdown",
+          "detail": "F1 records zero open-market buyers in the trailing 90-day window. At a time when the stock sits 26% below its 52-week high, the absence of insider conviction buying is a notable gap in the bull case. Combined with non-disclosure of CEO equity percentage, alignment between management and long-term shareholders cannot be verified from available data.",
+          "framework_codes": [
+            "F1",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform Dominator scores partial: NRR and GRR undisclosed, Fahlenbrach signal negative",
+          "detail": "F6 scores 4.0 (partial/moderate). Despite a Rule-of-40 above 50, the platform thesis is penalised by management's non-disclosure of net and gross revenue retention — the two SaaS metrics most directly tied to moat durability. Fahlenbrach signal is False (CEO equity alignment not confirmed). For a $23.8B revenue franchise, the absence of retention disclosure weakens the compounding-in-place argument.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "51.98",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "BEW verdict: no_winner_pattern — extreme-compounder tail is not confirmed",
+          "detail": "The Bessembinder Extreme Winner overlay returns no_winner_pattern. This matters for sizing and hold-duration conviction: the concentrated-position, hold-forever case requires the BEW tail to be live. Without it, the thesis is a high-quality business at a reasonable price — compelling, but not a structurally rare compounding event that demands position sizing above normal limits.",
+          "framework_codes": [
+            "F5",
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.19",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic ROIC (Peters-Taylor basis) continues to converge toward or diverge from GAAP ROIC over the next 2-3 annual filings. A widening gap would signal accelerating intangible spend without commensurate economic return — a thesis-erosion condition, not a timing signal.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Track gross margin trajectory annually. Current expansion of 53 bps/yr is modest; any reversal into gross margin compression would indicate pricing power or mix deterioration inconsistent with the moat thesis.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Watch for insider open-market purchase activity over the next 4 quarters. Continued absence of insider buying as the stock remains well below its prior high would compound the alignment concern; resumption would partially resolve it.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor whether Adobe begins disclosing NRR/GRR in MD&A. If the company continues to withhold these metrics as peer SaaS companies disclose them, it may reflect deteriorating cohort retention dynamics — a direct platform-moat checkpoint.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "EPS acceleration signal is 'net_increase_with_dips' — not clean acceleration. Monitor whether dips represent cyclical noise or a structural deceleration in earnings quality across 2-3 more reporting periods before updating the thesis.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Momentum failure (F2 score 3.0, 12-1 momentum -30.1%) may reflect emerging competitive disruption from generative-AI entrants attacking Adobe's creative workflow moat. This is the thesis-break scenario to distinguish from simple multiple compression: watch for revenue growth deceleration or customer-count stagnation in Creative Cloud cohorts.",
+          "severity": "high",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "R&D intensity data gap (F3) prevents full assessment of innovation spend trajectory. Until a complete multi-year R&D intensity series is available, the Innovation Compounder framework cannot be scored at full resolution — creating a blind spot in moat-direction assessment.",
+          "severity": "low",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "F3 Innovation Compounder: R&D intensity could not be computed — no annual filing period with rd_intensity data available. R&D band and intensity signals are scored as unknown. This creates a partial score floor for F3 regardless of other signals.",
+        "F4 Stealth Accumulation: options put/call ratio was not computed — no free-tier data source available per project spec (Pan-Poteshman 2006 methodology). Short interest current and peak figures are withheld as third-party data. F4 scoring rests only on EPS acceleration and decline-signal inputs.",
+        "F6 Platform Dominator: Net Revenue Retention (NRR) and Gross Revenue Retention (GRR) are not_disclosed by Adobe in its 10-K MD&A. These are scored as zero-point signals. F6 score would be higher if retention metrics were disclosed and positive.",
+        "Company-level: market_cap_usd, beta, PE trailing, EV/EBITDA, and PB ratio are null in the view — these fields were not populated for this run. Composite scoring proceeds on framework signals; market-cap-dependent stage reasoning uses the profitable_3yr and established_threshold check instead.",
+        "CEO equity percentage is not_disclosed — Fahlenbrach alignment signal in F6 and CEO alignment in F5 are scored as no_alignment / False accordingly."
+      ]
+    }
+  },
+  "input_tokens": 11860,
+  "output_tokens": 3343,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 71182,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

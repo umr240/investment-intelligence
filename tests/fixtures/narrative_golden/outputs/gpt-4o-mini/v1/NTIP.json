@@ -1,0 +1,167 @@
+{
+  "case_id": "NTIP",
+  "view_sha256": "6b108338f9c09fbdfc80c7a5f9a59156672d10b4236377a9b7d0db454debde46",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NTIP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:22.346795Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9107,
+    "completion_tokens": 598,
+    "cost_usd": 0.001725,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Network-1 Technologies, Inc. shows weak signals across frameworks, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Long-tenured CEO with alignment to strategy",
+          "detail": "The CEO, Corey Horowitz, has a long tenure, which typically signals stability and commitment to the company's long-term vision. This can be a positive factor in navigating challenges and executing strategic initiatives.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Potential for economic capital efficiency",
+          "detail": "The divergence between Peters-Taylor non-GAAP ROIC and GAAP ROIC indicates that economic capital efficiency may be materially better than GAAP suggests. This could imply hidden strengths in operational efficiency that are not fully captured in traditional metrics.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "90.86pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative net income indicates financial distress",
+          "detail": "The latest net income of -$2,420,000 suggests ongoing financial challenges, which may hinder growth and operational stability. This is a critical concern for long-term viability.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$2,420,000",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Weak growth quality signals",
+          "detail": "With a score of 3.5 in Growth Quality (F5), the company faces significant challenges in revenue growth and cash flow generation, which are essential for sustainable operations and future investment.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.5",
+              "field_path": "frameworks.4.score"
+            }
+          ]
+        },
+        {
+          "headline": "Platform Dominator framework fails to meet expectations",
+          "detail": "The score of 2.0 in the Platform Dominator framework (F6) indicates that the company lacks strong retention metrics and customer base stability, which are crucial for long-term success in its sector.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any signs of improvement in revenue generation and net income stability over the next few years.",
+          "severity": "medium",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Keep an eye on the divergence between GAAP and non-GAAP metrics to assess operational efficiency improvements.",
+          "severity": "medium",
+          "grounded_in": "overlay_triggers.0.trigger_id"
+        }
+      ],
+      "data_caveats": [
+        "Earnings dates are missing from yfinance, impacting the ability to analyze earnings trends effectively.",
+        "F5 framework lacks complete revenue data, free cash flow, and gross profit metrics, limiting growth quality assessment.",
+        "F6 framework lacks disclosed net revenue retention and gross revenue retention metrics, affecting platform stability evaluation."
+      ]
+    }
+  },
+  "input_tokens": 9107,
+  "output_tokens": 598,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 6955,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

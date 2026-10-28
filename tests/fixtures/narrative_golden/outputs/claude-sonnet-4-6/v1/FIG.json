@@ -1,0 +1,284 @@
+{
+  "case_id": "FIG",
+  "view_sha256": "7f32daabac14f8b2c609a8a064a15e1e3079f7fc20b42972c5b8294c568545bb",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "FIG",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:49:18.050481Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11983,
+    "completion_tokens": 3443,
+    "cost_usd": 0.087594,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[0]: claim value '64.28' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "bear[0].detail: number '90' not in scorecard whitelist (possible hallucination)",
+      "bear[3].detail: number '60' not in scorecard whitelist (possible hallucination)",
+      "bear[3].detail: number '70%' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Figma is a pre-profitability design-platform compounder with a dominant Rule-of-40 score and extreme R&D intensity, held back by negative GAAP earnings, a failed momentum signal, and top-decile asset growth that statistically predicts near-term underperformance — verdict: monitor.",
+      "bull": [
+        {
+          "headline": "Rule-of-40 score of 64 signals software-quality growth at scale despite current losses",
+          "detail": "At a Rule-of-40 reading well above the 40-point quality threshold, Figma combines revenue-scale growth with a positive FCF margin. The FCF margin of +18.1% confirms that cash generation has decoupled from GAAP net income losses, which are substantially driven by non-cash and investment charges rather than operational deterioration. For a pre-profitability compounder, cash-generating capacity is the thesis anchor.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "64.28",
+              "field_path": "frameworks.5.key_signals.5.1"
+            },
+            {
+              "value": "+18.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ICA restatement collapses the GAAP-ROIC distortion: economic ROIC materially less negative than GAAP implies",
+          "detail": "GAAP ROIC of -87.5% is severely distorted by immediate expensing of R&D and SG&A that Peters-Taylor 2017 methodology capitalises as knowledge and organisational capital. Once R&D is capitalised (15%/yr amortisation) and 25% of SG&A is capitalised as organisational capital (20%/yr amortisation), the adjusted ROIC narrows to -5.0% — an 82-percentage-point restatement. For an R&D-intensity of 97.5%, GAAP ROIC is almost entirely an accounting artefact. The economic capital base is materially larger than GAAP book value, and the trajectory of the economic ROIC is the variable to track over coming annual filings.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-0.8746",
+              "field_path": "overlay_triggers.1.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "-0.0501",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "82.45pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.9753",
+              "field_path": "overlay_triggers.0.relevant_numbers.rd_intensity"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with 48.5% equity stake creates exceptional capital-allocator alignment",
+          "detail": "Dylan Field holds 48.5% of equity — a stake large enough that his wealth is nearly entirely co-incident with long-term business value creation. This structurally suppresses empire-building M&A, EPS-metric gaming, and short-termism. Across Thorndike's Outsiders framework, high owner-operator equity is the single most predictive observable trait of long-run capital allocation quality. The signal is disclosed-exact, not estimated.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "48.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Zero financial leverage preserves optionality through the pre-profitability phase",
+          "detail": "Debt/EBITDA of 0.0 means the balance sheet carries no leverage risk into the company's scale-up phase. Compounding is destroyed by leverage-induced ruin; a clean balance sheet eliminates that failure mode for the foreseeable hold period. Combined with positive FCF, the company is self-funding its growth without dilution pressure from debt covenants.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "GP/A in top-40% proxy band confirms intangible-capital density consistent with platform economics",
+          "detail": "Gross-profit-to-assets in the top-40% band (GP/A ratio of 0.37) places Figma in the Eisfeldt-Papanikolaou organisational-capital zone where asset-light, high-margin businesses accumulate economic value well in excess of GAAP book. The BEW overlay verdict of moderate_winner_candidate reflects this profile: software platforms with strong GP/A and top-decile R&D intensity have historically populated the right tail of long-run equity return distributions.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.3706",
+              "field_path": "overlay_triggers.0.relevant_numbers.gp_a"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Piotroski F-score of 4/9 with top-decile asset growth triggers Cooper-Gulen-Schill disqualifier",
+          "detail": "An F-score of 4/9 sits in the weak zone, and asset growth in the top decile activates the Cooper-Gulen-Schill 2008 disqualifier — a robust academic finding that top-decile asset growers systematically underperform over the subsequent 1-3 years. The score is hard-capped as a result. The signal is a statistical headwind, not a business-quality verdict, but it is a measurable drag on near-term price discovery. Zero open-market insider buyers over the trailing 90 days provides no countervailing accumulation signal.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "12-1 momentum of -57.1% signals institutional distribution, not accumulation",
+          "detail": "Trailing 12-minus-1 month momentum of -57.1% is a severe negative signal under Jegadeesh-Titman momentum frameworks. The stock sits +50.6% off its 52-week low, suggesting a partial rebound from distribution lows, but the PEAD signal being 'positive_drift' is the only constructive element. Negative momentum of this magnitude historically predicts continued underperformance in the near-term window, consistent with the F2 fail verdict.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-57.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+50.6%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP net loss of $1.25B on $1.06B revenue reflects a deeply pre-profitability cost structure",
+          "detail": "Net income of -$1.25B against revenue of $1.06B means the company is spending materially more than it earns on a GAAP basis. While ICA restatement substantially explains the accounting distortion, the gap remains large in absolute terms. Until the economic ROIC (currently -5.0% Peters-Taylor adjusted) trends into positive territory across multiple annual filings, the thesis rests on future profitability, not demonstrated profitability — a structurally higher uncertainty position.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1250463000.0",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "1055788000.0",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "NRR and GRR not disclosed — the core SaaS durability metrics are blind spots",
+          "detail": "Net Revenue Retention and Gross Revenue Retention are both listed as not_disclosed. For a SaaS platform thesis, NRR is the single most important metric for assessing whether pricing power and expansion revenue can sustain compounding without constant new customer acquisition. The absence is noted in framework notes as applying to roughly 60-70% of the SaaS universe, but it remains a material analytical gap for a pre-profitability name where unit economics must carry the thesis.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Short history (4 years, recent IPO) forecloses F3 and F7 feasibility — long-cycle frameworks cannot run",
+          "detail": "F3 (Innovation Compounder, requires 5-year history) and F7 (Smart Beta Timing, requires 10-year history) are both unfeasible. This is a structural limitation of the analytical coverage, not a business quality signal per se, but it means the composite score of 4.21 is constructed from a reduced framework set and may miss signals that would become visible over a longer public history. The PSA overlay confirms this is not a spinoff candidate, so the listing-type discount is not offset by spinoff-specific mispricing dynamics.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.21",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor adjusted ROIC (-5.0%) improves toward breakeven across the next 2-3 annual filings. Failure to show directional improvement in economic ROIC would indicate the intangible capital investment is not translating into incremental returns — a thesis-break condition distinguishable from accounting noise.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor NRR disclosure emergence in 10-K MD&A. If, over the next 1-2 annual filings, Figma begins disclosing NRR and it is materially below 100%, the platform-expansion thesis loses its primary structural support. NRR below 100% at this stage of growth would indicate customer contraction is offsetting new logo acquisition.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Watch for top-decile asset growth persisting into a second consecutive year. Cooper-Gulen-Schill 2008 disqualifier activates on sustained overinvestment cycles; if asset growth remains top-decile, the statistical headwind extends and the F1 cap condition does not lift.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor CEO equity stake for material reductions via structured sales programmes. Dylan Field's 48.5% stake is the primary capital-allocator alignment signal. Sustained programmatic reduction toward single-digit ownership would degrade the Outsiders-trait score and remove the most powerful governance anchor in the thesis.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor whether the -57.1% trailing momentum reflects institutional distribution driven by a structural thesis break (customer loss, competitive displacement) versus IPO-price discovery normalisation. If PEAD positive drift fails to sustain over 2-3 quarters while revenue growth decelerates, the momentum signal becomes corroborating negative evidence rather than noise.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Short interest data is withheld (third-party data constraint). The absence of confirmed short interest levels means the F4 stealth-accumulation signal is partially blind. If short interest is elevated and undisclosed, the partial score of 5.5 may be overstated. Watch for proxy disclosures or regulatory filings that surface this data.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Revenue CAGR and buyback yield are uncomputed due to missing market cap and revenue history data. As historical data accumulates post-IPO, these signals may shift the composite score materially in either direction. The current composite of 4.21 is a partial-information verdict.",
+          "severity": "low",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "F4: Options put/call ratio was not computed — no free-tier source available per PROJECT_SPEC §F4 Pan-Poteshman 2006 methodology. Short interest (current and peak) is withheld as third-party data. F4 score of 5.5 reflects only the signals that could be computed.",
+        "F5: Revenue CAGR (3-year) is missing due to insufficient revenue history. ROIC (GAAP) was computed but the Peters-Taylor adjusted ROIC is provided via ICA overlay rather than the core F5 signal. Buyback yield could not be computed due to absent market cap and share repurchase data. F5 score of 4.5 reflects these gaps.",
+        "F5 / ICA-4: P/B ratio is null (market cap unavailable at run date). The ICA-4 trigger condition requiring P/B > 4.0 cannot be fully evaluated; the trigger fired on the R&D intensity and GP/A sub-conditions that could be computed.",
+        "PSA-3: Months since listing is null and listing type is unconfirmed (IPO date marked parser_uncertain). The PSA overlay concluded not_a_spinoff_candidate based on available signals, but the listing timeline carries parser uncertainty."
+      ]
+    }
+  },
+  "input_tokens": 11983,
+  "output_tokens": 3443,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 72825,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

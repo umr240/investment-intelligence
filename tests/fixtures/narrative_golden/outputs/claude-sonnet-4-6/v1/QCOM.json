@@ -1,0 +1,300 @@
+{
+  "case_id": "QCOM",
+  "view_sha256": "dc964d16d9798576d7cca7cb97e2bea856ae41639c51bb7c3b03fa4a5fb98ac7",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "QCOM",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:07:34.741970Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11914,
+    "completion_tokens": 3474,
+    "cost_usd": 0.087852,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[4].numeric_claims[0]: claim value '-0.289' does not match view value 'expensive' at 'frameworks.6.key_signals.1.1'"
+    ],
+    "body": {
+      "one_liner": "QCOM is a capital-efficient semiconductor IP licensor with strong GAAP economics, but intangible-capital restatement, stagnant revenue growth, negative momentum, and no stealth-accumulation signal collectively argue for watchful holding rather than thesis conviction.",
+      "bull": [
+        {
+          "headline": "High GAAP ROIC and robust FCF margin confirm durable capital efficiency",
+          "detail": "F5 scores a strong-fit verdict on the back of a ROIC of +24.4% and FCF margin of +23.6%. Even after Peters-Taylor intangible-capital restatement (ICA-5), the economic ROIC remains materially positive at 14.38%, confirming that QUALCOMM's licensing and chip businesses generate real returns above a reasonable cost of capital. Debt/EBITDA of 0.591 leaves the balance sheet conservative, preserving optionality through cycles.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+24.4%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "+23.6%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "0.591",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "14.38%",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Earnings quality is high: accruals (Sloan) and gross-profit density both pass",
+          "detail": "F1 registers a Piotroski score of 6/9 and confirms both Sloan high-quality accruals and a GP/A in the strong band. These signals indicate that reported earnings are cash-backed and that the asset base is productively employed. Shrinking asset growth alongside maintained profitability is consistent with a business harvesting returns rather than diluting capital in low-return expansions.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "R&D intensity sits in the 'sweet spot' band, sustaining IP-moat renewal",
+          "detail": "F3 flags R&D intensity at +20.4%, classified as 'sweet spot' — high enough to sustain QUALCOMM's patent portfolio and standards leadership (5G, Wi-Fi, automotive), but not so high as to signal speculative over-investment. For a licensing-dominant business model, sustained R&D spend is the primary mechanism by which the Cornered Resource (standards-essential patents) is renewed each technology generation.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+20.4%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Rule of 40 passes at 42.61, reflecting combined growth-plus-margin adequacy",
+          "detail": "F6 records a Rule of 40 score of 42.61 and a GP/A in the top-40-percentile proxy band. These metrics suggest that despite near-zero three-year revenue CAGR, profitability density is sufficient to clear the threshold typical of platform-quality businesses. The diversified customer-concentration signal further reduces single-customer cliff risk.",
+          "framework_codes": [
+            "F6",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "42.61",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "P/B below its own historical average may reflect intangible-capital understatement, not deterioration",
+          "detail": "F7 records a P/B z-score of -0.289 (below-average band), while ICA-4 flags that GP/A sits in the top sector tercile and R&D intensity exceeds 15%. Peters-Taylor capitalisation of R&D and organisational capital would materially increase the economic book value, implying the below-average P/B is an accounting artefact rather than a signal of business decline. The Arnott/Asness dispute on factor reliability (F7 note) argues against over-weighting this signal in either direction.",
+          "framework_codes": [
+            "F7",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-0.289",
+              "field_path": "frameworks.6.key_signals.1.1"
+            },
+            {
+              "value": "22.18pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Peters-Taylor restatement reveals a 22.18pp gap: economic ROIC is materially lower than GAAP ROIC",
+          "detail": "ICA-5 documents that Peters-Taylor non-GAAP ROIC is 14.38% versus GAAP ROIC of 36.56% — a downward divergence of 22.18 percentage points. The gap arises because GAAP omits capitalised R&D and organisational capital from the invested-capital denominator. When the full intangible asset base is included, capital efficiency is real but significantly less exceptional than the headline figure implies. This is the single most important quantitative restatement in this scorecard.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "22.18pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "14.38%",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "36.56%",
+              "field_path": "overlay_triggers.1.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Three-year revenue CAGR is effectively flat at +0.1%, raising TAM-ceiling and market-share questions",
+          "detail": "F5's revenue CAGR of +0.1% over three years is inconsistent with a compounding thesis. It reflects the cyclical nature of smartphone SoC demand and the structural risk that QUALCOMM's dominant Android modem/AP share has limited incremental TAM without successful diversification into automotive, IoT, and PC. Until revenue growth re-accelerates, the compounding thesis rests entirely on margin and buyback, not organic business expansion.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+0.1%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum is weak: only +2.2% 12-1 return and -29.9% from 52-week high",
+          "detail": "F2 scores a fail verdict with 12-1 momentum of +2.2% and a price sitting +29.9% below its 52-week high. The PEAD signal is mixed with recent-negative tilt. Weak price momentum at this magnitude is not merely a sentiment indicator — it often reflects a deteriorating institutional positioning or a market that has already priced in near-term earnings risk. It is a watch item, not an action trigger, but it argues against expecting near-term multiple expansion.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+2.2%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+29.9%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin contraction of -104.8 bps/year and no EPS acceleration signal eroding pricing power",
+          "detail": "F3's average gross-margin expansion of -104.8 bps/year indicates that either mix shift (away from higher-margin licensing toward chip revenue) or competitive pricing pressure is compressing economics. Combined with no EPS acceleration signal in F4 and a zero-quarter earnings-surprise streak, this suggests the business is not in a phase of operating leverage expansion — a prerequisite for the high-multiple valuation to expand rather than compress.",
+          "framework_codes": [
+            "F3",
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-104.8 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment signal is absent and no open-market insider buying was detected",
+          "detail": "F5 flags 'no_alignment' on CEO equity, and F1 records zero 90-day open-market buyers. The CEO equity ownership is flagged as parser-uncertain at 0.5%. Thorndike's Outsiders framework weights skin-in-the-game heavily as a predictor of capital-allocation discipline. Absent insider purchasing at current prices, the incentive-alignment leg of the thesis is weak. This is a monitoring flag, not a disqualifier, but it means capital-allocation quality must be assessed from cash-flow statement behaviour rather than insider conviction signals.",
+          "framework_codes": [
+            "F5",
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            },
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor-adjusted ROIC (currently 14.38%) continues to converge downward toward cost-of-capital over 2-3 annual filings. A sustained decline — not a single-year reading — would indicate that the intangible investment required to maintain the patent moat is consuming economic returns faster than the business generates them. That is a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor whether gross-margin contraction (-104.8 bps/year) persists or accelerates. Sustained multi-year compression would indicate structural mix-shift away from high-margin QTL licensing or competitive pressure on QCT pricing. Three consecutive annual filings showing continued erosion, absent a strategic explanation, would constitute a moat-narrowing signal.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor revenue CAGR trajectory annually. A second consecutive 3-year period of near-zero growth (currently +0.1%) without evidence of automotive/IoT/PC diversification gaining material revenue share would indicate the TAM ceiling of the core Android smartphone business has been reached, structurally capping compounding duration.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor whether the P/B premium (ICA-4: flagged vs. threshold) compresses as markets re-rate intangible-heavy semiconductors. The EV/Rev z-score of 0.821 (expensive band) leaves valuation vulnerable to multiple contraction in a rising-rate or risk-off environment. This is not an exit signal; it is a monitoring checkpoint for position sizing reassessment at year 5.",
+          "severity": "medium",
+          "grounded_in": "ICA-4"
+        },
+        {
+          "factor": "Monitor short interest data when accessible. F4's data gap on put/call ratio and withheld short-interest figures mean the stealth-accumulation/distribution picture is incomplete. If short interest is revealed to be elevated and rising, the F4 fail verdict has additional negative weight beyond what the current score reflects.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Monitor CEO capital-allocation behaviour via annual cash-flow statements (buyback price discipline, M&A activity). The absence of insider buying and the 'no_alignment' flag mean the only observable capital-allocator signal is the cash-flow statement itself. Empire-building acquisitions funded at rich multiples would trigger a Thorndike-inversion warning.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor PEAD (post-earnings announcement drift) signal trajectory. Currently 'mixed_recent_negative' in F2. A sustained negative PEAD over 3-4 consecutive quarters would indicate institutional sellers are persistently distributing on earnings events — a distributional (not just sentiment) deterioration.",
+          "severity": "low",
+          "grounded_in": "F2"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio was unavailable from free-tier sources and was skipped per project specification; the F4 score and stealth-accumulation verdict are therefore based on incomplete signal inputs.",
+        "Short interest data (current and peak) for F4 was withheld as third-party data; the F4 framework's accumulation/distribution read is partially blind.",
+        "Market cap, P/B ratio, P/E (trailing), EV/EBITDA, and beta are all null in the view; several valuation and sizing calculations that would otherwise inform F7 and composite context are unavailable for this run.",
+        "CEO equity ownership (0.5%) is flagged as parser-uncertain; insider-alignment signals based on this figure should be treated as indicative only.",
+        "NRR and GRR are not disclosed in F6; the platform-retention signal is absent and treated as zero-points per framework methodology, which may understate platform stickiness for a hardware IP licensor whose retention mechanics differ from SaaS.",
+        "Patent portfolio size is not disclosed in the F3 10-K signal; the Innovation Compounder score cannot reflect the depth of the standards-essential patent estate, which is a material qualitative asset not captured quantitatively."
+      ]
+    }
+  },
+  "input_tokens": 11914,
+  "output_tokens": 3474,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 72133,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

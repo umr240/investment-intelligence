@@ -1,0 +1,149 @@
+{
+  "case_id": "LICN",
+  "view_sha256": "b588e7cd651da017ad49bb9ba44e8ed1cb456c46b18e8cf91900dac4fe5987e6",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "LICN",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:55.786886Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8891,
+    "completion_tokens": 516,
+    "cost_usd": 0.001566,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "Lichen International Limited's composite score indicates exclusion due to insufficient data and negative earnings.",
+      "bull": [
+        {
+          "headline": "Potential for Economic Capital Efficiency",
+          "detail": "The divergence between Peters-Taylor non-GAAP ROIC and GAAP ROIC suggests that economic capital efficiency is significantly better than GAAP metrics indicate. This could imply that the company has undercapitalized R&D and SG&A, which may enhance future profitability if addressed. However, the current negative GAAP ROIC indicates substantial operational challenges that need to be monitored.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "15.30pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-0.1704",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-0.3234",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Insufficient Historical Data",
+          "detail": "Lichen International Limited's recent IPO status limits the feasibility of all frameworks due to insufficient quarterly and annual history. This lack of data prevents a comprehensive analysis of performance trends and financial health, raising concerns about the reliability of any conclusions drawn from available metrics.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Negative Earnings Impact",
+          "detail": "The company reported a significant net loss of $21,962,000 for the latest fiscal year, indicating severe operational inefficiencies. This negative income raises flags about the sustainability of its business model and the ability to achieve profitability in the near term, necessitating close monitoring of future earnings reports.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-21962000.0",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether operational inefficiencies persist, as indicated by continued negative earnings over the next few fiscal years.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Watch for any changes in the divergence between economic and GAAP ROIC, which may signal improvements in capital efficiency or further operational challenges.",
+          "severity": "medium",
+          "grounded_in": "overlay_triggers.0.trigger_id"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to generate sufficient revenue growth to offset its current losses, as indicated by the latest revenue figures.",
+          "severity": "medium",
+          "grounded_in": "company.latest_revenue"
+        }
+      ],
+      "data_caveats": [
+        "LICN: yfinance earnings_dates empty",
+        "LICN: no Form 4 insider transactions found on EDGAR"
+      ]
+    }
+  },
+  "input_tokens": 7867,
+  "output_tokens": 516,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 5370,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

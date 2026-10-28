@@ -1,0 +1,290 @@
+{
+  "case_id": "VLTO",
+  "view_sha256": "5c7d9d307bdaac68691f20ec8f99ec38be79d40516ddcbc5d7ccd1fa4a522d7b",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "VLTO",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:17:03.100437Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11907,
+    "completion_tokens": 3462,
+    "cost_usd": 0.087651,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[1]: claim value '24.4' does not match view value 'False' at 'frameworks.5.key_signals.5.1'"
+    ],
+    "body": {
+      "one_liner": "Veralto is a profitable industrial-measurement compounder with a strong ROIC profile and earnings momentum, but intangible-capital restatement materially deflates economic returns, management alignment is unconfirmed, and the platform-dominator framework scores at fail — a WATCHLIST thesis contingent on moat verification and capital-allocator clarity.",
+      "bull": [
+        {
+          "headline": "ROIC at ~20% signals genuine capital efficiency above industrial peers",
+          "detail": "GAAP ROIC of 19.8% is a strong signal for an industrial business; combined with an FCF margin of 16.5%, the business converts revenue to free cash with discipline. At a 3-year revenue CAGR of 4.2%, growth is measured but the quality of that growth — margin-accretive, cash-generative — is what matters for a decade-hold compounding thesis. The Debt/EBITDA of 1.448 is moderate and does not threaten financial flexibility.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "19.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "16.5%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+4.2%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "1.448",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Seven-quarter earnings surprise streak reflects operational consistency",
+          "detail": "An unbroken 7-quarter positive earnings surprise streak (F3) points to management guidance conservatism and underlying execution quality rather than one-off beats. Coupled with a positive PEAD (post-earnings announcement drift) signal from F2, the market has been systematically under-estimating Veralto's delivery — a pattern that tends to persist until either expectations fully reset or execution falters. Gross margin has expanded at 55.6 bps per year, confirming that pricing power or mix shift is structurally intact.",
+          "framework_codes": [
+            "F2",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            },
+            {
+              "value": "55.6 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Accruals discipline confirmed: Sloan high-quality earnings signal is positive",
+          "detail": "F1's Sloan accruals test returns True for high-quality earnings, meaning reported income is substantially backed by cash — an important foundational check on a company with 5 years of listed history and limited long-run track record. Piotroski score of 6/9 (moderate) adds breadth: the balance sheet is not deteriorating, profitability signals are positive, and operating efficiency is not flagging across the nine-factor test.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum framework at strong_fit with stock near 52-week high",
+          "detail": "F2 scores 7.0 (strong_fit) — the strongest individual framework score in the card. The stock is at its 52-week high (0.0% drawdown) and carries a positive PEAD signal. The 12-1 momentum reading of -4.0% reflects near-flat recent price action rather than deterioration; combined with PEAD, the pattern is consistent with a business whose earnings delivery continues to attract systematic institutional attention rather than speculative momentum.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-4.0%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+0.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Diversified customer base limits concentration risk in industrial end-markets",
+          "detail": "F6 flags customer concentration as 'diversified_base_case' — no single customer dependency that could inflict a step-change revenue shock. For a business in measurement and testing instrumentation, diversification across end-markets (water quality, product quality) reduces idiosyncratic cyclicality. This is a thesis-preservation floor condition, not a growth driver, but it matters for survivability of the 5-year hold.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Peters-Taylor restatement cuts economic ROIC by 11.14pp — intangible capital is material",
+          "detail": "ICA-5 overlay: GAAP ROIC of 21.99% deflates to 10.85% after capitalising R&D (15%/yr amortisation) and 25% of SG&A as organisational capital (20%/yr amortisation) under Peters-Taylor (2017). An 11.14pp gap — classified downward — means the invested-capital base is materially larger in economic terms than GAAP book implies. This is not an accounting artefact to dismiss; it is the economic cost of maintaining the business's intangible assets. The HOLD thesis must be anchored to the adjusted 10.85%, not the GAAP 21.99%.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "11.14pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "10.85%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "21.99%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform Dominator fails outright — no disclosed retention metrics, Rule of 40 at 24.4",
+          "detail": "F6 scores 2.0 (fail, weak band). Neither NRR nor GRR is disclosed — standard disclosure for recurring-revenue industrial software and services businesses is absent here. The Rule of 40 reads 24.4, below the threshold typically associated with high-quality platform compounders. Fahlenbrach signal is False. Veralto does not present as a platform-type business with defensible recurring-revenue lock-in on the available evidence; the moat must be assessed on switching-cost and process-power grounds, not network or platform dynamics.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "24.4",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment flagged as no_alignment; equity stake parser-uncertain",
+          "detail": "F5 flags CEO alignment as 'no_alignment' — a direct Outsiders 8-trait failure. The parsed CEO equity stake of 0.5% carries a 'parser_uncertain' state, meaning this number may not be reliable. Jennifer Honeycutt is not the founder. Without confirmed meaningful equity ownership, the capital-allocator quality that underpins the forever-hold thesis is unverified. M&A decisions, buyback timing, and SG&A discipline all depend on this alignment; it must be confirmed via DEF 14A before full conviction.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "F7 unfeasible: only 5 years of annual history limits long-cycle valuation anchoring",
+          "detail": "The Smart Beta Timing framework is unfeasible — VLTO listed in February 2024 (IPO date parser-uncertain) and the scorecard has 5 years of annual data against a 10-year requirement. This removes mean-reversion and cycle-adjusted valuation anchoring from the toolkit. There is no decade of ROIC history through which to assess moat durability across a full industrial cycle. The PSA overlay confirms this is not a spinoff candidate with a longer shadow history to draw on. Probabilistic base rates for the thesis rely on a truncated sample.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "R&D intensity at 4.8% lands outside the innovation band; GP/A not strong",
+          "detail": "F3 scores 5.0 (partial, moderate). R&D intensity of 4.8% falls in the 'outside_band' classification — either too low for a genuine innovation compounder or structured differently than the R&D-intensity screen expects for this sector. GP/A (gross profit to assets) is not in the strong tier per F1. For a measurement-instrument business where process-power and intangible moat are the primary investment theses, stagnant innovation investment would be a slow-moving thesis invalidator to monitor across the hold period.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+4.8%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "5.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic ROIC (Peters-Taylor adjusted) trends below cost-of-capital proxies over the next 2-3 annual filings. An 11.14pp GAAP-to-economic gap is not static — if SG&A or R&D intensity rises without proportional revenue payoff, the adjusted figure will compress further. This is the primary thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Verify CEO equity ownership via DEF 14A within the first annual proxy cycle. Parser-uncertain 0.5% stake is insufficient to confirm capital-allocator alignment. If confirmed ownership is immaterial and compensation is structured around revenue or EPS targets without ROIC gates, the management-quality pillar of the thesis is structurally weakened.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Track gross margin expansion trajectory across annual filings. Current 55.6 bps/yr expansion is modest; any reversal — particularly if driven by pricing concessions in water quality or product quality end-markets — would indicate competitive pressure eroding what appears to be the primary moat mechanism.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Watch for disclosure of NRR/GRR metrics if Veralto expands its software/services attach on instrumentation. Continued non-disclosure after 3-4 more annual filings in a segment that warrants it would itself be informative — either the retention economics are not favorable, or the business model is less recurring than the thesis assumes.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor institutional holder-count delta across the next 2+ 13F snapshots. Current F4 data has only one snapshot — insufficient to identify whether accumulation or distribution is underway. A confirmed distribution pattern among long-duration holders would be an early-warning signal ahead of any structural deterioration.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Assess whether the 7-quarter earnings surprise streak compresses as sell-side estimates catch up. PEAD and consistent beats are positively valued, but guidance resets that eliminate the beat-and-raise dynamic would remove the F2 strong_fit signal and could trigger momentum-based institutional outflows — a short-term headwind worth monitoring without acting on.",
+          "severity": "low",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Short-history risk (PSA-3): with fewer than 3 years of listed annual filings, the scorecard operates on a truncated data series. Any single anomalous year disproportionately affects rolling metrics. Treat all rate-of-change signals with wider uncertainty bands until a full 5-year listed history accumulates post-2026.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity stake (0.5%) carries a parser_uncertain state — the parsed figure may not accurately reflect actual ownership per proxy filings. Verify directly via DEF 14A before relying on this number for capital-allocator scoring.",
+        "F4 institutional holder-count delta is based on only one 13F snapshot; multiple dives over time are required to establish a directional accumulation or distribution signal. Current F4 score should be interpreted with wider uncertainty than a multi-snapshot reading.",
+        "F4 options put/call ratio is unavailable — no free-tier source was accessible per project specification. Sentiment skew from options markets is absent from the stealth-accumulation analysis.",
+        "F5 buyback yield could not be computed — market cap and share repurchase data were not persisted in the current run. Shareholder return assessment via buyback is incomplete.",
+        "IPO date carries a parser_uncertain state; months-since-listing for the PSA overlay could not be confirmed. PSA verdict ('not_a_spinoff_candidate') reflects available listing_type data, which was blank."
+      ]
+    }
+  },
+  "input_tokens": 11907,
+  "output_tokens": 3462,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 75637,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -26,6 +26,7 @@ import deepdive.llm_calls as llm_calls
 import deepdive.narrative as narrative
 from config.llm_prices import PRICES, PRICES_AS_OF, UnpricedModelError, cost_usd, price_for
 from config.settings import settings
+from deepdive.narrative_output import NarrativeProvider
 
 # The real writers, saved before the autouse `llm_rows` fixture replaces them.
 _WRITE, _UPDATE = llm_calls._write, llm_calls._update
@@ -157,6 +158,23 @@ def test_a_failed_attempt_and_its_fallback_are_both_recorded(
     assert (ok["guard_status"], ok["warning_count"]) == ("ok", 0)
     assert ok["cost_usd"] == cost_usd(settings.anthropic_narrative_model, 1_000, 200)
     assert out.cost_usd == ok["cost_usd"]
+
+
+def test_an_eval_call_is_marked_and_real_use_is_not(
+    monkeypatch: pytest.MonkeyPatch, llm_rows: list[dict[str, Any]]
+) -> None:
+    _narrate(monkeypatch)
+    assert {r["purpose"] for r in llm_rows} == {None}
+    llm_rows.clear()
+    narrative.generate_eval_narrative(
+        SimpleNamespace(ticker="LULU"),  # type: ignore[arg-type]
+        NarrativeProvider.ANTHROPIC,
+        "claude-haiku-4-5",
+    )
+    (row,) = llm_rows  # one provider, no fallback
+    assert (row["purpose"], row["model"], row["run_id"], row["provider"]) == (
+        "eval", "claude-haiku-4-5", None, "anthropic",
+    )  # fmt: skip
 
 
 def test_a_call_whose_row_was_not_written_is_still_the_last_call(
@@ -311,3 +329,18 @@ def test_llm_stats(db: sessionmaker[Session]) -> None:
     assert "claude-sonnet-4-6" in result.output and "Per ok call" in result.output
     assert result.output.count("$0.0060") == 2  # total, and per successful call
     assert "mystery-model" in result.output and "—" in result.output
+
+
+def test_llm_stats_keeps_eval_spend_on_its_own_row(db: sessionmaker[Session]) -> None:
+    from typer.testing import CliRunner
+
+    from cli.main import app
+
+    _WRITE(_row())
+    _WRITE(_row(purpose="eval", cost_usd=0.5))
+    result = CliRunner().invoke(app, ["llm", "stats"], env={"COLUMNS": "200"})
+    assert result.exit_code == 0, result.output
+    lines = [line for line in result.output.splitlines() if "claude-sonnet-4-6" in line]
+    assert len(lines) == 2
+    assert any("eval" in line and "$0.5000" in line for line in lines)
+    assert any("use" in line and "$0.0060" in line for line in lines)

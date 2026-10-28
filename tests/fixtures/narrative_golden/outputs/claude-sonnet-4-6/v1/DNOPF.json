@@ -1,0 +1,234 @@
+{
+  "case_id": "DNOPF",
+  "view_sha256": "5b9aa5ccf5edfc36d401c3a3d54263d9fd44cb31094adf6b5e2304bc937e8659",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "DNOPF",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:46:53.370575Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11652,
+    "completion_tokens": 2557,
+    "cost_usd": 0.073311,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Dino Polska posts strong revenue growth and respectable ROIC, but a composite exclude verdict, severe price-momentum failure, sparse institutional signal, and intangible-capital-adjusted economics that materially trail GAAP ROIC leave the thesis insufficiently grounded to hold with conviction at this stage.",
+      "bull": [
+        {
+          "headline": "Double-digit revenue CAGR sustained through recent years signals genuine store-rollout compounding",
+          "detail": "F5 records a 3-year revenue CAGR that demonstrates the Polish grocery-discount model is scaling with consistency. In the Consumer Defensive sector this kind of top-line compounding is rare; it reflects store-count expansion rather than same-store inflation alone, suggesting genuine TAM penetration runway remains. The base rate for discount grocers sustaining this pace at mid-cap scale is modest, but Dino's format — compact proximity stores in underserved Polish sub-urban markets — offers differentiation that a $1B challenger would take years to replicate via real-estate permitting and supplier relationships.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+23.2%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC indicates capital is being deployed productively relative to the grocery sector",
+          "detail": "F5 signals a GAAP ROIC that sits well into positive territory. For a brick-and-mortar grocery operator — a capital-intensive format with thin unit margins — this level of return on invested capital suggests Dino's store economics are sound and the rollout model is not destroying value per unit opened. The Outsiders capital-allocator lens reads this as a management team that is disciplining capital against hurdle rates rather than growing revenue at any cost.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+17.9%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive FCF margin confirms the business is cash-generative despite aggressive store expansion",
+          "detail": "An FCF margin above zero while executing a high-pace physical store rollout is a meaningful signal: the business is not consuming external capital to fund growth, at least at current expansion rates. This is structurally supportive of the thesis that unit economics work before the cost of incremental square footage — a critical hold-forever checkpoint for any retail compounder.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+2.3%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Composite verdict is exclude; the scorecard finds no multi-framework convergence to support a position",
+          "detail": "The stage-weighted composite scores below the threshold required for any positive verdict. With only three feasible frameworks (F2, F4, F5) and two scoring fail or weak, the framework lattice does not produce the lollapalooza convergence that the hold-forever philosophy requires before deploying capital. A single moderate F5 partial does not offset failed momentum and weak stealth-accumulation signals.",
+          "framework_codes": [
+            "F2",
+            "F4",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.46",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Price momentum is deeply negative; 12-1 return signals the market is pricing deterioration, not recovery",
+          "detail": "F2 records a 12-1 momentum reading of –35.9% and the stock sits far below its 52-week high. The academic evidence on momentum (Jegadeesh-Titman and successors) assigns negative predictive value to this signal over intermediate horizons. The failure here is not a valuation argument — it is a signal that informed capital is exiting, not accumulating. Under hold-forever framing this is a watch point: if price momentum does not inflect over the next 2–3 annual cycles, it warrants re-examination of whether the business is executing as modelled.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-35.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+34.8%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor economic ROIC trails GAAP ROIC by a material gap, suggesting intangible capital is being undercounted in the denominator",
+          "detail": "ICA-5 fires because the Peters-Taylor intangible-adjusted ROIC (capitalising R&D and a fraction of SG&A) sits materially below the GAAP figure. This downward revision indicates that once the brand and organisational capital embedded in SG&A expenditure is treated as invested capital rather than expensed, the apparent capital efficiency shrinks. For a relationship-driven retail operator, this is the more economically accurate picture — and it is the figure that should anchor long-run return assumptions.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.25pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.1401",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "0.1826",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "CEO equity ownership not disclosed; capital-allocator alignment cannot be assessed",
+          "detail": "F5 flags CEO alignment as no_alignment and the view confirms ownership percentage is not disclosed. The Outsiders framework makes skin-in-the-game a first-order predictor of capital-allocation quality over the 10-year hold. Without visibility into founder or management ownership, there is no basis on which to score this trait — and the absence of disclosure in an OTC-listed foreign private issuer structure is itself a governance data gap that should be monitored across annual filings.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor ROIC gap widens further across the next 2–3 annual filings; a sustained or widening gap would indicate economic capital efficiency is structurally overstated by GAAP reporting, breaking the quality-compounder thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Track CEO and management equity ownership disclosure. If no meaningful alignment is established or disclosed within the 5-year hold window, the capital-allocator pillar of the thesis remains unverifiable — a thesis-validation gap, not a noise event.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor 12-1 price momentum annually. Persistent negative momentum across multiple annual periods, absent an identifiable temporary cause, may signal structural deterioration in the business that fundamental filings lag in revealing.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "FCF margin is thin; monitor whether the rollout pace compresses FCF further. If the business turns FCF-negative for two or more consecutive years without a credible store-maturation explanation, the self-funded growth premise is broken.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "OTC listing and foreign private issuer structure (Polish domicile) constrains EDGAR XBRL data availability, creating persistent data gaps in earnings cadence, quarterly history, and insider transaction visibility. Monitor whether data quality improves as listing matures past the 5-year threshold.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Debt/EBITDA is uncomputable due to missing EBITDA data. As store expansion continues, leverage could be building unseen. Verify leverage level directly from annual report filings within the first 1–2 years of any hold.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "F4 EPS acceleration signal is absent due to zero reported quarters in the pipeline. If earnings cadence data remains unpopulated across the 5-year hold, the stealth-accumulation framework will remain structurally blind — a data infrastructure risk, not a business risk, but one that constrains thesis validation.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "EDGAR companyfacts unavailable for CIK 1796026; the pipeline fell back to per-filing XBRL, and no financial data was ultimately parsed for DNOPF via EDGAR. This is a material data-infrastructure gap affecting the reliability of all XBRL-derived signals.",
+        "CEO name and equity ownership percentage could not be retrieved from available sources; CEO alignment is scored as no_alignment and ownership remains not_disclosed.",
+        "Short interest current and peak figures are withheld as third-party data; the F4 short-decline signal is therefore based on incomplete information.",
+        "PEAD signal is absent because zero reported earnings rows were found; post-earnings-announcement drift cannot be assessed.",
+        "F4 EPS acceleration is uncomputable due to zero reported quarterly earnings rows; the surprise streak is similarly missing.",
+        "F4 options put/call ratio was not computed; no free-tier source is available per project specification.",
+        "F5 Debt/EBITDA is uncomputable because EBITDA is not available in the parsed data.",
+        "F5 buyback yield could not be computed due to missing market cap and share repurchases data.",
+        "No Form 4 insider transactions were found on EDGAR, rendering F1 unfeasible and leaving insider-activity inference entirely absent.",
+        "Short percent of float was unavailable, further limiting F4 short-interest analysis."
+      ]
+    }
+  },
+  "input_tokens": 11652,
+  "output_tokens": 2557,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 58053,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

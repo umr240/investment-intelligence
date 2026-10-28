@@ -93,14 +93,39 @@ def generate_narrative(
             "ANTHROPIC_API_KEY in .env, or NARRATIVE_PROVIDER=...",
         )
 
+    return _generate(view, order, run_id=latest_run_id(view.ticker))
+
+
+def generate_eval_narrative(
+    view: ScorecardView, provider: NarrativeProvider, model: str
+) -> NarrativeOutput:
+    """One narrative for an eval case (ADR-047): this provider and model, no fallback.
+
+    A golden-set view is a frozen public copy, not the ticker's live dive, so no
+    staleness check applies; the `llm_calls` row is marked `purpose="eval"`.
+    """
+    return _generate(view, [provider], run_id=None, model=model, purpose="eval")
+
+
+def _generate(
+    view: ScorecardView,
+    order: list[NarrativeProvider],
+    *,
+    run_id: int | None,
+    model: str | None = None,
+    purpose: str | None = None,
+) -> NarrativeOutput:
     last_err: Exception | None = None
     fallback_reason = ""
-    run_id = latest_run_id(view.ticker)
     for idx, provider in enumerate(order):
         try:
-            with attempt_context(ticker=view.ticker, run_id=run_id, attempt=idx + 1):
+            with attempt_context(
+                ticker=view.ticker, run_id=run_id, attempt=idx + 1, purpose=purpose
+            ):
                 body, prompt_tok, completion_tok, model_id, fit_notes = _call_provider(
-                    provider, view,
+                    provider,
+                    view,
+                    model,
                 )
         except _ProviderError as e:
             last_err = e
@@ -207,20 +232,24 @@ def _recorded(provider: str, model: str, system_prompt: str) -> Any:
 
 
 def _call_provider(
-    provider: NarrativeProvider, view: ScorecardView,
+    provider: NarrativeProvider,
+    view: ScorecardView,
+    model: str | None = None,
 ) -> tuple[NarrativeBody, int, int, str, list[str]]:
-    """Dispatch to the per-provider call.
+    """Dispatch to the per-provider call; `model` overrides the configured one.
 
     Returns (body, prompt_tok, comp_tok, model, fit_notes)."""
     if provider == NarrativeProvider.OPENAI:
-        return _call_openai(view)
-    return _call_anthropic(view)
+        return _call_openai(view, model)
+    return _call_anthropic(view, model)
 
 
 # ── OpenAI (primary) ─────────────────────────────────────────────────────
 
 
-def _call_openai(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, list[str]]:
+def _call_openai(
+    view: ScorecardView, model_override: str | None = None
+) -> tuple[NarrativeBody, int, int, str, list[str]]:
     try:
         from openai import (
             APIConnectionError,
@@ -233,7 +262,7 @@ def _call_openai(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, lis
         raise _ProviderError(f"openai SDK not installed: {e}") from e
 
     client = OpenAI(api_key=settings.openai_api_key)
-    model = settings.openai_narrative_model
+    model = model_override or settings.openai_narrative_model
     system_prompt = _build_system_prompt()
     user_prompt = _build_user_prompt(view)
 
@@ -288,7 +317,9 @@ def _call_openai(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, lis
 # ── Anthropic (fallback) ─────────────────────────────────────────────────
 
 
-def _call_anthropic(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, list[str]]:
+def _call_anthropic(
+    view: ScorecardView, model_override: str | None = None
+) -> tuple[NarrativeBody, int, int, str, list[str]]:
     try:
         import anthropic
         from anthropic import APIConnectionError, APIStatusError, RateLimitError
@@ -296,7 +327,7 @@ def _call_anthropic(view: ScorecardView) -> tuple[NarrativeBody, int, int, str, 
         raise _ProviderError(f"anthropic SDK not installed: {e}") from e
 
     client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
-    model = settings.anthropic_narrative_model
+    model = model_override or settings.anthropic_narrative_model
     system_prompt = _build_system_prompt()
     user_prompt = _build_user_prompt(view)
 

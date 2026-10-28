@@ -1,0 +1,166 @@
+{
+  "case_id": "CRWD",
+  "view_sha256": "dcb05c8ea96c4eaee0c2e4371b511f6a0ddf6640eb04114c2bd27e8c602fde2b",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "CRWD",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:00.017417Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9463,
+    "completion_tokens": 572,
+    "cost_usd": 0.001686,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[1].numeric_claims[0]: claim value '18.4 bps/yr' does not match view value 'Avg GM expansion' at 'frameworks.2.key_signals.0.0'",
+      "bull[1].numeric_claims[1]: claim value '28.8%' does not match view value 'R&D intensity' at 'frameworks.2.key_signals.1.0'",
+      "bear[0].numeric_claims[1]: claim value '-11.6%' does not match view value 'ROIC' at 'frameworks.4.key_signals.2.0'",
+      "bear[0].detail: number '162.5' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "CrowdStrike Holdings, Inc. is a watchlist candidate with strong momentum and innovation signals but faces profitability challenges.",
+      "bull": [
+        {
+          "headline": "Strong Momentum Signals",
+          "detail": "CrowdStrike exhibits a robust momentum score of 9.0, driven by a 98.9% return over the past 12 months, indicating significant positive price action and investor interest. This momentum warrants monitoring for potential extreme-winner status.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "98.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Compounder Characteristics",
+          "detail": "The company scores 8.0 in innovation, supported by consistent gross margin expansion of 18.4 bps per year and a high R&D intensity of 28.8%. This suggests a strong commitment to innovation and product development, which could drive future growth.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "18.4 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.0"
+            },
+            {
+              "value": "28.8%",
+              "field_path": "frameworks.2.key_signals.1.0"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income and ROIC",
+          "detail": "CrowdStrike reported a net income of -$162.5 million and a negative ROIC of -11.6%. This raises concerns about the company's ability to achieve sustainable profitability, particularly in a competitive market.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-162502000.0",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "-11.6%",
+              "field_path": "frameworks.4.key_signals.2.0"
+            }
+          ]
+        },
+        {
+          "headline": "Weak Pre-Discovery Alpha Score",
+          "detail": "With a score of 3.0 in the Pre-Discovery Alpha framework, the company shows weaknesses in key financial metrics, including a Piotroski score of 4/9 and a lack of open-market buyers, indicating potential challenges in operational efficiency and investor confidence.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether GAAP net income remains negative and if operating cash flow continues to exceed net income significantly, indicating potential for future profitability.",
+          "severity": "high",
+          "grounded_in": "ICA-3"
+        },
+        {
+          "factor": "Watch for continued erosion in ROIC over the next few years, as negative returns could signal deeper operational issues.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the current analysis, but F4 and F5 have specific data limitations affecting the completeness of the signals."
+      ]
+    }
+  },
+  "input_tokens": 8439,
+  "output_tokens": 572,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6405,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}
