@@ -4173,11 +4173,13 @@ def narrative_eval_replay(
     for (model, version), by_case in sorted(result.grades.items()):
         table = Table(title=f"{model}, prompt v{version}")
         table.add_column("Split")
-        for col in ("Cases", *VERDICT_GRADERS, "Cost", "p50", "p95"):
+        # G1 is the first attempt (ADR-045 §2.7 item 4); "G1 after" counts the one repair.
+        for col in ("Cases", *VERDICT_GRADERS, "Repairs", "G1 after", "Cost", "p50", "p95"):
             table.add_column(col, justify="right")
         for split in (TEST, TRAIN):
             s = summary(by_case, result.splits, split)
-            rates = ["—" if s[g] is None else f"{s[g]:.0%}" for g in VERDICT_GRADERS]
+            rates = ["—" if s[g] is None else f"{s[g]:.0%}" for g in (*VERDICT_GRADERS, "G1r")]
+            rates.insert(len(VERDICT_GRADERS), str(s["repairs"]))
             cost = "—" if s["cost_per_narrative"] is None else f"${s['cost_per_narrative']:.4f}"
             p50, p95 = (
                 "—" if s[k] is None else f"{s[k] / 1000:.1f}s"
@@ -4249,7 +4251,8 @@ def narrative_eval_run(
         raise typer.Exit(2) from None
     rprint(
         f"{len(cases)} {split} cases on {chosen.value}/{model}, prompt v{PROMPT_VERSION}: "
-        f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each)"
+        f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each); "
+        f"about ${2 * estimate:.2f} if every case uses its one repair (ADR-045 §2.5)"
     )
     if not yes and not typer.confirm("Spend this?", default=False):
         raise typer.Exit(1)

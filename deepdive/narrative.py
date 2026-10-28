@@ -21,18 +21,25 @@ The narrative is ALWAYS validated by `narrative_guard.validate()` before
 being returned. A guard failure does NOT mask the output — it sets
 `status=guard_failed` and emits warnings, so the CLI surfaces the issue
 to the human reader. Hallucinations leak through louder than they hide.
+
+Schema v2 (ADR-045): the model cites field IDs and writes numbers only as
+`{field_id}` placeholders, which `narrative_render` fills from the view. Both
+providers get the same per-request JSON schema as structured output; a guard
+failure earns one repair call on the same provider (§2.5).
 """
 from __future__ import annotations
 
 import json
 import logging
 import re
+from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, cast
 
 from pydantic import BaseModel
 
 from config.settings import settings
+from config.verdicts import narrative_verdict
 from deepdive.llm_calls import annotate_last, attempt_context, last_call_cost, recorded_call
 from deepdive.mental_model_composer import (
     Archetype,
@@ -45,19 +52,20 @@ from deepdive.mental_model_composer import (
 )
 from deepdive.narrative_output import (
     SCHEMA_V2,
-    NarrativeBody,
     NarrativeBodyV2,
     NarrativeOutput,
     NarrativeProvider,
     NarrativeStatus,
+    narrative_json_schema_v2,
 )
+from deepdive.narrative_render import render_body
 from deepdive.scorecard_view import ScorecardView
 
 logger = logging.getLogger(__name__)
 
-# Bump on any change to the system prompt or NarrativeBody schema (ADR-048 §2.2);
+# Bump on any change to the system prompt or the narrative schema (ADR-048 §2.2);
 # tests/test_llm_calls.py fails on a changed prompt hash without a bump.
-PROMPT_VERSION = 1
+PROMPT_VERSION = 2
 
 
 # ── Public API ───────────────────────────────────────────────────────────
@@ -117,18 +125,21 @@ def _generate(
     model: str | None = None,
     purpose: str | None = None,
 ) -> NarrativeOutput:
+    from deepdive.narrative_guard import validate as guard_validate
+
+    fields = view.citable_fields()  # one view for the prompt, the guard and the render
     last_err: Exception | None = None
     fallback_reason = ""
+    attempt = 0
     for idx, provider in enumerate(order):
+        attempt += 1
         try:
             with attempt_context(
-                ticker=view.ticker, run_id=run_id, attempt=idx + 1, purpose=purpose
+                ticker=view.ticker, run_id=run_id, attempt=attempt, purpose=purpose
             ):
-                body, prompt_tok, completion_tok, model_id, fit_notes = _call_provider(
-                    provider,
-                    view,
-                    model,
-                )
+                first = _call_provider(provider, view, model)
+                first_warnings = guard_validate(first.body, view)
+                annotate_last("warnings" if first_warnings else "ok", len(first_warnings))
         except _ProviderError as e:
             last_err = e
             # Provider errors can echo part of the API key; this text is logged
@@ -137,32 +148,51 @@ def _generate(
             logger.warning("Narrative provider %s failed: %s", provider.value, _redact(str(e)))
             continue
 
-        # Validate post-generation. Guard failures populate warnings but do
-        # NOT switch providers — re-rolling rarely fixes hallucinations and
-        # would silently double the bill.
-        from deepdive.narrative_guard import validate as guard_validate
-        guard_warnings = guard_validate(body, view)
+        reply, warnings, cost = first, first_warnings, last_call_cost()
+        repair_notes: list[str] = []
+        if first_warnings:  # §2.5: one repair, same provider, same request; never a second
+            attempt += 1
+            try:
+                with attempt_context(
+                    ticker=view.ticker, run_id=run_id, attempt=attempt, purpose=purpose
+                ):
+                    repair = (first.body, first_warnings)
+                    reply = _call_provider(provider, view, model, repair=repair)
+                    warnings = guard_validate(reply.body, view)
+                    annotate_last("warnings" if warnings else "ok", len(warnings))
+                repair_cost = last_call_cost()
+                cost = None if cost is None or repair_cost is None else round(cost + repair_cost, 6)
+            except _ProviderError as e:
+                reply, warnings = first, first_warnings
+                cost = None if cost is None else cost + (last_call_cost() or 0.0)
+                repair_notes = [f"repair: {provider.value}: {_redact(str(e))}"]
+        repaired = reply is not first
+
         # Status reflects grounding faults only. A trim is cosmetic — surfacing
         # it is right, but letting it raise GUARD_FAILED would report
         # "numeric/citation validation failed" for an over-long headline and
         # blunt a signal that should mean a suspect number.
-        status = NarrativeStatus.GUARD_FAILED if guard_warnings else NarrativeStatus.OK
-        warnings = [*guard_warnings, *(f"formatting: {n}" for n in fit_notes)]
-        annotate_last("warnings" if guard_warnings else "ok", len(warnings))
-
+        status = NarrativeStatus.GUARD_FAILED if warnings else NarrativeStatus.OK
+        notes = [*reply.fit_notes, *repair_notes]
         return NarrativeOutput(
             ticker=view.ticker,
             generated_at=datetime.now(timezone.utc),
             provider=provider,
-            model=model_id,
-            prompt_tokens=prompt_tok,
-            completion_tokens=completion_tok,
-            cost_usd=last_call_cost(),
+            model=reply.model,
+            prompt_tokens=first.prompt_tokens + (reply.prompt_tokens if repaired else 0),
+            completion_tokens=(
+                first.completion_tokens + (reply.completion_tokens if repaired else 0)
+            ),
+            cost_usd=cost,
             fallback_used=(idx > 0),
             fallback_reason=fallback_reason if idx > 0 else "",
             status=status,
-            guard_warnings=warnings,
-            body=body,
+            guard_warnings=[*warnings, *(f"formatting: {n}" for n in notes)],
+            schema_version=SCHEMA_V2,
+            body=reply.body,
+            rendered=render_body(reply.body, fields),
+            first_attempt=first.body if repaired else None,
+            first_attempt_warnings=first_warnings if repaired else [],
         )
 
     raise NarrativeUnavailableError(
@@ -229,29 +259,87 @@ def _recorded(provider: str, model: str, system_prompt: str) -> Any:
         model=model,
         prompt_version=PROMPT_VERSION,
         system_prompt=system_prompt,
-        schema=NarrativeBody.model_json_schema(),
+        schema=NarrativeBodyV2.model_json_schema(),  # the static shape; IDs vary per request
     )
+
+
+@dataclass(frozen=True)
+class _Reply:
+    body: NarrativeBodyV2
+    prompt_tokens: int
+    completion_tokens: int
+    model: str
+    fit_notes: list[str]
+
+
+Repair = tuple[NarrativeBodyV2, list[str]]  # the answer that failed the guard, and why
 
 
 def _call_provider(
     provider: NarrativeProvider,
     view: ScorecardView,
     model: str | None = None,
-) -> tuple[NarrativeBody, int, int, str, list[str]]:
-    """Dispatch to the per-provider call; `model` overrides the configured one.
-
-    Returns (body, prompt_tok, comp_tok, model, fit_notes)."""
+    repair: Repair | None = None,
+) -> _Reply:
+    """One structured-output request; `model` overrides the configured one."""
     if provider == NarrativeProvider.OPENAI:
-        return _call_openai(view, model)
-    return _call_anthropic(view, model)
+        return _call_openai(view, model, repair)
+    return _call_anthropic(view, model, repair)
+
+
+def _request_schema(view: ScorecardView) -> dict[str, Any]:
+    """The v2 body schema with this view's IDs, inlined and strict for both providers."""
+    schema = narrative_json_schema_v2(list(view.citable_fields()))
+    return _strict_schema(_inline_refs(schema))
+
+
+def _inline_refs(schema: dict[str, Any]) -> dict[str, Any]:
+    """Replace each `$ref` with its `$defs` entry: one schema shape both providers accept."""
+    defs = schema.get("$defs", {})
+
+    def walk(node: Any) -> Any:
+        if isinstance(node, dict):
+            ref = node.get("$ref")
+            if isinstance(ref, str) and ref.startswith("#/$defs/"):
+                return walk(defs[ref.split("/")[-1]])
+            return {k: walk(v) for k, v in node.items() if k != "$defs"}
+        if isinstance(node, list):
+            return [walk(v) for v in node]
+        return node
+
+    return cast(dict[str, Any], walk(schema))
+
+
+def _repair_turns(repair: Repair | None) -> list[dict[str, str]]:
+    """The failed answer and the guard's warnings, as the next two turns (§2.5)."""
+    if repair is None:
+        return []
+    body, warnings = repair
+    faults = "\n".join(f"- {w}" for w in warnings)
+    return [
+        {"role": "assistant", "content": body.model_dump_json()},
+        {"role": "user", "content": (
+            f"The checks rejected that answer:\n{faults}\n\nReturn the whole narrative again "
+            "with each fault fixed. Keep everything that passed. Every number must be a "
+            "{field_id} placeholder from the citable fields."
+        )},
+    ]  # fmt: skip
+
+
+def _parse_reply(raw: Any, provider: str) -> tuple[NarrativeBodyV2, list[str]]:
+    raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBodyV2)
+    try:
+        return NarrativeBodyV2.model_validate(raw), fit_notes
+    except Exception as e:
+        raise _ProviderError(f"{provider} JSON did not match NarrativeBodyV2: {e}") from e
 
 
 # ── OpenAI (primary) ─────────────────────────────────────────────────────
 
 
 def _call_openai(
-    view: ScorecardView, model_override: str | None = None
-) -> tuple[NarrativeBody, int, int, str, list[str]]:
+    view: ScorecardView, model_override: str | None = None, repair: Repair | None = None
+) -> _Reply:
     try:
         from openai import (
             APIConnectionError,
@@ -268,9 +356,6 @@ def _call_openai(
     system_prompt = _build_system_prompt()
     user_prompt = _build_user_prompt(view)
 
-    schema = NarrativeBody.model_json_schema()
-    schema["additionalProperties"] = False  # strict mode requires this everywhere
-
     with _recorded("openai", model, system_prompt) as call:
         try:
             resp = client.chat.completions.create(
@@ -280,14 +365,15 @@ def _call_openai(
                     "type": "json_schema",
                     "json_schema": {
                         "name": "NarrativeBody",
-                        "schema": _strict_schema(schema),
+                        "schema": _request_schema(view),
                         "strict": True,
                     },
                 },
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt},
-                ],
+                    *_repair_turns(repair),
+                ],  # type: ignore[misc]  # plain role/content dicts
             )
         except (RateLimitError, AuthenticationError, APIConnectionError) as e:
             raise _ProviderError(f"openai transport: {type(e).__name__}: {e}") from e
@@ -304,24 +390,19 @@ def _call_openai(
         except json.JSONDecodeError as e:
             raise _ProviderError(f"openai returned invalid JSON: {e}") from e
 
-        raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBody)
-        try:
-            body = NarrativeBody.model_validate(raw)
-        except Exception as e:
-            raise _ProviderError(f"openai JSON did not match NarrativeBody: {e}") from e
-
+        body, fit_notes = _parse_reply(raw, "openai")
         usage = getattr(resp, "usage", None)
         pt = int(getattr(usage, "prompt_tokens", 0) or 0)
         ct = int(getattr(usage, "completion_tokens", 0) or 0)
-        return body, pt, ct, model, fit_notes
+        return _Reply(body, pt, ct, model, fit_notes)
 
 
 # ── Anthropic (fallback) ─────────────────────────────────────────────────
 
 
 def _call_anthropic(
-    view: ScorecardView, model_override: str | None = None
-) -> tuple[NarrativeBody, int, int, str, list[str]]:
+    view: ScorecardView, model_override: str | None = None, repair: Repair | None = None
+) -> _Reply:
     try:
         import anthropic
         from anthropic import APIConnectionError, APIStatusError, RateLimitError
@@ -333,28 +414,17 @@ def _call_anthropic(
     system_prompt = _build_system_prompt()
     user_prompt = _build_user_prompt(view)
 
-    # Anthropic structured output via tool-use: define a single "emit_narrative"
-    # tool whose schema IS NarrativeBody, force tool_choice → guarantees JSON.
-    tool_schema = NarrativeBody.model_json_schema()
-    tool_schema["additionalProperties"] = False
-
     with _recorded("anthropic", model, system_prompt) as call:
         try:
-            # max_tokens=4096: empirically bull(5)+bear(5)+risks(8)+data_caveats can
-            # exceed 2048 with Sonnet's verbose tool-call reasoning, leaving the
-            # tool_input truncated mid-field. 4096 fits the worst case and is well
-            # under the model's output ceiling.
+            # Structured output, not a forced tool call: current models reject a forced
+            # tool_choice with a 400 (ADR-045 §1, §2.7 item 1). The v1 baseline averaged
+            # 3,130 output tokens; 8,192 leaves room for the v2 fields and a repair.
             resp = client.messages.create(
                 model=model,
-                max_tokens=4096,
+                max_tokens=8192,
                 system=system_prompt,
-                tools=[{
-                    "name": "emit_narrative",
-                    "description": "Emit the structured bull/bear/risks narrative for the scorecard.",  # noqa: E501
-                    "input_schema": tool_schema,
-                }],
-                tool_choice={"type": "tool", "name": "emit_narrative"},
-                messages=[{"role": "user", "content": user_prompt}],
+                output_config={"format": {"type": "json_schema", "schema": _request_schema(view)}},
+                messages=[{"role": "user", "content": user_prompt}, *_repair_turns(repair)],  # type: ignore[list-item]
             )
         except (RateLimitError, APIConnectionError) as e:
             raise _ProviderError(f"anthropic transport: {type(e).__name__}: {e}") from e
@@ -362,30 +432,25 @@ def _call_anthropic(
             raise _ProviderError(f"anthropic status {e.status_code}: {e}") from e
 
         call.response = resp
-        tool_input: dict | None = None
-        for block in resp.content:
-            if getattr(block, "type", None) == "tool_use":
-                tool_input = block.input  # type: ignore[attr-defined]
-                break
-        if tool_input is None:
-            raise _ProviderError("anthropic did not return a tool_use block")
-
-        tool_input, fit_notes = _fit_to_declared_lengths(tool_input, NarrativeBody)
+        if resp.stop_reason in ("max_tokens", "refusal"):
+            raise _ProviderError(f"anthropic stopped early: {resp.stop_reason}")
+        text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
         try:
-            body = NarrativeBody.model_validate(tool_input)
-        except Exception as e:
-            raise _ProviderError(f"anthropic tool_input did not match NarrativeBody: {e}") from e
+            raw = json.loads(text)
+        except json.JSONDecodeError as e:
+            raise _ProviderError(f"anthropic returned invalid JSON: {e}") from e
 
+        body, fit_notes = _parse_reply(raw, "anthropic")
         usage = getattr(resp, "usage", None)
         pt = int(getattr(usage, "input_tokens", 0) or 0)
         ct = int(getattr(usage, "output_tokens", 0) or 0)
-        return body, pt, ct, model, fit_notes
+        return _Reply(body, pt, ct, model, fit_notes)
 
 
 def _fit_to_declared_lengths(
     payload: Any, model: type[BaseModel],
 ) -> tuple[Any, list[str]]:
-    """Trim over-long strings to the `maxLength` their schema declares.
+    """Trim over-long strings and lists to the `maxLength` / `maxItems` their schema declares.
 
     Neither OpenAI's strict mode nor Anthropic's tool-use schema enforces
     `maxLength` — both accepted a schema declaring it and returned longer
@@ -425,6 +490,10 @@ def _fit_to_declared_lengths(
             }
         if isinstance(value, list):
             items = node.get("items", {})
+            cap = node.get("maxItems")  # not sent to the provider (ADR-045 §2.7 item 1)
+            if isinstance(cap, int) and len(value) > cap:
+                notes.append(f"{path} cut from {len(value)} to {cap} items")
+                value = value[:cap]
             return [walk(v, items, f"{path}.{i}") for i, v in enumerate(value)]
         return value
 
@@ -452,37 +521,46 @@ A Python pipeline has already computed every quantitative signal (7 academic fra
 3 diagnostic overlays, a stage-weighted composite). Your role is presentation only.
 
 HARD RULES (violating these is the worst possible failure):
-1. NEVER invent or estimate numbers. Every numeric value in your output (percentages, dollar
-   amounts, scores, ratios, year counts, etc.) must come from the ScorecardView JSON the user
-   provides. If a number you'd want to mention is not in the view, do not mention any number —
-   describe the qualitative pattern instead.
-2. Every numeric_claim you emit MUST include a `field_path` pointing to the exact location in
-   the ScorecardView JSON where that number lives (e.g. "composite.score",
-   "frameworks.0.score", "company.market_cap_usd"). The downstream validator checks each path.
-3. Cite framework codes (F1..F7) in `framework_codes` for every bull/bear point, and only cite
-   frameworks that appear in `frameworks` (i.e. exclude unfeasible ones).
-4. Risks must be grounded in something concrete in the view: a framework code, an overlay
-   trigger_id (e.g. "BEW-2"), or a data_gap entry. The `grounded_in` field is mandatory.
-5. Do not name external data sources (Bloomberg, FactSet, Fiscal.ai, etc.) and do not claim our
+1. NEVER type a number. The user message lists the CITABLE FIELDS: an ID, its value and its
+   label. To state a value, write its ID in braces, e.g. "ROIC is {F5.roic}"; code replaces
+   the placeholder with the value. A number that is not a citable field must not appear at
+   all: describe the pattern in words instead. A typed digit is checked and flagged.
+2. Use IDs exactly as listed. List the IDs each bull or bear point relies on in its
+   `numeric_claims`.
+3. Cite framework codes (F1..F7) in `framework_codes` for every bull/bear point, and only
+   frameworks that were scored (the user message names the unfeasible ones).
+4. Risks must be grounded in something concrete: a scored framework code, an overlay
+   trigger_id (e.g. "BEW-2"), a citable field ID, or a data_gap entry. `grounded_in` is
+   mandatory.
+5. `verdict` is given in the user message: copy it exactly. `verdict_reason` explains why the
+   scorecard produced it. You explain the verdict; you do not choose or soften it.
+6. `triggers`: at least one. Each names one citable field ID and the change in it that would
+   alter the verdict, e.g. field "F5.roic", condition "turns positive across two annual
+   filings". A trigger condition is the ONLY place you may state a threshold of your own.
+7. `owner_operator_answer`: would an owner hold 100% of this business for ten years on what
+   the scorecard shows? YES, NO, or NOT_YET when the evidence is not there yet.
+   `moat_direction`: WIDENING, FLAT, NARROWING, or UNKNOWN when the scorecard cannot tell.
+8. Do not name external data sources (Bloomberg, FactSet, Fiscal.ai, etc.) and do not claim our
    numbers agree or disagree with any external benchmark — you have no access to those sources.
-6. Tone: terse, analytical, peer-reviewed. No marketing language. No emojis. No buy/sell
-   recommendations beyond what the composite verdict already says.
-7. Length: each headline ≤ 140 chars, each detail ≤ 600 chars. Prefer fewer high-quality points
-   over many vague ones.
-8. data_caveats must paraphrase the actual `fetch_data_gaps` and per-framework `data_gaps` in
-   the view. Do not invent caveats; do not omit material ones.
-9. The user message includes a "Lattice" section: the mental models composed for this profile.
-   BEFORE drafting, reason through them in this order (ADR-023 §1.3 Block 2):
-     (a) INVERSION — what makes most stocks losers; how many of those traits this one shares
-     (b) CIRCLE OF COMPETENCE — what is understood vs. unknown; "unknown" is a first-class output
-     (c) MOAT DIRECTION — name the specific Power if present; widening / flat / narrowing
-     (d) CAPITAL ALLOCATOR — Outsiders 8 traits, scored against scorecard signals
-     (e) LUNCH-EATING TEST — would a $1B-funded challenger displace this in 5 years?
-     (f) PROBABILISTIC — base rate for this profile; conditional given divergent signals
-   Each model's "Inversion form" line is the failure mode you must check against this profile.
-   Lattice models are reasoning aids — DO NOT cite their slugs in `framework_codes` or
-   `grounded_in` (those fields accept only F1..F7, overlay trigger_ids, view field paths).
-10. HOLD-LOGIC FRAMING (DEC-23 — forever-default, 5-year minimum reconsideration):
+9. Tone: terse, analytical, peer-reviewed. No marketing language. No emojis. No buy/sell
+   recommendations.
+10. Length: one_liner <= 400 chars, headline <= 140, detail <= 600, verdict_reason <= 600, risk
+    factor <= 500, trigger condition <= 300. At most 5 bull and 5 bear points, 8 risks and 8
+    triggers. Prefer fewer high-quality points over many vague ones.
+11. data_caveats must paraphrase the actual `fetch_data_gaps` and per-framework `data_gaps` in
+    the view. Do not invent caveats; do not omit material ones.
+12. The user message includes a "Lattice" section: the mental models composed for this profile.
+    BEFORE drafting, reason through them in this order (ADR-023 §1.3 Block 2):
+      (a) INVERSION — what makes most stocks losers; how many of those traits this one shares
+      (b) CIRCLE OF COMPETENCE — what is understood vs. unknown; "unknown" is a first-class output
+      (c) MOAT DIRECTION — name the specific Power if present; widening / flat / narrowing
+      (d) CAPITAL ALLOCATOR — Outsiders 8 traits, scored against scorecard signals
+      (e) LUNCH-EATING TEST — would a $1B-funded challenger displace this in 5 years?
+      (f) PROBABILISTIC — base rate for this profile; conditional given divergent signals
+    Each model's "Inversion form" line is the failure mode you must check against this profile.
+    Lattice models are reasoning aids — their slugs never appear in `framework_codes`,
+    `grounded_in` or field IDs.
+13. HOLD-LOGIC FRAMING (DEC-23 — forever-default, 5-year minimum reconsideration):
     The user's hold philosophy is Buffett/Sleep/Akre/Smith/Russo convergent:
       • Default state: hold forever.
       • Reconsideration window: opens at 5 years, never before. Years 1-4 are
@@ -495,12 +573,11 @@ HARD RULES (violating these is the worst possible failure):
         wealth-destroying habit at the portfolio level.
     Frame your output accordingly:
       • Risks (the `risks` array) are THESIS-VALIDATION CHECKPOINTS to monitor
-        across the 5-year hold, NOT stop-loss triggers. Each risk should be
-        phrased as a condition to WATCH FOR over years 1-5 ("monitor whether
-        ROIC erosion continues over 2-3 more annual filings before
-        reconsidering thesis"), not a level to EXIT AT ("sell if drawdown
-        exceeds X%"). High-severity risks describe thesis-BREAK conditions,
-        not price moves.
+        across the 5-year hold, NOT stop-loss triggers. Phrase each as a condition
+        to WATCH FOR over years 1-5 ("monitor whether ROIC erosion continues over
+        further annual filings before reconsidering the thesis"), not a level to
+        EXIT AT. High-severity risks describe thesis-BREAK conditions, not price
+        moves. Put any threshold in a trigger, not in the risk text.
       • Bear points stay analytical — describe what's working against the
         thesis structurally. Don't recommend timing actions.
       • Bull points are the why-hold-forever case, including BEW (Bessembinder
@@ -532,14 +609,23 @@ def _build_user_prompt(view: ScorecardView) -> str:
     overlay_ids = [t.trigger_id for t in view.overlay_triggers] or ["none"]
 
     lattice_block = _build_lattice_block(view)
+    verdict = narrative_verdict(view.composite.verdict)
+    if verdict is None:  # every composite verdict maps (config/verdicts.py); never guess one
+        raise ValueError(f"{view.ticker}: no narrative verdict for {view.composite.verdict!r}")
+    fields = "\n".join(
+        f"{fid} = {f.value}  ({f.label})" for fid, f in view.citable_fields().items()
+    )
 
     return (
         f"Generate a narrative for {view.ticker} (run {view.run_date}, mode {view.mode_used}).\n"
+        f"Verdict (copy it exactly): {verdict}\n"
         f"Feasible frameworks: {', '.join(feasible) or 'none'}\n"
         f"Unfeasible frameworks: {', '.join(unfeasible) or 'none'}\n"
         f"Active overlay triggers: {', '.join(overlay_ids)}\n\n"
+        f"CITABLE FIELDS (the only numbers you may state, each as {{ID}}):\n{fields}\n\n"
         f"{lattice_block}\n\n"
-        f"ScorecardView JSON (THE ONLY SOURCE OF NUMBERS):\n```json\n{payload}\n```\n"
+        "ScorecardView JSON (context only; cite its numbers by ID, never copy them):\n"
+        f"```json\n{payload}\n```\n"
     )
 
 
@@ -765,7 +851,8 @@ def persist_narrative(narrative: NarrativeOutput) -> bool:
 
     Stores body sections as JSON strings (keeps audit trail of guard
     warnings + token usage). A v2 narrative stores its rendered copy, and the
-    model's own body under `_template` so it can be re-checked. Returns True on
+    model's own body under `_template` so it can be re-checked, and a repaired one
+    its first attempt under `_first_attempt`. Returns True on
     success, False if no DeepDiveRun exists yet for the ticker.
     """
     from sqlalchemy import desc, select
@@ -778,6 +865,11 @@ def persist_narrative(narrative: NarrativeOutput) -> bool:
     bear_json = json.dumps(sections.pop("bear"), default=str)
     if isinstance(narrative.body, NarrativeBodyV2):
         sections["_template"] = narrative.body.model_dump(mode="json")
+        if narrative.first_attempt is not None:  # §2.5: what the repair replaced, and why
+            sections["_first_attempt"] = {
+                "template": narrative.first_attempt.model_dump(mode="json"),
+                "guard_warnings": list(narrative.first_attempt_warnings),
+            }
     risk_json = json.dumps(
         {
             **sections,

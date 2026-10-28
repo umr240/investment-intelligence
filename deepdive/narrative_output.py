@@ -262,11 +262,17 @@ class NarrativeOutput(BaseModel):
     guard_warnings: list[str] = Field(default_factory=list)
     body: NarrativeBody | NarrativeBodyV2  # v2: as the model wrote it, placeholders and all
     rendered: NarrativeBodyV2 | None = None  # v2 only: the body with values filled in
+    # ADR-045 §2.5: the body before the one bounded repair, and what the guard said about it.
+    # Token and cost fields above count both calls.
+    first_attempt: NarrativeBodyV2 | None = None
+    first_attempt_warnings: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _body_matches_schema_version(self) -> NarrativeOutput:
         v2 = self.schema_version == SCHEMA_V2
-        if v2 != isinstance(self.body, NarrativeBodyV2) or (self.rendered is not None and not v2):
+        if v2 != isinstance(self.body, NarrativeBodyV2) or (
+            not v2 and (self.rendered is not None or self.first_attempt is not None)
+        ):
             raise ValueError(f"body does not match schema_version {self.schema_version}")
         if (
             self.rendered is not None

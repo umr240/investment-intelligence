@@ -3,6 +3,10 @@
 Grading reads a golden-set case and one stored model output; nothing here calls
 a model. A grade is `pass`, `fail`, `not_measured` (the grader's input does not
 exist yet) or `measured` (G6/G7 report a number, not a verdict).
+
+G1–G5 grade the first attempt, the headline (ADR-045 §2.7 item 4). A narrative
+that used its one repair also gets G1r–G5r for the repaired answer; G6 and G7
+count both calls.
 """
 
 from __future__ import annotations
@@ -36,6 +40,7 @@ from deepdive.scorecard_view import ScorecardView
 
 PASS, FAIL, NOT_MEASURED, MEASURED = "pass", "fail", "not_measured", "measured"
 VERDICT_GRADERS = ("G1", "G2", "G3", "G4", "G5")
+REPAIRED = "r"  # suffix of the grades of a repaired answer: G1r..G5r
 CITATION_FLOOR = 1  # framework codes plus numeric claims per bull/bear point; set after baseline
 # ADR-023-A1 row 2: the fields added to bull/bear/risks/data_caveats (ADR-045 builds them).
 REQUIRED_FIELDS = ("verdict", "owner_operator_answer", "moat_direction", "triggers")
@@ -82,7 +87,21 @@ def _texts(out: NarrativeOutput, view: ScorecardView) -> list[str]:
 
 
 def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
-    body = out.narrative.body
+    first = out.narrative.first_attempt
+    if first is None:
+        verdicts = _verdict_grades(view, out.narrative)
+    else:  # the first attempt is the headline; the repaired answer is graded beside it
+        attempt = out.narrative.model_copy(update={"body": first, "first_attempt": None})
+        verdicts = _verdict_grades(view, attempt) + [
+            Grade(f"{g.grader}{REPAIRED}", g.status, g.detail, g.value)
+            for g in _verdict_grades(view, out.narrative)
+        ]
+    return [*verdicts[:5], *_cost_grades(out), *verdicts[5:]]
+
+
+def _verdict_grades(view: ScorecardView, narrative: NarrativeOutput) -> list[Grade]:
+    """G1–G5 for one answer."""
+    body = narrative.body
     warnings = validate(body, view)
     g1 = Grade("G1", PASS) if not warnings else Grade("G1", FAIL, f"{len(warnings)}: {warnings[0]}")
 
@@ -117,7 +136,7 @@ def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
     leftover = re.compile(r"[{}]") if isinstance(body, NarrativeBodyV2) else _PLACEHOLDER
     problems += [
         f"unrendered placeholder in {t[:40]!r}"
-        for t in _texts(out.narrative, view)
+        for t in _texts(narrative, view)
         if leftover.search(t) or _PLACEHOLDER.search(t)
     ]
     g3 = Grade("G3", FAIL, f"{len(problems)}: {problems[0]}") if problems else Grade("G3", PASS)
@@ -126,7 +145,11 @@ def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
 
     missing = [f for f in REQUIRED_FIELDS if getattr(body, f, None) in (None, "", [])]
     g5 = Grade("G5", FAIL, f"missing {', '.join(missing)}") if missing else Grade("G5", PASS)
+    return [g1, g2, g3, g4, g5]
 
+
+def _cost_grades(out: EvalOutput) -> list[Grade]:
+    """G6 (cost) and G7 (latency), over every call the narrative made."""
     cost = cost_usd(
         out.model,
         out.input_tokens,
@@ -143,7 +166,7 @@ def grade(view: ScorecardView, out: EvalOutput) -> list[Grade]:
         tokens += f"; narrative recorded ${stored:.6f}"
     g6 = Grade("G6", MEASURED if cost is not None else NOT_MEASURED, tokens, cost)
     g7 = Grade("G7", MEASURED, "", float(out.latency_ms))
-    return [g1, g2, g3, g4, g5, g6, g7]
+    return [g6, g7]
 
 
 @dataclass
@@ -205,6 +228,11 @@ def serialise(by_case: dict[str, list[Grade]]) -> dict[str, list[dict[str, Any]]
     return {case: [asdict(g) for g in gs] for case, gs in sorted(by_case.items())}
 
 
+def _final(grades: list[Grade], grader: str) -> Grade | None:
+    by = {g.grader: g for g in grades}
+    return by.get(f"{grader}{REPAIRED}", by.get(grader))
+
+
 def summary(by_case: dict[str, list[Grade]], splits: dict[str, str], split: str) -> dict[str, Any]:
     """Pass rates per grader, cost per narrative and latency percentiles for one split."""
     rows = [gs for case, gs in by_case.items() if splits.get(case) == split]
@@ -212,6 +240,12 @@ def summary(by_case: dict[str, list[Grade]], splits: dict[str, str], split: str)
     for grader in VERDICT_GRADERS:
         graded = [g for gs in rows for g in gs if g.grader == grader and g.status in (PASS, FAIL)]
         out[grader] = sum(g.status == PASS for g in graded) / len(graded) if graded else None
+        # After repair: the repaired grade where the narrative used its repair, else the first.
+        after = [g for gs in rows if (g := _final(gs, grader)) and g.status in (PASS, FAIL)]
+        out[f"{grader}{REPAIRED}"] = (
+            sum(g.status == PASS for g in after) / len(after) if after else None
+        )
+    out["repairs"] = sum(any(g.grader.endswith(REPAIRED) for g in gs) for gs in rows)
     costs = [g.value for gs in rows for g in gs if g.grader == "G6" and g.value is not None]
     latency = sorted(g.value for gs in rows for g in gs if g.grader == "G7" and g.value is not None)
     out["cost_per_narrative"] = statistics.fmean(costs) if costs else None

@@ -76,7 +76,7 @@ def stubbed(monkeypatch: pytest.MonkeyPatch, db: None) -> list[tuple[str, str, s
 
     monkeypatch.setattr(narrative, "generate_eval_narrative", fake)
     monkeypatch.setattr(runner, "deferred_models", lambda _v: ["meta/dropped_model"])
-    monkeypatch.setattr(runner, "last_call_id", lambda: None)
+    monkeypatch.setattr(runner, "last_call_id", lambda: 0)
     return calls
 
 
@@ -242,3 +242,24 @@ def test_cli_stops_after_consecutive_failures(
     out = _cli(*args, "--yes")
     assert calls == ["AAA", "BBB", "CCC"] and "3 failures in a row" in out.output, out.output
     assert "0 written, 3 failed, 2 not run" in out.output and out.exit_code == 1
+
+
+def test_usage_counts_every_narrative_call_of_the_case(db: None) -> None:
+    from data.db import get_session
+    from data.models.schema import LlmCall
+
+    def row(site: str, tokens: int) -> LlmCall:
+        return LlmCall(call_site=site, attempt=1, provider="anthropic", model="m",
+                       prompt_version=2, prompt_sha256="x", input_tokens=tokens,
+                       output_tokens=tokens // 10, cache_write_tokens=0, cache_read_tokens=1,
+                       latency_ms=tokens // 100, status="ok")  # fmt: skip
+
+    with get_session() as s:
+        s.add(row("narrative", 5_000))  # an earlier case
+        s.commit()
+    before = runner.last_call_id()
+    with get_session() as s:  # this case: a first attempt and its repair (ADR-045 §2.7 item 4)
+        s.add_all([row("narrative", 10_000), row("chat", 99_000), row("narrative", 12_000)])
+        s.commit()
+    assert runner._usage(before) == (22_000, 2_200, 2, 0, 220)
+    assert runner._usage(runner.last_call_id()) is None
