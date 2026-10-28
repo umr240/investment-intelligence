@@ -757,11 +757,7 @@ def _persist_dive_results(
                 alt_score_map, mode=mode, stage=stage.stage,
             )
             composite_non_gaap_pre_overlays = alt_out.score
-            composite_non_gaap = (
-                round(min((alt_out.score or 0.0) + overlay_bonus, 10.0), 4)
-                if alt_out.score is not None
-                else None
-            )
+            composite_non_gaap = _apply_overlay_bonus(alt_out.score, overlay_bonus)
 
     composite_gaap = composite       # alias for return clarity
 

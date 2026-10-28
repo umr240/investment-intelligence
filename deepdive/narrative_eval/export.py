@@ -139,7 +139,8 @@ def withhold(view: ScorecardView) -> tuple[ScorecardView, tuple[str, ...]]:
     public = ScorecardView.from_dict(tree)
     body = public.to_llm_context()
     for value in values:
-        if abs(value) >= _LEAK_FLOOR and json.dumps(value) in body:
+        forms = {json.dumps(value)} | ({str(int(value))} if value.is_integer() else set())
+        if abs(value) >= _LEAK_FLOOR and any(f in body for f in forms):
             raise WithheldValueLeak(f"{view.ticker}: withheld value {value} still in the view")
     return public, tuple(paths)
 
