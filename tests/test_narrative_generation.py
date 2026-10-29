@@ -16,6 +16,7 @@ import openai
 import pytest
 
 import deepdive.narrative as narrative
+import deepdive.narrative_output as narrative_output
 from config.llm_prices import cost_usd
 from config.settings import settings
 from deepdive.narrative_eval.export import TRAIN
@@ -174,7 +175,7 @@ def test_the_prompt_hash_covers_the_schema_of_a_view_with_nothing_scored(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     before = narrative._versioned_schema()
-    real = narrative.narrative_json_schema_v2
+    real = narrative_output.narrative_json_schema_v2
 
     def no_floor(ids: list[str], codes: list[str], groundings: Any = None) -> Any:
         schema = real(ids, codes, groundings)

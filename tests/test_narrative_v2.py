@@ -124,9 +124,8 @@ def test_a_risk_is_grounded_in_one_of_this_views_values() -> None:
     schema = narrative_json_schema_v2(["F5.roic"], ["F5"], ["F5", "ICA-5", "F5.roic"])
     grounded = schema["$defs"]["RiskFactorV2"]["properties"]["grounded_in"]
     assert grounded["enum"] == ["F5", "ICA-5", "F5.roic"]  # not 'F2, F4' or 'data_gap'
-    assert "enum" not in narrative_json_schema_v2([], [])["$defs"]["RiskFactorV2"]["properties"][
-        "grounded_in"
-    ]
+    bare = narrative_json_schema_v2([], [])["$defs"]["RiskFactorV2"]["properties"]
+    assert "enum" not in bare["grounded_in"]
 
 
 # ── Rendering ──────────────────────────────────────────────────────────────
