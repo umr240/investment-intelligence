@@ -178,11 +178,19 @@ def test_the_v2_guard_names_each_fault(
     assert any(warning in w for w in warnings), warnings
 
 
-def test_a_window_a_field_is_defined_over_is_not_a_claim(crwd: ScorecardView) -> None:
-    said = "No insider bought in the prior 90 days ({F1.90d_open_market_buyers}); 3 years."
+def test_a_window_a_cited_field_is_defined_over_is_not_a_claim(crwd: ScorecardView) -> None:
+    said = "No insider bought in the prior 90 days ({F1.90d_open_market_buyers})."
     assert validate(_body(one_liner=said), crwd) == []  # F1.90d_…: a 90-day window
-    for made_up in ("No insider bought in the prior 60 days.", "Listed for 254 months."):
-        assert any("literal number" in w for w in validate(_body(one_liner=made_up), crwd))
+    point = _point("No insider buying in 90 days", "Buyers: {F1.90d_open_market_buyers}.",
+                   ["F1"], ["F1.90d_open_market_buyers"])  # fmt: skip
+    assert validate(_body(bull=[point]), crwd) == []  # the point cites it, not the headline
+    for made_up in (
+        "Down over 52 weeks.",  # the 52w field is not cited here
+        "Down over 52 weeks ({F1.90d_open_market_buyers}).",  # cites a 90d field, not a 52w one
+        "Listed for 254 months.",
+        "Losses for 1.25 years ({F5.revenue_cagr_3y}).",  # '25 years' inside a decimal
+    ):
+        assert any("literal number" in w for w in validate(_body(one_liner=made_up), crwd)), made_up
 
 
 def test_only_a_trigger_condition_may_propose_a_threshold(crwd: ScorecardView) -> None:

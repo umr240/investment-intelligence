@@ -203,6 +203,13 @@ def test_a_view_with_nothing_scored_is_answered_without_framework_codes() -> Non
     assert out.body.bull[0].framework_codes == [] and out.guard_warnings == []
 
 
+def test_a_scored_view_without_framework_codes_is_not_accepted(crwd: ScorecardView) -> None:
+    bare = {k: v for k, v in _point("FCF {F5.fcf_margin}.", ["F5.fcf_margin"]).items()
+            if k != "framework_codes"}  # fmt: skip
+    with pytest.raises(narrative.NarrativeUnavailableError, match="did not match"):
+        _generate(crwd, _reply(bull=[bare]))
+
+
 def test_there_is_never_a_second_repair(crwd: ScorecardView) -> None:
     out = _generate(crwd, INVENTED, INVENTED, _reply())
     assert len(_Anthropic.calls) == 2 and len(_Anthropic.replies) == 1

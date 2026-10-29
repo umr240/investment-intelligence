@@ -391,10 +391,11 @@ def _repair_turns(repair: Repair | None, view: ScorecardView) -> list[dict[str, 
 
 
 def _parse_reply(
-    raw: Any, provider: str, tokens: tuple[int, int]
+    raw: Any, provider: str, tokens: tuple[int, int], view: ScorecardView
 ) -> tuple[NarrativeBodyV2, list[str]]:
     raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBodyV2)
-    if isinstance(raw, dict):  # a view with no scored framework is not asked for codes
+    scored = any(not f.is_unfeasible for f in view.frameworks)
+    if isinstance(raw, dict) and not scored:  # such a view is not asked for codes
         for point in [*raw.get("bull", []), *raw.get("bear", [])]:
             if isinstance(point, dict):
                 point.setdefault("framework_codes", [])
@@ -465,7 +466,7 @@ def _call_openai(
         except json.JSONDecodeError as e:
             raise _ProviderError(f"openai returned invalid JSON: {e}", tokens) from e
 
-        body, fit_notes = _parse_reply(raw, "openai", tokens)
+        body, fit_notes = _parse_reply(raw, "openai", tokens, view)
         return _Reply(body, *tokens, model, fit_notes)
 
 
@@ -523,7 +524,7 @@ def _call_anthropic(
         except json.JSONDecodeError as e:
             raise _ProviderError(f"anthropic returned invalid JSON: {e}", tokens) from e
 
-        body, fit_notes = _parse_reply(raw, "anthropic", tokens)
+        body, fit_notes = _parse_reply(raw, "anthropic", tokens, view)
         return _Reply(body, *tokens, model, fit_notes)
 
 
