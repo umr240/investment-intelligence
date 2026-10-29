@@ -42,6 +42,7 @@ RECORDED = {
     ("narrative", "narrative"): {
         1: "249f31cfb12ff9f6bf49a8bb2c5cd47fd6c691d7e0b41bdbaedd2ae1e26c9f5b",
         2: "82453c483981084f95f1ff951cb1a03d11539aca0eecf2a4817d806f216f22fe",  # ADR-045 schema v2
+        3: "ccbaa5a32ee0da847ce5d57abccfdbf7323af73cdd0af9c2cf825a276087f8c4",  # S5 fixes
     },
     ("chat", "chat"): {1: "cf660ece09c18355cebe42b2576c5a56e63c5d3d6c8dce53d37ea9ae04783ee9"},
     ("external_signals", "8-K"): {

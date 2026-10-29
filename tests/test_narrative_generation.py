@@ -110,7 +110,8 @@ def test_a_clean_answer_is_rendered_from_the_view_it_was_checked_against(
     assert out.rendered.bull[0].detail == "FCF margin is +29.8%."
     assert out.first_attempt is None and len(_Anthropic.calls) == 1
     (row,) = llm_rows
-    assert (row["attempt"], row["prompt_version"], row["guard_status"]) == (1, 2, "ok")
+    assert (row["attempt"], row["guard_status"]) == (1, "ok")
+    assert row["prompt_version"] == narrative.PROMPT_VERSION
 
 
 def test_a_failed_answer_gets_one_repair_with_its_warnings(
@@ -134,6 +135,17 @@ def test_a_failed_answer_gets_one_repair_with_its_warnings(
     assert [(r["attempt"], r["guard_status"]) for r in llm_rows] == [(1, "warnings"), (2, "ok")]
     assert (out.prompt_tokens, out.completion_tokens) == (20_000, 4_000)
     assert out.cost_usd == round(2 * cost_usd(MODEL, 10_000, 2_000), 6)  # type: ignore[operator]
+
+
+def test_a_repair_names_the_ids_an_unknown_one_likely_meant(crwd: ScorecardView) -> None:
+    # The smoke test's gpt-4o-mini repair wrote {F3.gaap_net_income}; the view has ICA-3's.
+    unknown = _reply(bear=[_point("Net income was {F3.gaap_net_income}.", ["F5.moat"])])
+    _generate(crwd, unknown, _reply())
+    warnings = _Anthropic.calls[1]["messages"][2]["content"]
+    assert "- 'F3.gaap_net_income' is not listed; did you mean 'ICA-3.gaap_net_income'?" in warnings
+    assert "- 'F5.moat' is not listed; state it in words, without a number." in warnings
+    hints = narrative._id_hints(["triggers[0]: 'F5.roik' is not a citable field"], ["F5.roic"])
+    assert hints == ["- 'F5.roik' is not listed; did you mean 'F5.roic'?"]
 
 
 def test_there_is_never_a_second_repair(crwd: ScorecardView) -> None:
@@ -171,8 +183,12 @@ def test_anthropic_gets_structured_output_with_this_views_ids(crwd: ScorecardVie
     text = json.dumps(schema)
     assert "$ref" not in text and "$defs" not in text and '"maxLength"' not in text
     assert "do not choose it" in schema["properties"]["verdict"]["description"]  # kept inlining
-    ids = schema["properties"]["bull"]["items"]["properties"]["numeric_claims"]["items"]
+    point = schema["properties"]["bull"]["items"]["properties"]
+    ids = point["numeric_claims"]["items"]
     assert ids["properties"]["field_id"]["enum"] == list(crwd.citable_fields())
+    feasible = sorted(f.code for f in crwd.frameworks if not f.is_unfeasible)
+    assert point["framework_codes"]["items"]["enum"] == feasible
+    assert "at most 600 characters" in schema["properties"]["verdict_reason"]["description"]
     assert schema["additionalProperties"] is False and set(schema["required"]) == set(
         NarrativeBodyV2.model_fields
     )
@@ -224,7 +240,7 @@ def test_extra_points_are_cut_to_the_schema_limit(crwd: ScorecardView) -> None:
 def test_the_first_attempt_is_the_headline_grade(crwd: ScorecardView) -> None:
     out = _generate(crwd, INVENTED, _reply())
     sha = "0" * 64
-    ev = EvalOutput(case_id="CRWD", view_sha256=sha, model=MODEL, prompt_version=2, narrative=out,
+    ev = EvalOutput(case_id="CRWD", view_sha256=sha, model=MODEL, prompt_version=3, narrative=out,
                     input_tokens=20_000, output_tokens=4_000, latency_ms=9_000)  # fmt: skip
     by = {g.grader: g for g in grade(crwd, ev)}
     assert (by["G1"].status, by["G1r"].status) == ("fail", "pass")

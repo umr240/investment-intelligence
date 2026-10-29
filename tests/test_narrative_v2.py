@@ -93,13 +93,26 @@ def test_the_request_schema_names_this_views_ids_and_no_rejected_keyword(
     crwd: ScorecardView,
 ) -> None:
     ids = list(crwd.citable_fields())
-    schema = narrative_json_schema_v2(ids)
+    schema = narrative_json_schema_v2(ids, ["F1", "F5"])
     text = json.dumps(schema)
     for kw in ("minLength", "maxLength", "minimum", "maximum", "maxItems"):
         assert f'"{kw}"' not in text, kw
     for name in ("FieldCitation", "Trigger"):
         assert schema["$defs"][name]["properties"]["field_id"]["enum"] == ids
+    point = schema["$defs"]["CasePoint"]["properties"]
+    assert point["framework_codes"]["items"]["enum"] == ["F1", "F5"]  # not 'ICA-3' (smoke test)
     assert schema["properties"]["bull"]["minItems"] == 1  # Anthropic accepts 0 or 1
+
+
+def test_a_stripped_limit_is_restated_where_the_model_reads_it() -> None:
+    schema = narrative_json_schema_v2(["F5.roic"], [])
+    props = schema["properties"]
+    assert props["verdict_reason"]["description"].endswith("Limit: at most 600 characters.")
+    assert props["bull"]["description"] == "Limit: at most 5 items."
+    detail = schema["$defs"]["CasePoint"]["properties"]["detail"]["description"]
+    assert detail.startswith("Write every number") and detail.endswith("at most 800 characters.")
+    codes = schema["$defs"]["CasePoint"]["properties"]["framework_codes"]
+    assert "enum" not in codes["items"]  # no scored framework: no empty enum
 
 
 # ── Rendering ──────────────────────────────────────────────────────────────

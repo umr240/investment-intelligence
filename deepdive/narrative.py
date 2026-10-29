@@ -34,6 +34,7 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from difflib import get_close_matches
 from typing import Any, cast
 
 from pydantic import BaseModel
@@ -65,7 +66,7 @@ logger = logging.getLogger(__name__)
 
 # Bump on any change to the system prompt or the narrative schema (ADR-048 §2.2);
 # tests/test_llm_calls.py fails on a changed prompt hash without a bump.
-PROMPT_VERSION = 2
+PROMPT_VERSION = 3
 
 
 # ── Public API ───────────────────────────────────────────────────────────
@@ -301,7 +302,8 @@ def _call_provider(
 
 def _request_schema(view: ScorecardView) -> dict[str, Any]:
     """The v2 body schema with this view's IDs, inlined and strict for both providers."""
-    schema = narrative_json_schema_v2(list(view.citable_fields()))
+    feasible = sorted(f.code for f in view.frameworks if not f.is_unfeasible)
+    schema = narrative_json_schema_v2(list(view.citable_fields()), feasible)
     return _strict_schema(_inline_refs(schema))
 
 
@@ -323,12 +325,32 @@ def _inline_refs(schema: dict[str, Any]) -> dict[str, Any]:
     return cast(dict[str, Any], walk(schema))
 
 
-def _repair_turns(repair: Repair | None) -> list[dict[str, Any]]:
+_UNKNOWN_ID = re.compile(r"'\{?([^'{}]+)\}?' is not a citable field")
+
+
+def _id_hints(warnings: list[str], ids: list[str]) -> list[str]:
+    """For each unknown ID a warning names, the citable IDs it most likely meant."""
+    hints = []
+    for bad in dict.fromkeys(m[1] for w in warnings for m in _UNKNOWN_ID.finditer(w)):
+        name = bad.rsplit(".", 1)[-1]
+        near = [i for i in ids if i.rsplit(".", 1)[-1] == name] or get_close_matches(
+            bad, ids, n=3, cutoff=0.6
+        )
+        hints.append(
+            f"- '{bad}' is not listed; did you mean {' or '.join(map(repr, near))}?"
+            if near else f"- '{bad}' is not listed; state it in words, without a number."
+        )  # fmt: skip
+    return hints
+
+
+def _repair_turns(repair: Repair | None, view: ScorecardView) -> list[dict[str, Any]]:
     """The failed answer and the guard's warnings, as the next two turns (§2.5)."""
     if repair is None:
         return []
     body, warnings = repair
     faults = "\n".join(f"- {w}" for w in warnings)
+    if hints := _id_hints(warnings, list(view.citable_fields())):
+        faults += "\n\nCitable fields that may be meant:\n" + "\n".join(hints)
     return [
         {"role": "assistant", "content": body.model_dump_json()},
         {"role": "user", "content": (
@@ -375,7 +397,7 @@ def _call_openai(
     messages = cast(
         "list[ChatCompletionMessageParam]",
         [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt},
-         *_repair_turns(repair)],
+         *_repair_turns(repair, view)],
     )  # fmt: skip
     with _recorded("openai", model, system_prompt) as call:
         try:
@@ -436,7 +458,8 @@ def _call_anthropic(
         "format": {"type": "json_schema", "schema": _request_schema(view)}
     }
     messages = cast(
-        "list[MessageParam]", [{"role": "user", "content": user_prompt}, *_repair_turns(repair)]
+        "list[MessageParam]",
+        [{"role": "user", "content": user_prompt}, *_repair_turns(repair, view)],
     )
     with _recorded("anthropic", model, system_prompt) as call:
         try:
@@ -568,9 +591,8 @@ HARD RULES (violating these is the worst possible failure):
    numbers agree or disagree with any external benchmark — you have no access to those sources.
 9. Tone: terse, analytical, peer-reviewed. No marketing language. No emojis. No buy/sell
    recommendations.
-10. Length: one_liner <= 400 chars, headline <= 140, detail <= 600, verdict_reason <= 600, risk
-    factor <= 500, trigger condition <= 300. At most 5 bull and 5 bear points, 8 risks and 8
-    triggers. Prefer fewer high-quality points over many vague ones.
+10. Length: the schema states each field's limit in its description; stay inside it, as
+    text over the limit is cut. Prefer fewer high-quality points over many vague ones.
 11. data_caveats must paraphrase the actual `fetch_data_gaps` and per-framework `data_gaps` in
     the view. Do not invent caveats; do not omit material ones.
 12. The user message includes a "Lattice" section: the mental models composed for this profile.
