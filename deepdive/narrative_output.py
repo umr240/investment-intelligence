@@ -228,9 +228,11 @@ _LIMIT_TEXT = {
 }  # fmt: skip
 
 
-def narrative_json_schema_v2(field_ids: list[str], framework_codes: list[str]) -> dict[str, Any]:
-    """The v2 body schema for one request: field IDs and framework codes are enums of this
-    view's (§2.2), so an answer cannot name one the view lacks."""
+def narrative_json_schema_v2(
+    field_ids: list[str], framework_codes: list[str], groundings: list[str] | None = None
+) -> dict[str, Any]:
+    """The v2 body schema for one request: field IDs, framework codes and risk groundings are
+    enums of this view's (§2.2), so an answer cannot name one the view lacks."""
     schema = NarrativeBodyV2.model_json_schema()
 
     def strip(node: Any) -> Any:
@@ -250,9 +252,15 @@ def narrative_json_schema_v2(field_ids: list[str], framework_codes: list[str]) -
     if field_ids:
         for name in ("FieldCitation", "Trigger"):
             schema["$defs"][name]["properties"]["field_id"]["enum"] = list(field_ids)
+    point = schema["$defs"]["CasePoint"]
     if framework_codes:
-        codes = schema["$defs"]["CasePoint"]["properties"]["framework_codes"]
-        codes["items"]["enum"] = list(framework_codes)
+        point["properties"]["framework_codes"]["items"]["enum"] = list(framework_codes)
+    elif field_ids:  # nothing scored: a point cites a field instead (parsing restores the [])
+        del point["properties"]["framework_codes"]
+        point["required"].remove("framework_codes")
+        point["properties"]["numeric_claims"]["minItems"] = 1
+    if groundings:
+        schema["$defs"]["RiskFactorV2"]["properties"]["grounded_in"]["enum"] = list(groundings)
     return schema
 
 

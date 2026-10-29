@@ -111,8 +111,21 @@ def test_a_stripped_limit_is_restated_where_the_model_reads_it() -> None:
     assert props["bull"]["description"] == "Limit: at most 5 items."
     detail = schema["$defs"]["CasePoint"]["properties"]["detail"]["description"]
     assert detail.startswith("Write every number") and detail.endswith("at most 800 characters.")
-    codes = schema["$defs"]["CasePoint"]["properties"]["framework_codes"]
-    assert "enum" not in codes["items"]  # no scored framework: no empty enum
+
+
+def test_with_no_scored_framework_a_point_must_cite_a_field_instead() -> None:
+    point = narrative_json_schema_v2(["F5.roic"], [])["$defs"]["CasePoint"]
+    assert "framework_codes" not in point["properties"]  # no empty enum, no code to invent
+    assert "framework_codes" not in point["required"]
+    assert point["properties"]["numeric_claims"]["minItems"] == 1  # G3's citation floor
+
+
+def test_a_risk_is_grounded_in_one_of_this_views_values() -> None:
+    schema = narrative_json_schema_v2(["F5.roic"], ["F5"], ["F5", "ICA-5", "F5.roic"])
+    grounded = schema["$defs"]["RiskFactorV2"]["properties"]["grounded_in"]
+    assert grounded["enum"] == ["F5", "ICA-5", "F5.roic"]  # not 'F2, F4' or 'data_gap'
+    bare = narrative_json_schema_v2([], [])["$defs"]["RiskFactorV2"]["properties"]
+    assert "enum" not in bare["grounded_in"]
 
 
 # ── Rendering ──────────────────────────────────────────────────────────────
@@ -163,6 +176,28 @@ def test_the_v2_guard_names_each_fault(
 ) -> None:
     warnings = validate(_body(**over), crwd)
     assert any(warning in w for w in warnings), warnings
+
+
+def test_a_window_a_cited_field_is_defined_over_is_not_a_claim(crwd: ScorecardView) -> None:
+    path = ROOT / "tests/fixtures/narrative_golden/train/AAPL.json"  # 90 is not in its view
+    aapl = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
+
+    def one_liner(said: str) -> list[str]:
+        return [w for w in validate(_body(one_liner=said), aapl) if w.startswith("one_liner")]
+
+    cited = "No insider bought in the prior 90 days ({F1.90d_open_market_buyers})."
+    assert one_liner(cited) == []  # F1.90d_…: a 90-day window
+    assert one_liner("No insider bought in the prior 90 days.")  # the field is not cited
+    point = _point("No insider buying in 90 days", "Buyers: {F1.90d_open_market_buyers}.",
+                   ["F1"], ["F1.90d_open_market_buyers"])  # fmt: skip
+    assert not [w for w in validate(_body(bull=[point]), aapl) if w.startswith("bull[0]")]
+    for made_up in (
+        "Down over 52 weeks.",  # the 52w field is not cited here
+        "Down over 52 weeks ({F1.90d_open_market_buyers}).",  # cites a 90d field, not a 52w one
+        "Listed for 254 months.",
+        "Losses for 1.3 years ({F5.revenue_cagr_3y}).",  # not '3 years' inside a decimal
+    ):
+        assert any("literal number" in w for w in validate(_body(one_liner=made_up), crwd)), made_up
 
 
 def test_only_a_trigger_condition_may_propose_a_threshold(crwd: ScorecardView) -> None:

@@ -16,10 +16,12 @@ import openai
 import pytest
 
 import deepdive.narrative as narrative
+import deepdive.narrative_output as narrative_output
 from config.llm_prices import cost_usd
 from config.settings import settings
 from deepdive.narrative_eval.export import TRAIN
 from deepdive.narrative_eval.graders import EvalOutput, grade, summary
+from deepdive.narrative_guard import validate
 from deepdive.narrative_output import SCHEMA_V2, NarrativeBodyV2, NarrativeProvider, NarrativeStatus
 from deepdive.narrative_render import render_body
 from deepdive.scorecard_view import ScorecardView
@@ -170,6 +172,44 @@ def test_the_prompt_hash_covers_the_request_schema_and_the_repair_text(
     assert narrative._versioned_schema() != before
 
 
+def test_the_prompt_hash_covers_the_schema_of_a_view_with_nothing_scored(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    before = narrative._versioned_schema()
+    real = narrative_output.narrative_json_schema_v2
+
+    def no_floor(ids: list[str], codes: list[str], groundings: Any = None) -> Any:
+        schema = real(ids, codes, groundings)
+        schema["$defs"]["CasePoint"]["properties"]["numeric_claims"].pop("minItems", None)
+        return schema
+
+    monkeypatch.setattr(narrative, "narrative_json_schema_v2", no_floor)
+    assert narrative._versioned_schema() != before
+
+
+def test_a_view_with_nothing_scored_is_answered_without_framework_codes() -> None:
+    path = ROOT / "tests/fixtures/narrative_golden/train/ATGL.json"  # no framework scored
+    atgl = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
+    bare = {"headline": "Losses", "detail": "Net income {company.latest_net_income}.",
+            "numeric_claims": [{"field_id": "company.latest_net_income"}]}  # fmt: skip
+    out = _generate(atgl, _reply(
+        one_liner="Composite {composite.score}.", verdict="EXCLUDE WITH REASON", bull=[bare],
+        bear=[bare], triggers=[{"field_id": "composite.score", "condition": "rises"}],
+        data_caveats=["No Form 4 insider transactions found on EDGAR."],
+    ))  # fmt: skip
+    point = _Anthropic.calls[0]["output_config"]["format"]["schema"]["properties"]["bull"]
+    assert "framework_codes" not in point["items"]["properties"]
+    assert point["items"]["properties"]["numeric_claims"]["minItems"] == 1
+    assert out.body.bull[0].framework_codes == [] and out.guard_warnings == []
+
+
+def test_a_scored_view_without_framework_codes_is_not_accepted(crwd: ScorecardView) -> None:
+    bare = {k: v for k, v in _point("FCF {F5.fcf_margin}.", ["F5.fcf_margin"]).items()
+            if k != "framework_codes"}  # fmt: skip
+    with pytest.raises(narrative.NarrativeUnavailableError, match="did not match"):
+        _generate(crwd, _reply(bull=[bare]))
+
+
 def test_there_is_never_a_second_repair(crwd: ScorecardView) -> None:
     out = _generate(crwd, INVENTED, INVENTED, _reply())
     assert len(_Anthropic.calls) == 2 and len(_Anthropic.replies) == 1
@@ -210,10 +250,27 @@ def test_anthropic_gets_structured_output_with_this_views_ids(crwd: ScorecardVie
     assert ids["properties"]["field_id"]["enum"] == list(crwd.citable_fields())
     feasible = sorted(f.code for f in crwd.frameworks if not f.is_unfeasible)
     assert point["framework_codes"]["items"]["enum"] == feasible
+    grounded = schema["properties"]["risks"]["items"]["properties"]["grounded_in"]["enum"]
+    assert grounded[: len(feasible)] == feasible and "F5.roic" in grounded
+    assert {t.trigger_id for t in crwd.overlay_triggers} <= set(grounded)
     assert "at most 600 characters" in schema["properties"]["verdict_reason"]["description"]
     assert schema["additionalProperties"] is False and set(schema["required"]) == set(
         NarrativeBodyV2.model_fields
     )
+
+
+def test_a_quoted_data_gap_is_offered_as_the_part_before_the_quote(
+    crwd: ScorecardView,
+) -> None:
+    view = copy.deepcopy(crwd)  # TOITF's gap; OpenAI rejected the whole request with a 400
+    view.fetch_data_gaps = ["EDGAR: could not resolve 'X': not found\n  Tip: find(\"...\")"]
+    schema = narrative._request_schema(view)
+    grounded = schema["properties"]["risks"]["items"]["properties"]["grounded_in"]["enum"]
+    assert grounded[-1] == "EDGAR: could not resolve 'X': not found"
+    assert not any('"' in g or "\n" in g for g in grounded)
+    risk = {"factor": "Filings unresolved.", "severity": "high", "grounded_in": grounded[-1]}
+    body = NarrativeBodyV2.model_validate(_reply(risks=[risk]))
+    assert not [w for w in validate(body, view) if "risks[0]" in w]
 
 
 def test_openai_gets_the_same_strict_schema(

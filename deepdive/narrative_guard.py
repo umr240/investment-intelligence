@@ -159,6 +159,33 @@ def validate(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView) -> list
 _PROPOSED_THRESHOLD = re.compile(r"^triggers\[\d+\]\.condition$")
 
 
+_LABEL_WINDOW = re.compile(r"(?<![\w.-])(\d+)\s?(d|w|y)\b")  # "90d …"; no m: it can mean million
+_PERIOD = {"d": "day", "w": "week", "y": "year"}
+
+
+def _window_phrases(labels: list[str]) -> re.Pattern[str] | None:
+    """'the prior 90 days' beside a 90d field: the field's definition, not a claim (ADR-045
+    §2.2). Only the windows of fields cited in the same point; any other duration is checked."""
+    windows = sorted({rf"{n}\s?-?\s?{_PERIOD[u]}s?" for label in labels
+                      for n, u in _LABEL_WINDOW.findall(label)})  # fmt: skip
+    return re.compile(rf"(?<![\w.])(?:{'|'.join(windows)})\b", re.IGNORECASE) if windows else None
+
+
+def _cited_by_part(body: NarrativeBodyV2) -> dict[str, set[str]]:
+    """Field IDs each part cites: a bull/bear point, risk or trigger as a whole, else one text."""
+    from deepdive.narrative_render import placeholders, prose
+
+    cited: dict[str, set[str]] = {}
+    for path, text in prose(body):
+        cited.setdefault(path.split(".")[0], set()).update(placeholders(text))
+    for section, points in (("bull", body.bull), ("bear", body.bear)):
+        for i, p in enumerate(points):
+            cited[f"{section}[{i}]"].update(c.field_id for c in p.numeric_claims)
+    for i, r in enumerate(body.risks):
+        cited[f"risks[{i}]"].add(r.grounded_in.strip())
+    return cited
+
+
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
     """Guard warnings for a schema v2 body (ADR-045 §2.2, §2.3). Empty == clean."""
     from deepdive.narrative_render import PLACEHOLDER, placeholders, prose, render_text
@@ -172,6 +199,7 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
     all_framework_codes = {fv.code for fv in view.frameworks}
     overlay_ids = {t.trigger_id for t in view.overlay_triggers}
     fetch_gaps = list(view.fetch_data_gaps or [])
+    cited = _cited_by_part(body)
 
     # 1. Every placeholder names a citable field, and nothing is left unrendered.
     for path, text in prose(body):
@@ -181,7 +209,11 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
             warnings.append(f"{path}: unrendered placeholder or stray brace")
         # 2. A literal number in a claim is a guard error unless the view holds it.
         if not _PROPOSED_THRESHOLD.match(path):
-            for tok, floats, unit in _extract_tokens_and_floats(PLACEHOLDER.sub(" ", text)):
+            claim = PLACEHOLDER.sub(" ", text)
+            part = cited.get(path.split(".")[0], set())
+            windows = _window_phrases([fields[f].label for f in part if f in fields])
+            claim = windows.sub(" ", claim) if windows else claim
+            for tok, floats, unit in _extract_tokens_and_floats(claim):
                 if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
                     warnings.append(
                         f"{path}: literal number '{tok}' not in scorecard whitelist "
