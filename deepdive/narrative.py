@@ -318,8 +318,10 @@ def _request_schema(view: ScorecardView) -> dict[str, Any]:
     feasible = sorted(f.code for f in view.frameworks if not f.is_unfeasible)
     fields = list(view.citable_fields())
     triggers = [t.trigger_id for t in view.overlay_triggers]
-    # What the guard accepts as a risk's ground (narrative_guard._risk_grounding_warnings).
-    groundings = list(dict.fromkeys([*feasible, *triggers, *fields, *(view.fetch_data_gaps or [])]))
+    # OpenAI rejects '"' in an enum value; a gap's text before one is still a part the guard
+    # matches (narrative_guard._risk_grounding_warnings accepts any part of a gap).
+    gaps = [re.split(r'["\n]', g, maxsplit=1)[0].strip() for g in view.fetch_data_gaps or []]
+    groundings = list(dict.fromkeys([*feasible, *triggers, *fields, *filter(None, gaps)]))
     schema = narrative_json_schema_v2(fields, feasible, groundings)
     return _strict_schema(_inline_refs(schema))
 

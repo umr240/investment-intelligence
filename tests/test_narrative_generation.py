@@ -21,6 +21,7 @@ from config.llm_prices import cost_usd
 from config.settings import settings
 from deepdive.narrative_eval.export import TRAIN
 from deepdive.narrative_eval.graders import EvalOutput, grade, summary
+from deepdive.narrative_guard import validate
 from deepdive.narrative_output import SCHEMA_V2, NarrativeBodyV2, NarrativeProvider, NarrativeStatus
 from deepdive.narrative_render import render_body
 from deepdive.scorecard_view import ScorecardView
@@ -249,6 +250,20 @@ def test_anthropic_gets_structured_output_with_this_views_ids(crwd: ScorecardVie
     assert schema["additionalProperties"] is False and set(schema["required"]) == set(
         NarrativeBodyV2.model_fields
     )
+
+
+def test_a_quoted_data_gap_is_offered_as_the_part_before_the_quote(
+    crwd: ScorecardView,
+) -> None:
+    view = copy.deepcopy(crwd)  # TOITF's gap; OpenAI rejected the whole request with a 400
+    view.fetch_data_gaps = ["EDGAR: could not resolve 'X': not found\n  Tip: find(\"...\")"]
+    schema = narrative._request_schema(view)
+    grounded = schema["properties"]["risks"]["items"]["properties"]["grounded_in"]["enum"]
+    assert grounded[-1] == "EDGAR: could not resolve 'X': not found"
+    assert not any('"' in g or "\n" in g for g in grounded)
+    risk = {"factor": "Filings unresolved.", "severity": "high", "grounded_in": grounded[-1]}
+    body = NarrativeBodyV2.model_validate(_reply(risks=[risk]))
+    assert not [w for w in validate(body, view) if "risks[0]" in w]
 
 
 def test_openai_gets_the_same_strict_schema(
