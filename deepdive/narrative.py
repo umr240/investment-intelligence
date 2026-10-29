@@ -396,7 +396,8 @@ def _parse_reply(
     raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBodyV2)
     scored = any(not f.is_unfeasible for f in view.frameworks)
     if isinstance(raw, dict) and not scored:  # such a view is not asked for codes
-        for point in [*raw.get("bull", []), *raw.get("bear", [])]:
+        points = [p for k in ("bull", "bear") if isinstance(raw.get(k), list) for p in raw[k]]
+        for point in points:
             if isinstance(point, dict):
                 point.setdefault("framework_codes", [])
     try:
