@@ -213,6 +213,40 @@ def test_only_a_trigger_condition_may_propose_a_threshold(crwd: ScorecardView) -
         ]
 
 
+def test_a_citable_value_typed_out_is_flagged_beside_any_measure(crwd: ScorecardView) -> None:
+    # ADR §1's CRWD failure: +29.8% is the FCF margin, cited as ROIC.
+    wrong = _body(bear=[_point("h", "ROIC is +29.8%.", ["F5"], ["F5.roic"])])
+    assert validate(wrong, crwd) == [
+        "bear[0].detail: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+    # A form, a paper's year, a score's scale and a label are not values.
+    said = "Cooper-Gulen-Schill (2008) and the 10-K and 13-F; F5 is {F5.score}/10, Rule of 40."
+    assert validate(_body(one_liner=said), crwd) == []
+    # A '%' number is only a '%' value: "5.69%" is not the composite's 5.69/10.
+    assert validate(_body(one_liner="Within 5.69% of it."), crwd) == []
+    assert validate(_body(one_liner="Within 10% of it."), crwd) == [  # ICA-1's 10.0%
+        "one_liner: literal number '10%' is the value of ICA-1.rd_threshold; "
+        "write {ICA-1.rd_threshold} instead"
+    ]
+
+
+def test_a_trigger_may_type_only_its_threshold(crwd: ScorecardView) -> None:
+    def condition(said: str) -> list[str]:
+        return validate(_body(triggers=[{"field_id": "F5.roic", "condition": said}]), crwd)
+
+    assert condition("rises above roughly 8-10%, or exceeds 6.0/10, or comes within 5%") == []
+    assert condition("contraction exceeding 200bps") == []
+    assert condition("ROIC, now 47.3%, falls below 10%") == [
+        "triggers[0].condition: literal number '47.3%' not in scorecard whitelist "
+        "(cite a field with a placeholder)"
+    ]
+    assert condition("falls from +29.8% to 10%") == [
+        "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+
+
 def test_a_rendered_copy_must_be_the_body_with_its_text_filled_in(crwd: ScorecardView) -> None:
     body = _body()
     other = render_body(_body(moat_direction="WIDENING"), crwd.citable_fields())

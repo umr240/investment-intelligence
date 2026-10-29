@@ -51,6 +51,7 @@ import re
 from typing import Any
 
 from config.verdicts import narrative_verdict
+from deepdive.citable_fields import CitableField
 from deepdive.narrative_output import NarrativeBody, NarrativeBodyV2
 from deepdive.scorecard_view import ScorecardView
 
@@ -153,10 +154,28 @@ def validate(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView) -> list
     return warnings
 
 
-# A trigger condition states a threshold the model proposes ("falls below 10%"),
-# which no view holds; every other text is a claim, so a literal number in it must
-# be one the view holds (§2.2). v1 checked only the one-liner and the points.
-_PROPOSED_THRESHOLD = re.compile(r"^triggers\[\d+\]\.condition$")
+# A trigger condition may state a threshold the model proposes ("falls below 10%"), which
+# no view holds: only a number right after a comparison. Its current value is a placeholder.
+_TRIGGER = re.compile(r"^triggers\[\d+\]\.condition$")
+_NUM = r"[+−-]?\$?\d[\d,.]*\s?(?:%|x|bps|pp|tn|bn|mn|[TBMK])?"
+_THRESHOLD = re.compile(
+    r"(?:\b(?:below|above|under|over|exceed\w*|surpass\w*|cross\w*|reach\w*|within|beyond"
+    r"|past|than|to|at (?:least|most))\s+(?:(?:roughly|about|around|approximately)\s+)?"
+    r"|[<>≤≥]=?\s*)"
+    rf"{_NUM}(?:\s?(?:-|–|to)\s?{_NUM})?(?:/\s?\d+)?(?![\w])",  # "8-10%", "6.0/10"
+    re.IGNORECASE,
+)
+# Not values: filing forms ("10-K", "13F") and a score's scale ("{F7.score}/10").
+_NOT_A_VALUE = re.compile(
+    r"\b(?:10-K|10-Q|8-K|6-K|20-F|40-F|13-?F|S-1|DEF\s?14A)\b"
+    r"|(?:(?<![\d.])|(?<=\.\d)|(?<=\.\d\d))/\s?\d+\b",
+    re.IGNORECASE,
+)
+
+
+def _is_year(tok: str, unit: str) -> bool:
+    """A cited paper's year ('Cooper-Gulen-Schill 2008') is near a fiscal year, not a value."""
+    return not unit and tok.isdigit() and 1900 <= int(tok) <= 2100
 
 
 _LABEL_WINDOW = re.compile(r"(?<![\w.-])(\d+)\s?(d|w|y)\b")  # "90d …"; no m: it can mean million
@@ -183,7 +202,27 @@ def _cited_by_part(body: NarrativeBodyV2) -> dict[str, set[str]]:
             cited[f"{section}[{i}]"].update(c.field_id for c in p.numeric_claims)
     for i, r in enumerate(body.risks):
         cited[f"risks[{i}]"].add(r.grounded_in.strip())
+    for i, t in enumerate(body.triggers):
+        cited.setdefault(f"triggers[{i}]", set()).add(t.field_id)
     return cited
+
+
+def _citable_values(
+    fields: dict[str, CitableField], unit: str
+) -> list[tuple[str, set[str], set[float]]]:
+    """The citable values a `unit` number may be typed out from: a '%' or 'x' number is only
+    one rendered with that unit ("+29.8%", "2.8x"), so "5.69%" is not a 5.69/10 score."""
+    out = []
+    for field_id, f in fields.items():
+        if unit in ("%", "x") and unit not in f.value.lower():
+            continue
+        value = re.sub(r"/\s?\d+\b", "", f.value)  # "4.9/10" is 4.9: the scale is no value
+        forms: set[str] = set()
+        _walk_collect(value, forms, last_key="")
+        floats = _extract_normalised(value)
+        if forms or floats:
+            out.append((field_id, forms, floats))
+    return out
 
 
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
@@ -200,6 +239,13 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
     overlay_ids = {t.trigger_id for t in view.overlay_triggers}
     fetch_gaps = list(view.fetch_data_gaps or [])
     cited = _cited_by_part(body)
+    values = {u: _citable_values(fields, u) for u in ("%", "x", "")}
+    # A label with a digit in it names a measure ("Rule of 40", "12-1 momentum").
+    labels = sorted({f.label for f in fields.values() if re.search(r"\d", f.label)}, key=len)
+    label_re = (
+        re.compile("|".join(re.escape(lb) for lb in reversed(labels)), re.IGNORECASE)
+        if labels else None
+    )  # fmt: skip
 
     # 1. Every placeholder names a citable field, and nothing is left unrendered.
     for path, text in prose(body):
@@ -207,18 +253,30 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
         warnings += [f"{path}: placeholder '{{{f}}}' is not a citable field" for f in unknown]
         if not unknown and re.search(r"[{}]", render_text(text, fields)):
             warnings.append(f"{path}: unrendered placeholder or stray brace")
-        # 2. A literal number in a claim is a guard error unless the view holds it.
-        if not _PROPOSED_THRESHOLD.match(path):
-            claim = PLACEHOLDER.sub(" ", text)
-            part = cited.get(path.split(".")[0], set())
-            windows = _window_phrases([fields[f].label for f in part if f in fields])
-            claim = windows.sub(" ", claim) if windows else claim
-            for tok, floats, unit in _extract_tokens_and_floats(claim):
-                if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
-                    warnings.append(
-                        f"{path}: literal number '{tok}' not in scorecard whitelist "
-                        "(cite a field with a placeholder)"
-                    )
+        # 2. A typed number is a guard error if the view lacks it, and also if it is a citable
+        # field's value: that is a placeholder typed out, possibly beside the wrong measure.
+        claim = _NOT_A_VALUE.sub(" ", PLACEHOLDER.sub(" ", text))
+        claim = label_re.sub(" ", claim) if label_re else claim
+        if _TRIGGER.match(path):
+            claim = _THRESHOLD.sub(" ", claim)
+        part = cited.get(path.split(".")[0], set())
+        windows = _window_phrases([fields[f].label for f in part if f in fields])
+        claim = windows.sub(" ", claim) if windows else claim
+        for tok, floats, unit in _extract_tokens_and_floats(claim):
+            if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
+                warnings.append(
+                    f"{path}: literal number '{tok}' not in scorecard whitelist "
+                    "(cite a field with a placeholder)"
+                )
+                continue
+            if _is_year(tok, unit):
+                continue
+            hit = next((f for f, w, wf in values.get(unit, values[""])
+                        if _token_is_whitelisted(tok, floats, w, wf, unit)), None)  # fmt: skip
+            if hit:
+                warnings.append(
+                    f"{path}: literal number '{tok}' is the value of {hit}; write {{{hit}}} instead"
+                )
 
     for section_name, points in (("bull", body.bull), ("bear", body.bear)):
         for i, p in enumerate(points):
