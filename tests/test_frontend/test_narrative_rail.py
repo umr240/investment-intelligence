@@ -7,6 +7,7 @@ ADR-045 §3 relies on it. After a reload the rail read warnings GET did not retu
 from __future__ import annotations
 
 import json
+import urllib.error
 import urllib.request
 from typing import Any
 
@@ -23,8 +24,12 @@ def _get(path: str) -> Any:
 
 
 def _ticker_with(status: str) -> str:
-    for ticker in sorted({d["ticker"] for d in _get("/overview/recent-dives?limit=200")}):
-        n = _get(f"/dive/{ticker}/narrative")
+    tickers: set[str] = {d["ticker"] for d in _get("/overview/recent-dives?limit=200")}
+    for ticker in sorted(tickers):
+        try:
+            n = _get(f"/dive/{ticker}/narrative")
+        except urllib.error.HTTPError:  # a dive listed without its company row
+            continue
         if n.get("generated") and n.get("audit", {}).get("status") == status:
             return ticker
     pytest.skip(f"no latest dive in this DB has a {status} narrative")
