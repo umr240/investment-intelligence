@@ -67,7 +67,7 @@ logger = logging.getLogger(__name__)
 
 # Bump on any change to the system prompt or the narrative schema (ADR-048 §2.2);
 # tests/test_llm_calls.py fails on a changed prompt hash without a bump.
-PROMPT_VERSION = 3
+PROMPT_VERSION = 4
 
 
 # ── Public API ───────────────────────────────────────────────────────────
@@ -281,7 +281,10 @@ def _versioned_schema() -> dict[str, Any]:
     """What the prompt hash covers besides the system prompt (ADR-048 §2.2): the request
     schema without a view's IDs, and the repair turn's fixed text."""
     return {
-        "request": _strict_schema(_inline_refs(narrative_json_schema_v2([], []))),
+        "request": [  # with and without a scored framework; sentinels stand in for the enums
+            _strict_schema(_inline_refs(narrative_json_schema_v2(["<id>"], codes, ["<g>"])))
+            for codes in (["<code>"], [])
+        ],
         "repair": [_REPAIR_ASK, _HINTS_HEADER, _HINT_NEAR, _HINT_NONE],
     }
 
@@ -313,7 +316,11 @@ def _call_provider(
 def _request_schema(view: ScorecardView) -> dict[str, Any]:
     """The v2 body schema with this view's IDs, inlined and strict for both providers."""
     feasible = sorted(f.code for f in view.frameworks if not f.is_unfeasible)
-    schema = narrative_json_schema_v2(list(view.citable_fields()), feasible)
+    fields = list(view.citable_fields())
+    triggers = [t.trigger_id for t in view.overlay_triggers]
+    # What the guard accepts as a risk's ground (narrative_guard._risk_grounding_warnings).
+    groundings = list(dict.fromkeys([*feasible, *triggers, *fields, *(view.fetch_data_gaps or [])]))
+    schema = narrative_json_schema_v2(fields, feasible, groundings)
     return _strict_schema(_inline_refs(schema))
 
 
@@ -385,6 +392,10 @@ def _parse_reply(
     raw: Any, provider: str, tokens: tuple[int, int]
 ) -> tuple[NarrativeBodyV2, list[str]]:
     raw, fit_notes = _fit_to_declared_lengths(raw, NarrativeBodyV2)
+    if isinstance(raw, dict):  # a view with no scored framework is not asked for codes
+        for point in [*raw.get("bull", []), *raw.get("bear", [])]:
+            if isinstance(point, dict):
+                point.setdefault("framework_codes", [])
     try:
         return NarrativeBodyV2.model_validate(raw), fit_notes
     except Exception as e:
@@ -595,10 +606,12 @@ HARD RULES (violating these is the worst possible failure):
 2. Use IDs exactly as listed. List the IDs each bull or bear point relies on in its
    `numeric_claims`.
 3. Cite framework codes (F1..F7) in `framework_codes` for every bull/bear point, and only
-   frameworks that were scored (the user message names the unfeasible ones).
-4. Risks must be grounded in something concrete: a scored framework code, an overlay
-   trigger_id (e.g. "BEW-2"), a citable field ID, or a data_gap entry. `grounded_in` is
-   mandatory.
+   frameworks that were scored (the user message names the unfeasible ones). When none was
+   scored, the schema has no `framework_codes`: each point lists at least one field it relies
+   on in `numeric_claims`.
+4. Risks must be grounded in something concrete: one value from the `grounded_in` list in the
+   schema (a scored framework code, an overlay trigger_id such as "BEW-2", a citable field ID,
+   or a data gap, copied exactly). `grounded_in` is mandatory.
 5. `verdict` is given in the user message: copy it exactly. `verdict_reason` explains why the
    scorecard produced it. You explain the verdict; you do not choose or soften it.
 6. `triggers`: at least one. Each names one citable field ID and the change in it that would

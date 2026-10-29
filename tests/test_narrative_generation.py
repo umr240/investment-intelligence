@@ -170,6 +170,37 @@ def test_the_prompt_hash_covers_the_request_schema_and_the_repair_text(
     assert narrative._versioned_schema() != before
 
 
+def test_the_prompt_hash_covers_the_schema_of_a_view_with_nothing_scored(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    before = narrative._versioned_schema()
+    real = narrative.narrative_json_schema_v2
+
+    def no_floor(ids: list[str], codes: list[str], groundings: Any = None) -> Any:
+        schema = real(ids, codes, groundings)
+        schema["$defs"]["CasePoint"]["properties"]["numeric_claims"].pop("minItems", None)
+        return schema
+
+    monkeypatch.setattr(narrative, "narrative_json_schema_v2", no_floor)
+    assert narrative._versioned_schema() != before
+
+
+def test_a_view_with_nothing_scored_is_answered_without_framework_codes() -> None:
+    path = ROOT / "tests/fixtures/narrative_golden/train/ATGL.json"  # no framework scored
+    atgl = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
+    bare = {"headline": "Losses", "detail": "Net income {company.latest_net_income}.",
+            "numeric_claims": [{"field_id": "company.latest_net_income"}]}  # fmt: skip
+    out = _generate(atgl, _reply(
+        one_liner="Composite {composite.score}.", verdict="EXCLUDE WITH REASON", bull=[bare],
+        bear=[bare], triggers=[{"field_id": "composite.score", "condition": "rises"}],
+        data_caveats=["No Form 4 insider transactions found on EDGAR."],
+    ))  # fmt: skip
+    point = _Anthropic.calls[0]["output_config"]["format"]["schema"]["properties"]["bull"]
+    assert "framework_codes" not in point["items"]["properties"]
+    assert point["items"]["properties"]["numeric_claims"]["minItems"] == 1
+    assert out.body.bull[0].framework_codes == [] and out.guard_warnings == []
+
+
 def test_there_is_never_a_second_repair(crwd: ScorecardView) -> None:
     out = _generate(crwd, INVENTED, INVENTED, _reply())
     assert len(_Anthropic.calls) == 2 and len(_Anthropic.replies) == 1
@@ -210,6 +241,9 @@ def test_anthropic_gets_structured_output_with_this_views_ids(crwd: ScorecardVie
     assert ids["properties"]["field_id"]["enum"] == list(crwd.citable_fields())
     feasible = sorted(f.code for f in crwd.frameworks if not f.is_unfeasible)
     assert point["framework_codes"]["items"]["enum"] == feasible
+    grounded = schema["properties"]["risks"]["items"]["properties"]["grounded_in"]["enum"]
+    assert grounded[: len(feasible)] == feasible and "F5.roic" in grounded
+    assert {t.trigger_id for t in crwd.overlay_triggers} <= set(grounded)
     assert "at most 600 characters" in schema["properties"]["verdict_reason"]["description"]
     assert schema["additionalProperties"] is False and set(schema["required"]) == set(
         NarrativeBodyV2.model_fields

@@ -159,6 +159,18 @@ def validate(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView) -> list
 _PROPOSED_THRESHOLD = re.compile(r"^triggers\[\d+\]\.condition$")
 
 
+_LABEL_WINDOW = re.compile(r"(?<![\w.-])(\d+)\s?(d|w|m|y)\b")  # "90d open-market buyers"
+_PERIOD = {"d": "day", "w": "week", "m": "month", "y": "year"}
+
+
+def _window_phrases(labels: list[str]) -> re.Pattern[str] | None:
+    """'the prior 90 days' where a field's label is a 90d window: the field's definition,
+    not a claim (ADR-045 §2.2). Only a window some field has; other durations are checked."""
+    windows = sorted({rf"{n}\s?-?\s?{_PERIOD[u]}s?" for label in labels
+                      for n, u in _LABEL_WINDOW.findall(label)})  # fmt: skip
+    return re.compile(rf"\b(?:{'|'.join(windows)})\b", re.IGNORECASE) if windows else None
+
+
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
     """Guard warnings for a schema v2 body (ADR-045 §2.2, §2.3). Empty == clean."""
     from deepdive.narrative_render import PLACEHOLDER, placeholders, prose, render_text
@@ -172,6 +184,7 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
     all_framework_codes = {fv.code for fv in view.frameworks}
     overlay_ids = {t.trigger_id for t in view.overlay_triggers}
     fetch_gaps = list(view.fetch_data_gaps or [])
+    windows = _window_phrases([f.label for f in fields.values()])
 
     # 1. Every placeholder names a citable field, and nothing is left unrendered.
     for path, text in prose(body):
@@ -181,7 +194,9 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
             warnings.append(f"{path}: unrendered placeholder or stray brace")
         # 2. A literal number in a claim is a guard error unless the view holds it.
         if not _PROPOSED_THRESHOLD.match(path):
-            for tok, floats, unit in _extract_tokens_and_floats(PLACEHOLDER.sub(" ", text)):
+            claim = PLACEHOLDER.sub(" ", text)
+            claim = windows.sub(" ", claim) if windows else claim
+            for tok, floats, unit in _extract_tokens_and_floats(claim):
                 if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
                     warnings.append(
                         f"{path}: literal number '{tok}' not in scorecard whitelist "
