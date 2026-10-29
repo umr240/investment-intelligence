@@ -41,10 +41,11 @@ the `tools` list does not stop a Bash write.
 
 ## Report
 
-First line `## pr-verifier`; second line `BLOCKING` or `NOT BLOCKING`, then
-the full SHA reviewed, taken from `gh pr view <N> --json headRefOid` (not the
-local branch). The caller posts the report verbatim as a PR comment; the merge
-check accepts it only from the PR author's account and only for that SHA.
+First line `## pr-verifier`. Second line, on one line with single spaces:
+`NOT BLOCKING <full sha>` or `BLOCKING <full sha>`, the SHA taken from
+`gh pr view <N> --json headRefOid` (not the local branch). The caller posts the
+report verbatim as a PR comment; the owner's local merge check accepts it only
+from the PR author's account and only for that SHA.
 
 Then findings ranked by
 severity, each with `file:line`, a failure scenario and a suggested fix. Say
