@@ -221,22 +221,38 @@ class NarrativeBodyV2(BaseModel):
 # Keywords Anthropic's structured outputs reject (ADR-045 §2.7 item 1); lengths are
 # enforced after parsing instead. `minItems` above 1 is rejected too; none is used.
 _UNSENT_KEYWORDS = frozenset({"minLength", "maxLength", "minimum", "maximum", "maxItems"})
+# A stripped limit is restated in the description, where the model still reads it.
+_LIMIT_TEXT = {
+    "minLength": "at least {} characters", "maxLength": "at most {} characters",
+    "minimum": "at least {}", "maximum": "at most {}", "maxItems": "at most {} items",
+}  # fmt: skip
 
 
-def narrative_json_schema_v2(field_ids: list[str]) -> dict[str, Any]:
-    """The v2 body schema for one request: field IDs are an enum of this view's (§2.2)."""
+def narrative_json_schema_v2(field_ids: list[str], framework_codes: list[str]) -> dict[str, Any]:
+    """The v2 body schema for one request: field IDs and framework codes are enums of this
+    view's (§2.2), so an answer cannot name one the view lacks."""
     schema = NarrativeBodyV2.model_json_schema()
 
     def strip(node: Any) -> Any:
         if isinstance(node, dict):
-            return {k: strip(v) for k, v in node.items() if k not in _UNSENT_KEYWORDS}
+            out = {k: strip(v) for k, v in node.items() if k not in _UNSENT_KEYWORDS}
+            limits = [_LIMIT_TEXT[k].format(v) for k, v in node.items() if k in _UNSENT_KEYWORDS]
+            if limits:
+                said = out.get("description", "")
+                out["description"] = f"{said} Limit: {', '.join(limits)}.".lstrip()
+            return out
         if isinstance(node, list):
             return [strip(v) for v in node]
         return node
 
     schema = cast(dict[str, Any], strip(schema))
-    for name in ("FieldCitation", "Trigger"):
-        schema["$defs"][name]["properties"]["field_id"]["enum"] = list(field_ids)
+    # An empty enum is invalid; without one the guard still rejects every ID and code.
+    if field_ids:
+        for name in ("FieldCitation", "Trigger"):
+            schema["$defs"][name]["properties"]["field_id"]["enum"] = list(field_ids)
+    if framework_codes:
+        codes = schema["$defs"]["CasePoint"]["properties"]["framework_codes"]
+        codes["items"]["enum"] = list(framework_codes)
     return schema
 
 
