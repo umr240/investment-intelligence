@@ -340,7 +340,7 @@ def test_api_withholds_narrative_and_chat_on_a_dive_without_recorded_inputs(
         lambda _t, mode=None, run_id=None: SimpleNamespace(ticker="LULU"),
     )
     monkeypatch.setattr(narrative, "_call_provider", _no_call)
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://127.0.0.1")
     got = client.get("/dive/LULU/narrative").json()
     assert got == {"generated": False, "stale": True, "stale_reason": staleness.UNRECORDED_REASON}
     assert client.post("/dive/LULU/narrative").status_code == 409
@@ -450,7 +450,7 @@ def test_chat_grounds_in_the_view_its_dive_froze_not_todays(
         )  # fmt: skip
 
     monkeypatch.setattr(conversation, "generate_chat_response", fake_chat)
-    client = TestClient(app)
+    client = TestClient(app, base_url="http://127.0.0.1")
     assert client.post("/dive/LULU/chat", params={"message": "why?"}).status_code == 200
     assert seen == {"score": 6.5, "run_id": run}
 
