@@ -41,7 +41,10 @@ the `tools` list does not stop a Bash write.
 
 ## Report
 
-A verdict line, `BLOCKING` or `NOT BLOCKING`, then findings ranked by
+First line `## pr-verifier`; second line `BLOCKING` or `NOT BLOCKING` and the
+commit reviewed (`git rev-parse <branch>`). The caller posts the report
+verbatim as a PR comment, where the merge check reads those two lines. Then
+findings ranked by
 severity, each with `file:line`, a failure scenario and a suggested fix. Say
 plainly what checks out. Label anything you did not verify as a guess.
 Under 600 words.
