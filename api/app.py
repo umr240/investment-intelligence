@@ -279,6 +279,7 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
         if not run.bull_narrative:
             return {"generated": False}
         risk_data = _json.loads(run.risk_factors)
+        audit = risk_data.get("_audit", {})
         return {
             "generated": True,
             "run_id": run.id,
@@ -287,7 +288,9 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
             "bear": _json.loads(run.bear_narrative),
             "risks": risk_data.get("risks", []),
             "data_caveats": risk_data.get("data_caveats", []),
-            "audit": risk_data.get("_audit", {}),
+            "audit": audit,
+            # As POST returns them, so a reload still shows a failed guard (ADR-045 §3).
+            "guard_warnings": audit.get("guard_warnings", []),
             # Schema v2 only (ADR-045): absent from a v1 narrative.
             **{k: risk_data[k] for k in _NARRATIVE_V2_KEYS if k in risk_data},
         }

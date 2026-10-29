@@ -314,6 +314,32 @@ def test_a_v2_narrative_is_stored_rendered_with_its_template(
                                 "condition": "turns positive and stays above 10%"}]  # fmt: skip
     assert got["risks"][0]["factor"] == "Losses persist: net income -$162.5M."
     assert "_template" not in got and got["bull"][0]["numeric_claims"]
+    assert (got["audit"]["status"], got["guard_warnings"]) == ("ok", [])
+
+
+def test_a_narrative_that_failed_the_guard_is_read_back_as_failed(
+    db: sessionmaker[Session], crwd: ScorecardView
+) -> None:
+    from fastapi.testclient import TestClient
+
+    from api.app import app
+    from data.models.schema import Company, DeepDiveRun
+    from deepdive.narrative import persist_narrative
+    from deepdive.narrative_output import NarrativeStatus
+
+    with db() as s:
+        co = Company(ticker="CRWD", name="CrowdStrike", exchange="NASDAQ")
+        s.add(co)
+        s.flush()
+        s.add(DeepDiveRun(company_id=co.id, ticker="CRWD", mode="default"))
+        s.commit()
+    failed = _narrative(crwd).model_copy(
+        update={"status": NarrativeStatus.GUARD_FAILED, "guard_warnings": ["bull[0]: literal 7"]}
+    )
+    assert persist_narrative(failed)
+    got = TestClient(app).get("/dive/CRWD/narrative").json()
+    assert got["audit"]["status"] == "guard_failed"
+    assert got["guard_warnings"] == ["bull[0]: literal 7"]
 
 
 def test_a_v1_narrative_is_stored_as_before(db: sessionmaker[Session], crwd: ScorecardView) -> None:
