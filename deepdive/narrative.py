@@ -41,6 +41,7 @@ from pydantic import BaseModel
 
 from config.settings import settings
 from config.verdicts import narrative_verdict
+from deepdive.citable_fields import CitableField
 from deepdive.llm_calls import annotate_last, attempt_context, last_call_cost, recorded_call
 from deepdive.mental_model_composer import (
     Archetype,
@@ -272,8 +273,17 @@ def _recorded(provider: str, model: str, system_prompt: str) -> Any:
         model=model,
         prompt_version=PROMPT_VERSION,
         system_prompt=system_prompt,
-        schema=NarrativeBodyV2.model_json_schema(),  # the static shape; IDs vary per request
+        schema=_versioned_schema(),
     )
+
+
+def _versioned_schema() -> dict[str, Any]:
+    """What the prompt hash covers besides the system prompt (ADR-048 §2.2): the request
+    schema without a view's IDs, and the repair turn's fixed text."""
+    return {
+        "request": _strict_schema(_inline_refs(narrative_json_schema_v2([], []))),
+        "repair": [_REPAIR_ASK, _HINTS_HEADER, _HINT_NEAR, _HINT_NONE],
+    }
 
 
 @dataclass(frozen=True)
@@ -326,20 +336,34 @@ def _inline_refs(schema: dict[str, Any]) -> dict[str, Any]:
 
 
 _UNKNOWN_ID = re.compile(r"'\{?([^'{}]+)\}?' is not a citable field")
+_REPAIR_ASK = (
+    "The checks rejected that answer:\n{faults}\n\nReturn the whole narrative again with each "
+    "fault fixed. Keep everything that passed. Every number must be a {{field_id}} placeholder "
+    "from the citable fields."
+)
+_HINTS_HEADER = "\n\nCitable fields with a similar ID:\n"
+# A similar ID can be a different measure (revenue vs revenue CAGR); the guard checks only
+# that an ID exists, so the label and unit go with it and words stay an option.
+_HINT_NEAR = (
+    "- '{bad}' is not listed. Similar: {near}. Use one only if it is the same measure; "
+    "otherwise state it in words, without a number."
+)
+_HINT_NONE = "- '{bad}' is not listed; state it in words, without a number."
 
 
-def _id_hints(warnings: list[str], ids: list[str]) -> list[str]:
-    """For each unknown ID a warning names, the citable IDs it most likely meant."""
-    hints = []
+def _id_hints(warnings: list[str], fields: dict[str, CitableField]) -> list[str]:
+    """For each unknown ID a warning names, up to three citable IDs it may have meant."""
+    ids, hints = list(fields), []
     for bad in dict.fromkeys(m[1] for w in warnings for m in _UNKNOWN_ID.finditer(w)):
         name = bad.rsplit(".", 1)[-1]
-        near = [i for i in ids if i.rsplit(".", 1)[-1] == name] or get_close_matches(
+        near = [i for i in ids if i.rsplit(".", 1)[-1] == name][:3] or get_close_matches(
             bad, ids, n=3, cutoff=0.6
         )
-        hints.append(
-            f"- '{bad}' is not listed; did you mean {' or '.join(map(repr, near))}?"
-            if near else f"- '{bad}' is not listed; state it in words, without a number."
+        shown = ", ".join(
+            f"'{i}' ({fields[i].label}, {fields[i].unit})" if fields[i].unit
+            else f"'{i}' ({fields[i].label})" for i in near
         )  # fmt: skip
+        hints.append(_HINT_NEAR.format(bad=bad, near=shown) if near else _HINT_NONE.format(bad=bad))
     return hints
 
 
@@ -349,16 +373,12 @@ def _repair_turns(repair: Repair | None, view: ScorecardView) -> list[dict[str, 
         return []
     body, warnings = repair
     faults = "\n".join(f"- {w}" for w in warnings)
-    if hints := _id_hints(warnings, list(view.citable_fields())):
-        faults += "\n\nCitable fields that may be meant:\n" + "\n".join(hints)
+    if hints := _id_hints(warnings, view.citable_fields()):
+        faults += _HINTS_HEADER + "\n".join(hints)
     return [
         {"role": "assistant", "content": body.model_dump_json()},
-        {"role": "user", "content": (
-            f"The checks rejected that answer:\n{faults}\n\nReturn the whole narrative again "
-            "with each fault fixed. Keep everything that passed. Every number must be a "
-            "{field_id} placeholder from the citable fields."
-        )},
-    ]  # fmt: skip
+        {"role": "user", "content": _REPAIR_ASK.format(faults=faults)},
+    ]
 
 
 def _parse_reply(

@@ -246,9 +246,11 @@ def narrative_json_schema_v2(field_ids: list[str], framework_codes: list[str]) -
         return node
 
     schema = cast(dict[str, Any], strip(schema))
-    for name in ("FieldCitation", "Trigger"):
-        schema["$defs"][name]["properties"]["field_id"]["enum"] = list(field_ids)
-    if framework_codes:  # an empty enum is invalid; the guard still rejects every code
+    # An empty enum is invalid; without one the guard still rejects every ID and code.
+    if field_ids:
+        for name in ("FieldCitation", "Trigger"):
+            schema["$defs"][name]["properties"]["field_id"]["enum"] = list(field_ids)
+    if framework_codes:
         codes = schema["$defs"]["CasePoint"]["properties"]["framework_codes"]
         codes["items"]["enum"] = list(framework_codes)
     return schema

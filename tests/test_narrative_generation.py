@@ -142,10 +142,32 @@ def test_a_repair_names_the_ids_an_unknown_one_likely_meant(crwd: ScorecardView)
     unknown = _reply(bear=[_point("Net income was {F3.gaap_net_income}.", ["F5.moat"])])
     _generate(crwd, unknown, _reply())
     warnings = _Anthropic.calls[1]["messages"][2]["content"]
-    assert "- 'F3.gaap_net_income' is not listed; did you mean 'ICA-3.gaap_net_income'?" in warnings
+    assert (
+        "- 'F3.gaap_net_income' is not listed. Similar: 'ICA-3.gaap_net_income' "
+        "(ICA-3 gaap net income, usd). Use one only if it is the same measure; "
+        "otherwise state it in words, without a number."
+    ) in warnings
     assert "- 'F5.moat' is not listed; state it in words, without a number." in warnings
-    hints = narrative._id_hints(["triggers[0]: 'F5.roik' is not a citable field"], ["F5.roic"])
-    assert hints == ["- 'F5.roik' is not listed; did you mean 'F5.roic'?"]
+
+
+def test_a_hint_shows_what_each_similar_id_measures_and_at_most_three(
+    crwd: ScorecardView,
+) -> None:
+    fields = crwd.citable_fields()
+    # A level metric's nearest ID is a growth rate: the label says so, and words stay an option.
+    (hint,) = narrative._id_hints(["x: placeholder '{F5.revenue}' is not a citable field"], fields)
+    assert "'F5.revenue_cagr_3y' (Revenue CAGR 3y, pct)" in hint and "in words" in hint
+    (hint,) = narrative._id_hints(["triggers[0]: 'X.score' is not a citable field"], fields)
+    assert hint.count("score)") == 3
+
+
+def test_the_prompt_hash_covers_the_request_schema_and_the_repair_text(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    before = narrative._versioned_schema()
+    assert "Limit: at most 600 characters." in json.dumps(before)  # restated in the schema
+    monkeypatch.setattr(narrative, "_HINT_NEAR", "- '{bad}': try {near}.")
+    assert narrative._versioned_schema() != before
 
 
 def test_there_is_never_a_second_repair(crwd: ScorecardView) -> None:
