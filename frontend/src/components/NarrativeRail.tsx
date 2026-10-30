@@ -64,11 +64,17 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
       <div style={{ padding: "18px 20px", borderBottom: "2px solid var(--color-divider)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h4>Narrative</h4>
-          {narrative?.generated && (
-            <span className="mono dim" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {narrative?.generated && (!narrative.audit?.status ? (
+            <span className="mono dim" data-testid="narrative-guard-unknown">guard status unknown</span>
+          ) : narrative.audit.status === "ok" && !(narrative.guard_warnings ?? []).length ? (
+            <span className="mono dim" style={{ display: "flex", alignItems: "center", gap: 6 }} data-testid="narrative-grounded">
               <span className="live" />grounded
             </span>
-          )}
+          ) : (
+            <span className="mono" style={{ color: "var(--color-accent-800)" }} data-testid="narrative-guard-failed">
+              guard failed
+            </span>
+          ))}
         </div>
         <p className="mono dim" style={{ marginTop: 8 }}>
           Editorial synthesis — bull, bear, risk. Every claim cites a scorecard number. No new facts introduced.
