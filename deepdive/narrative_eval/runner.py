@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import Any
 
 from config.llm_prices import cost_usd, require_price
-from deepdive.llm_calls import last_call_id
 from deepdive.mental_model_composer import select_models_for_dive
 from deepdive.narrative_eval.export import TEST, TRAIN
 from deepdive.narrative_eval.graders import EvalOutput
@@ -24,6 +23,7 @@ from deepdive.scorecard_view import ScorecardView
 
 EST_OUTPUT_TOKENS = 3_800  # ADR-047 §2.4: measured output per narrative
 CHARS_PER_TOKEN = 4  # rough; the figure is shown as an estimate
+REPAIR_NOTE_TOKENS = 500  # the guard's warnings in a repair turn; a guess, shown as one
 MAX_CONSECUTIVE_FAILURES = 3  # a billing or auth error fails every case; stop, rerun resumes
 
 
@@ -66,8 +66,9 @@ def select_cases(golden: Path, split: str) -> list[dict[str, Any]]:
     return sorted(cases, key=lambda c: str(c["case_id"]))
 
 
-def estimate_cost(cases: list[dict[str, Any]], model: str) -> float:
-    """Estimated USD for one narrative per case. Raises UnpricedModelError for an unpriced model."""
+def estimate_cost(cases: list[dict[str, Any]], model: str, *, repairs: bool = False) -> float:
+    """Estimated USD for one narrative per case; with `repairs`, if every case used its one
+    repair, whose input adds the failed answer (ADR-045 §2.5). Raises UnpricedModelError."""
     from deepdive.narrative import _build_system_prompt, _build_user_prompt
 
     require_price(model)
@@ -76,6 +77,9 @@ def estimate_cost(cases: list[dict[str, Any]], model: str) -> float:
     for case in cases:
         chars = system + len(_build_user_prompt(ScorecardView.from_dict(case["view"])))
         total += cost_usd(model, chars // CHARS_PER_TOKEN, EST_OUTPUT_TOKENS) or 0.0
+        if repairs:
+            repair_in = chars // CHARS_PER_TOKEN + EST_OUTPUT_TOKENS + REPAIR_NOTE_TOKENS
+            total += cost_usd(model, repair_in, EST_OUTPUT_TOKENS) or 0.0
     return total
 
 
@@ -92,23 +96,40 @@ def deferred_models(view: ScorecardView) -> list[str]:
     return [m.slug for m in composition.deferred]
 
 
-def _usage(row_id: int | None) -> tuple[int, int, int, int, int] | None:
-    """(input, output, cache read, cache write, latency ms) from the call's llm_calls row."""
-    if row_id is None:
-        return None
+def last_call_id() -> int:
+    """The newest `llm_calls` row id, 0 for none: the rows after it belong to the next case."""
+    from sqlalchemy import func, select
+
     from data.db import get_session
     from data.models.schema import LlmCall
 
     with get_session() as session:
-        row: Any = session.get(LlmCall, row_id)
-        if row is None:
+        return int(session.execute(select(func.max(LlmCall.id))).scalar() or 0)
+
+
+def _usage(after_id: int, ticker: str) -> tuple[int, int, int, int, int] | None:
+    """(input, output, cache read, cache write, latency ms) summed over the case's narrative
+    calls: a repair is a second call (ADR-045 §2.7 item 4). None if none was recorded."""
+    from sqlalchemy import select
+
+    from data.db import get_session
+    from data.models.schema import LlmCall
+
+    with get_session() as session:
+        rows: list[Any] = list(session.execute(
+            select(LlmCall).where(  # not a UI or --narrate call another process made meanwhile
+                LlmCall.__table__.c.id > after_id, LlmCall.__table__.c.call_site == "narrative",
+                LlmCall.__table__.c.purpose == "eval", LlmCall.__table__.c.ticker == ticker,
+            )
+        ).scalars())  # fmt: skip
+        if not rows:
             return None
         return (
-            int(row.input_tokens),
-            int(row.output_tokens),
-            int(row.cache_read_tokens),
-            int(row.cache_write_tokens),
-            int(row.latency_ms),
+            sum(int(r.input_tokens) for r in rows),
+            sum(int(r.output_tokens) for r in rows),
+            sum(int(r.cache_read_tokens) for r in rows),
+            sum(int(r.cache_write_tokens) for r in rows),
+            sum(int(r.latency_ms) for r in rows),
         )
 
 
@@ -118,11 +139,12 @@ def run_case(case: dict[str, Any], provider: NarrativeProvider, model: str) -> E
 
     view = ScorecardView.from_dict(case["view"])
     deferred = deferred_models(view)
+    before = last_call_id()
     start = time.perf_counter()
     narrative = generate_eval_narrative(view, provider, model)
     elapsed = int((time.perf_counter() - start) * 1000)
-    usage = _usage(last_call_id())
-    # Without the row (its write failed), the narrative's own counts; cache tokens unknown.
+    usage = _usage(before, view.ticker)
+    # Without the rows (their write failed), the narrative's own counts; cache tokens unknown.
     inp, out, cache_read, cache_write, latency = usage or (
         narrative.prompt_tokens, narrative.completion_tokens, 0, 0, elapsed,
     )  # fmt: skip
