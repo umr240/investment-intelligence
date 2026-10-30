@@ -51,6 +51,7 @@ import re
 from typing import Any
 
 from config.verdicts import narrative_verdict
+from deepdive.citable_fields import CitableField
 from deepdive.narrative_output import NarrativeBody, NarrativeBodyV2
 from deepdive.scorecard_view import ScorecardView
 
@@ -153,10 +154,46 @@ def validate(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView) -> list
     return warnings
 
 
-# A trigger condition states a threshold the model proposes ("falls below 10%"),
-# which no view holds; every other text is a claim, so a literal number in it must
-# be one the view holds (§2.2). v1 checked only the one-liner and the points.
-_PROPOSED_THRESHOLD = re.compile(r"^triggers\[\d+\]\.condition$")
+# A trigger condition may state thresholds the model proposes ("falls below 10%"), which no
+# view holds: a number right after a comparison. What the value is now is a placeholder.
+_TRIGGER = re.compile(r"^triggers\[\d+\]\.condition$")
+_NUM = r"[+−-]?\$?\d[\d,.]*\s?(?:%|x|bps|pp|tn|bn|mn|[TBMK])?"
+_MOVE = (r"(?:fall|drop|declin|rise|rising|grow|climb|increas|decreas|recover|improv|deteriorat"
+         r"|return|mov|expand|contract|widen|narrow|compress)\w*")  # fmt: skip
+_THRESHOLD = re.compile(
+    rf"\bbetween\s+{_NUM}\s+and\s+{_NUM}(?![\w])"
+    r"|(?:\b(?:below|above|under|over|exceed\w*|surpass\w*|cross\w*|reach\w*|within|beyond|past"
+    rf"|than|at (?:least|most)|{_MOVE}\s+(?:back\s+to|to|by))\s+"
+    r"(?:(?:roughly|about|around|approximately)\s+)?|[<>≤≥]=?\s*)"
+    rf"{_NUM}(?:[-–]{_NUM})?(?:/10\b)?"  # "8-10%", "6.0/10"
+    r"(?:\s+or\s+(?:more|less|greater|higher|lower|worse|better)\b)?(?![\w])"
+    rf"|\b{_MOVE}\s+{_NUM}\s+or\s+(?:more|less)\b",  # "falls 20% or more", not "growing 29.8%"
+    re.IGNORECASE,
+)
+_FROM_TO = re.compile(rf"(\bfrom\s+{_NUM}\s+to\s+){_NUM}(?![\w])", re.IGNORECASE)  # 2nd only
+_CURRENT = re.compile(  # "now over 47.3%", "47.3% today": a value, never a threshold
+    rf"\b(?:now|currently|today|presently|stands at|sits at)\s+(?:[a-z]+\s+){{0,2}}?{_NUM}"
+    rf"|{_NUM}\s+(?:now|currently|today)\b",
+    re.IGNORECASE,
+)
+# Not values: filing forms ("10-Ks", "13F"), the owner's question ("100% of this business"),
+# and a score's scale ("{F7.score}/10", "1.5/10").
+_FORMS = re.compile(
+    r"\b(?:10-K|10-Q|8-K|6-K|20-F|40-F|13-?F|S-1|DEF\s?14A)s?\b"
+    r"|\b100\s?% of (?:the|this|a|an|that) (?:business|company)\b",
+    re.IGNORECASE,
+)
+_SCALE = re.compile(r"(?:(?<=\})\s?|(?<=\d))/\s?10\b(?!\.?\d)")
+
+
+def _thresholds_removed(claim: str) -> str:
+    """A trigger condition without the thresholds it may type."""
+    current = [m.span() for m in _CURRENT.finditer(claim)]
+
+    def drop(m: re.Match[str]) -> str:
+        return m.group(0) if any(a < m.end() and m.start() < b for a, b in current) else " "
+
+    return _THRESHOLD.sub(drop, _FROM_TO.sub(lambda m: m.group(1), claim))
 
 
 _LABEL_WINDOW = re.compile(r"(?<![\w.-])(\d+)\s?(d|w|y)\b")  # "90d …"; no m: it can mean million
@@ -183,7 +220,48 @@ def _cited_by_part(body: NarrativeBodyV2) -> dict[str, set[str]]:
             cited[f"{section}[{i}]"].update(c.field_id for c in p.numeric_claims)
     for i, r in enumerate(body.risks):
         cited[f"risks[{i}]"].add(r.grounded_in.strip())
+    for i, t in enumerate(body.triggers):
+        cited.setdefault(f"triggers[{i}]", set()).add(t.field_id)
     return cited
+
+
+def _citable_values(fields: dict[str, CitableField]) -> list[tuple[str, str, set[float]]]:
+    """Each citable value's rendered unit ('%', 'x' or '') and numbers, without its scale."""
+    out = []
+    for field_id, f in fields.items():
+        unit = next((u for u in ("%", "x") if u in f.value.lower()), "")
+        floats = _extract_normalised(re.sub(r"/\s?\d+\b", "", f.value))  # "4.9/10" is 4.9
+        if floats:
+            out.append((field_id, unit, floats))
+    return out
+
+
+def _typed_value(
+    tok: str, floats: set[float], unit: str, values: list[tuple[str, str, set[float]]]
+) -> tuple[list[str], str | None]:
+    """The citable fields a typed number is exactly, else the nearest one it is close to.
+
+    A '%' or 'x' number is only a value rendered with that unit, so "5.69%" is not a 5.69/10
+    score. A bare integer or fraction ("top 10 customers", "50/50") counts only if exact, and
+    only against a value with no unit. Otherwise the nearest within the prose tolerance.
+    """
+    exact_only = not unit and "." not in tok
+    near: list[tuple[float, str]] = []
+    for field_id, field_unit, wf in values:
+        if (unit in ("%", "x") and field_unit != unit) or (exact_only and field_unit):
+            continue
+        d = min(_distance(f, w) for f in floats for w in wf) if floats else 1.0
+        if d < 1e-9 or (not exact_only and d <= _PROSE_FUZZY_TOL):
+            near.append((d, field_id))
+    exact = [field_id for d, field_id in near if d < 1e-9]
+    return exact, (None if exact or not near else min(near)[1])
+
+
+def _distance(typed: float, value: float) -> float:
+    """Relative distance; a rendered '%' value already holds its percent and fraction forms."""
+    if not value:
+        return 0.0 if typed == 0 else 1.0
+    return abs(abs(typed) - abs(value)) / abs(value)
 
 
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
@@ -200,6 +278,7 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
     overlay_ids = {t.trigger_id for t in view.overlay_triggers}
     fetch_gaps = list(view.fetch_data_gaps or [])
     cited = _cited_by_part(body)
+    values = _citable_values(fields)
 
     # 1. Every placeholder names a citable field, and nothing is left unrendered.
     for path, text in prose(body):
@@ -207,18 +286,35 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
         warnings += [f"{path}: placeholder '{{{f}}}' is not a citable field" for f in unknown]
         if not unknown and re.search(r"[{}]", render_text(text, fields)):
             warnings.append(f"{path}: unrendered placeholder or stray brace")
-        # 2. A literal number in a claim is a guard error unless the view holds it.
-        if not _PROPOSED_THRESHOLD.match(path):
-            claim = PLACEHOLDER.sub(" ", text)
-            part = cited.get(path.split(".")[0], set())
-            windows = _window_phrases([fields[f].label for f in part if f in fields])
-            claim = windows.sub(" ", claim) if windows else claim
-            for tok, floats, unit in _extract_tokens_and_floats(claim):
-                if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
-                    warnings.append(
-                        f"{path}: literal number '{tok}' not in scorecard whitelist "
-                        "(cite a field with a placeholder)"
-                    )
+        # 2. A typed number is a guard error if the view lacks it, and also if it is a citable
+        # field's value: that is a placeholder typed out, possibly beside the wrong measure.
+        claim = _FORMS.sub(" ", PLACEHOLDER.sub(" ", _SCALE.sub(" ", text)))
+        if _TRIGGER.match(path):
+            claim = _thresholds_removed(claim)
+        part = cited.get(path.split(".")[0], set())
+        windows = _window_phrases([fields[f].label for f in part if f in fields])
+        claim = windows.sub(" ", claim) if windows else claim
+        for tok, floats, unit in _extract_tokens_and_floats(claim):
+            if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
+                warnings.append(
+                    f"{path}: literal number '{tok}' not in scorecard whitelist "
+                    "(cite a field with a placeholder)"
+                )
+                continue
+            exact, near = _typed_value(tok, floats, unit, values)
+            if len(exact) == 1:
+                warnings.append(
+                    f"{path}: literal number '{tok}' is the value of {exact[0]}; "
+                    f"write {{{exact[0]}}} instead"
+                )
+            elif exact or near:  # one of several, or only near: no advice on which it states
+                which = (
+                    f"a value of {', '.join(exact)}" if exact else f"close to the value of {near}"
+                )
+                warnings.append(
+                    f"{path}: literal number '{tok}' is {which}; "
+                    "write the placeholder of the value it states"
+                )
 
     for section_name, points in (("bull", body.bull), ("bear", body.bear)):
         for i, p in enumerate(points):

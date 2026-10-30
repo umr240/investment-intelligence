@@ -213,6 +213,114 @@ def test_only_a_trigger_condition_may_propose_a_threshold(crwd: ScorecardView) -
         ]
 
 
+def test_a_citable_value_typed_out_is_flagged_beside_any_measure(crwd: ScorecardView) -> None:
+    def said(text: str) -> list[str]:
+        return validate(_body(one_liner=text), crwd)
+
+    # ADR §1's CRWD failure: +29.8% is the FCF margin, cited as ROIC.
+    wrong = _body(bear=[_point("h", "ROIC is +29.8%.", ["F5"], ["F5.roic"])])
+    assert validate(wrong, crwd) == [
+        "bear[0].detail: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+    # The nearest value is named, not the first within tolerance (ICA-1's 10.0% is near too).
+    assert said("OCF covers losses 9.9 times.") == [
+        "one_liner: literal number '9.9' is the value of ICA-3.ocf_to_loss_ratio; "
+        "write {ICA-3.ocf_to_loss_ratio} instead"
+    ]
+    assert said("Debt/EBITDA 0.0.") == [  # 0.0, not 18.4 bps, which rounds to it
+        "one_liner: literal number '0.0' is the value of F5.debt_ebitda; "
+        "write {F5.debt_ebitda} instead"
+    ]
+    assert said("R&D runs at 28.8%.") == [  # F3 and ICA-1 hold the same value: no advice
+        "one_liner: literal number '28.8%' is a value of F3.r_d_intensity, ICA-1.rd_intensity; "
+        "write the placeholder of the value it states"
+    ]
+    assert said("Listed 88 months.") == [
+        "one_liner: literal number '88' is the value of PSA-3.months_since_listing; "
+        "write {PSA-3.months_since_listing} instead"
+    ]
+    # Near a value but not it: flagged, without advice that could name the wrong field. The
+    # nearest is named: 29.5% is within tolerance of 28.8%, 29.0% and 29.8%.
+    assert said("ROIC is 29.5%.") == [
+        "one_liner: literal number '29.5%' is close to the value of F5.fcf_margin; "
+        "write the placeholder of the value it states"
+    ]
+    assert said("Fiscal 2026 closed.") == [  # a year the view holds is typed out too
+        "one_liner: literal number '2026' is the value of company.latest_fiscal_year; "
+        "write {company.latest_fiscal_year} instead"
+    ]
+    # Not values: a form, a paper's year, a score's scale; a bare count matches only exactly.
+    plain = "Cooper-Gulen-Schill (2008); 10-Ks and 13-F; F5 is {F5.score}/10; the top 10 holders."
+    assert said(plain) == []
+    assert said("Over the last 30 years, 50/50 odds, over 90 days.") == []
+    assert said("Would I own 100% of this business?") == []  # the owner's question
+    assert said("Revenue grew 98.9%.")  # +98.9% is F2.12_1_momentum, so 100% would be near it
+    assert said("100% of the revenue grew.")  # not the owner's question: checked
+    # A '%' number is only a '%' value: "5.69%" is not the composite's 5.69/10.
+    assert said("Within 5.69% of it.") == []
+    assert said("Within 10% of it.") == [  # ICA-1's 10.0%
+        "one_liner: literal number '10%' is the value of ICA-1.rd_threshold; "
+        "write {ICA-1.rd_threshold} instead"
+    ]
+
+
+def test_a_filing_form_and_a_score_scale_are_no_value() -> None:
+    path = ROOT / "tests/fixtures/narrative_golden/train/ADBE.json"  # F7.score is 10/10
+    adbe = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
+    assert validate(_body(one_liner="Per the 10-Ks and 10-Q; F5 is {F5.score}/10."), adbe) == []
+    assert validate(_body(one_liner="The 10 of it."), adbe)  # the same 10, not a form
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["Score {composite.score}/77.7B.", "{F5.roic} / 29.8%", "Scored 1.5/10."],
+)
+def test_only_a_score_scale_is_dropped_before_the_check(crwd: ScorecardView, text: str) -> None:
+    assert any("literal number" in w for w in validate(_body(one_liner=text), crwd)), text
+
+
+def test_a_trigger_may_type_only_its_thresholds(crwd: ScorecardView) -> None:
+    def condition(said: str, field: str = "F5.roic", view: ScorecardView = crwd) -> list[str]:
+        return validate(_body(triggers=[{"field_id": field, "condition": said}]), view)
+
+    thresholds = "rises above roughly 8-10%, exceeds 6.0/10, comes within 5% or climbs back to 15%"
+    assert condition(thresholds) == []
+    assert condition("contracts by 300 bps, falls 20% or more, or to between 10% and 29.8%") == []
+    assert condition("contraction exceeding 200bps") == []
+    made_up = "triggers[0].condition: literal number '47.3%' not in scorecard whitelist"
+    for said in (
+        "ROIC, now 47.3%, falls below 10%",
+        "ROIC, up to 47.3%, falls below 10%",  # `to` is a threshold only after a move
+        "now over 47.3%",  # what the value is now, though worded as a comparison
+        "close to 47.3%",
+        "falls below 10% - 47.3%",  # a spaced dash is no range
+        "falls below 10% to 47.3%",
+        "falls below 10% and 47.3% of customers churn",  # `and` joins a range only after between
+        "offset by 47.3% churn, ROIC falls below 10%",  # `by` is a threshold only after a move
+        "47.3% or more of revenue churns and ROIC falls below 10%",
+    ):
+        assert any(w.startswith(made_up) for w in condition(said)), said
+    assert condition("ROIC, growing 29.8% a year, falls below 10%") == [  # a rate, not a threshold
+        "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+    assert condition("ROIC, driven by 29.8% FCF margin, falls below 10%") == [
+        "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+    assert condition("falls from +29.8% to 10%") == [  # "from X": the current value
+        "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+    # The trigger's field counts as cited: its window is its definition (90 is not in AAPL).
+    path = ROOT / "tests/fixtures/narrative_golden/train/AAPL.json"
+    aapl = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
+    buyers = "an insider buys in the prior 90 days"
+    assert condition(buyers, "F1.90d_open_market_buyers", aapl) == []
+    assert condition(buyers, "F5.roic", aapl)
+
+
 def test_a_rendered_copy_must_be_the_body_with_its_text_filled_in(crwd: ScorecardView) -> None:
     body = _body()
     other = render_body(_body(moat_direction="WIDENING"), crwd.citable_fields())
