@@ -279,7 +279,7 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
         if not run.bull_narrative:
             return {"generated": False}
         risk_data = _json.loads(run.risk_factors)
-        audit = risk_data.get("_audit", {})
+        audit = risk_data.get("_audit") or {}
         return {
             "generated": True,
             "run_id": run.id,

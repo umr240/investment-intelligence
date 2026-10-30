@@ -64,7 +64,9 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
       <div style={{ padding: "18px 20px", borderBottom: "2px solid var(--color-divider)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h4>Narrative</h4>
-          {narrative?.generated && (narrative.audit?.status === "ok" && !(narrative.guard_warnings ?? []).length ? (
+          {narrative?.generated && (!narrative.audit?.status ? (
+            <span className="mono dim" data-testid="narrative-guard-unknown">guard status unknown</span>
+          ) : narrative.audit.status === "ok" && !(narrative.guard_warnings ?? []).length ? (
             <span className="mono dim" style={{ display: "flex", alignItems: "center", gap: 6 }} data-testid="narrative-grounded">
               <span className="live" />grounded
             </span>
