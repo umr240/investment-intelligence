@@ -255,6 +255,8 @@ def test_a_citable_value_typed_out_is_flagged_beside_any_measure(crwd: Scorecard
     assert said(plain) == []
     assert said("Over the last 30 years, 50/50 odds, over 90 days.") == []
     assert said("Would I own 100% of this business?") == []  # the owner's question
+    assert said("Revenue grew 98.9%.")  # +98.9% is F2.12_1_momentum, so 100% would be near it
+    assert said("100% of the revenue grew.")  # not the owner's question: checked
     # A '%' number is only a '%' value: "5.69%" is not the composite's 5.69/10.
     assert said("Within 5.69% of it.") == []
     assert said("Within 10% of it.") == [  # ICA-1's 10.0%
@@ -263,10 +265,10 @@ def test_a_citable_value_typed_out_is_flagged_beside_any_measure(crwd: Scorecard
     ]
 
 
-def test_a_filing_form_is_no_value() -> None:
+def test_a_filing_form_and_a_score_scale_are_no_value() -> None:
     path = ROOT / "tests/fixtures/narrative_golden/train/ADBE.json"  # F7.score is 10/10
     adbe = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
-    assert validate(_body(one_liner="Per the 10-Ks and 10-Q."), adbe) == []
+    assert validate(_body(one_liner="Per the 10-Ks and 10-Q; F5 is {F5.score}/10."), adbe) == []
     assert validate(_body(one_liner="The 10 of it."), adbe)  # the same 10, not a form
 
 
@@ -295,8 +297,18 @@ def test_a_trigger_may_type_only_its_thresholds(crwd: ScorecardView) -> None:
         "falls below 10% - 47.3%",  # a spaced dash is no range
         "falls below 10% to 47.3%",
         "falls below 10% and 47.3% of customers churn",  # `and` joins a range only after between
+        "offset by 47.3% churn, ROIC falls below 10%",  # `by` is a threshold only after a move
+        "47.3% or more of revenue churns and ROIC falls below 10%",
     ):
         assert any(w.startswith(made_up) for w in condition(said)), said
+    assert condition("ROIC, growing 29.8% a year, falls below 10%") == [  # a rate, not a threshold
+        "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
+    assert condition("ROIC, driven by 29.8% FCF margin, falls below 10%") == [
+        "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
+        "write {F5.fcf_margin} instead"
+    ]
     assert condition("falls from +29.8% to 10%") == [  # "from X": the current value
         "triggers[0].condition: literal number '29.8%' is the value of F5.fcf_margin; "
         "write {F5.fcf_margin} instead"

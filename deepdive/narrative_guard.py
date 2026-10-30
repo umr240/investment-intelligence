@@ -163,10 +163,11 @@ _MOVE = (r"(?:fall|drop|declin|rise|rising|grow|climb|increas|decreas|recover|im
 _THRESHOLD = re.compile(
     rf"\bbetween\s+{_NUM}\s+and\s+{_NUM}(?![\w])"
     r"|(?:\b(?:below|above|under|over|exceed\w*|surpass\w*|cross\w*|reach\w*|within|beyond|past"
-    rf"|than|by|at (?:least|most)|{_MOVE}\s+(?:back\s+)?to)\s+"
+    rf"|than|at (?:least|most)|{_MOVE}\s+(?:back\s+to|to|by))\s+"
     r"(?:(?:roughly|about|around|approximately)\s+)?|[<>≤≥]=?\s*)"
-    rf"{_NUM}(?:[-–]{_NUM})?(?:/10\b)?(?![\w])"  # "8-10%", "6.0/10"
-    rf"|{_NUM}\s+or\s+(?:more|less|greater|higher|lower|worse|better)\b",  # "20% or more"
+    rf"{_NUM}(?:[-–]{_NUM})?(?:/10\b)?"  # "8-10%", "6.0/10"
+    r"(?:\s+or\s+(?:more|less|greater|higher|lower|worse|better)\b)?(?![\w])"
+    rf"|\b{_MOVE}\s+{_NUM}\s+or\s+(?:more|less)\b",  # "falls 20% or more", not "growing 29.8%"
     re.IGNORECASE,
 )
 _FROM_TO = re.compile(rf"(\bfrom\s+{_NUM}\s+to\s+){_NUM}(?![\w])", re.IGNORECASE)  # 2nd only
@@ -179,10 +180,10 @@ _CURRENT = re.compile(  # "now over 47.3%", "47.3% today": a value, never a thre
 # and a score's scale ("{F7.score}/10", "1.5/10").
 _FORMS = re.compile(
     r"\b(?:10-K|10-Q|8-K|6-K|20-F|40-F|13-?F|S-1|DEF\s?14A)s?\b"
-    r"|\b100\s?% of (?:the|this|a|an|that)\b",
+    r"|\b100\s?% of (?:the|this|a|an|that) (?:business|company)\b",
     re.IGNORECASE,
 )
-_SCALE = re.compile(r"(?:(?<=\})\s?|(?<=\d))/\s?10\b(?![.\d])")
+_SCALE = re.compile(r"(?:(?<=\})\s?|(?<=\d))/\s?10\b(?!\.?\d)")
 
 
 def _thresholds_removed(claim: str) -> str:
@@ -249,21 +250,18 @@ def _typed_value(
     for field_id, field_unit, wf in values:
         if (unit in ("%", "x") and field_unit != unit) or (exact_only and field_unit):
             continue
-        d = min(_distance(f, w, unit) for f in floats for w in wf) if floats else 1.0
+        d = min(_distance(f, w) for f in floats for w in wf) if floats else 1.0
         if d < 1e-9 or (not exact_only and d <= _PROSE_FUZZY_TOL):
             near.append((d, field_id))
     exact = [field_id for d, field_id in near if d < 1e-9]
     return exact, (None if exact or not near else min(near)[1])
 
 
-def _distance(typed: float, value: float, unit: str) -> float:
-    """Relative distance; a '%' number may also be a stored fraction typed as a percent."""
+def _distance(typed: float, value: float) -> float:
+    """Relative distance; a rendered '%' value already holds its percent and fraction forms."""
     if not value:
         return 0.0 if typed == 0 else 1.0
-    d = abs(abs(typed) - abs(value)) / abs(value)
-    if unit == "%":
-        d = min(d, abs(abs(typed) - abs(value) * 100) / (abs(value) * 100))
-    return d
+    return abs(abs(typed) - abs(value)) / abs(value)
 
 
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
