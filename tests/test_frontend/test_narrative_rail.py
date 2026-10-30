@@ -45,14 +45,19 @@ def _open_dive(page: Any, ticker: str) -> None:
 
 
 _WARNING = "bull[0].detail: literal number '47%'"
+_TRIM = "formatting: bull.1.headline trimmed from 152 to 140 chars"  # status stays ok
+_REPAIR = "repair: anthropic: status 529"
+_BADGES = ("grounded", "guard-failed", "guard-unknown", "guard-other")
 
 
 @pytest.mark.parametrize(
     ("audit", "warnings", "badge"),
     [
         ({"status": "ok"}, [], "narrative-grounded"),
-        ({"status": "guard_failed"}, [_WARNING], "narrative-guard-failed"),
+        ({"status": "ok"}, [_TRIM, _REPAIR], "narrative-grounded"),  # notes, not faults
+        ({"status": "guard_failed"}, [_WARNING, _TRIM], "narrative-guard-failed"),
         ({"status": "ok"}, [_WARNING], "narrative-guard-failed"),
+        ({"status": "provider_error"}, [], "narrative-guard-other"),
         ({}, [], "narrative-guard-unknown"),
     ],
 )  # fmt: skip
@@ -72,9 +77,12 @@ def test_the_badge_follows_the_stored_guard_result(
     page.route("**/dive/*/narrative", stored)
     _open_dive(page, BROWSER_TICKER)
     page.wait_for_selector(f"[data-testid={badge}]", timeout=60_000)
-    others = {"narrative-grounded", "narrative-guard-failed", "narrative-guard-unknown"} - {badge}
+    others = {f"narrative-{b}" for b in _BADGES} - {badge}
     assert all(page.locator(f"[data-testid={b}]").count() == 0 for b in others)
-    assert ("Hallucination guard warnings" in page.inner_text("body")) == bool(warnings)
+    body = page.inner_text("body")
+    assert ("Hallucination guard warnings" in body) == (_WARNING in warnings)
+    assert (page.locator("[data-testid=narrative-notes]").count() == 1) == (_TRIM in warnings)
+    assert (_TRIM in body) == (_TRIM in warnings)
     assert not page.js_errors, page.js_errors
 
 
