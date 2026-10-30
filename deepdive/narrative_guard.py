@@ -161,10 +161,12 @@ _NUM = r"[+−-]?\$?\d[\d,.]*\s?(?:%|x|bps|pp|tn|bn|mn|[TBMK])?"
 _MOVE = (r"(?:fall|drop|declin|rise|rising|grow|climb|increas|decreas|recover|improv|deteriorat"
          r"|return|mov|expand|contract|widen|narrow|compress)\w*")  # fmt: skip
 _THRESHOLD = re.compile(
-    r"(?:\b(?:below|above|under|over|exceed\w*|surpass\w*|cross\w*|reach\w*|within|beyond|past"
-    rf"|than|at (?:least|most)|{_MOVE}\s+(?:back\s+)?to)\s+"
+    rf"\bbetween\s+{_NUM}\s+and\s+{_NUM}(?![\w])"
+    r"|(?:\b(?:below|above|under|over|exceed\w*|surpass\w*|cross\w*|reach\w*|within|beyond|past"
+    rf"|than|by|at (?:least|most)|{_MOVE}\s+(?:back\s+)?to)\s+"
     r"(?:(?:roughly|about|around|approximately)\s+)?|[<>≤≥]=?\s*)"
-    rf"{_NUM}(?:(?:-|–|\s(?:to|and)\s){_NUM})?(?:/10\b)?(?![\w])",  # "8-10%", "6.0/10"
+    rf"{_NUM}(?:[-–]{_NUM})?(?:/10\b)?(?![\w])"  # "8-10%", "6.0/10"
+    rf"|{_NUM}\s+or\s+(?:more|less|greater|higher|lower|worse|better)\b",  # "20% or more"
     re.IGNORECASE,
 )
 _FROM_TO = re.compile(rf"(\bfrom\s+{_NUM}\s+to\s+){_NUM}(?![\w])", re.IGNORECASE)  # 2nd only
@@ -173,8 +175,13 @@ _CURRENT = re.compile(  # "now over 47.3%", "47.3% today": a value, never a thre
     rf"|{_NUM}\s+(?:now|currently|today)\b",
     re.IGNORECASE,
 )
-# Not values: filing forms ("10-K", "13F") and a score's scale ("{F7.score}/10", "1.5/10").
-_FORMS = re.compile(r"\b(?:10-K|10-Q|8-K|6-K|20-F|40-F|13-?F|S-1|DEF\s?14A)s?\b", re.IGNORECASE)
+# Not values: filing forms ("10-Ks", "13F"), the owner's question ("100% of this business"),
+# and a score's scale ("{F7.score}/10", "1.5/10").
+_FORMS = re.compile(
+    r"\b(?:10-K|10-Q|8-K|6-K|20-F|40-F|13-?F|S-1|DEF\s?14A)s?\b"
+    r"|\b100\s?% of (?:the|this|a|an|that)\b",
+    re.IGNORECASE,
+)
 _SCALE = re.compile(r"(?:(?<=\})\s?|(?<=\d))/\s?10\b(?![.\d])")
 
 
@@ -217,49 +224,46 @@ def _cited_by_part(body: NarrativeBodyV2) -> dict[str, set[str]]:
     return cited
 
 
-def _citable_values(fields: dict[str, CitableField]) -> list[tuple[str, str, set[str], set[float]]]:
-    """Each citable value's rendered unit ('%', 'x' or ''), forms and numbers, without its scale."""
+def _citable_values(fields: dict[str, CitableField]) -> list[tuple[str, str, set[float]]]:
+    """Each citable value's rendered unit ('%', 'x' or '') and numbers, without its scale."""
     out = []
     for field_id, f in fields.items():
         unit = next((u for u in ("%", "x") if u in f.value.lower()), "")
-        value = re.sub(r"/\s?\d+\b", "", f.value)  # "4.9/10" is 4.9: the scale is no value
-        forms: set[str] = set()
-        _walk_collect(value, forms, last_key="")
-        floats = _extract_normalised(value)
-        if forms or floats:
-            out.append((field_id, unit, forms, floats))
+        floats = _extract_normalised(re.sub(r"/\s?\d+\b", "", f.value))  # "4.9/10" is 4.9
+        if floats:
+            out.append((field_id, unit, floats))
     return out
 
 
 def _typed_value(
-    tok: str, floats: set[float], unit: str, values: list[tuple[str, str, set[str], set[float]]]
-) -> tuple[str, bool] | None:
-    """The citable value a typed number states, and whether exactly; None if none.
+    tok: str, floats: set[float], unit: str, values: list[tuple[str, str, set[float]]]
+) -> tuple[list[str], str | None]:
+    """The citable fields a typed number is exactly, else the nearest one it is close to.
 
     A '%' or 'x' number is only a value rendered with that unit, so "5.69%" is not a 5.69/10
     score. A bare integer or fraction ("top 10 customers", "50/50") counts only if exact, and
     only against a value with no unit. Otherwise the nearest within the prose tolerance.
     """
     exact_only = not unit and "." not in tok
-    best: tuple[float, str] | None = None
-    for field_id, field_unit, forms, wf in values:
+    near: list[tuple[float, str]] = []
+    for field_id, field_unit, wf in values:
         if (unit in ("%", "x") and field_unit != unit) or (exact_only and field_unit):
             continue
-        if tok in forms:
-            return field_id, True
-        for f in floats:
-            for w in wf:
-                if not w:
-                    d = 0.0 if f == 0 else 1.0
-                else:
-                    d = abs(abs(f) - abs(w)) / abs(w)
-                    if unit == "%":  # a stored fraction typed as a percent
-                        d = min(d, abs(abs(f) - abs(w) * 100) / (abs(w) * 100))
-                if d < 1e-9:
-                    return field_id, True
-                if not exact_only and d <= _PROSE_FUZZY_TOL and (best is None or d < best[0]):
-                    best = (d, field_id)
-    return (best[1], False) if best else None
+        d = min(_distance(f, w, unit) for f in floats for w in wf) if floats else 1.0
+        if d < 1e-9 or (not exact_only and d <= _PROSE_FUZZY_TOL):
+            near.append((d, field_id))
+    exact = [field_id for d, field_id in near if d < 1e-9]
+    return exact, (None if exact or not near else min(near)[1])
+
+
+def _distance(typed: float, value: float, unit: str) -> float:
+    """Relative distance; a '%' number may also be a stored fraction typed as a percent."""
+    if not value:
+        return 0.0 if typed == 0 else 1.0
+    d = abs(abs(typed) - abs(value)) / abs(value)
+    if unit == "%":
+        d = min(d, abs(abs(typed) - abs(value) * 100) / (abs(value) * 100))
+    return d
 
 
 def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
@@ -299,15 +303,18 @@ def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
                     "(cite a field with a placeholder)"
                 )
                 continue
-            typed = _typed_value(tok, floats, unit, values)
-            if typed and typed[1]:
+            exact, near = _typed_value(tok, floats, unit, values)
+            if len(exact) == 1:
                 warnings.append(
-                    f"{path}: literal number '{tok}' is the value of {typed[0]}; "
-                    f"write {{{typed[0]}}} instead"
+                    f"{path}: literal number '{tok}' is the value of {exact[0]}; "
+                    f"write {{{exact[0]}}} instead"
                 )
-            elif typed:  # near a value, so it may state another: no advice on which
+            elif exact or near:  # one of several, or only near: no advice on which it states
+                which = (
+                    f"a value of {', '.join(exact)}" if exact else f"close to the value of {near}"
+                )
                 warnings.append(
-                    f"{path}: literal number '{tok}' is close to the value of {typed[0]}; "
+                    f"{path}: literal number '{tok}' is {which}; "
                     "write the placeholder of the value it states"
                 )
 

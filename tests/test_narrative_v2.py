@@ -228,6 +228,14 @@ def test_a_citable_value_typed_out_is_flagged_beside_any_measure(crwd: Scorecard
         "one_liner: literal number '9.9' is the value of ICA-3.ocf_to_loss_ratio; "
         "write {ICA-3.ocf_to_loss_ratio} instead"
     ]
+    assert said("Debt/EBITDA 0.0.") == [  # 0.0, not 18.4 bps, which rounds to it
+        "one_liner: literal number '0.0' is the value of F5.debt_ebitda; "
+        "write {F5.debt_ebitda} instead"
+    ]
+    assert said("R&D runs at 28.8%.") == [  # F3 and ICA-1 hold the same value: no advice
+        "one_liner: literal number '28.8%' is a value of F3.r_d_intensity, ICA-1.rd_intensity; "
+        "write the placeholder of the value it states"
+    ]
     assert said("Listed 88 months.") == [
         "one_liner: literal number '88' is the value of PSA-3.months_since_listing; "
         "write {PSA-3.months_since_listing} instead"
@@ -246,12 +254,20 @@ def test_a_citable_value_typed_out_is_flagged_beside_any_measure(crwd: Scorecard
     plain = "Cooper-Gulen-Schill (2008); 10-Ks and 13-F; F5 is {F5.score}/10; the top 10 holders."
     assert said(plain) == []
     assert said("Over the last 30 years, 50/50 odds, over 90 days.") == []
+    assert said("Would I own 100% of this business?") == []  # the owner's question
     # A '%' number is only a '%' value: "5.69%" is not the composite's 5.69/10.
     assert said("Within 5.69% of it.") == []
     assert said("Within 10% of it.") == [  # ICA-1's 10.0%
         "one_liner: literal number '10%' is the value of ICA-1.rd_threshold; "
         "write {ICA-1.rd_threshold} instead"
     ]
+
+
+def test_a_filing_form_is_no_value() -> None:
+    path = ROOT / "tests/fixtures/narrative_golden/train/ADBE.json"  # F7.score is 10/10
+    adbe = ScorecardView.from_dict(json.loads(path.read_text("utf-8"))["view"])
+    assert validate(_body(one_liner="Per the 10-Ks and 10-Q."), adbe) == []
+    assert validate(_body(one_liner="The 10 of it."), adbe)  # the same 10, not a form
 
 
 @pytest.mark.parametrize(
@@ -268,6 +284,7 @@ def test_a_trigger_may_type_only_its_thresholds(crwd: ScorecardView) -> None:
 
     thresholds = "rises above roughly 8-10%, exceeds 6.0/10, comes within 5% or climbs back to 15%"
     assert condition(thresholds) == []
+    assert condition("contracts by 300 bps, falls 20% or more, or to between 10% and 29.8%") == []
     assert condition("contraction exceeding 200bps") == []
     made_up = "triggers[0].condition: literal number '47.3%' not in scorecard whitelist"
     for said in (
@@ -276,6 +293,8 @@ def test_a_trigger_may_type_only_its_thresholds(crwd: ScorecardView) -> None:
         "now over 47.3%",  # what the value is now, though worded as a comparison
         "close to 47.3%",
         "falls below 10% - 47.3%",  # a spaced dash is no range
+        "falls below 10% to 47.3%",
+        "falls below 10% and 47.3% of customers churn",  # `and` joins a range only after between
     ):
         assert any(w.startswith(made_up) for w in condition(said)), said
     assert condition("falls from +29.8% to 10%") == [  # "from X": the current value
