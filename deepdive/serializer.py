@@ -12,6 +12,7 @@ from datetime import datetime
 from typing import Any
 
 from data.models.schema import DeepDiveRun, ScreenerRun
+from deepdive.narrative_output import split_guard_warnings
 
 
 def export_deepdive_markdown(run: DeepDiveRun, company_name: str = "") -> str:
@@ -322,12 +323,14 @@ def _render_risk_section(raw: str | None) -> list[str]:
         ptok = audit.get("prompt_tokens")
         ctok = audit.get("completion_tokens")
         gen_at = audit.get("generated_at")
-        warns = audit.get("guard_warnings") or []
+        warns, notes = split_guard_warnings(audit.get("guard_warnings"))
         lines.append(f"- Provider: `{provider}` / Model: `{model}`")
         if ptok is not None or ctok is not None:
             lines.append(f"- Tokens: prompt={ptok}, completion={ctok}")
         if gen_at:
             lines.append(f"- Generated: `{gen_at}`")
         lines.append(f"- Guard warnings: {len(warns)}")
+        if notes:
+            lines.append(f"- Notes (trims, a failed repair): {len(notes)}")
 
     return lines

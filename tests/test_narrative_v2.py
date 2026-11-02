@@ -28,6 +28,7 @@ from deepdive.narrative_output import (
     NarrativeProvider,
     NarrativeVerdict,
     narrative_json_schema_v2,
+    split_guard_warnings,
 )
 from deepdive.narrative_render import placeholders, render_body, render_text
 from deepdive.scorecard_view import ScorecardView
@@ -416,7 +417,7 @@ def test_a_v2_narrative_is_stored_rendered_with_its_template(
     assert risk["_template"]["bull"][0]["detail"].endswith("{F6.rule_of_40}.")
     assert (risk["schema_version"], risk["verdict"]) == (SCHEMA_V2, "WATCHLIST WITH TRIGGERS")
 
-    got = TestClient(app).get("/dive/CRWD/narrative").json()
+    got = TestClient(app, base_url="http://127.0.0.1").get("/dive/CRWD/narrative").json()
     assert got["generated"] and got["verdict"] == "WATCHLIST WITH TRIGGERS"
     assert got["triggers"] == [{"field_id": "F5.roic",
                                 "condition": "turns positive and stays above 10%"}]  # fmt: skip
@@ -434,6 +435,7 @@ def test_a_narrative_that_failed_the_guard_is_read_back_as_failed(
     from data.models.schema import Company, DeepDiveRun
     from deepdive.narrative import persist_narrative
     from deepdive.narrative_output import NarrativeStatus
+    from deepdive.serializer import export_deepdive_markdown
 
     with db() as s:
         co = Company(ticker="CRWD", name="CrowdStrike", exchange="NASDAQ")
@@ -441,13 +443,50 @@ def test_a_narrative_that_failed_the_guard_is_read_back_as_failed(
         s.flush()
         s.add(DeepDiveRun(company_id=co.id, ticker="CRWD", mode="default"))
         s.commit()
-    failed = _narrative(crwd).model_copy(
-        update={"status": NarrativeStatus.GUARD_FAILED, "guard_warnings": ["bull[0]: literal 7"]}
-    )
+    trim = "formatting: bull.0.headline trimmed from 152 to 140 chars"
+    failed = _narrative(crwd).model_copy(update={
+        "status": NarrativeStatus.GUARD_FAILED, "guard_warnings": ["bull[0]: literal 7", trim],
+    })  # fmt: skip
     assert persist_narrative(failed)
-    got = TestClient(app).get("/dive/CRWD/narrative").json()
+    got = TestClient(app, base_url="http://127.0.0.1").get("/dive/CRWD/narrative").json()
     assert got["audit"]["status"] == "guard_failed"
-    assert got["guard_warnings"] == ["bull[0]: literal 7"]
+    assert got["guard_warnings"] == ["bull[0]: literal 7", trim]
+    assert (got["guard_faults"], got["guard_notes"]) == (["bull[0]: literal 7"], [trim])
+    with db() as s:  # the markdown export counts the same split
+        md = export_deepdive_markdown(s.execute(select(DeepDiveRun)).scalars().one())
+    assert "- Guard warnings: 1\n- Notes (trims, a failed repair): 1" in md
+    # A stored `_audit` or warning list of null reads as empty, not as an error.
+    with db() as s:
+        run = s.execute(select(DeepDiveRun)).scalars().one()
+        run.risk_factors = json.dumps({**json.loads(str(run.risk_factors)), "_audit": None})
+        s.commit()
+    got = TestClient(app, base_url="http://127.0.0.1").get("/dive/CRWD/narrative").json()
+    assert (got["audit"], got["guard_warnings"], got["guard_faults"]) == ({}, [], [])
+
+
+def test_trim_and_repair_notes_are_split_from_guard_faults() -> None:
+    trim = "formatting: bull.0.headline trimmed from 152 to 140 chars"
+    repair = "repair: openai: 529"
+    fault = "bull[0]: literal 7"
+    assert split_guard_warnings([fault, trim, repair]) == ([fault], [trim, repair])
+    assert split_guard_warnings(None) == ([], [])
+
+
+@pytest.mark.parametrize(
+    "over",
+    [
+        {"one_liner": "Margins at {F5.gross_margin}."},
+        {"verdict_reason": "Revenue tripled to $77.7B."},
+        {"bull": [_point("h", "ROIC is +29.8%.", ["F7"], ["F6.nrr"])]},
+        {"verdict": "EXCLUDE WITH REASON", "triggers": []},
+        {"risks": [{"factor": "f", "severity": "low", "grounded_in": "vibes"}]},
+        {"data_caveats": []},
+    ],
+)  # fmt: skip
+def test_no_guard_fault_reads_as_a_note(crwd: ScorecardView, over: dict[str, Any]) -> None:
+    # The rail, CLI and export file a warning under notes by its prefix alone.
+    warnings = validate(_body(**over), crwd)
+    assert warnings and split_guard_warnings(warnings) == (warnings, [])
 
 
 def test_a_v1_narrative_is_stored_as_before(db: sessionmaker[Session], crwd: ScorecardView) -> None:
