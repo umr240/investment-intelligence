@@ -57,7 +57,8 @@ a gitignored `CLAUDE.local.md`, which Claude Code also loads.
 - **A fresh pair of eyes before the owner's.** Each implementation PR is
   reviewed by a verifier that sees only the spec, the diff and the gate output,
   not the implementing session's reasoning. Its findings are fixed or listed in
-  the PR. It filters; the owner still decides.
+  the PR. It filters; who may merge is the owner's working agreement
+  (`CLAUDE.local.md`), not the verifier's call.
 - **Gates, not prompts.** A rule that matters is enforced by a test or a CI
   check (as `tests/test_llm_call_sites.py` enforces the LLM call sites). Where a
   rule can only live in prose, say so where it is stated.
