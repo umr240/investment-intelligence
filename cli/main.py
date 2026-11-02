@@ -1003,11 +1003,13 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
             border_style="yellow",
         ))
     if repairs:
-        rprint(Panel(
-            "\n".join(f"  · {w.removeprefix(REPAIR_NOTE)}" for w in repairs),
-            title="[yellow]Repair call failed: the first answer is shown[/yellow]",
-            border_style="yellow",
-        ))
+        rprint(
+            Panel(
+                "\n".join(f"  · {w.removeprefix(REPAIR_NOTE)}" for w in repairs),
+                title="[yellow]Repair call failed: the first answer is shown[/yellow]",
+                border_style="yellow",
+            )
+        )
 
     # Persist (best-effort — silent if no DeepDiveRun row).
     try:

@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -457,8 +457,8 @@ def test_a_narrative_that_failed_the_guard_is_read_back_as_failed(
     assert "- Guard warnings: 1\n- Notes (trims, a failed repair): 1" in md
     # A stored `_audit` or warning list of null reads as empty, not as an error.
     with db() as s:
-        run = s.execute(select(DeepDiveRun)).scalars().one()
-        run.risk_factors = json.dumps({**json.loads(str(run.risk_factors)), "_audit": None})
+        stored = json.loads(str(s.execute(select(DeepDiveRun.risk_factors)).scalar_one()))
+        s.execute(update(DeepDiveRun).values(risk_factors=json.dumps({**stored, "_audit": None})))
         s.commit()
     got = TestClient(app, base_url="http://127.0.0.1").get("/dive/CRWD/narrative").json()
     assert (got["audit"], got["guard_warnings"], got["guard_faults"]) == ({}, [], [])
