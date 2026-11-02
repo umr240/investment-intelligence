@@ -92,6 +92,7 @@ and is capped at one.
 4. **Repair (§2.5).** The eval records first-attempt and post-repair grades separately; the first attempt is the headline. The repair's tokens count in G6.
 5. **Graders.** Replay picks the guard by the output's schema version, so v1 outputs keep their v1 grades. The prompt version becomes 2.
 6. **Eval discipline.** Prompt iteration runs on the train split only. The test split runs once per accepted prompt version.
+7. **Typed numbers (§2.2; owner, 2026-11-02).** In prose, a typed number is a guard error if the view lacks it, or if it is a citable field's value: it should have been the placeholder. Filing form names, a score's scale and the owner's question ("100% of this business") are not values. A trigger condition may type thresholds of its own, the numbers after a comparison ("falls below 10%"). What the value is now is a placeholder.
 
 ## 3. Inversion (mandatory)
 
@@ -109,7 +110,7 @@ and is capped at one.
 
 ## 5. Consequences
 
-- Mis-citation becomes unrepresentable.
+- A citation can name only a field the view has, and a citable value typed out in prose is a guard error (§2.7 item 7). Whether a cited field is the right one for its claim ("ROIC is {F5.fcf_margin}") is ADR-046's check.
 - The `narrative_json` schema version is bumped. Old narratives stay readable, and the UI renders both versions.
 - Model migration becomes possible without the forced-tool-choice 400.
 
