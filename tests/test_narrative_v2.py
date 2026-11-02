@@ -462,6 +462,56 @@ def test_a_narrative_that_failed_the_guard_is_read_back_as_failed(
         s.commit()
     got = TestClient(app, base_url="http://127.0.0.1").get("/dive/CRWD/narrative").json()
     assert (got["audit"], got["guard_warnings"], got["guard_faults"]) == ({}, [], [])
+    with db() as s:
+        audit = {"status": "guard_failed", "guard_warnings": None}
+        s.execute(update(DeepDiveRun).values(risk_factors=json.dumps({**stored, "_audit": audit})))
+        s.commit()
+    got = TestClient(app, base_url="http://127.0.0.1").get("/dive/CRWD/narrative").json()
+    assert (got["guard_warnings"], got["guard_faults"], got["guard_notes"]) == ([], [], [])
+
+
+def _failed_repair(view: ScorecardView) -> NarrativeOutput:
+    """A narrative whose first attempt failed the guard and whose repair call raised."""
+    from deepdive.narrative_output import NarrativeStatus
+
+    return _narrative(view).model_copy(update={
+        "status": NarrativeStatus.GUARD_FAILED,
+        "guard_warnings": ["bull[0]: literal 7", "repair: openai: status 529"],
+    })  # fmt: skip
+
+
+def test_post_returns_the_same_split(crwd: ScorecardView, monkeypatch: pytest.MonkeyPatch) -> None:
+    from fastapi.testclient import TestClient
+
+    import deepdive.narrative as narrative
+    import deepdive.scorecard_view as scorecard_view
+    from api.app import app
+
+    monkeypatch.setattr(scorecard_view, "load_scorecard_view", lambda _t: crwd)
+    failed = _failed_repair(crwd)
+    monkeypatch.setattr(narrative, "generate_narrative", lambda _v, provider_pref=None: failed)
+    monkeypatch.setattr(narrative, "persist_narrative", lambda _n: True)
+    got = TestClient(app, base_url="http://127.0.0.1").post("/dive/CRWD/narrative").json()
+    assert got["guard_faults"] == ["bull[0]: literal 7"]
+    assert got["guard_notes"] == ["repair: openai: status 529"]
+
+
+def test_the_cli_shows_a_failed_repair_apart_from_guard_faults(
+    crwd: ScorecardView, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    import cli.main as cli
+    import deepdive.narrative as narrative
+
+    failed = _failed_repair(crwd)
+    monkeypatch.setattr(narrative, "generate_narrative", lambda _v, provider_pref=None: failed)
+    monkeypatch.setattr(narrative, "persist_narrative", lambda _n: True)
+    cli._render_narrative(crwd, None)
+    out = capsys.readouterr().out
+    assert "Hallucination guard warnings" in out and "Repair call failed" in out
+    flagged = [line for line in out.splitlines() if "⚠" in line]
+    assert any("literal 7" in line for line in flagged)
+    assert not any("529" in line for line in flagged)
+    assert out.index("Repair call failed") < out.index("openai: status 529")
 
 
 def test_trim_and_repair_notes_are_split_from_guard_faults() -> None:
