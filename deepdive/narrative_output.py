@@ -264,6 +264,17 @@ def narrative_json_schema_v2(
     return schema
 
 
+# Notes that ride in `guard_warnings` but are no grounding fault: the status stays OK for
+# them (deepdive/narrative.py). Every reader splits by these, never by its own match.
+FORMATTING_NOTE, REPAIR_NOTE = "formatting: ", "repair: "
+
+
+def split_guard_warnings(warnings: list[str] | None) -> tuple[list[str], list[str]]:
+    """A narrative's guard warnings as (grounding faults, notes)."""
+    notes = [w for w in warnings or [] if w.startswith((FORMATTING_NOTE, REPAIR_NOTE))]
+    return [w for w in warnings or [] if w not in notes], notes
+
+
 class NarrativeOutput(BaseModel):
     """Full narrative envelope: body + provenance + validation status.
 

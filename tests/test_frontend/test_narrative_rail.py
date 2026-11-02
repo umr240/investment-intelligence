@@ -15,6 +15,7 @@ from typing import Any
 
 import pytest
 
+from deepdive.narrative_output import split_guard_warnings
 from tests.test_frontend.conftest import API_BASE, BROWSER_TICKER, WEB_BASE
 
 pytestmark = pytest.mark.browser
@@ -54,8 +55,9 @@ _BADGES = ("grounded", "guard-failed", "guard-unknown", "guard-other")
     ("audit", "warnings", "badge"),
     [
         ({"status": "ok"}, [], "narrative-grounded"),
-        ({"status": "ok"}, [_TRIM, _REPAIR], "narrative-grounded"),  # notes, not faults
+        ({"status": "ok"}, [_TRIM], "narrative-grounded"),  # a note, not a fault
         ({"status": "guard_failed"}, [_WARNING, _TRIM], "narrative-guard-failed"),
+        ({"status": "guard_failed"}, [_WARNING, _REPAIR], "narrative-guard-failed"),
         ({"status": "ok"}, [_WARNING], "narrative-guard-failed"),
         ({"status": "provider_error"}, [], "narrative-guard-other"),
         ({}, [], "narrative-guard-unknown"),
@@ -67,6 +69,7 @@ def test_the_badge_follows_the_stored_guard_result(
     reply = {"generated": True, "run_id": 1, "one_liner": "A narrative.", "bull": [],
              "bear": [], "risks": [], "data_caveats": [], "audit": audit,
              "guard_warnings": warnings}  # fmt: skip
+    reply["guard_faults"], reply["guard_notes"] = split_guard_warnings(warnings)  # as the API does
 
     def stored(route: Any) -> None:
         if route.request.method == "GET":
@@ -81,8 +84,12 @@ def test_the_badge_follows_the_stored_guard_result(
     assert all(page.locator(f"[data-testid={b}]").count() == 0 for b in others)
     body = page.inner_text("body")
     assert ("Hallucination guard warnings" in body) == (_WARNING in warnings)
-    assert (page.locator("[data-testid=narrative-notes]").count() == 1) == (_TRIM in warnings)
-    assert (_TRIM in body) == (_TRIM in warnings)
+    notes = [w for w in warnings if w in (_TRIM, _REPAIR)]
+    assert (page.locator("[data-testid=narrative-notes]").count() == 1) == bool(notes)
+    if notes:  # a note shows under NOTES, never in the hallucination box
+        shown = page.locator("[data-testid=narrative-notes]").inner_text()
+        boxed = " ".join(page.locator(".error-box").all_inner_texts())
+        assert all(n in shown and n not in boxed for n in notes)
     assert not page.js_errors, page.js_errors
 
 

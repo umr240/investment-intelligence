@@ -59,11 +59,9 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
     }
   }
 
-  // Trim and repair notes ride in guard_warnings but are no guard fault: the status stays
-  // ok for them (deepdive/narrative.py), so only the other warnings fail the badge.
-  const isNote = (w: string) => /^(formatting|repair): /.test(w);
-  const faults = (narrative?.guard_warnings ?? []).filter((w) => !isNote(w));
-  const notes = (narrative?.guard_warnings ?? []).filter(isNote);
+  // Trim and repair notes are no guard fault; the API splits them out of guard_warnings.
+  const faults = narrative?.guard_faults ?? [];
+  const notes = narrative?.guard_notes ?? [];
   const status = narrative?.audit?.status;
 
   return (

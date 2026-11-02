@@ -11,7 +11,7 @@ from __future__ import annotations
 import pytest
 
 from deepdive.narrative import _fit_to_declared_lengths, _trim_on_word_boundary
-from deepdive.narrative_output import NarrativeBody
+from deepdive.narrative_output import NarrativeBody, split_guard_warnings
 
 _HEADLINE_CAP = 140
 
@@ -76,26 +76,20 @@ def test_other_capped_fields_are_also_fitted(field: str, cap: int) -> None:
 
 # ── Status must not conflate formatting with grounding ────────────────────
 
-def _split(warnings: list[str]) -> tuple[list[str], list[str]]:
-    """The partition cli/main.py applies when rendering warnings."""
-    grounding = [w for w in warnings if not w.startswith("formatting: ")]
-    formatting = [w for w in warnings if w.startswith("formatting: ")]
-    return grounding, formatting
-
-
 def test_a_trim_alone_is_not_reported_as_a_grounding_failure() -> None:
     """A trimmed headline must not raise "numeric/citation validation failed".
 
     Conflating the two would blunt a signal that should only ever mean a
     number in the narrative is unsupported by the scorecard.
     """
-    grounding, formatting = _split(["formatting: bear.2.headline trimmed from 148 to 140 chars"])
+    trim = "formatting: bear.2.headline trimmed from 148 to 140 chars"
+    grounding, formatting = split_guard_warnings([trim])
     assert grounding == []
     assert len(formatting) == 1
 
 
 def test_grounding_and_formatting_warnings_are_reported_separately() -> None:
-    grounding, formatting = _split([
+    grounding, formatting = split_guard_warnings([
         "bull.0 cites 45.2% which is not present in the view",
         "formatting: one_liner trimmed from 460 to 400 chars",
     ])
