@@ -32,6 +32,7 @@ def _openai_only(monkeypatch: pytest.MonkeyPatch) -> None:
     # The DEC-46 stale-dive gate runs before any provider; keep it off the real DB.
     monkeypatch.setattr("data.dive_staleness.latest_dive_stale_reason", lambda _t: None)
     monkeypatch.setattr("data.dive_staleness.run_withheld_reason", lambda _r: None)
+    monkeypatch.setattr("data.dive_staleness.latest_run_id", lambda _t: None)
 
 
 def _leaks(text: str) -> bool:
