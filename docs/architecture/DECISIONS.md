@@ -759,3 +759,12 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Decision**: The owner accepted ADR-047 with four additions (§2.7): versioned fixtures that replay refuses on a mismatch, live runs from the CLI only with a priced confirmation, eval calls marked in `llm_calls`, and composer deferrals recorded per case as the evidence ADR-055 needs before lattice RAG can reopen. The golden set's train and test splits both live in this public repo; contamination is mitigated by a canary string in every test file, a quarterly refresh with post-cutoff dives, and the existing `Read` deny rule. No eval library is adopted: the graders are deterministic and the model is called only through `deepdive/narrative.py`; pydantic-evals' case/evaluator/report shape is borrowed. The work is delivered as an epic branch (`epic/adr-047-evals`) of story PRs, merged into `main` after a full e2e run.
 **Resolves**: `docs/OPEN_QUESTIONS.md` #1.
 **See**: `ADR-047-narrative-eval-harness.md` §2.1, §2.7.
+
+---
+
+## DEC-53 — ADR-045 accepted: the model cites field IDs, code renders the numbers
+
+**Date**: 2026-10-28
+**Decision**: The owner accepted ADR-045 with eight amendments: the baseline evidence and the longer model list in §1, the other six in §2.7. Narrative claims cite stable field IDs (framework code plus label slug) from a per-request enum, prose uses `{F5.roic}`-style placeholders that code renders, and the model explains the deterministic verdict rather than choosing it. Anthropic moves from a forced tool call, which current models reject with a 400, to `output_config.format`; OpenAI keeps strict `json_schema`. One bounded repair is allowed, graded separately from the first attempt. No library is adopted: instructor's validation-retry pattern is borrowed, since both providers enforce the schema natively. The evidence is the ADR-047 baseline, where most guard failures were right values cited at the wrong list position. Delivered as `epic/adr-045-grounded-narrative`.
+**See**: `ADR-045-grounded-narrative-generation.md` §1, §2.7.
+

@@ -35,6 +35,11 @@ Checks performed (each emits a string warning into `guard_warnings`):
      If view has data gaps but body.data_caveats is empty → warning.
      (We do NOT enforce 1-to-1 mapping — the LLM is allowed to summarise.)
 
+Schema v2 (ADR-045) bodies go to `validate_v2`: the model cites field IDs and
+writes numbers only as placeholders, so checks 1-2 become "every ID exists" and
+"no literal number outside the whitelist", and the verdict must equal the
+mapped composite verdict.
+
 The validator NEVER raises. It returns a list[str] of warnings; an empty
 list means the narrative is clean. The caller (narrative.generate_narrative)
 flags status=guard_failed when warnings is non-empty so the CLI can show
@@ -45,7 +50,9 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from deepdive.narrative_output import NarrativeBody
+from config.verdicts import narrative_verdict
+from deepdive.citable_fields import CitableField
+from deepdive.narrative_output import NarrativeBody, NarrativeBodyV2
 from deepdive.scorecard_view import ScorecardView
 
 # Numbers the LLM might write: 12.4%, $2.1B, 0.85, 6/9, 1.2x, 4,500
@@ -71,8 +78,10 @@ _NUMBER_RE = re.compile(
 )
 
 
-def validate(body: NarrativeBody, view: ScorecardView) -> list[str]:
+def validate(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView) -> list[str]:
     """Return a list of guard-warning strings. Empty == clean."""
+    if isinstance(body, NarrativeBodyV2):
+        return validate_v2(body, view)
     warnings: list[str] = []
 
     view_dict = view.to_dict()
@@ -127,54 +136,263 @@ def validate(body: NarrativeBody, view: ScorecardView) -> list[str]:
     # 3. FRAMEWORK CITATIONS
     for section_name, points in (("bull", body.bull), ("bear", body.bear)):
         for i, p in enumerate(points):
-            for code in p.framework_codes:
-                if code not in all_framework_codes:
-                    warnings.append(
-                        f"{section_name}[{i}].framework_codes: '{code}' "
-                        f"is not a recognised framework"
-                    )
-                elif code not in feasible_codes:
-                    warnings.append(
-                        f"{section_name}[{i}].framework_codes: '{code}' "
-                        f"is unfeasible for this ticker — cannot ground a point"
-                    )
+            warnings += _framework_code_warnings(
+                f"{section_name}[{i}]", p.framework_codes, all_framework_codes, feasible_codes
+            )
 
     # 4. RISK GROUNDING — accept framework codes, overlay trigger IDs,
     # data-gap substrings, OR any view field path that resolves (e.g. the
     # LLM noticed `company.ceo_equity_pct_state` and used it as grounding —
     # legitimate, not a hallucination).
     for i, r in enumerate(body.risks):
-        g = (r.grounded_in or "").strip()
-        if not g:
-            warnings.append(f"risks[{i}]: empty grounded_in")
-            continue
-        if g in feasible_codes:
-            continue
-        if g in overlay_ids:
-            continue
-        if any(g in gap or gap in g for gap in fetch_gaps):
-            continue
-        # Field-path fallback: try as a dotted path into the view dict.
-        if "." in g and _walk_path(view_dict, g) is not None:
-            continue
-        # Bare field-name fallback: any non-null leaf with this name.
-        if _view_has_field_name(view_dict, g):
-            continue
-        warnings.append(
-            f"risks[{i}]: grounded_in='{g}' does not match any framework, "
-            f"overlay trigger, data gap, or view field"
+        warnings += _risk_grounding_warnings(
+            i, r.grounded_in, view_dict, feasible_codes, overlay_ids, fetch_gaps
         )
 
     # 5. CAVEAT FIDELITY
-    has_any_gap = bool(fetch_gaps) or any(
-        fv.data_gaps for fv in view.frameworks
-    )
-    if has_any_gap and not body.data_caveats:
-        warnings.append(
-            "data_caveats is empty but view has data_gaps — caveats elided"
-        )
-
+    warnings += _caveat_warnings(view, body.data_caveats)
     return warnings
+
+
+# A trigger condition may state thresholds the model proposes ("falls below 10%"), which no
+# view holds: a number right after a comparison. What the value is now is a placeholder.
+_TRIGGER = re.compile(r"^triggers\[\d+\]\.condition$")
+_NUM = r"[+−-]?\$?\d[\d,.]*\s?(?:%|x|bps|pp|tn|bn|mn|[TBMK])?"
+_MOVE = (r"(?:fall|drop|declin|rise|rising|grow|climb|increas|decreas|recover|improv|deteriorat"
+         r"|return|mov|expand|contract|widen|narrow|compress)\w*")  # fmt: skip
+_THRESHOLD = re.compile(
+    rf"\bbetween\s+{_NUM}\s+and\s+{_NUM}(?![\w])"
+    r"|(?:\b(?:below|above|under|over|exceed\w*|surpass\w*|cross\w*|reach\w*|within|beyond|past"
+    rf"|than|at (?:least|most)|{_MOVE}\s+(?:back\s+to|to|by))\s+"
+    r"(?:(?:roughly|about|around|approximately)\s+)?|[<>≤≥]=?\s*)"
+    rf"{_NUM}(?:[-–]{_NUM})?(?:/10\b)?"  # "8-10%", "6.0/10"
+    r"(?:\s+or\s+(?:more|less|greater|higher|lower|worse|better)\b)?(?![\w])"
+    rf"|\b{_MOVE}\s+{_NUM}\s+or\s+(?:more|less)\b",  # "falls 20% or more", not "growing 29.8%"
+    re.IGNORECASE,
+)
+_FROM_TO = re.compile(rf"(\bfrom\s+{_NUM}\s+to\s+){_NUM}(?![\w])", re.IGNORECASE)  # 2nd only
+_CURRENT = re.compile(  # "now over 47.3%", "47.3% today": a value, never a threshold
+    rf"\b(?:now|currently|today|presently|stands at|sits at)\s+(?:[a-z]+\s+){{0,2}}?{_NUM}"
+    rf"|{_NUM}\s+(?:now|currently|today)\b",
+    re.IGNORECASE,
+)
+# Not values: filing forms ("10-Ks", "13F"), the owner's question ("100% of this business"),
+# and a score's scale ("{F7.score}/10", "1.5/10").
+_FORMS = re.compile(
+    r"\b(?:10-K|10-Q|8-K|6-K|20-F|40-F|13-?F|S-1|DEF\s?14A)s?\b"
+    r"|\b100\s?% of (?:the|this|a|an|that) (?:business|company)\b",
+    re.IGNORECASE,
+)
+_SCALE = re.compile(r"(?:(?<=\})\s?|(?<=\d))/\s?10\b(?!\.?\d)")
+
+
+def _thresholds_removed(claim: str) -> str:
+    """A trigger condition without the thresholds it may type."""
+    current = [m.span() for m in _CURRENT.finditer(claim)]
+
+    def drop(m: re.Match[str]) -> str:
+        return m.group(0) if any(a < m.end() and m.start() < b for a, b in current) else " "
+
+    return _THRESHOLD.sub(drop, _FROM_TO.sub(lambda m: m.group(1), claim))
+
+
+_LABEL_WINDOW = re.compile(r"(?<![\w.-])(\d+)\s?(d|w|y)\b")  # "90d …"; no m: it can mean million
+_PERIOD = {"d": "day", "w": "week", "y": "year"}
+
+
+def _window_phrases(labels: list[str]) -> re.Pattern[str] | None:
+    """'the prior 90 days' beside a 90d field: the field's definition, not a claim (ADR-045
+    §2.2). Only the windows of fields cited in the same point; any other duration is checked."""
+    windows = sorted({rf"{n}\s?-?\s?{_PERIOD[u]}s?" for label in labels
+                      for n, u in _LABEL_WINDOW.findall(label)})  # fmt: skip
+    return re.compile(rf"(?<![\w.])(?:{'|'.join(windows)})\b", re.IGNORECASE) if windows else None
+
+
+def _cited_by_part(body: NarrativeBodyV2) -> dict[str, set[str]]:
+    """Field IDs each part cites: a bull/bear point, risk or trigger as a whole, else one text."""
+    from deepdive.narrative_render import placeholders, prose
+
+    cited: dict[str, set[str]] = {}
+    for path, text in prose(body):
+        cited.setdefault(path.split(".")[0], set()).update(placeholders(text))
+    for section, points in (("bull", body.bull), ("bear", body.bear)):
+        for i, p in enumerate(points):
+            cited[f"{section}[{i}]"].update(c.field_id for c in p.numeric_claims)
+    for i, r in enumerate(body.risks):
+        cited[f"risks[{i}]"].add(r.grounded_in.strip())
+    for i, t in enumerate(body.triggers):
+        cited.setdefault(f"triggers[{i}]", set()).add(t.field_id)
+    return cited
+
+
+def _citable_values(fields: dict[str, CitableField]) -> list[tuple[str, str, set[float]]]:
+    """Each citable value's rendered unit ('%', 'x' or '') and numbers, without its scale."""
+    out = []
+    for field_id, f in fields.items():
+        unit = next((u for u in ("%", "x") if u in f.value.lower()), "")
+        floats = _extract_normalised(re.sub(r"/\s?\d+\b", "", f.value))  # "4.9/10" is 4.9
+        if floats:
+            out.append((field_id, unit, floats))
+    return out
+
+
+def _typed_value(
+    tok: str, floats: set[float], unit: str, values: list[tuple[str, str, set[float]]]
+) -> tuple[list[str], str | None]:
+    """The citable fields a typed number is exactly, else the nearest one it is close to.
+
+    A '%' or 'x' number is only a value rendered with that unit, so "5.69%" is not a 5.69/10
+    score. A bare integer or fraction ("top 10 customers", "50/50") counts only if exact, and
+    only against a value with no unit. Otherwise the nearest within the prose tolerance.
+    """
+    exact_only = not unit and "." not in tok
+    near: list[tuple[float, str]] = []
+    for field_id, field_unit, wf in values:
+        if (unit in ("%", "x") and field_unit != unit) or (exact_only and field_unit):
+            continue
+        d = min(_distance(f, w) for f in floats for w in wf) if floats else 1.0
+        if d < 1e-9 or (not exact_only and d <= _PROSE_FUZZY_TOL):
+            near.append((d, field_id))
+    exact = [field_id for d, field_id in near if d < 1e-9]
+    return exact, (None if exact or not near else min(near)[1])
+
+
+def _distance(typed: float, value: float) -> float:
+    """Relative distance; a rendered '%' value already holds its percent and fraction forms."""
+    if not value:
+        return 0.0 if typed == 0 else 1.0
+    return abs(abs(typed) - abs(value)) / abs(value)
+
+
+def validate_v2(body: NarrativeBodyV2, view: ScorecardView) -> list[str]:
+    """Guard warnings for a schema v2 body (ADR-045 §2.2, §2.3). Empty == clean."""
+    from deepdive.narrative_render import PLACEHOLDER, placeholders, prose, render_text
+
+    warnings: list[str] = []
+    fields = view.citable_fields()
+    view_dict = view.to_dict()
+    whitelist = _build_whitelist(view)
+    whitelist_floats = _collect_floats(view_dict)
+    feasible_codes = {fv.code for fv in view.frameworks if not fv.is_unfeasible}
+    all_framework_codes = {fv.code for fv in view.frameworks}
+    overlay_ids = {t.trigger_id for t in view.overlay_triggers}
+    fetch_gaps = list(view.fetch_data_gaps or [])
+    cited = _cited_by_part(body)
+    values = _citable_values(fields)
+
+    # 1. Every placeholder names a citable field, and nothing is left unrendered.
+    for path, text in prose(body):
+        unknown = [f for f in placeholders(text) if f not in fields]
+        warnings += [f"{path}: placeholder '{{{f}}}' is not a citable field" for f in unknown]
+        if not unknown and re.search(r"[{}]", render_text(text, fields)):
+            warnings.append(f"{path}: unrendered placeholder or stray brace")
+        # 2. A typed number is a guard error if the view lacks it, and also if it is a citable
+        # field's value: that is a placeholder typed out, possibly beside the wrong measure.
+        claim = _FORMS.sub(" ", PLACEHOLDER.sub(" ", _SCALE.sub(" ", text)))
+        if _TRIGGER.match(path):
+            claim = _thresholds_removed(claim)
+        part = cited.get(path.split(".")[0], set())
+        windows = _window_phrases([fields[f].label for f in part if f in fields])
+        claim = windows.sub(" ", claim) if windows else claim
+        for tok, floats, unit in _extract_tokens_and_floats(claim):
+            if not _token_is_whitelisted(tok, floats, whitelist, whitelist_floats, unit):
+                warnings.append(
+                    f"{path}: literal number '{tok}' not in scorecard whitelist "
+                    "(cite a field with a placeholder)"
+                )
+                continue
+            exact, near = _typed_value(tok, floats, unit, values)
+            if len(exact) == 1:
+                warnings.append(
+                    f"{path}: literal number '{tok}' is the value of {exact[0]}; "
+                    f"write {{{exact[0]}}} instead"
+                )
+            elif exact or near:  # one of several, or only near: no advice on which it states
+                which = (
+                    f"a value of {', '.join(exact)}" if exact else f"close to the value of {near}"
+                )
+                warnings.append(
+                    f"{path}: literal number '{tok}' is {which}; "
+                    "write the placeholder of the value it states"
+                )
+
+    for section_name, points in (("bull", body.bull), ("bear", body.bear)):
+        for i, p in enumerate(points):
+            warnings += [
+                f"{section_name}[{i}].numeric_claims: '{c.field_id}' is not a citable field"
+                for c in p.numeric_claims
+                if c.field_id not in fields
+            ]
+            warnings += _framework_code_warnings(
+                f"{section_name}[{i}]", p.framework_codes, all_framework_codes, feasible_codes
+            )
+
+    # 3. The model explains the deterministic verdict; it does not choose it (§3).
+    expected = narrative_verdict(view.composite.verdict)
+    if body.verdict.value != expected:
+        warnings.append(
+            f"verdict: '{body.verdict.value}' but the composite verdict "
+            f"'{view.composite.verdict}' maps to '{expected}'"
+        )
+    if not body.triggers:  # what would flip it, for an exclude or research-only verdict too
+        warnings.append("triggers: empty; name what would change the verdict")
+    warnings += [
+        f"triggers[{i}]: '{t.field_id}' is not a citable field"
+        for i, t in enumerate(body.triggers)
+        if t.field_id not in fields
+    ]
+
+    for i, r in enumerate(body.risks):
+        if r.grounded_in.strip() not in fields:
+            warnings += _risk_grounding_warnings(
+                i, r.grounded_in, view_dict, feasible_codes, overlay_ids, fetch_gaps
+            )
+    warnings += _caveat_warnings(view, body.data_caveats)
+    return warnings
+
+
+def _framework_code_warnings(
+    where: str, codes: list[str], all_codes: set[str], feasible: set[str]
+) -> list[str]:
+    out = []
+    for code in codes:
+        if code not in all_codes:
+            out.append(f"{where}.framework_codes: '{code}' is not a recognised framework")
+        elif code not in feasible:
+            out.append(
+                f"{where}.framework_codes: '{code}' "
+                f"is unfeasible for this ticker — cannot ground a point"
+            )
+    return out
+
+
+def _risk_grounding_warnings(
+    i: int,
+    grounded_in: str | None,
+    view_dict: dict[str, Any],
+    feasible: set[str],
+    overlay_ids: set[str],
+    fetch_gaps: list[str],
+) -> list[str]:
+    g = (grounded_in or "").strip()
+    if not g:
+        return [f"risks[{i}]: empty grounded_in"]
+    if g in feasible or g in overlay_ids or any(g in gap or gap in g for gap in fetch_gaps):
+        return []
+    # Field-path fallback: a dotted path into the view dict, or a bare leaf name.
+    if ("." in g and _walk_path(view_dict, g) is not None) or _view_has_field_name(view_dict, g):
+        return []
+    return [
+        f"risks[{i}]: grounded_in='{g}' does not match any framework, "
+        f"overlay trigger, data gap, or view field"
+    ]
+
+
+def _caveat_warnings(view: ScorecardView, caveats: list[str]) -> list[str]:
+    has_any_gap = bool(view.fetch_data_gaps) or any(fv.data_gaps for fv in view.frameworks)
+    if has_any_gap and not caveats:
+        return ["data_caveats is empty but view has data_gaps — caveats elided"]
+    return []
 
 
 # ── Internals ────────────────────────────────────────────────────────────

@@ -877,7 +877,13 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         generate_narrative,
         persist_narrative,
     )
-    from deepdive.narrative_output import NarrativeStatus
+    from deepdive.narrative_output import (
+        BearPoint,
+        BullPoint,
+        CasePoint,
+        NarrativeBodyV2,
+        NarrativeStatus,
+    )
 
     rprint("\n[bold cyan]AI Narrative[/bold cyan]  [dim](generating...)[/dim]")
 
@@ -905,15 +911,28 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
     rprint(audit)
 
     body = narrative.body
+    if isinstance(narrative.body, NarrativeBodyV2):  # show the filled-in copy (ADR-045)
+        if narrative.rendered is None:
+            raise ValueError(f"{narrative.ticker}: a v2 narrative must be rendered to be shown")
+        body = narrative.rendered
     rprint(Panel(
         f"[italic]{body.one_liner}[/italic]",
         title="[bold]Thesis[/bold]",
         border_style="cyan",
     ))
+    if isinstance(body, NarrativeBodyV2):
+        verdict_lines = [
+            f"[bold]{body.verdict.value}[/bold]. {body.verdict_reason}",
+            f"Owner-operator answer: {body.owner_operator_answer.value}  ·  "
+            f"Moat direction: {body.moat_direction.value}",
+            *(f"  · [dim]{t.field_id}[/dim]: {t.condition}" for t in body.triggers),
+        ]
+        rprint(Panel("\n".join(verdict_lines), title="[bold]Verdict[/bold]", border_style="cyan"))
 
     if body.bull:
         bull_lines: list[str] = []
-        for i, p in enumerate(body.bull, 1):
+        bull_points: list[BullPoint | BearPoint | CasePoint] = [*body.bull]
+        for i, p in enumerate(bull_points, 1):
             cites = (" [dim]" + ", ".join(p.framework_codes) + "[/dim]") if p.framework_codes else ""
             bull_lines.append(f"[bold]{i}. {p.headline}[/bold]{cites}")
             bull_lines.append(f"   {p.detail}")
@@ -922,7 +941,8 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
 
     if body.bear:
         bear_lines: list[str] = []
-        for i, p in enumerate(body.bear, 1):
+        bear_points: list[BullPoint | BearPoint | CasePoint] = [*body.bear]
+        for i, p in enumerate(bear_points, 1):
             cites = (" [dim]" + ", ".join(p.framework_codes) + "[/dim]") if p.framework_codes else ""
             bear_lines.append(f"[bold]{i}. {p.headline}[/bold]{cites}")
             bear_lines.append(f"   {p.detail}")
@@ -4153,11 +4173,13 @@ def narrative_eval_replay(
     for (model, version), by_case in sorted(result.grades.items()):
         table = Table(title=f"{model}, prompt v{version}")
         table.add_column("Split")
-        for col in ("Cases", *VERDICT_GRADERS, "Cost", "p50", "p95"):
+        # G1 is the first attempt (ADR-045 §2.7 item 4); "G1 after" counts the one repair.
+        for col in ("Cases", *VERDICT_GRADERS, "Repairs", "G1 after", "Cost", "p50", "p95"):
             table.add_column(col, justify="right")
         for split in (TEST, TRAIN):
             s = summary(by_case, result.splits, split)
-            rates = ["—" if s[g] is None else f"{s[g]:.0%}" for g in VERDICT_GRADERS]
+            rates = ["—" if s[g] is None else f"{s[g]:.0%}" for g in (*VERDICT_GRADERS, "G1r")]
+            rates.insert(len(VERDICT_GRADERS), str(s["repairs"]))
             cost = "—" if s["cost_per_narrative"] is None else f"${s['cost_per_narrative']:.4f}"
             p50, p95 = (
                 "—" if s[k] is None else f"{s[k] / 1000:.1f}s"
@@ -4224,12 +4246,14 @@ def narrative_eval_run(
         raise typer.Exit(2)
     try:
         estimate = estimate_cost(cases, model)
+        worst = estimate_cost(cases, model, repairs=True)
     except UnpricedModelError as exc:
         rprint(f"[red]{exc}. Copy its price row first (ADR-048).[/red]")
         raise typer.Exit(2) from None
     rprint(
         f"{len(cases)} {split} cases on {chosen.value}/{model}, prompt v{PROMPT_VERSION}: "
-        f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each)"
+        f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each); "
+        f"about ${worst:.2f} if every case uses its one repair (ADR-045 §2.5)"
     )
     if not yes and not typer.confirm("Spend this?", default=False):
         raise typer.Exit(1)

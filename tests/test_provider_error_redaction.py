@@ -9,13 +9,13 @@ scrubbed neither its log line nor its final error (Security §1).
 from __future__ import annotations
 
 import logging
-from types import SimpleNamespace
 
 import pytest
 
 import deepdive.conversation as conversation
 import deepdive.narrative as narrative
 from config.settings import settings
+from tests.test_narrative_eval.test_export import _view
 
 _FRAGMENT = "sk-proj-ab" + "*" * 20 + "wxyz"
 
@@ -46,7 +46,7 @@ def test_narrative_final_error_is_redacted(
         caplog.at_level(logging.WARNING),
         pytest.raises(narrative.NarrativeUnavailableError) as exc,
     ):
-        narrative.generate_narrative(SimpleNamespace(ticker="X"), provider_pref="openai_only")  # type: ignore[arg-type]
+        narrative.generate_narrative(_view("X"), provider_pref="openai_only")
     assert "[redacted]" in str(exc.value)
     assert not _leaks(str(exc.value))
     assert not _leaks(caplog.text)

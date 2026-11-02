@@ -23,9 +23,11 @@ from deepdive.narrative_eval.graders import (
     summary,
 )
 from deepdive.narrative_output import (
+    SCHEMA_V2,
     BearPoint,
     BullPoint,
     NarrativeBody,
+    NarrativeBodyV2,
     NarrativeOutput,
     NarrativeProvider,
     NumericClaim,
@@ -35,21 +37,11 @@ from frameworks.composite import COMPOSITE_VERSION
 from tests.test_narrative_eval.test_export import _view
 
 
-class _BodyWithContract(NarrativeBody):
-    """The ADR-023-A1 fields ADR-045 will add, to show G2 and G5 passing."""
-
-    verdict: str | None = None
-    owner_operator_answer: str | None = None
-    moat_direction: str | None = None
-    triggers: list[str] = []
-
-
 def _body(*, claim_path: str = "composite.score", codes: list[str] | None = None,
-          detail: str = "Composite is 5.0.", cls: type[NarrativeBody] = NarrativeBody,
-          **extra: Any) -> NarrativeBody:  # fmt: skip
+          detail: str = "Composite is 5.0.", **extra: Any) -> NarrativeBody:  # fmt: skip
     claim = NumericClaim(value="5.0", field_path=claim_path)
     point: dict[str, Any] = {"headline": "Steady", "detail": detail, "numeric_claims": [claim]}
-    return cls(
+    return NarrativeBody(
         one_liner="A steady business.",
         bull=[BullPoint(**point, framework_codes=["F2"] if codes is None else codes)],
         bear=[
@@ -59,11 +51,28 @@ def _body(*, claim_path: str = "composite.score", codes: list[str] | None = None
     )
 
 
-def _out(body: NarrativeBody, view: ScorecardView, *, recorded: float | None = None,
-         latency: int = 2500, model: str = "claude-sonnet-4-6") -> EvalOutput:  # fmt: skip
+def _body_v2(**over: Any) -> NarrativeBodyV2:
+    """A v2 body for `_view()`, whose only citable field is `composite.score`."""
+    cites = [{"field_id": "composite.score"}]
+    point = {"headline": "Steady", "detail": "Composite is {composite.score}.",
+             "framework_codes": [], "numeric_claims": cites}  # fmt: skip
+    return NarrativeBodyV2.model_validate({
+        "one_liner": "A steady business.", "verdict": "WATCHLIST WITH TRIGGERS",
+        "verdict_reason": "A composite of {composite.score} is a monitor.",
+        "owner_operator_answer": "NOT_YET", "moat_direction": "UNKNOWN",
+        "bull": [point], "bear": [point], "risks": [],
+        "triggers": [{"field_id": "composite.score", "condition": "rises to a watchlist score"}],
+        "data_caveats": [], **over,
+    })  # fmt: skip
+
+
+def _out(body: NarrativeBody | NarrativeBodyV2, view: ScorecardView, *,
+         recorded: float | None = None, latency: int = 2500,
+         model: str = "claude-sonnet-4-6") -> EvalOutput:  # fmt: skip
     narrative = NarrativeOutput(
         ticker=view.ticker, generated_at=datetime(2026, 10, 28),
         provider=NarrativeProvider.ANTHROPIC, model=model, body=body, cost_usd=recorded,
+        schema_version=SCHEMA_V2 if isinstance(body, NarrativeBodyV2) else "1.0",
     )  # fmt: skip
     sha = hashlib.sha256(view.to_llm_context().encode()).hexdigest()
     return EvalOutput(
@@ -96,8 +105,8 @@ def test_g1_runs_the_current_guard() -> None:
 
 def test_g2_compares_with_the_mapped_deterministic_verdict() -> None:
     view = _view(verdict="monitor")  # ADR-054: monitor -> WATCHLIST WITH TRIGGERS
-    ok = _body(cls=_BodyWithContract, verdict="WATCHLIST WITH TRIGGERS")
-    wrong = _body(cls=_BodyWithContract, verdict="EXCLUDE WITH REASON")
+    ok = _body_v2()
+    wrong = _body_v2(verdict="EXCLUDE WITH REASON")
     assert _by_id(grade(view, _out(ok, view)))["G2"].status == PASS
     g2 = _by_id(grade(view, _out(wrong, view)))["G2"]
     assert g2.status == FAIL and "WATCHLIST WITH TRIGGERS" in g2.detail
@@ -128,13 +137,29 @@ def test_g3_needs_a_citation_per_point() -> None:
     assert g3.status == FAIL and "bull[0] cites nothing" in g3.detail
 
 
-def test_g5_passes_once_the_contract_fields_are_filled() -> None:
-    view = _view()
-    full = _body(
-        cls=_BodyWithContract, verdict="WATCHLIST WITH TRIGGERS",
-        owner_operator_answer="not yet", moat_direction="FLAT", triggers=["FCF > 0"],
-    )  # fmt: skip
-    assert _by_id(grade(view, _out(full, view)))["G5"].status == PASS
+def test_a_v2_narrative_passes_g1_to_g5_with_its_placeholders_rendered() -> None:
+    view = _view(verdict="monitor")
+    got = _by_id(grade(view, _out(_body_v2(), view)))
+    assert [got[g].status for g in ("G1", "G2", "G3", "G5")] == [PASS] * 4, got
+    no_triggers = _by_id(grade(view, _out(_body_v2(triggers=[]), view)))
+    assert no_triggers["G5"].detail == "missing triggers"
+    assert no_triggers["G1"].status == FAIL  # a watchlist verdict needs its triggers
+
+
+@pytest.mark.parametrize(
+    ("over", "problem"),
+    [
+        ({"one_liner": "Grows {F9.nothing}."}, "unrendered placeholder"),
+        ({"one_liner": "Grows {{composite.score}}."}, "unrendered placeholder"),
+        ({"bull": [{"headline": "h", "detail": "d", "framework_codes": [],
+                    "numeric_claims": [{"field_id": "F5.roic"}]}]},
+         "cites missing field 'F5.roic'"),
+    ],
+)  # fmt: skip
+def test_g3_checks_a_v2_narrative_after_rendering(over: dict[str, Any], problem: str) -> None:
+    view = _view(verdict="monitor")
+    g3 = _by_id(grade(view, _out(_body_v2(**over), view)))["G3"]
+    assert g3.status == FAIL and problem in g3.detail, g3
 
 
 def test_g6_is_not_measured_for_an_unpriced_model() -> None:

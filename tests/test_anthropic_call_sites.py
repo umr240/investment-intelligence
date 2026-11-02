@@ -8,6 +8,7 @@ breaking all four calls. The fake client below rejects those arguments the same 
 
 from __future__ import annotations
 
+import json
 from types import SimpleNamespace
 from typing import Any
 
@@ -18,16 +19,17 @@ import deepdive.conversation as conversation
 import deepdive.external_signals as external_signals
 import deepdive.narrative as narrative
 from config.settings import settings
+from tests.test_narrative_eval.test_export import _view
 
 _REMOVED_IN_1X = {"temperature", "top_p", "top_k"}
 
-_NARRATIVE = {
-    "one_liner": "Composite 7.0/10 — watchlist.",
-    "bull": [{"headline": "h", "detail": "d", "framework_codes": [], "numeric_claims": []}],
-    "bear": [{"headline": "b", "detail": "d", "framework_codes": [], "numeric_claims": []}],
-    "risks": [],
-    "data_caveats": [],
-}
+_POINT = {"headline": "h", "detail": "d", "framework_codes": [], "numeric_claims": []}
+_NARRATIVE = {  # schema v2, for `_view()` (its one citable field is composite.score)
+    "one_liner": "o", "verdict": "WATCHLIST WITH TRIGGERS", "verdict_reason": "r",
+    "owner_operator_answer": "NOT_YET", "moat_direction": "UNKNOWN", "bull": [_POINT],
+    "bear": [_POINT], "risks": [],
+    "triggers": [{"field_id": "composite.score", "condition": "rises"}], "data_caveats": [],
+}  # fmt: skip
 
 
 class _FakeAnthropic:
@@ -44,11 +46,15 @@ class _FakeAnthropic:
                 f"Messages.create() got an unexpected keyword argument {sorted(removed)[0]!r}"
             )
         _FakeAnthropic.calls.append(kwargs)
-        name = kwargs["tool_choice"]["name"]
-        block = SimpleNamespace(type="tool_use", name=name, input=_FakeAnthropic.tool_input)
+        if "output_config" in kwargs:
+            block = SimpleNamespace(type="text", text=json.dumps(_FakeAnthropic.tool_input))
+        else:
+            name = kwargs["tool_choice"]["name"]
+            block = SimpleNamespace(type="tool_use", name=name, input=_FakeAnthropic.tool_input)
         return SimpleNamespace(
-            content=[block], usage=SimpleNamespace(input_tokens=1, output_tokens=1)
-        )
+            content=[block], usage=SimpleNamespace(input_tokens=1, output_tokens=1),
+            stop_reason="end_turn",
+        )  # fmt: skip
 
 
 @pytest.fixture(autouse=True)
@@ -65,11 +71,17 @@ def _assert_one_forced_tool_call(tool: str) -> None:
 
 
 def test_narrative(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Structured output, never a forced tool call: current models reject one (ADR-045 §2.4).
     monkeypatch.setattr(narrative, "_build_system_prompt", lambda: "sys")
     monkeypatch.setattr(narrative, "_build_user_prompt", lambda _view: "user")
     _FakeAnthropic.tool_input = _NARRATIVE
-    narrative._call_anthropic(None)  # type: ignore[arg-type]
-    _assert_one_forced_tool_call("emit_narrative")
+    narrative._call_anthropic(_view())
+    (call,) = _FakeAnthropic.calls
+    assert "tool_choice" not in call and "tools" not in call
+    fmt = call["output_config"]["format"]
+    assert fmt["type"] == "json_schema" and "$ref" not in json.dumps(fmt["schema"])
+    trigger = fmt["schema"]["properties"]["triggers"]["items"]
+    assert trigger["properties"]["field_id"]["enum"] == ["composite.score", "F2.score"]
 
 
 def test_chat(monkeypatch: pytest.MonkeyPatch) -> None:

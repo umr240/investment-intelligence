@@ -76,7 +76,7 @@ def stubbed(monkeypatch: pytest.MonkeyPatch, db: None) -> list[tuple[str, str, s
 
     monkeypatch.setattr(narrative, "generate_eval_narrative", fake)
     monkeypatch.setattr(runner, "deferred_models", lambda _v: ["meta/dropped_model"])
-    monkeypatch.setattr(runner, "last_call_id", lambda: None)
+    monkeypatch.setattr(runner, "last_call_id", lambda: 0)
     return calls
 
 
@@ -102,7 +102,7 @@ def test_run_case_takes_tokens_from_the_recorded_call(
     stubbed: list[Any], monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setattr(runner, "last_call_id", lambda: 7)
-    monkeypatch.setattr(runner, "_usage", lambda row_id: (9_000, 3_000, 2_000, 0, 4_200))
+    monkeypatch.setattr(runner, "_usage", lambda row_id, ticker: (9_000, 3_000, 2_000, 0, 4_200))
     (case,) = runner.select_cases(_golden(tmp_path, (_view("AAA"), TRAIN)), TRAIN)
     out = runner.run_case(case, NarrativeProvider.OPENAI, "gpt-4o-mini")
     assert (out.input_tokens, out.cache_read_tokens, out.latency_ms) == (9_000, 2_000, 4_200)
@@ -114,6 +114,8 @@ def test_estimate_prices_every_case_and_refuses_an_unpriced_model(tmp_path: Path
     one = runner.estimate_cost(cases[:1], "claude-sonnet-4-6")
     assert one > 3_800 * 15 / 1e6  # at least the estimated output
     assert runner.estimate_cost(cases, "claude-sonnet-4-6") == pytest.approx(2 * one, rel=0.05)
+    worst = runner.estimate_cost(cases[:1], "claude-sonnet-4-6", repairs=True)
+    assert worst > 2 * one  # a repair's input also carries the failed answer
     with pytest.raises(UnpricedModelError):
         runner.estimate_cost(cases, "claude-sonnet-5")
 
@@ -242,3 +244,27 @@ def test_cli_stops_after_consecutive_failures(
     out = _cli(*args, "--yes")
     assert calls == ["AAA", "BBB", "CCC"] and "3 failures in a row" in out.output, out.output
     assert "0 written, 3 failed, 2 not run" in out.output and out.exit_code == 1
+
+
+def test_usage_counts_every_narrative_call_of_the_case(db: None) -> None:
+    from data.db import get_session
+    from data.models.schema import LlmCall
+
+    def row(site: str, tokens: int, purpose: str | None = "eval", ticker: str = "AAA") -> LlmCall:
+        return LlmCall(call_site=site, attempt=1, provider="anthropic", model="m",
+                       prompt_version=2, prompt_sha256="x", input_tokens=tokens,
+                       output_tokens=tokens // 10, cache_write_tokens=0, cache_read_tokens=1,
+                       latency_ms=tokens // 100, status="ok", purpose=purpose,
+                       ticker=ticker)  # fmt: skip
+
+    with get_session() as s:
+        s.add(row("narrative", 5_000))  # an earlier case
+        s.commit()
+    before = runner.last_call_id()
+    with get_session() as s:  # this case: a first attempt and its repair (ADR-045 §2.7 item 4)
+        s.add_all([row("narrative", 10_000), row("chat", 99_000), row("narrative", 12_000),
+                   row("narrative", 7_000, purpose=None),  # a UI narrative meanwhile
+                   row("narrative", 8_000, ticker="BBB")])  # fmt: skip
+        s.commit()
+    assert runner._usage(before, "AAA") == (22_000, 2_200, 2, 0, 220)
+    assert runner._usage(runner.last_call_id(), "AAA") is None

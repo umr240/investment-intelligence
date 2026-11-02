@@ -163,6 +163,11 @@ export interface NarrativeAudit {
   status?: string;
 }
 
+export interface NarrativeTrigger {
+  field_id: string;
+  condition: string;
+}
+
 export interface Narrative {
   generated: boolean;
   stale?: boolean;
@@ -175,6 +180,13 @@ export interface Narrative {
   data_caveats?: string[];
   audit?: NarrativeAudit;
   guard_warnings?: string[];
+  // Schema v2 only (ADR-045); a v1 narrative has none of these.
+  schema_version?: string;
+  verdict?: string;
+  verdict_reason?: string;
+  owner_operator_answer?: string;
+  moat_direction?: string;
+  triggers?: NarrativeTrigger[];
 }
 
 export interface ChatMessage {

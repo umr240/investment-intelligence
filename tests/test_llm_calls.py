@@ -5,6 +5,7 @@ All offline: fake clients, an in-memory database, no tokens.
 
 from __future__ import annotations
 
+import json
 import os
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -27,6 +28,7 @@ import deepdive.narrative as narrative
 from config.llm_prices import PRICES, PRICES_AS_OF, UnpricedModelError, cost_usd, price_for
 from config.settings import settings
 from deepdive.narrative_output import NarrativeProvider
+from tests.test_narrative_eval.test_export import _view
 
 # The real writers, saved before the autouse `llm_rows` fixture replaces them.
 _WRITE, _UPDATE = llm_calls._write, llm_calls._update
@@ -39,6 +41,9 @@ ACC = "0000000001-26-000001"
 RECORDED = {
     ("narrative", "narrative"): {
         1: "249f31cfb12ff9f6bf49a8bb2c5cd47fd6c691d7e0b41bdbaedd2ae1e26c9f5b",
+        2: "82453c483981084f95f1ff951cb1a03d11539aca0eecf2a4817d806f216f22fe",  # ADR-045 schema v2
+        3: "e05770e18b62d867c1c98ba7d422cd30e9ca216f9d6724e68e7c6bb4958a1f53",  # S5 fixes
+        4: "e18d21062d203a0f394b089136f29c33947d869ff4d940673481037aa02a66e3",  # S6
     },
     ("chat", "chat"): {1: "cf660ece09c18355cebe42b2576c5a56e63c5d3d6c8dce53d37ea9ae04783ee9"},
     ("external_signals", "8-K"): {
@@ -49,13 +54,13 @@ RECORDED = {
     },
 }
 
-_NARRATIVE = {
-    "one_liner": "Composite 7.0/10 — watchlist.",
-    "bull": [{"headline": "h", "detail": "d", "framework_codes": [], "numeric_claims": []}],
-    "bear": [{"headline": "b", "detail": "d", "framework_codes": [], "numeric_claims": []}],
-    "risks": [],
-    "data_caveats": [],
-}
+_POINT = {"headline": "h", "detail": "d", "framework_codes": [], "numeric_claims": []}
+_NARRATIVE = {  # schema v2, for `_view()` (its one citable field is composite.score)
+    "one_liner": "Composite {composite.score}.", "verdict": "WATCHLIST WITH TRIGGERS",
+    "verdict_reason": "r", "owner_operator_answer": "NOT_YET", "moat_direction": "UNKNOWN",
+    "bull": [_POINT], "bear": [_POINT], "risks": [],
+    "triggers": [{"field_id": "composite.score", "condition": "rises"}], "data_caveats": [],
+}  # fmt: skip
 
 
 class _FakeAnthropic:
@@ -65,13 +70,16 @@ class _FakeAnthropic:
         self.messages = SimpleNamespace(create=self._create)
 
     def _create(self, **kwargs: Any) -> SimpleNamespace:
-        name = kwargs["tool_choice"]["name"]
-        block = SimpleNamespace(type="tool_use", name=name, input=_FakeAnthropic.tool_input)
+        if "output_config" in kwargs:  # structured output (the narrative, ADR-045)
+            block = SimpleNamespace(type="text", text=json.dumps(_FakeAnthropic.tool_input))
+        else:
+            name = kwargs["tool_choice"]["name"]
+            block = SimpleNamespace(type="tool_use", name=name, input=_FakeAnthropic.tool_input)
         usage = SimpleNamespace(
             input_tokens=1_000, output_tokens=200,
             cache_creation_input_tokens=0, cache_read_input_tokens=0,
         )  # fmt: skip
-        return SimpleNamespace(id="msg_1", content=[block], usage=usage)
+        return SimpleNamespace(id="msg_1", content=[block], usage=usage, stop_reason="end_turn")
 
 
 class _DownOpenAI:
@@ -140,7 +148,7 @@ def _narrate(monkeypatch: pytest.MonkeyPatch) -> Any:
     monkeypatch.setattr(narrative, "_build_user_prompt", lambda _v: "user")
     monkeypatch.setattr("deepdive.narrative_guard.validate", lambda _b, _v: [])
     _FakeAnthropic.tool_input = _NARRATIVE
-    return narrative.generate_narrative(SimpleNamespace(ticker="LULU"), provider_pref="openai")  # type: ignore[arg-type]
+    return narrative.generate_narrative(_view("LULU"), provider_pref="openai")
 
 
 def test_a_failed_attempt_and_its_fallback_are_both_recorded(
@@ -166,11 +174,8 @@ def test_an_eval_call_is_marked_and_real_use_is_not(
     _narrate(monkeypatch)
     assert {r["purpose"] for r in llm_rows} == {None}
     llm_rows.clear()
-    narrative.generate_eval_narrative(
-        SimpleNamespace(ticker="LULU"),  # type: ignore[arg-type]
-        NarrativeProvider.ANTHROPIC,
-        "claude-haiku-4-5",
-    )
+    model = "claude-haiku-4-5"
+    narrative.generate_eval_narrative(_view("LULU"), NarrativeProvider.ANTHROPIC, model)
     (row,) = llm_rows  # one provider, no fallback
     assert (row["purpose"], row["model"], row["run_id"], row["provider"]) == (
         "eval", "claude-haiku-4-5", None, "anthropic",
