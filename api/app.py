@@ -299,6 +299,7 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
 
     from data.db import get_session
     from data.models.schema import Company, DeepDiveRun
+    from deepdive.narrative_output import split_guard_warnings
 
     ticker = ticker.upper()
     with get_session() as session:
@@ -320,6 +321,7 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
             return {"generated": False}
         risk_data = _json.loads(run.risk_factors)
         audit = risk_data.get("_audit") or {}
+        faults, notes = split_guard_warnings(audit.get("guard_warnings"))
         return {
             "generated": True,
             "run_id": run.id,
@@ -330,7 +332,9 @@ async def get_narrative(ticker: str) -> dict[str, Any]:
             "data_caveats": risk_data.get("data_caveats", []),
             "audit": audit,
             # As POST returns them, so a reload still shows a failed guard (ADR-045 §3).
-            "guard_warnings": audit.get("guard_warnings", []),
+            "guard_warnings": [*faults, *notes],
+            "guard_faults": faults,
+            "guard_notes": notes,
             # Schema v2 only (ADR-045): absent from a v1 narrative.
             **{k: risk_data[k] for k in _NARRATIVE_V2_KEYS if k in risk_data},
         }
@@ -349,6 +353,7 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
         persist_narrative,
         shown_sections,
     )
+    from deepdive.narrative_output import split_guard_warnings
     from deepdive.scorecard_view import load_scorecard_view
 
     ticker = ticker.upper()
@@ -366,6 +371,7 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
         persist_narrative(narrative)
     except NarrativeOnStaleDiveError as exc:
         raise HTTPException(409, f"{exc}. Re-run the dive, then generate.") from exc
+    faults, notes = split_guard_warnings(narrative.guard_warnings)
 
     return {
         "generated": True,
@@ -377,6 +383,8 @@ async def post_narrative(ticker: str, provider: str | None = None) -> dict[str, 
             "fallback_used": narrative.fallback_used, "status": narrative.status.value,
         },
         "guard_warnings": list(narrative.guard_warnings),
+        "guard_faults": faults,
+        "guard_notes": notes,
     }
 
 

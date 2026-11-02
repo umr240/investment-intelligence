@@ -878,11 +878,14 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         persist_narrative,
     )
     from deepdive.narrative_output import (
+        FORMATTING_NOTE,
+        REPAIR_NOTE,
         BearPoint,
         BullPoint,
         CasePoint,
         NarrativeBodyV2,
         NarrativeStatus,
+        split_guard_warnings,
     )
 
     rprint("\n[bold cyan]AI Narrative[/bold cyan]  [dim](generating...)[/dim]")
@@ -975,11 +978,11 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         rprint(Panel(caveat_text, title="[dim]Data caveats (per LLM)[/dim]",
                      border_style="dim"))
 
-    # Guard warnings — surface loudly. This is the safety net. Formatting notes
-    # ride in the same list but are cosmetic, so they show separately and never
-    # carry the grounding-failure verdict.
-    grounding = [w for w in narrative.guard_warnings if not w.startswith("formatting: ")]
-    formatting = [w for w in narrative.guard_warnings if w.startswith("formatting: ")]
+    # Guard warnings — surface loudly. This is the safety net. Trim and repair notes
+    # ride in the same list but are no grounding fault, so they show separately.
+    grounding, notes = split_guard_warnings(narrative.guard_warnings)
+    formatting = [n for n in notes if n.startswith(FORMATTING_NOTE)]
+    repairs = [n for n in notes if n.startswith(REPAIR_NOTE)]
 
     if narrative.status == NarrativeStatus.GUARD_FAILED and grounding:
         rprint(Panel(
@@ -995,10 +998,18 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
 
     if formatting:
         rprint(Panel(
-            "\n".join(f"  · {w.removeprefix('formatting: ')}" for w in formatting),
+            "\n".join(f"  · {w.removeprefix(FORMATTING_NOTE)}" for w in formatting),
             title="[yellow]Output trimmed to schema limits[/yellow]",
             border_style="yellow",
         ))
+    if repairs:
+        rprint(
+            Panel(
+                "\n".join(f"  · {w.removeprefix(REPAIR_NOTE)}" for w in repairs),
+                title="[yellow]Repair call failed: the first answer is shown[/yellow]",
+                border_style="yellow",
+            )
+        )
 
     # Persist (best-effort — silent if no DeepDiveRun row).
     try:

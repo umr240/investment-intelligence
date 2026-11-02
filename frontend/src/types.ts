@@ -180,6 +180,8 @@ export interface Narrative {
   data_caveats?: string[];
   audit?: NarrativeAudit;
   guard_warnings?: string[];
+  guard_faults?: string[];  // guard_warnings split by deepdive/narrative_output.py
+  guard_notes?: string[];
   // Schema v2 only (ADR-045); a v1 narrative has none of these.
   schema_version?: string;
   verdict?: string;

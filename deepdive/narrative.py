@@ -53,6 +53,8 @@ from deepdive.mental_model_composer import (
     select_models_for_dive,
 )
 from deepdive.narrative_output import (
+    FORMATTING_NOTE,
+    REPAIR_NOTE,
     SCHEMA_V2,
     NarrativeBodyV2,
     NarrativeOutput,
@@ -169,7 +171,7 @@ def _generate(
                 reply, warnings = first, first_warnings
                 cost = None if cost is None else cost + (last_call_cost() or 0.0)
                 failed_repair_tokens = e.usage
-                repair_notes = [f"repair: {provider.value}: {_redact(str(e))}"]
+                repair_notes = [f"{REPAIR_NOTE}{provider.value}: {_redact(str(e))}"]
         repaired = reply is not first
         extra_pt, extra_ct = (
             (reply.prompt_tokens, reply.completion_tokens) if repaired else failed_repair_tokens
@@ -192,7 +194,7 @@ def _generate(
             fallback_used=(idx > 0),
             fallback_reason=fallback_reason if idx > 0 else "",
             status=status,
-            guard_warnings=[*warnings, *(f"formatting: {n}" for n in reply.fit_notes),
+            guard_warnings=[*warnings, *(f"{FORMATTING_NOTE}{n}" for n in reply.fit_notes),
                             *repair_notes],  # fmt: skip
             schema_version=SCHEMA_V2,
             body=reply.body,
