@@ -1,0 +1,189 @@
+{
+  "case_id": "NVDA",
+  "view_sha256": "ecf7846a4f9949082fa4cedaee443b732e4640ae498deafddff7501a978f1905",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NVDA",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:29.623954Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9760,
+    "completion_tokens": 762,
+    "cost_usd": 0.001844,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].numeric_claims[0]: claim value '4' does not match view value '('Piotroski', '4/9')' at 'frameworks.0.key_signals.0'"
+    ],
+    "body": {
+      "one_liner": "NVIDIA Corporation exhibits strong innovation and growth quality, but faces risks in capital efficiency and valuation.",
+      "bull": [
+        {
+          "headline": "Strong Innovation Compounder",
+          "detail": "NVIDIA demonstrates robust innovation capabilities, evidenced by a strong score in the Innovation Compounder framework (F3) at 7.0, indicating consistent growth in gross margins and a positive surprise streak over seven quarters. This positions the company well for sustained competitive advantage in the semiconductor sector.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        },
+        {
+          "headline": "High Growth Quality",
+          "detail": "The company scores 8.5 in the Growth Quality framework (F5), reflecting a remarkable revenue CAGR of 100% over three years and a high free cash flow margin of 41.9%. This indicates strong operational efficiency and the ability to generate substantial cash flow, supporting long-term growth.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "100.0%",
+              "field_path": "frameworks.4.key_signals.0"
+            },
+            {
+              "value": "41.9%",
+              "field_path": "frameworks.4.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "Platform Dominator Characteristics",
+          "detail": "NVIDIA's Platform Dominator framework score is 7.0 (F6), indicating it possesses characteristics of a mature platform business, including customer concentration and a strong GP/A ratio. This suggests a durable competitive position in the semiconductor industry.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Capital Efficiency Divergence",
+          "detail": "The overlay trigger ICA-5 indicates a significant divergence between economic and GAAP ROIC, with a gap of 15.93 percentage points. This suggests that the company's capital efficiency may be overstated, warranting close monitoring of future performance to ensure sustainable returns.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "15.93pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation Concerns",
+          "detail": "NVIDIA's Smart Beta Timing framework (F7) scores poorly at 1.0, indicating that the current valuation metrics suggest the stock is very expensive relative to its historical performance. This raises concerns about potential overvaluation and the sustainability of current price levels.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.0",
+              "field_path": "frameworks.6.score"
+            }
+          ]
+        },
+        {
+          "headline": "Low Piotroski Score",
+          "detail": "The Piotroski score is at 4, which is below the threshold of 5, indicating potential financial weaknesses. This is compounded by the overlay trigger PSA-4, suggesting that despite positive cash flow and quality, the low score may reflect underlying risks that need to be monitored.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4",
+              "field_path": "frameworks.0.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic ROIC continues to diverge from GAAP ROIC over the next few annual filings, as indicated by ICA-5.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any deterioration in the Piotroski score, which currently stands at 4, as indicated by PSA-4.",
+          "severity": "medium",
+          "grounded_in": "PSA-4"
+        },
+        {
+          "factor": "Keep an eye on valuation metrics, particularly the Smart Beta Timing score, which indicates potential overvaluation.",
+          "severity": "medium",
+          "grounded_in": "F7"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps were reported for the analysis, ensuring all frameworks were fully populated with available data."
+      ]
+    }
+  },
+  "input_tokens": 8736,
+  "output_tokens": 762,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 7258,
+  "lattice_deferred": [
+    "bayesian_updating",
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

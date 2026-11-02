@@ -1,0 +1,152 @@
+{
+  "case_id": "ADP",
+  "view_sha256": "63f704c36fe4dd3b507d7fe08b5b4058cd88d68d791d678644bf11fa66b353e4",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ADP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:15:50.073164Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9330,
+    "completion_tokens": 556,
+    "cost_usd": 0.001656,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "ADP's composite score indicates a need for monitoring due to mixed signals across frameworks.",
+      "bull": [
+        {
+          "headline": "Strong momentum signal supports growth thesis.",
+          "detail": "ADP's momentum framework (F2) shows a score of 7.0, indicating a strong fit with a positive drift in the PEAD signal. This suggests that recent price movements may continue to reflect underlying strength in the business, supporting a favorable outlook for growth.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "High ROIC indicates efficient capital use.",
+          "detail": "The growth quality framework (F5) reveals a ROIC of 60.6%, suggesting that ADP effectively utilizes its capital to generate returns. This high efficiency is a positive indicator for long-term value creation.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "60.6%",
+              "field_path": "frameworks.4.key_signals.2"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Concerns over CEO alignment with shareholder interests.",
+          "detail": "The growth quality framework (F5) indicates 'no alignment' for CEO equity ownership, which raises concerns about potential misalignment of interests between management and shareholders. This could impact long-term strategic decisions.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Significant divergence between GAAP and economic ROIC.",
+          "detail": "The ICA overlay (ICA-5) highlights a substantial gap of 27.75 percentage points between Peters-Taylor non-GAAP ROIC and GAAP ROIC, indicating that economic capital efficiency materially diverges from GAAP. This discrepancy warrants close monitoring as it may signal underlying issues in capital allocation or operational efficiency.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "27.75",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any deterioration in momentum signals that could indicate a reversal in growth trends.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Keep an eye on CEO equity alignment as it may affect long-term strategic decisions.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported in the fetch_data_gaps section, indicating complete data availability for analysis.",
+        "F4 data gaps exist due to reliance on third-party data for options put/call ratio, which may affect the completeness of the stealth accumulation analysis.",
+        "F5 lacks free cash flow data, limiting the assessment of cash generation capabilities."
+      ]
+    }
+  },
+  "input_tokens": 8306,
+  "output_tokens": 556,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 5812,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

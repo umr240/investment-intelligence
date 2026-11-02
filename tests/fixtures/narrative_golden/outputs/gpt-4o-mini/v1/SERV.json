@@ -1,0 +1,173 @@
+{
+  "case_id": "SERV",
+  "view_sha256": "d3cffe84d3c00a5596009d68986ef2295cdea01cfd8e7eb662851d377c140a19",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SERV",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:19:39.225515Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9699,
+    "completion_tokens": 633,
+    "cost_usd": 0.001758,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[0]: claim value '+190.8%' does not match view value '('Customer concentration', 'diversified_base_case')' at 'frameworks.5.key_signals.0'",
+      "bull[1].numeric_claims[0]: claim value '12830.3 bps/yr' does not match view value '('Short int (current)', 'withheld: third-party data')' at 'frameworks.3.key_signals.0'",
+      "bull[1].numeric_claims[1]: claim value '+17.1' does not match view value '('Short int (peak)', 'withheld: third-party data')' at 'frameworks.3.key_signals.1'",
+      "bear[0].numeric_claims[1]: claim value '-120.9%' does not match view value '('GRR (Gross Revenue Retention)', 'not_disclosed')' at 'frameworks.5.key_signals.2'",
+      "bear[1].numeric_claims[0]: claim value '-65.1%' does not match view value '('Avg GM expansion', '12830.3 bps/yr')' at 'frameworks.2.key_signals.0'",
+      "bear[0].detail: number '101.36' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Monitor Serve Robotics Inc. for signs of operational improvement amid significant net losses.",
+      "bull": [
+        {
+          "headline": "Strong Revenue Growth Signals Potential",
+          "detail": "Serve Robotics Inc. has demonstrated a remarkable revenue CAGR of +190.8% over the past three years, indicating a strong growth trajectory despite current losses. This growth rate positions the company favorably within its sector, suggesting potential for future profitability if operational efficiencies can be achieved.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+190.8%",
+              "field_path": "frameworks.5.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Potential with R&D Investment",
+          "detail": "The company exhibits a high R&D intensity of +17.1, which is indicative of a commitment to innovation. This investment in R&D, coupled with a positive average gross margin expansion of 12830.3 bps/yr, suggests that Serve Robotics is positioning itself to enhance its product offerings and market competitiveness over time.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "12830.3 bps/yr",
+              "field_path": "frameworks.3.key_signals.0"
+            },
+            {
+              "value": "+17.1",
+              "field_path": "frameworks.3.key_signals.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income Raises Concerns",
+          "detail": "Serve Robotics reported a significant net loss of $101.36 million for the latest fiscal year, which raises concerns about its financial sustainability. This ongoing loss, combined with a negative ROIC of -120.9%, suggests that the company is currently struggling to convert its investments into profitable returns, necessitating close monitoring of future performance.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-101361000.0",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "-120.9%",
+              "field_path": "frameworks.5.key_signals.2"
+            }
+          ]
+        },
+        {
+          "headline": "Weak Momentum and Market Sentiment",
+          "detail": "The company's momentum score is weak, with a 12-1 momentum of -65.1%, indicating a significant decline in stock performance relative to its peers. This negative momentum could reflect broader market sentiment challenges, which may hinder the company's ability to attract new investors and sustain its growth trajectory.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-65.1%",
+              "field_path": "frameworks.2.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any signs of declining revenue growth or increased operational inefficiencies.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to manage its R&D expenditures effectively to avoid further losses.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the current analysis, indicating a complete dataset for the frameworks utilized. However, the absence of market cap data limits certain analyses, particularly in assessing relative valuation and capital efficiency."
+      ]
+    }
+  },
+  "input_tokens": 8675,
+  "output_tokens": 633,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6982,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

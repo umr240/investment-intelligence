@@ -1,0 +1,159 @@
+{
+  "case_id": "NTES",
+  "view_sha256": "d00772ded2ab80bcbd325616f5bac4a0878f9c3c84cdeb8e0f8b6202b979c9c2",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NTES",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:57:12.657226Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 10403,
+    "completion_tokens": 1679,
+    "cost_usd": 0.056394,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "risks[1]: grounded_in='F7' does not match any framework, overlay trigger, data gap, or view field",
+      "risks[4]: grounded_in='BEW-no_winner_pattern' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "NTES receives a composite \"exclude\" verdict driven entirely by data-infrastructure failure: zero feasible frameworks could be scored, making any quantitative thesis construction impossible at this run date.",
+      "bull": [
+        {
+          "headline": "Founder-CEO still at the helm — a qualitative positive that survives data gaps",
+          "detail": "Lei Ding co-founded NetEase and remains CEO, satisfying the single most important Outsiders trait (owner-operator skin in the game). Founder-led platforms in gaming/internet historically exhibit better long-term capital allocation discipline than hired-manager equivalents. This trait is observable without quantitative framework scores and should be monitored as a hold-thesis anchor if data infrastructure is restored.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Revenue base is material — scale exists even if unscored",
+          "detail": "The latest disclosed revenue figure confirms a substantial operating business. Scale of this magnitude implies established customer relationships, content libraries, and distribution infrastructure. None of these durability characteristics can be quantified in this run, but scale alone places NTES outside the survivorship-risk zone that afflicts micro-cap names.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "16105276000.0",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "All 7 frameworks unfeasible — composite score is zero by construction, not by performance",
+          "detail": "F1–F6 failed for absence of quarterly history (0 quarters available vs. 4–8 required). F7 failed because split-basis resolution is unresolved across the available annual periods. A composite score of 0.0 with verdict 'exclude' does not reflect poor business quality; it reflects a data-pipeline state that produces no scoreable signal whatsoever. Treating this as a negative quality signal would be a category error.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Key valuation and profitability fields are null — no price-to-earnings, EV/EBITDA, or market cap available",
+          "detail": "Beta, market cap, P/E trailing, P/B, EV/EBITDA, and latest net income are all null in this run. No valuation anchor exists. Without these inputs, no margin-of-safety calculation is possible, and stage classification defaults to 'mid_cap' on incomplete reasoning (both market_cap_usd and latest_net_income are null). No investment sizing decision can be grounded in this output.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "CEO equity stake undisclosed — capital-allocator alignment unverifiable",
+          "detail": "ceo_equity_pct_state is 'not_disclosed', meaning the single most direct measure of founder skin-in-the-game cannot be confirmed quantitatively. While Lei Ding's founder status is a qualitative positive, the absence of a disclosed equity percentage prevents any scoring of the Outsiders 'significant ownership' trait. This is a monitoring gap, not a confirmed negative.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the data-contract failure (C2 block: quarterly rows present but zero usable quarters) is resolved in the next pipeline refresh. Until it is, no framework score can be produced and no quantitative thesis can be validated. If unresolved after two consecutive quarterly refreshes, the data gap itself becomes a monitoring failure risk.",
+          "severity": "high",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Monitor whether the split-basis ambiguity on annual periods (cited in F7 unfeasible reason) is resolved. Unresolved share-split history corrupts long-run per-share metrics across all annual frameworks and prevents any Smart Beta Timing or value-anchor signal from being computed.",
+          "severity": "medium",
+          "grounded_in": "F7"
+        },
+        {
+          "factor": "Monitor CEO equity disclosure in subsequent DEF 14A filings. The 'not_disclosed' state means alignment of founder incentives with long-term shareholders cannot be confirmed. If equity stake has materially declined (e.g. through secondary sales), the founder-CEO bull thesis weakens structurally.",
+          "severity": "medium",
+          "grounded_in": "company.ceo_equity_pct_state"
+        },
+        {
+          "factor": "Monitor profitable_3yr flag. Currently false (null net income contributing to this classification). If profitability does not turn positive and confirmable over the next 2–3 annual filings, the stage reasoning remains incomplete and the hold thesis lacks earnings-quality grounding.",
+          "severity": "medium",
+          "grounded_in": "stage"
+        },
+        {
+          "factor": "BEW overlay returned 'no_winner_pattern' and SIM returned 'auto_partial_one_test_only'. Neither Bessembinder Extreme Winner nor full SIM confirmation is in place. Monitor whether subsequent fully-scored runs produce BEW qualification — its absence does not confirm the negative, but its presence would meaningfully upgrade the hold thesis.",
+          "severity": "low",
+          "grounded_in": "BEW-no_winner_pattern"
+        }
+      ],
+      "data_caveats": [
+        "NTES: data contract C2 (block) not met — quarterly rows are present in the source but none passed the contract filter, resulting in zero usable quarterly periods across all frameworks (F1–F6 each require 4–8 quarters; F7 requires 10 resolved annual periods but only 6 are available with split basis unresolved). This is the primary reason all frameworks are unfeasible and the composite score is zero.",
+        "Key financial fields — market_cap_usd, latest_net_income, beta, pe_trailing, pb_ratio, ev_ebitda, and ceo_equity_pct — are all null in this run. Valuation, profitability, and CEO alignment metrics cannot be referenced or scored.",
+        "Stage classification of 'mid_cap' is provisional: both market_cap_usd and latest_net_income are null, so the reasoning inputs for stage determination are incomplete.",
+        "SIM overlay is partial (auto_partial_one_test_only), meaning only one of the required SIM sub-tests could be evaluated. Full SIM confirmation requires a complete data refresh."
+      ]
+    }
+  },
+  "input_tokens": 10403,
+  "output_tokens": 1679,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 40492,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "case_id": "BIDU",
+  "view_sha256": "1fda86f21522581917141d17231c5860d321fb88a61ed640fcc9b5c738e2b082",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BIDU",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:41:26.708120Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 10585,
+    "completion_tokens": 1983,
+    "cost_usd": 0.0615,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "All seven quantitative frameworks are unfeasible due to absent quarterly and annual data in the pipeline, producing a composite score of zero and an exclude verdict — the scorecard is a data-coverage failure, not a business-quality verdict on Baidu.",
+      "bull": [
+        {
+          "headline": "Founder-CEO with long tenure is a structural positive worth monitoring once data coverage is restored",
+          "detail": "Yanhong Li (Robin Li) founded Baidu and remains CEO, satisfying the founder-operator criterion that Thorndike's Outsiders research associates with superior long-run capital allocation. Founder-CEOs with skin in the game structurally differ from hired managers incentivised on annual EPS. This qualitative positive cannot be scored by any framework in this run but should anchor the hold-rationale once quantitative scoring becomes feasible.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Profitability at scale is confirmed: net income positive for the latest fiscal year",
+          "detail": "The stage-reasoning flags the company as profitable over a three-year span, and the latest reported net income is a positive figure. A business generating meaningful net income at this revenue level is not a pre-revenue speculation. Profitability is the minimum prerequisite for F5 (Growth Quality) and F6 (Platform Dominator) scoring — confirming it survives the first gate once data pipelines are repaired.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$799M",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$18.46B",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "Long public listing history (254 months since IPO) implies extensive annual-report archive for future scoring",
+          "detail": "The overlay trigger records 254 months since listing. This means roughly two decades of annual filings exist in principle, sufficient for F7 (requires 10 annual periods) and all quarterly frameworks once the data pipeline's C2 block contract is satisfied. The exclude verdict is a pipeline artefact, not a fundamental verdict on business history or durability.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "254",
+              "field_path": "overlay_triggers.0.relevant_numbers.months_since_listing"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "All seven frameworks unfeasible: composite score is zero with no analytical grounding",
+          "detail": "F1 through F7 are each marked unfeasible due to missing quarterly history (F1–F5 need 4Q, F3/F6 need 8Q) and missing annual history (F7 needs 10 periods). The composite score of zero and verdict of 'exclude' follow mechanically from this total data absence. No business-quality signal — positive or negative — was computable in this run.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Data contract C2 block violation: pipeline cannot ingest quarterly rows, preventing all framework scoring",
+          "detail": "The fetch_data_gaps log records a C2 block contract failure (quarterly rows present). A block-level contract failure means the data layer actively rejected ingestion, not merely returned sparse data. Until this contract is satisfied, no quarterly framework (F1, F2, F4, F5 at 4Q minimum; F3, F6 at 8Q minimum) can run, leaving the scorecard structurally blind regardless of business fundamentals.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Market cap, beta, P/E, P/B, and EV/EBITDA all null: valuation and risk context entirely absent",
+          "detail": "Key market-data fields — market_cap_usd, beta, pe_trailing, pb_ratio, ev_ebitda — are all null in this run. Absence of market cap prevents stage confirmation (stage reasoning notes market_cap_usd as null). Absence of valuation multiples prevents any margin-of-safety assessment. This compounds the framework unfeasibility: even qualitative valuation judgment is unsupported by current data.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "CEO equity percentage not disclosed: capital-allocator alignment unquantifiable",
+          "detail": "The ceo_equity_pct field is in state 'not_disclosed'. Founder status is confirmed, but the degree of economic alignment cannot be calibrated. Thorndike's Outsiders framework requires observable skin-in-the-game as a first-order signal; without a disclosed equity stake, the founder-CEO positive is qualitative only and cannot be weighted in any quantitative scoring.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the C2 data contract block is resolved within 1–2 refresh cycles. If quarterly rows remain absent after two consecutive run dates, the exclude verdict will persist indefinitely regardless of business quality, creating a false-negative risk for the portfolio.",
+          "severity": "high",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Monitor whether the annual split factor (C3 warn contract) is resolved. An unknown split factor contaminates per-share metrics across all annual-period frameworks, particularly F7, and could silently distort scores once annual data becomes available.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "PSA-3 trigger fired: F7 is unfeasible on annual history despite 254 months of public listing. Watch for whether this is a data-sourcing gap (fixable) or a structural limitation of the pipeline's EDGAR/exchange mapping for China-listed ADRs. If structural, F7 scoring may never be feasible for this ticker.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "CEO equity percentage is not disclosed. Over the 5-year monitoring horizon, watch DEF 14A filings annually for any change in disclosure posture. Persistent non-disclosure weakens the founder-alignment thesis and is a first-order Outsiders trait that cannot be confirmed.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": [
+        "C2 block contract not met: quarterly rows are present in the source but failed the pipeline's ingestion block check. This prevents all quarterly-dependent frameworks (F1, F2, F3, F4, F5, F6) from scoring. Source: fetch_data_gaps.",
+        "C3 warn contract not met: the latest annual split factor is not known. This may affect per-share calculations in annual-period frameworks once they become feasible. Source: fetch_data_gaps.",
+        "All seven frameworks (F1–F7) are individually unfeasible due to insufficient quarterly history (F1/F2/F4/F5: 0 of 4 required quarters; F3/F6: 0 of 8 required quarters) and insufficient annual history (F7: 0 of 10 required annual periods). No framework-level data_gaps were recorded because scoring was never attempted.",
+        "Market capitalisation, beta, trailing P/E, P/B ratio, and EV/EBITDA are all null in this run. Valuation context and market-risk calibration are entirely absent.",
+        "CEO equity percentage is in state 'not_disclosed'. The degree of founder economic alignment cannot be quantified from available data."
+      ]
+    }
+  },
+  "input_tokens": 10585,
+  "output_tokens": 1983,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 43987,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

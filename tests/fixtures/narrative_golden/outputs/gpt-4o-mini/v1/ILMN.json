@@ -1,0 +1,199 @@
+{
+  "case_id": "ILMN",
+  "view_sha256": "2b9241da3a01ecca91775da243e53e3a7c3fc45de797588492fec7c7f80824d3",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ILMN",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:43.128860Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9806,
+    "completion_tokens": 738,
+    "cost_usd": 0.001837,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[1]: claim value 'low_positive' does not match view value '('Asset growth band', 'low_positive')' at 'frameworks.0.key_signals.1'",
+      "bull[0].numeric_claims[2]: claim value 'True' does not match view value '('Sloan high quality', 'True')' at 'frameworks.0.key_signals.3'",
+      "bear[1].numeric_claims[0]: field_path 'overlay_triggers.2.relevant_numbers.current_ev_revenue' does not exist in view",
+      "bear[2].numeric_claims[0]: claim value 'no_alignment' does not match view value '('ROIC', '+13.7%')' at 'frameworks.4.key_signals.2'"
+    ],
+    "body": {
+      "one_liner": "Illumina, Inc. shows strong fundamentals but faces challenges in growth quality and valuation metrics.",
+      "bull": [
+        {
+          "headline": "Strong Pre-Discovery Signals",
+          "detail": "Illumina, Inc. exhibits strong pre-discovery signals with a Piotroski score of 8/9, indicating solid fundamentals and high gross profitability. The company is also in a low asset growth band, suggesting efficient capital allocation. These factors position it well for potential market recognition.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0"
+            },
+            {
+              "value": "low_positive",
+              "field_path": "frameworks.0.key_signals.1"
+            },
+            {
+              "value": "True",
+              "field_path": "frameworks.0.key_signals.3"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Momentum Indicators",
+          "detail": "The company has demonstrated significant momentum with a 12-1 momentum return of +128.2%, indicating strong recent performance. This positive drift suggests that investor sentiment is favorable, potentially leading to further price appreciation.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+128.2%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Compounder with Strong R&D",
+          "detail": "Illumina's R&D intensity stands at +22.3%, reflecting a commitment to innovation. The company has a defensible patent portfolio with 1,380 patents, which supports its competitive position in the laboratory analytical instruments sector.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1,380",
+              "field_path": "frameworks.2.key_signals.4"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Declining Revenue Growth",
+          "detail": "The company has experienced a revenue CAGR of -1.8% over the past three years, indicating challenges in maintaining growth. This decline raises concerns about the sustainability of its business model and future profitability.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.8%",
+              "field_path": "frameworks.4.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "High Valuation Relative to Growth",
+          "detail": "Illumina's current valuation metrics suggest it is trading at a premium, with an EV/Rev ratio above the sector median. This high valuation, combined with declining revenue growth, may limit upside potential and increase risk for investors.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5x",
+              "field_path": "overlay_triggers.2.relevant_numbers.current_ev_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "Weak Capital Allocation Signals",
+          "detail": "The company lacks alignment in CEO equity ownership, which raises concerns about management's incentives. This misalignment could lead to decisions that do not prioritize shareholder value, impacting long-term performance.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "no_alignment",
+              "field_path": "frameworks.4.key_signals.2"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any significant changes in R&D intensity or patent portfolio that could affect competitive positioning.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Keep an eye on revenue trends; further declines could signal deeper issues in the business model.",
+          "severity": "high",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity percentage is not disclosed, which limits insight into management alignment.",
+        "F4 data gaps exist due to reliance on third-party sources for options data, impacting the completeness of the analysis."
+      ]
+    }
+  },
+  "input_tokens": 8782,
+  "output_tokens": 738,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 8032,
+  "lattice_deferred": [
+    "bayesian_updating",
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

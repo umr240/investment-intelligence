@@ -1,0 +1,329 @@
+{
+  "case_id": "ILMN",
+  "view_sha256": "2b9241da3a01ecca91775da243e53e3a7c3fc45de797588492fec7c7f80824d3",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ILMN",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:52:09.382522Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12357,
+    "completion_tokens": 4096,
+    "cost_usd": 0.098511,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[1]: claim value '20.77' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "data_caveats is empty but view has data_gaps — caveats elided",
+      "formatting: bear.4.headline trimmed from 161 to 140 chars"
+    ],
+    "body": {
+      "one_liner": "Illumina's genomics franchise exhibits strong quality and momentum signals with a defensible patent portfolio, but negative three-year revenue growth, contested capital-efficiency accounting, and a failing valuation score make this a monitor-closely watchlist name rather than a clear compounder thesis.",
+      "bull": [
+        {
+          "headline": "Near-perfect Piotroski score signals improving fundamental health across balance sheet, profitability, and operating efficiency",
+          "detail": "F1 returns a score of 7.83 with a Piotroski reading of 8/9, Sloan high-quality accruals, and a strong GP/A signal. Low-positive asset growth further confirms disciplined expansion rather than balance-sheet bloat. These are the empirical hallmarks of a business whose fundamentals are strengthening — a prerequisite for durable compounding. Inversion check: asset growth is low-positive, not negative, so there is no contraction signal alongside the quality reading.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.83",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "12-month momentum of +128.2% at 52-week high triggers BEW extreme-winner check — sized, extended hold warranted if thesis holds",
+          "detail": "F2 scores a perfect 10.0 with trailing 12-1 momentum of +128.2%, and the stock sits at its 52-week high with a positive PEAD drift signal. BEW-3 fires: compounding pace exceeds the extreme-winner threshold. Per Bessembinder's empirical finding, the 4% of stocks that create the bulk of market wealth must be held in size and held long. Momentum at this magnitude, combined with fundamental quality (F1 strong), is statistically rare. The hold-forever frame is appropriate; trimming on price strength is a structurally wealth-destroying habit here.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "10.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+128.2%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+0.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "1,380-patent portfolio and R&D intensity in the sweet spot underpin a Cornered Resource / Process Power moat",
+          "detail": "F3 scores 8.0 with R&D intensity at 22.3% (sweet-spot band) and a defensible portfolio of 1,380 patents. Six consecutive quarters of positive earnings surprise reinforce execution consistency. Helmer's Cornered Resource framing applies: sequencing IP is not easily replicated by a $1B challenger in five years — regulatory, scientific, and production-scale barriers are compounding. Moat direction appears flat-to-widening on the innovation axis, though the -38.6 bps/yr gross margin erosion is the key derivative to watch.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.0",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "+22.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "1,380",
+              "field_path": "frameworks.2.key_signals.4.1"
+            },
+            {
+              "value": "6 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            },
+            {
+              "value": "-38.6 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ICA restatement reveals economic ROIC materially diverges from GAAP — intangible capital is being systematically under-counted",
+          "detail": "ICA-1 and ICA-5 both fire: GAAP ROIC of 13.7% is understated relative to economic capital deployed because R&D (22.3% intensity) and SG&A are expensed immediately under GAAP. The Peters-Taylor capitalisation methodology — applied consistently from the same SEC 10-K XBRL source — produces a divergence of 40.22 percentage points upward (economic > GAAP). For an intangible-heavy genomics platform, this is the correct interpretive lens. The GAAP number understates capital efficiency; the economic picture is more nuanced but more flattering on invested-capital quality.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+13.7%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "40.22pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "+22.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "FCF margin of 20.7% demonstrates the business converts revenue to cash at a rate consistent with quality-compounder profiles",
+          "detail": "Despite a negative three-year revenue CAGR, Illumina's FCF margin of 20.7% signals that the cost structure has been disciplined and the core franchise continues to generate cash. For a business in revenue consolidation (post-GRAIL divestiture period), FCF resilience is the correct metric to monitor. Compounding requires reinvestment runway — this margin creates optionality for capital allocation without balance-sheet strain, though Debt/EBITDA of 2.361 warrants monitoring.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+20.7%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "2.361",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative 3-year revenue CAGR of -1.8% is a structural red flag — quality without growth is a moat in maintenance mode, not compounding",
+          "detail": "F5 partial verdict (score 5.0) is anchored by a revenue CAGR of -1.8% over three years. A genomics platform with a defensible IP moat that cannot grow top-line is either facing market saturation, competitive displacement, or post-acquisition disruption. The inversion is clear: if the TAM is large but share is declining, the moat is narrowing. Six quarters of positive earnings surprise (F3) do not resolve the growth question — they may reflect cost-cutting efficiency rather than volume or pricing power expansion.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "5.0",
+              "field_path": "frameworks.4.score"
+            }
+          ]
+        },
+        {
+          "headline": "F6 fails (score 2.0): Rule of 40 at 20.77 and undisclosed retention metrics preclude a platform-dominator verdict",
+          "detail": "F6 scores 2.0 (fail band). The Rule of 40 reading of 20.77 is well below the threshold for platform-quality designation. Neither NRR nor GRR are disclosed in the 10-K MD&A — absence of retention metrics is informative: companies with strong cohort economics typically surface them. The Fahlenbrach signal is False. A business that cannot demonstrate platform stickiness in its own disclosures does not earn the platform-dominator premium embedded in rich valuation multiples.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "20.77",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "F7 fails on P/B (very_expensive band, z-score 2.116) — valuation provides no margin of safety at current levels",
+          "detail": "F7 scores 3.0 with P/B z-score of 2.116 (very_expensive band). EV/Rev is near historical average (z-score -0.007), but the book-value multiple is stretched. For a company with negative three-year revenue growth and partial capital-efficiency signals, paying a very-expensive book multiple compresses the forward return distribution. BEW-2 fires on F1/F3 quality trading rich — the quality premium is priced in, narrowing the asymmetry that makes extreme winners matter. Margin of safety is absent on the book-value dimension.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.6.score"
+            },
+            {
+              "value": "2.116",
+              "field_path": "frameworks.6.key_signals.2.1"
+            },
+            {
+              "value": "-0.007",
+              "field_path": "frameworks.6.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment flagged as no_alignment; non-founder hired CEO with undisclosed equity — capital allocator quality unverifiable",
+          "detail": "F5 flags CEO alignment as no_alignment. Jacob Thaysen is not the founder. CEO equity percentage is not disclosed (data gap: parser_uncertain). Without quantifiable skin in the game, the Outsiders 8-trait framework cannot confirm capital-allocator quality. Hired managers paid on EPS metrics face structural incentives that diverge from long-term owner interests — empire-building M&A, EPS-target buybacks at any price. With Debt/EBITDA at 2.361 and free cash available, capital allocation decisions over the next 3-5 years are a primary thesis checkpoint.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.361",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC of -34.29% under Peters-Taylor reveals intangible capital stock is larger than GAAP invested capital — economic returns are…",
+          "detail": "ICA-5 reveals that the Peters-Taylor adjusted ROIC is 5.93%, while the underlying GAAP ROIC leg used in the restatement is -34.29%. The 40.22pp gap is upward (economic > GAAP), confirming intangible capitalisation improves the picture — but the Peters-Taylor economic ROIC of 5.93% is itself modest. A business whose economic return on invested capital (inclusive of R&D and OC) is in the mid-single digits is not compounding at rates that justify very-expensive book multiples.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.93%",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-34.29%",
+              "field_path": "overlay_triggers.1.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "40.22pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether revenue CAGR recovers toward positive territory over the next 2-3 annual filings. Sustained negative top-line growth in a large-TAM genomics market is an early signal of structural share loss or TAM contraction — either constitutes a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch gross margin trajectory: -38.6 bps/yr average expansion is negative (erosion). If GM erosion accelerates over 2-3 more filings without offsetting volume leverage, the moat's pricing power dimension is narrowing — a Helmer-style Power degradation signal.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Capital allocation risk: with Debt/EBITDA at 2.361, a non-founder CEO with unverified equity alignment, and free cash flow available, monitor whether capital is deployed via value-creative R&D reinvestment or empire-building M&A. A material acquisition at a rich multiple without strategic rationale is an Outsiders 8-trait inversion signal.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Peters-Taylor economic ROIC of 5.93% is thin. Monitor whether ROIC (economic basis) improves as the intangible capital stock matures and amortises. Flat or declining economic ROIC over years 2-5 would indicate the R&D spend is not converting to durable economic capital — a compounding-rate drift failure mode.",
+          "severity": "medium",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "BEW-2 fires: F1 and F3 quality trading at rich valuation (P/B z-score 2.116, very_expensive). The extreme-winner case requires the business to grow into its quality premium. Monitor whether positive momentum (BEW-3, +128.2%) is sustained by fundamental improvement or is purely sentiment-driven. Sentiment-only momentum without fundamental support collapses.",
+          "severity": "medium",
+          "grounded_in": "BEW-2"
+        },
+        {
+          "factor": "F6 fail: absence of disclosed NRR/GRR means customer retention quality is unverifiable. If competitive entrants (e.g. Pacific Biosciences, Oxford Nanopore, or a well-funded long-read sequencing challenger) accelerate instrument adoption at existing ILMN accounts, there is no early-warning metric available in public disclosures. Monitor for any voluntary retention disclosure in future 10-Ks.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "F4 partial (score 5.0): short interest data withheld and EPS acceleration absent. If EPS acceleration does not emerge over the next 2 annual filings despite FCF margin of 20.7%, the stealth-accumulation thesis is not supported — institutional accumulation may not be occurring at the scale the momentum signal implies.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "CEO equity percentage is parser_uncertain and effectively not disclosed. If proxy filings in years 1-2 confirm minimal CEO equity ownership, the capital-allocator alignment thesis weakens materially — reassess Outsiders 8-trait scoring when DEF 14A data becomes cleanly parseable.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": []
+    }
+  },
+  "input_tokens": 12357,
+  "output_tokens": 4096,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 86878,
+  "lattice_deferred": [
+    "bayesian_updating",
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

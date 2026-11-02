@@ -1,0 +1,209 @@
+{
+  "case_id": "AAPL",
+  "view_sha256": "299372135acdc33d40982f3b5f5a678852b06102053dfc8d018757e6aaf761cd",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AAPL",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:15:35.728727Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9508,
+    "completion_tokens": 870,
+    "cost_usd": 0.001948,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[0]: field_path 'overlay_triggers.1.relevant_numbers.current_ev_revenue' does not exist in view"
+    ],
+    "body": {
+      "one_liner": "Apple Inc. shows strong innovation and growth quality but faces risks from economic capital efficiency divergence and high valuation.",
+      "bull": [
+        {
+          "headline": "Strong Momentum Signals",
+          "detail": "Apple Inc. exhibits a robust momentum score of 9.0, indicating positive price trends and strong investor interest. The 12-1 momentum is at +23.4%, suggesting a favorable short-term outlook. This momentum is supported by a positive post-earnings announcement drift, reinforcing the potential for continued upward price movement.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+23.4%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Compounder with Strong Margins",
+          "detail": "The company scores 7.0 in the Innovation Compounder framework, reflecting a solid average gross margin expansion of 173.4 basis points per year. This is complemented by an R&D intensity increase of 8.3%, indicating a commitment to innovation that supports long-term growth.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "173.4 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+8.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "High ROIC and Strong Free Cash Flow",
+          "detail": "Apple's Growth Quality framework score is 8.5, driven by a remarkable ROIC of 92.5% and a free cash flow margin of 29.3%. These metrics indicate efficient capital allocation and strong profitability, essential for sustaining competitive advantages over time.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.5",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+92.5%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "+29.3%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Economic Capital Efficiency Divergence",
+          "detail": "The ICA overlay indicates a significant divergence between economic and GAAP ROIC, with a gap of 50.13 percentage points. This suggests that the company's economic capital efficiency is materially lower than reported, raising concerns about the sustainability of its high ROIC in the long term.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "50.13pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.333",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "0.8343",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "High Valuation Relative to Quality",
+          "detail": "The BEW overlay suggests that Apple is trading at a high valuation relative to its quality scores, with an EV/Revenue ratio exceeding 5x. This indicates that while the company demonstrates strong quality and innovation, it may be overvalued, which could pose risks if growth expectations are not met.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5x",
+              "field_path": "overlay_triggers.1.relevant_numbers.current_ev_revenue"
+            },
+            {
+              "value": "6.83",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "7.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic capital efficiency continues to diverge from GAAP ROIC over the next few annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for signs of declining momentum or innovation metrics that could indicate a shift in market perception or competitive position.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Keep an eye on valuation metrics to ensure they remain justified by growth and quality signals; a significant drop could trigger a reevaluation of the investment thesis.",
+          "severity": "medium",
+          "grounded_in": "BEW-2"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity percentage is uncertain due to parsing issues; see logs for details."
+      ]
+    }
+  },
+  "input_tokens": 9508,
+  "output_tokens": 870,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 9809,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

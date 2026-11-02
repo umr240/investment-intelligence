@@ -1,0 +1,168 @@
+{
+  "case_id": "BABA",
+  "view_sha256": "10f20cacde4fdfd5bdd775d58f54ffbc0ee4e814f60ab742602370215333b036",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BABA",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:30.696467Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9164,
+    "completion_tokens": 632,
+    "cost_usd": 0.001754,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Alibaba Group Holding Limited shows significant structural weaknesses, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Strong GP/A signal indicates quality assets.",
+          "detail": "Alibaba's GP/A score is strong, suggesting that the company maintains a solid asset base relative to its revenue, which is a positive indicator for long-term stability and operational efficiency. This strength can provide a buffer against competitive pressures and market volatility.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "True",
+              "field_path": "frameworks.0.key_signals.4.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak momentum signals indicate potential challenges ahead.",
+          "detail": "The momentum framework shows a significant decline of -33.1% over the past 12 months, indicating that the stock is underperforming and may face continued selling pressure. This weak momentum could deter new investors and impact the stock's recovery potential.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-33.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation metrics reveal stagnation.",
+          "detail": "The average gross margin expansion is negative at -29.3 basis points per year, suggesting that Alibaba is struggling to improve its profitability through innovation. This stagnation could hinder its competitive position in a rapidly evolving market.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-29.3 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Growth quality signals are concerning.",
+          "detail": "The growth quality framework indicates a low score of 2.5, with significant gaps in free cash flow and return on invested capital metrics. This raises concerns about the company's ability to generate sustainable growth and manage its capital effectively.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.5",
+              "field_path": "frameworks.4.score"
+            }
+          ]
+        },
+        {
+          "headline": "Platform dominance metrics are weak.",
+          "detail": "With a score of only 2.0 in the platform dominator framework, Alibaba shows insufficient retention metrics and customer concentration, which could threaten its long-term viability in the competitive landscape.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Piotroski score remains low while cash flow and asset quality stay intact.",
+          "severity": "medium",
+          "grounded_in": "PSA-4"
+        },
+        {
+          "factor": "Watch for continued decline in gross margins over the next few quarters.",
+          "severity": "high",
+          "grounded_in": "frameworks.2.key_signals.0.1"
+        },
+        {
+          "factor": "Keep an eye on innovation output and patent disclosures in upcoming filings.",
+          "severity": "medium",
+          "grounded_in": "frameworks.2.key_signals.4.1"
+        }
+      ],
+      "data_caveats": [
+        "Data contract C4 warning not met; unexplained quarterly share jumps not observed. Framework gaps include missing ROA YoY data, total assets, and current assets/liabilities for F1, and no disclosed patent portfolio for F3."
+      ]
+    }
+  },
+  "input_tokens": 9164,
+  "output_tokens": 632,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 6503,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

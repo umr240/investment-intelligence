@@ -1,0 +1,154 @@
+{
+  "case_id": "CSGP",
+  "view_sha256": "88c571120c7cd3bd92ccc477f66345505c92a1dcb879de9cca1c69676d673b9c",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "CSGP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:06.413316Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8857,
+    "completion_tokens": 559,
+    "cost_usd": 0.001587,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "CoStar Group, Inc. shows mixed signals with a composite score of 4.86, indicating a need for monitoring.",
+      "bull": [
+        {
+          "headline": "Strong Valuation Signals",
+          "detail": "CoStar Group, Inc. exhibits very cheap valuation metrics, with an EV/Rev z-score of -2.0 and a P/B z-score of -2.61, indicating potential undervaluation relative to peers. This is supported by framework F7, which scores 10.0, reflecting strong fit in smart beta timing.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-2.0",
+              "field_path": "frameworks.6.key_signals.0"
+            },
+            {
+              "value": "-2.61",
+              "field_path": "frameworks.6.key_signals.2"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Revenue Growth",
+          "detail": "The company has demonstrated a revenue CAGR of +14.2% over the past three years, indicating robust growth potential. This is a key strength highlighted in framework F5, which scores 5.5, suggesting a partial fit in growth quality.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+14.2%",
+              "field_path": "frameworks.4.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Momentum Indicators",
+          "detail": "CoStar Group, Inc. has a momentum score of 3.0, reflecting a significant decline of -60.2% over the past year. This weak performance is a concern and is captured in framework F2, which indicates a failure in momentum.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-60.2%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Erosion in Gross Margin",
+          "detail": "The company is experiencing an average gross margin contraction of -50.1 basis points per year, which raises concerns about its pricing power and operational efficiency. This trend is noted in framework F3, which scores 4.5, indicating partial fit but highlighting a potential risk.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-50.1 bps/yr",
+              "field_path": "frameworks.2.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether gross margin erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "frameworks.2.key_signals.0"
+        },
+        {
+          "factor": "Watch for any further deterioration in momentum metrics, particularly if the decline persists beyond the current period.",
+          "severity": "medium",
+          "grounded_in": "frameworks.1.score"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the current analysis, ensuring all frameworks are fully populated."
+      ]
+    }
+  },
+  "input_tokens": 7833,
+  "output_tokens": 559,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6382,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

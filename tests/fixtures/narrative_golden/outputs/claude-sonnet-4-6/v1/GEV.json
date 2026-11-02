@@ -1,0 +1,299 @@
+{
+  "case_id": "GEV",
+  "view_sha256": "7229425f28a9e82c816971bd5e8bc17d2e2178c4be09b8b9d17431793baada56",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "GEV",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:50:42.482637Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11467,
+    "completion_tokens": 3766,
+    "cost_usd": 0.090891,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[1]: claim value '18.71' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "bear[4].detail: number '06' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "GE Vernova is a profitable, cash-generative industrial compounder riding the electrification supercycle, but its mid-stage composite (4.22/10) reflects thin stealth-accumulation signals, nascent platform economics, and a short independent listing history that constrains full-cycle confidence.",
+      "bull": [
+        {
+          "headline": "Strong FCF generation underpins compounding durability across the electrification build-out",
+          "detail": "A trailing FCF margin of +30.1% at a revenue base of $38.1B signals that GEV converts growth into cash at a rate atypical for capital-intensive industrials. Paired with a 3-year revenue CAGR of +8.7%, this is the foundational compounding condition — sustained high-cash conversion on a growing base. The Piotroski score of 7/9 corroborates balance-sheet and earnings quality. Sloan accruals flag high quality, reducing the risk that reported earnings are overstated.",
+          "framework_codes": [
+            "F1",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+30.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "$38.1B",
+              "field_path": "company.latest_revenue"
+            },
+            {
+              "value": "+8.7%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "7/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "12-month momentum (+69.0%) triggers BEW-3 extreme-winner watch — sized, extended hold warranted",
+          "detail": "Bessembinder's empirical finding is that aggregate equity wealth concentrates in ~4% of stocks. BEW-3 fires when 12-1 momentum exceeds +50%; GEV's reading of +69.0% clears that threshold and places it inside the moderate extreme-winner candidate cohort. The implication is hold-logic, not entry logic: trimming on price strength is a structurally wealth-destroying habit when a name is inside this candidate pool. The position must be sized to matter and held long enough for tail compounding to register.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+69.0%",
+              "field_path": "overlay_triggers.1.relevant_numbers.return_12_1"
+            },
+            {
+              "value": "+29.1%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin expansion of ~271 bps/yr indicates operating leverage is accruing, not eroding",
+          "detail": "Average gross margin expansion of 271.1 bps per year, sustained across the available history, is a derivative signal — it shows the moat direction is widening on the unit-economics dimension. For an industrial at scale, margin expansion of this pace is not trivial; it reflects mix shift, pricing power, or efficiency gains compounding over time. Combined with an R&D intensity of +3.1%, the business is reinvesting in its technological position while simultaneously improving returns.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "271.1 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+3.1%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "ROIC positive at +9.6% with net income of $4.9B establishes profitability credibility at scale",
+          "detail": "A ROIC of +9.6% on a profitable base ($4.9B net income) confirms the business generates returns above a reasonable capital-cost estimate for this stage. Many energy-transition capex plays burn capital while building scale; GEV is already earning above-threshold returns. This is the prerequisite condition for compounding — you cannot compound below the cost of capital. The signal remains partial (F5 verdict) because Debt/EBITDA is unavailable, leaving leverage ambiguous.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+9.6%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "$4.9B",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Moderate patent portfolio (318 patents) and diversified customer base reduce single-point fragility",
+          "detail": "A portfolio of 318 patents scored as moderate provides some intangible-moat insulation against direct replication of GEV's engineering IP, particularly relevant in grid-scale power equipment where regulatory certification timelines act as an additional barrier. Customer concentration is classified as diversified, limiting revenue-cliff risk from any single counterparty. These two signals, taken together, suggest the business has breadth as well as depth in its competitive position.",
+          "framework_codes": [
+            "F3",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "318",
+              "field_path": "frameworks.2.key_signals.4.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "F4 score of 2.0/10 (fail): no stealth accumulation signal detected — institutional conviction is thin or invisible",
+          "detail": "F4 scored at the floor of the feasible range. The 13F holder-count delta is a single snapshot (no trend), options put/call data is absent, and no meaningful short-interest trend is available. The EPS acceleration signal reads 'net_increase_with_dips' — not a clean positive. Absence of stealth accumulation does not invalidate the business case, but it removes one of the higher-confidence timing signals. Without accumulation evidence, the composite lacks a smart-money corroboration layer.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.3.score"
+            }
+          ]
+        },
+        {
+          "headline": "F6 score of 1.0/10 (fail): GEV does not exhibit platform economics — Rule of 40 at 18.71 is well below threshold",
+          "detail": "F6's weak band and fail verdict reflect the absence of NRR/GRR disclosure (not a SaaS model), a Rule of 40 score of 18.71 (well below the 40 threshold), and no Fahlenbrach signal. GEV is an industrial capital-equipment and services business, not a platform. This is not a misclassification — the F6 score correctly identifies that GEV's moat does not derive from network effects or recurring software-like retention economics. Investors who underwrite a platform multiple are mispricing the business model.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "18.71",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "PEAD signal is 'mixed_recent_negative' — post-earnings price behaviour has turned adverse",
+          "detail": "The momentum framework (F2) records a mixed_recent_negative PEAD signal. While 12-1 momentum is strongly positive, the most recent post-earnings drift is adverse. This is a derivative signal: the stock's price has been expanding, but the market's immediate reaction to the most recent earnings information is no longer rewarding. This could reflect execution risk, guidance conservatism, or early-stage multiple compression on the energy-transition trade. It warrants monitoring over the next two to three earnings cycles.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment flagged 'no_alignment': equity ownership state is parser-uncertain at 0.5% — Outsiders trait absent",
+          "detail": "F5 scores CEO alignment as no_alignment. The ceo_equity_pct is recorded at 0.5% with a parser_uncertain state flag, and GEV's CEO is not the founder. Against the Thorndike Outsiders framework, founder-absent + uncertain equity ownership + hired professional tenure is the weakest capital-allocator configuration. The scorecard cannot confirm Outsiders trait alignment. Over a 5-year hold, capital-allocation decisions (M&A, buybacks, reinvestment) made by a management team with limited skin-in-the-game materially affect compounding outcomes.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Short listing history (PSA-3): F7 unfeasible, limiting full-cycle quality assessment",
+          "detail": "GEV listed on 2025-02-06 and has only five years of available annual history (not the ten required for F7). The PSA-3 overlay fires because F7 is unfeasible for recent listings. This is a structural data constraint, not a quality indictment — but it means the scorecard cannot assess long-cycle earnings quality, cross-cycle ROIC durability, or historical capital-allocation patterns. The composite (4.22/10, monitor) is computed on five of six feasible frameworks; the missing cycle data creates irreducible epistemic uncertainty about how GEV behaves through a full industrial downturn.",
+          "framework_codes": [
+            "F1",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.22",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor ROIC trajectory over the next 2-3 annual filings: if ROIC erodes from its current +9.6% level while revenue growth decelerates below the 3-year CAGR, the compounding thesis begins to break structurally. Watch for margin compression driven by supply-chain cost inflation, project mix shift toward lower-margin segments, or pricing concessions in competitive grid-equipment tenders.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Capital-allocator risk: monitor whether Scott Strazik's tenure produces Outsiders-consistent decisions (disciplined buybacks, reinvestment at high-ROIC rates, avoidance of empire-building M&A) or reverts to EPS-target management patterns. The current CEO equity alignment is flagged no_alignment with parser uncertainty — if subsequent filings confirm thin equity stake, this is a sustained watch condition for years 1-5.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PEAD deterioration: if the mixed_recent_negative post-earnings drift signal persists or worsens across the next 2 earnings cycles, it may indicate the market is pricing in execution risk or guidance haircuts that the scorecard's annual-data framework cannot yet capture. Not an exit trigger — a monitoring checkpoint.",
+          "severity": "medium",
+          "grounded_in": "BEW-3"
+        },
+        {
+          "factor": "Gross-margin expansion sustainability: the 271 bps/yr expansion trajectory must be re-tested annually. If expansion stalls or reverses (likely signals: commoditised equipment pricing, loss of service-contract attach rates, or customer push-back on long-term service agreements), the moat-widening thesis becomes moat-flat, reducing the conviction for extended hold.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Debt/EBITDA unknown (F5 data gap): leverage structure is unverified. If GEV carries material debt relative to EBITDA, a demand downturn in the energy-transition capital cycle could stress the balance sheet in a way the current scorecard cannot detect. Monitor the Debt/EBITDA ratio when EBITDA disclosure becomes available in future filings.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Single listing-cycle history (PSA-3): GEV has not been tested through a full industrial or credit cycle as a standalone public entity. The prior GE parent's cycle behaviour is not a reliable proxy. Watch how management responds to the first material revenue or margin contraction — that event will be the first real capital-allocator signal.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "F4 accumulation signal remains absent: a single 13F snapshot and no options data means institutional conviction cannot be tracked over time. If repeated dives over years 1-2 continue to show no positive holder-count delta, it may indicate that informed institutional capital is not building a position — a soft negative signal for the BEW extreme-winner hypothesis.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "R&D intensity at +3.1% is currently outside the model's optimal band (F3). If competitors — particularly European and Asian grid-equipment OEMs — accelerate R&D in power conversion and grid management, GEV's patent portfolio (318, moderate) may not constitute a durable intangible barrier. Monitor relative R&D spend trajectory annually.",
+          "severity": "low",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "F4 — 13F holder-count delta: only one institutional snapshot is available; a trend signal requires multiple dives accumulated over time. The stealth-accumulation signal is structurally underweighted until additional snapshots are available.",
+        "F4 — options put/call ratio: no free-tier source available; skipped per project specification. Pan-Poteshman sentiment signal is absent from this run.",
+        "F5 — Debt/EBITDA: EBITDA is not available in the current data pull; leverage ratio is recorded as None and contributes zero to the F5 score. Balance-sheet risk from debt load cannot be assessed from this scorecard alone.",
+        "F7 — Smart Beta Timing: unfeasible due to insufficient annual history (5 years available, 10 required) and recent listing date. Full-cycle valuation and long-horizon earnings-quality signals are absent from the composite.",
+        "PSA-3 overlay: listing type field is empty; the pipeline could not confirm whether GEV's listing structure (spinoff/demerger vs. primary IPO) qualifies for PSA workflow adjustment. The overlay verdict defaults to not_a_spinoff_candidate under this uncertainty.",
+        "Market cap, beta, EV/EBITDA, P/B, and trailing P/E are all null in the current view. Valuation-relative signals and risk-adjusted return metrics cannot be computed from this scorecard run. CEO equity percentage carries a parser_uncertain flag and should be verified against the most recent DEF 14A filing."
+      ]
+    }
+  },
+  "input_tokens": 11467,
+  "output_tokens": 3766,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 84412,
+  "lattice_deferred": [
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "case_id": "NOW",
+  "view_sha256": "ce157ef52240e37985d58706f35022654c30b90aea4ffcf9cd2270ff3330b28a",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NOW",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:11.083170Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9596,
+    "completion_tokens": 590,
+    "cost_usd": 0.001717,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[0]: claim value '22.4%' does not match view value '('Customer concentration', 'diversified_base_case')' at 'frameworks.5.key_signals.0'",
+      "bull[0].numeric_claims[1]: claim value '31.1%' does not match view value '('NRR (Net Revenue Retention)', 'not_disclosed')' at 'frameworks.5.key_signals.1'",
+      "bull[0].numeric_claims[2]: claim value '8.4%' does not match view value '('GRR (Gross Revenue Retention)', '98.0% (best_in_class)')' at 'frameworks.5.key_signals.2'",
+      "bull[1].numeric_claims[0]: claim value '7' does not match view value '('EPS acceleration', 'no_acceleration')' at 'frameworks.3.key_signals.3'"
+    ],
+    "body": {
+      "one_liner": "ServiceNow, Inc. is on the watchlist due to mixed signals across its frameworks, indicating potential risks and opportunities.",
+      "bull": [
+        {
+          "headline": "Strong Growth Quality Signals",
+          "detail": "ServiceNow demonstrates robust growth quality with a revenue CAGR of +22.4%, a free cash flow margin of +31.1%, and a positive ROIC of +8.4%. These metrics suggest effective capital allocation and operational efficiency, supporting a strong hold case. Frameworks: F5",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "22.4%",
+              "field_path": "frameworks.5.key_signals.0"
+            },
+            {
+              "value": "31.1%",
+              "field_path": "frameworks.5.key_signals.1"
+            },
+            {
+              "value": "8.4%",
+              "field_path": "frameworks.5.key_signals.2"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Compounder Status",
+          "detail": "The company is classified as an innovation compounder with a strong score of 7.0 in F3, indicating effective R&D investment and a history of positive surprise streaks over 7 quarters. This positions ServiceNow favorably for future growth. Frameworks: F3",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7",
+              "field_path": "frameworks.3.key_signals.3"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Pre-Discovery Alpha Score",
+          "detail": "ServiceNow's pre-discovery alpha score is weak at 3.0, indicating potential challenges in generating excess returns relative to the market. This could hinder long-term performance and investor confidence. Frameworks: F1",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        },
+        {
+          "headline": "Negative Momentum Signals",
+          "detail": "The company has experienced negative momentum with a 12-1 momentum of -26.9%, suggesting a downward trend in stock performance that could deter new investors. Frameworks: F2",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-26.9%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for signs of declining gross margins, as average GM expansion is currently negative at -12.5 bps/yr.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Keep an eye on customer retention metrics; NRR is currently not disclosed, which is critical for SaaS businesses.",
+          "severity": "high",
+          "grounded_in": "F6"
+        }
+      ],
+      "data_caveats": [
+        "CEO equity percentage is uncertain due to parsing issues; see logs for details.",
+        "F4 options put/call ratio data is unavailable due to lack of free-tier sources."
+      ]
+    }
+  },
+  "input_tokens": 8572,
+  "output_tokens": 590,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6935,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

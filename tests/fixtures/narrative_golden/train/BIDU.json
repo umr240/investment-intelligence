@@ -1,0 +1,177 @@
+{
+  "case_id": "BIDU",
+  "composite_version": 1,
+  "dive_date": "2026-10-28",
+  "run_id": 257,
+  "schema_version": "1.0",
+  "source_view_sha256": "1390b9907e74f196d81ad684476ccce94a4dd802f4b62febe72187f872e687ce",
+  "split": "train",
+  "strata": [
+    "exclude_path"
+  ],
+  "view": {
+    "company": {
+      "beta": null,
+      "ceo_equity_pct": null,
+      "ceo_equity_pct_state": "not_disclosed",
+      "ceo_name": "Yanhong Li",
+      "cik": "0001329099",
+      "ev_ebitda": null,
+      "exchange": "Nasdaq",
+      "fiscal_year_end_month": 12,
+      "industry": "Services-Computer Programming, Data Processing, Etc.",
+      "ipo_date": "2005-08-05",
+      "ipo_date_state": "disclosed_exact",
+      "is_founder_ceo": true,
+      "latest_fiscal_year": 2025,
+      "latest_net_income": 799000000.0,
+      "latest_period_end": "2025-12-31",
+      "latest_revenue": 18458000000.0,
+      "market_cap_usd": null,
+      "name": "Baidu, Inc.",
+      "pb_ratio": null,
+      "pe_trailing": null,
+      "sector": "Communication Services",
+      "ticker": "BIDU"
+    },
+    "composite": {
+      "mode_resolved": "A",
+      "score": 0.0,
+      "verdict": "exclude",
+      "weights_renormalised": false,
+      "weights_used": {}
+    },
+    "fetch_data_gaps": [
+      "BIDU: data contract C2 (block) not met: quarterly rows present",
+      "BIDU: data contract C3 (warn) not met: latest annual split factor known"
+    ],
+    "frameworks": [
+      {
+        "band": "unfeasible",
+        "code": "F1",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Pre-Discovery Alpha",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F2",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Momentum",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F3",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Innovation Compounder",
+        "unfeasible_reason": "insufficient quarterly history (needs 8Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F4",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Stealth Accumulation",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F5",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Growth Quality",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F6",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Platform Dominator",
+        "unfeasible_reason": "insufficient quarterly history (needs 8Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F7",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Smart Beta Timing",
+        "unfeasible_reason": "insufficient history (F7 requires 10 annual period(s); only 0 available)",
+        "verdict": "unfeasible"
+      }
+    ],
+    "mode_used": "default",
+    "overlay_triggers": [
+      {
+        "condition": "F7 unfeasible on annual history, though the registrant is long-listed: insufficient history (F7 requires 10 annual period(s); only 0 available). Spinoff/demerger PSA workflow may apply if listing_type confirms",
+        "framework_section": "F7",
+        "overlay_type": "PSA",
+        "relevant_numbers": {
+          "f7_unfeasible_reason": "insufficient history (F7 requires 10 annual period(s); only 0 available)",
+          "listing_type": "",
+          "months_since_listing": 254
+        },
+        "trigger_id": "PSA-3"
+      }
+    ],
+    "overlay_verdicts": {
+      "BEW": "no_winner_pattern",
+      "PSA": "not_a_spinoff_candidate"
+    },
+    "run_date": "2026-10-28",
+    "schema_version": "1.0",
+    "stage": {
+      "reasoning": {
+        "established_threshold": 50000000000,
+        "latest_net_income": 799000000.0,
+        "market_cap_usd": null,
+        "profitable_3yr": true
+      },
+      "stage": "mid_cap"
+    },
+    "ticker": "BIDU"
+  },
+  "view_sha256": "1fda86f21522581917141d17231c5860d321fb88a61ed640fcc9b5c738e2b082",
+  "withheld": [
+    "company.market_cap_usd",
+    "stage.reasoning.market_cap_usd"
+  ]
+}

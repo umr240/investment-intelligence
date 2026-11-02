@@ -59,16 +59,31 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
     }
   }
 
+  // Trim and repair notes ride in guard_warnings but are no guard fault: the status stays
+  // ok for them (deepdive/narrative.py), so only the other warnings fail the badge.
+  const isNote = (w: string) => /^(formatting|repair): /.test(w);
+  const faults = (narrative?.guard_warnings ?? []).filter((w) => !isNote(w));
+  const notes = (narrative?.guard_warnings ?? []).filter(isNote);
+  const status = narrative?.audit?.status;
+
   return (
     <div style={{ borderLeft: "2px solid var(--color-divider)", background: "var(--color-surface)", display: "flex", flexDirection: "column", minHeight: 400 }}>
       <div style={{ padding: "18px 20px", borderBottom: "2px solid var(--color-divider)" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h4>Narrative</h4>
-          {narrative?.generated && (
-            <span className="mono dim" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {narrative?.generated && (!status ? (
+            <span className="mono dim" data-testid="narrative-guard-unknown">guard status unknown</span>
+          ) : status === "guard_failed" || faults.length ? (
+            <span className="mono" style={{ color: "var(--color-accent-800)" }} data-testid="narrative-guard-failed">
+              guard failed
+            </span>
+          ) : status === "ok" ? (
+            <span className="mono dim" style={{ display: "flex", alignItems: "center", gap: 6 }} data-testid="narrative-grounded">
               <span className="live" />grounded
             </span>
-          )}
+          ) : (
+            <span className="mono dim" data-testid="narrative-guard-other">{status.replace(/_/g, " ")}</span>
+          ))}
         </div>
         <p className="mono dim" style={{ marginTop: 8 }}>
           Editorial synthesis — bull, bear, risk. Every claim cites a scorecard number. No new facts introduced.
@@ -96,6 +111,27 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
         {narrative?.generated && (
           <>
             {narrative.one_liner && <p style={{ fontStyle: "italic", padding: "12px 0", borderBottom: "1px solid var(--color-divider)" }}>{narrative.one_liner}</p>}
+
+            {narrative.verdict && (
+              <div style={{ padding: "16px 0", borderBottom: "1px solid var(--color-divider)" }} data-testid="narrative-verdict">
+                <div className="mono dim" style={{ letterSpacing: ".1em", marginBottom: 8 }}>VERDICT</div>
+                <strong>{narrative.verdict}</strong>
+                {narrative.verdict_reason && <p style={{ fontSize: 13, lineHeight: 1.55, margin: "4px 0 6px" }}>{narrative.verdict_reason}</p>}
+                <p className="mono dim" style={{ margin: "4px 0" }}>
+                  Owner-operator answer: {narrative.owner_operator_answer ?? "—"} · Moat direction: {narrative.moat_direction ?? "—"}
+                </p>
+                {(narrative.triggers ?? []).length > 0 && (
+                  <div style={{ marginTop: 8 }}>
+                    <div className="mono dim" style={{ marginBottom: 4 }}>Triggers that would change it</div>
+                    {narrative.triggers!.map((t, i) => (
+                      <div key={i} style={{ fontSize: 13, margin: "2px 0" }}>
+                        <span className="cite" style={{ marginRight: 6 }}>{t.field_id}</span>{t.condition}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {(narrative.bull ?? []).length > 0 && (
               <div style={{ padding: "16px 0", borderBottom: "1px solid var(--color-divider)" }}>
@@ -146,10 +182,17 @@ export default function NarrativeRail({ ticker }: { ticker: string }) {
               </div>
             )}
 
-            {(narrative.guard_warnings ?? []).length > 0 && (
+            {faults.length > 0 && (
               <div className="error-box">
                 ⚠ Hallucination guard warnings — treat with extra scrutiny:
-                {narrative.guard_warnings!.map((w, i) => <div key={i}>· {w}</div>)}
+                {faults.map((w, i) => <div key={i}>· {w}</div>)}
+              </div>
+            )}
+
+            {notes.length > 0 && (
+              <div style={{ padding: "12px 0" }} data-testid="narrative-notes">
+                <div className="mono dim" style={{ letterSpacing: ".1em", marginBottom: 6 }}>NOTES</div>
+                {notes.map((n, i) => <p key={i} className="dim" style={{ margin: "2px 0" }}>· {n}</p>)}
               </div>
             )}
 

@@ -1,0 +1,169 @@
+{
+  "case_id": "VHI.TO",
+  "view_sha256": "e68cb016fdfbe2bd56c3f49f5ef0f37da97887ec5d5ad40c15cce3e1894e7808",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "VHI.TO",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:20:26.575065Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8893,
+    "completion_tokens": 593,
+    "cost_usd": 0.001613,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[0]: field_path 'frameworks.2.key_signals.0' does not exist in view",
+      "bull[0].numeric_claims[1]: field_path 'frameworks.2.key_signals.1' does not exist in view",
+      "bull[1].numeric_claims[0]: field_path 'frameworks.2.key_signals.2' does not exist in view",
+      "bull[1].numeric_claims[1]: field_path 'frameworks.2.key_signals.3' does not exist in view",
+      "bear[1].numeric_claims[0]: field_path 'frameworks.2.key_signals.4' does not exist in view",
+      "risks[1]: grounded_in='frameworks.2.key_signals.0' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "Vitalhub Corp. exhibits mixed signals with a composite verdict of 'exclude' due to weak momentum and partial growth quality.",
+      "bull": [
+        {
+          "headline": "Strong revenue growth and cash flow margins",
+          "detail": "Vitalhub Corp. has demonstrated a robust revenue CAGR of 39.7% over the past three years, coupled with a free cash flow margin of 16.3%. These metrics indicate a strong growth trajectory and efficient cash generation, which are critical for long-term sustainability and reinvestment.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "39.7%",
+              "field_path": "frameworks.2.key_signals.0"
+            },
+            {
+              "value": "16.3%",
+              "field_path": "frameworks.2.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "Solid ROIC and zero debt",
+          "detail": "The company reports a return on invested capital (ROIC) of 8.7% and maintains a debt-to-EBITDA ratio of 0.0. This indicates effective capital utilization and a strong balance sheet, which are favorable for long-term growth and resilience against economic downturns.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.7%",
+              "field_path": "frameworks.2.key_signals.2"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.2.key_signals.3"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak momentum signals",
+          "detail": "Vitalhub Corp. has a 12-1 momentum of -30.3% and a negative post-earnings announcement drift. These indicators suggest a lack of positive market sentiment and could reflect underlying weaknesses in investor confidence or operational performance.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-30.3%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment issues",
+          "detail": "The lack of CEO equity alignment raises concerns regarding management's incentives and long-term commitment to shareholder interests. This misalignment can lead to strategic decisions that do not prioritize shareholder value.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "no_alignment",
+              "field_path": "frameworks.2.key_signals.4"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "medium",
+          "grounded_in": "overlay_triggers.0.trigger_id"
+        },
+        {
+          "factor": "Watch for any significant changes in revenue growth trends that could indicate a shift in market demand or competitive position.",
+          "severity": "medium",
+          "grounded_in": "frameworks.2.key_signals.0"
+        }
+      ],
+      "data_caveats": [
+        "VHI.TO: yfinance shortPercentOfFloat unavailable",
+        "VHI.TO: yfinance institutional_holders unavailable",
+        "VHI.TO: insider transactions unavailable — Toronto Stock Exchange issuers file no SEC Form 4 (jurisdiction CA, regime sedar)"
+      ]
+    }
+  },
+  "input_tokens": 7869,
+  "output_tokens": 593,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6152,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

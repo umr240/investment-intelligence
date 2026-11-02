@@ -877,7 +877,13 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
         generate_narrative,
         persist_narrative,
     )
-    from deepdive.narrative_output import NarrativeStatus
+    from deepdive.narrative_output import (
+        BearPoint,
+        BullPoint,
+        CasePoint,
+        NarrativeBodyV2,
+        NarrativeStatus,
+    )
 
     rprint("\n[bold cyan]AI Narrative[/bold cyan]  [dim](generating...)[/dim]")
 
@@ -905,15 +911,28 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
     rprint(audit)
 
     body = narrative.body
+    if isinstance(narrative.body, NarrativeBodyV2):  # show the filled-in copy (ADR-045)
+        if narrative.rendered is None:
+            raise ValueError(f"{narrative.ticker}: a v2 narrative must be rendered to be shown")
+        body = narrative.rendered
     rprint(Panel(
         f"[italic]{body.one_liner}[/italic]",
         title="[bold]Thesis[/bold]",
         border_style="cyan",
     ))
+    if isinstance(body, NarrativeBodyV2):
+        verdict_lines = [
+            f"[bold]{body.verdict.value}[/bold]. {body.verdict_reason}",
+            f"Owner-operator answer: {body.owner_operator_answer.value}  ·  "
+            f"Moat direction: {body.moat_direction.value}",
+            *(f"  · [dim]{t.field_id}[/dim]: {t.condition}" for t in body.triggers),
+        ]
+        rprint(Panel("\n".join(verdict_lines), title="[bold]Verdict[/bold]", border_style="cyan"))
 
     if body.bull:
         bull_lines: list[str] = []
-        for i, p in enumerate(body.bull, 1):
+        bull_points: list[BullPoint | BearPoint | CasePoint] = [*body.bull]
+        for i, p in enumerate(bull_points, 1):
             cites = (" [dim]" + ", ".join(p.framework_codes) + "[/dim]") if p.framework_codes else ""
             bull_lines.append(f"[bold]{i}. {p.headline}[/bold]{cites}")
             bull_lines.append(f"   {p.detail}")
@@ -922,7 +941,8 @@ def _render_narrative(view: object, provider_pref: str | None) -> None:
 
     if body.bear:
         bear_lines: list[str] = []
-        for i, p in enumerate(body.bear, 1):
+        bear_points: list[BullPoint | BearPoint | CasePoint] = [*body.bear]
+        for i, p in enumerate(bear_points, 1):
             cites = (" [dim]" + ", ".join(p.framework_codes) + "[/dim]") if p.framework_codes else ""
             bear_lines.append(f"[bold]{i}. {p.headline}[/bold]{cites}")
             bear_lines.append(f"   {p.detail}")
@@ -4062,13 +4082,14 @@ def llm_stats(
     ok_priced = func.sum(case((LlmCall.status == "ok", case((LlmCall.cost_usd.is_not(None), 1)))))
     q = (
         select(
-            LlmCall.call_site, LlmCall.model, LlmCall.prompt_version,
+            LlmCall.call_site, func.coalesce(LlmCall.purpose, "use"), LlmCall.model,
+            LlmCall.prompt_version,
             func.count(), failed, func.avg(LlmCall.latency_ms),
             func.sum(LlmCall.cost_usd), func.count(LlmCall.cost_usd), ok_priced,
         )
         .where(LlmCall.created_at >= since)
-        .group_by(LlmCall.call_site, LlmCall.model, LlmCall.prompt_version)
-        .order_by(LlmCall.call_site, LlmCall.model, LlmCall.prompt_version)
+        .group_by(LlmCall.call_site, LlmCall.purpose, LlmCall.model, LlmCall.prompt_version)
+        .order_by(LlmCall.call_site, LlmCall.purpose, LlmCall.model, LlmCall.prompt_version)
     )  # fmt: skip
     with get_session() as session:
         rows = session.execute(q).all()
@@ -4076,20 +4097,187 @@ def llm_stats(
         rprint(f"No LLM calls recorded in the last {days} days.")
         return
     table = Table(title=f"LLM calls, last {days} days")
-    for col in ("Call site", "Model"):
+    for col in ("Call site", "Purpose", "Model"):
         table.add_column(col)
     for col in ("Prompt v", "Calls", "Failed", "Avg latency", "Cost", "Per ok call"):
         table.add_column(col, justify="right")
-    for site, model, version, n, n_failed, latency, cost, priced, ok_n in rows:
+    # Eval runs (ADR-047) are their own rows, so real-use cost is never mixed with them.
+    for site, purpose, model, version, n, n_failed, latency, cost, priced, ok_n in rows:
         # Unpriced calls are counted, not costed; failed attempts cost nothing but are not calls.
         per_call = f"${cost / ok_n:.4f}" if ok_n else "—"
         unpriced = "" if priced == n else f" ({n - priced} unpriced)"
         total = f"${cost:.4f}{unpriced}" if priced else "—"
         table.add_row(
-            site, model, str(version), str(n), str(n_failed or 0),
+            site, purpose, model, str(version), str(n), str(n_failed or 0),
             f"{(latency or 0) / 1000:.1f}s", total, per_call,
         )  # fmt: skip
     console.print(table)
+
+
+narrative_app = typer.Typer(help="Narrative evaluation (ADR-047).")
+eval_app = typer.Typer(help="The golden set, graders and replay; only `run` calls a model.")
+narrative_app.add_typer(eval_app, name="eval")
+app.add_typer(narrative_app, name="narrative")
+
+
+@eval_app.command("export")
+def narrative_eval_export(
+    out: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--out"),
+    write: bool = typer.Option(False, "--write", help="Write cases; otherwise report only."),
+) -> None:
+    """Export each company's latest frozen dive view as a golden-set case. DB-only."""
+    from data.db import get_session
+    from deepdive.narrative_eval.export import (
+        TEST, TRAIN, collect_cases, coverage, write_cases,
+    )  # fmt: skip
+
+    with get_session() as session:
+        cases = collect_cases(session)
+    n_test = sum(c.split == TEST for c in cases)
+    rprint(f"{len(cases)} cases: {len(cases) - n_test} train, {n_test} test")
+    table = Table(title="Strata (ADR-047 §2.1)")
+    table.add_column("Stratum")
+    for col in (TRAIN, TEST):
+        table.add_column(col, justify="right")
+    for stratum, n in coverage(cases).items():
+        missing = "[red]0[/red]"
+        table.add_row(stratum, str(n[TRAIN] or missing), str(n[TEST] or missing))
+    console.print(table)
+    withheld = sum(len(c.withheld) for c in cases)
+    rprint(f"{withheld} third-party values withheld across {len(cases)} cases")
+    if write:
+        paths = write_cases(cases, out)
+        rprint(f"[green]Wrote {len(paths)} files under {out}[/green]")
+
+
+@eval_app.command("replay")
+def narrative_eval_replay(
+    golden: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--golden"),
+    record: bool = typer.Option(False, "--record", help="Write grades.json; else compare."),
+) -> None:
+    """Re-grade every stored output against its case. Free: no model is called.
+
+    Exits 1 when a case or output no longer replays, or a grade differs from grades.json.
+    """
+    import json as _json
+
+    from deepdive.narrative_eval.export import TEST, TRAIN
+    from deepdive.narrative_eval.graders import (
+        VERDICT_GRADERS, grades_path, replay, serialise, summary,
+    )  # fmt: skip
+
+    result = replay(golden)
+    for line in result.drift:
+        rprint(f"[red]drift: {line}[/red]")
+    changed = []
+    for (model, version), by_case in sorted(result.grades.items()):
+        table = Table(title=f"{model}, prompt v{version}")
+        table.add_column("Split")
+        # G1 is the first attempt (ADR-045 §2.7 item 4); "G1 after" counts the one repair.
+        for col in ("Cases", *VERDICT_GRADERS, "Repairs", "G1 after", "Cost", "p50", "p95"):
+            table.add_column(col, justify="right")
+        for split in (TEST, TRAIN):
+            s = summary(by_case, result.splits, split)
+            rates = ["—" if s[g] is None else f"{s[g]:.0%}" for g in (*VERDICT_GRADERS, "G1r")]
+            rates.insert(len(VERDICT_GRADERS), str(s["repairs"]))
+            cost = "—" if s["cost_per_narrative"] is None else f"${s['cost_per_narrative']:.4f}"
+            p50, p95 = (
+                "—" if s[k] is None else f"{s[k] / 1000:.1f}s"
+                for k in ("latency_p50_ms", "latency_p95_ms")
+            )
+            table.add_row(split, str(s["cases"]), *rates, cost, p50, p95)
+        console.print(table)
+        path, grades = grades_path(golden, model, version), serialise(by_case)
+        if record:
+            path.write_text(_json.dumps(grades, indent=2) + "\n", "utf-8")
+        elif not path.exists() or _json.loads(path.read_text("utf-8")) != grades:
+            changed.append(str(path))
+    for where in changed:
+        rprint(f"[red]grades differ from {where}; rerun with --record if intended[/red]")
+    if not result.grades:
+        rprint("No stored outputs to grade.")
+    if result.drift or changed:
+        raise typer.Exit(1)
+
+
+@eval_app.command("run")
+def narrative_eval_run(
+    provider: str = typer.Option(..., "--provider", help="anthropic or openai."),
+    model: str = typer.Option(..., "--model", help="Must have a row in config/llm_prices.py."),
+    split: str = typer.Option("test", "--split", help="test, train or all."),
+    limit: int | None = typer.Option(None, "--limit", help="At most this many cases."),
+    golden: Path = typer.Option(Path("tests/fixtures/narrative_golden"), "--golden"),
+    yes: bool = typer.Option(False, "--yes", help="Skip the confirmation."),
+) -> None:
+    """Generate one narrative per golden-set case. SPENDS TOKENS, after a priced confirmation.
+
+    Cases that already have an output for this model and prompt version are skipped.
+    """
+    from config.llm_prices import UnpricedModelError
+    from deepdive.narrative import PROMPT_VERSION, NarrativeUnavailableError
+    from deepdive.narrative_eval.runner import (
+        MAX_CONSECUTIVE_FAILURES,
+        estimate_cost,
+        output_path,
+        refusal,
+        run_case,
+        select_cases,
+        write_output,
+    )
+    from deepdive.narrative_output import NarrativeProvider
+
+    if split not in ("test", "train", "all"):
+        rprint("[red]--split is test, train or all.[/red]")
+        raise typer.Exit(2)
+    try:
+        chosen = NarrativeProvider(provider.lower())
+    except ValueError:
+        rprint("[red]--provider is anthropic or openai.[/red]")
+        raise typer.Exit(2) from None
+    cases = [
+        c for c in select_cases(golden, split)
+        if not output_path(golden, model, PROMPT_VERSION, c["case_id"]).exists()
+    ][:limit]  # fmt: skip
+    if not cases:
+        rprint(f"Nothing to run: every {split} case has an output for {model} v{PROMPT_VERSION}.")
+        return
+    if why := refusal(chosen, model):
+        rprint(f"[red]Not starting: {why}.[/red]")
+        raise typer.Exit(2)
+    try:
+        estimate = estimate_cost(cases, model)
+        worst = estimate_cost(cases, model, repairs=True)
+    except UnpricedModelError as exc:
+        rprint(f"[red]{exc}. Copy its price row first (ADR-048).[/red]")
+        raise typer.Exit(2) from None
+    rprint(
+        f"{len(cases)} {split} cases on {chosen.value}/{model}, prompt v{PROMPT_VERSION}: "
+        f"estimated ${estimate:.2f} (input from prompt length, ~3.8k output tokens each); "
+        f"about ${worst:.2f} if every case uses its one repair (ADR-045 §2.5)"
+    )
+    if not yes and not typer.confirm("Spend this?", default=False):
+        raise typer.Exit(1)
+    written = failed = streak = 0
+    for i, case in enumerate(cases, 1):
+        try:
+            write_output(golden, run_case(case, chosen, model))
+            written += 1
+            streak = 0
+        except NarrativeUnavailableError as exc:
+            failed += 1
+            streak += 1
+            rprint(f"  [yellow]{case['case_id']}: {exc}[/yellow]")
+        rprint(f"  {i}/{len(cases)} {case['case_id']}")
+        if streak == MAX_CONSECUTIVE_FAILURES and i < len(cases):
+            rprint(f"[red]Stopping: {streak} failures in a row. Rerun to resume.[/red]")
+            break
+    not_run = len(cases) - written - failed
+    rprint(
+        f"{written} written, {failed} failed, {not_run} not run. Grade them with "
+        "`invest narrative eval replay --record`; actual spend is in `invest llm stats`."
+    )
+    if not_run:
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

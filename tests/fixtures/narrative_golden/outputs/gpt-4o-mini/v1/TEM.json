@@ -1,0 +1,165 @@
+{
+  "case_id": "TEM",
+  "view_sha256": "9c8f4d0d96e0bbb25025be03f9ae7822c95a303602948dd980c02024bf887c8d",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "TEM",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:20:09.749439Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9597,
+    "completion_tokens": 692,
+    "cost_usd": 0.001778,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[0]: claim value '13.6%' does not match view value '('Short int (peak)', 'withheld: third-party data')' at 'frameworks.3.key_signals.1'",
+      "bull[1].numeric_claims[0]: field_path 'frameworks.6.key_signals.1' does not exist in view",
+      "bear[0].detail: number '245.03' not in scorecard whitelist (possible hallucination)",
+      "risks[1]: grounded_in='frameworks.6.key_signals.1' does not match any framework, overlay trigger, data gap, or view field",
+      "risks[2]: grounded_in='frameworks.1.data_gaps.0' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "Tempus AI, Inc. shows potential but requires monitoring due to mixed signals across frameworks.",
+      "bull": [
+        {
+          "headline": "Strong R&D Investment Signals Future Growth",
+          "detail": "Tempus AI, Inc. demonstrates a robust R&D intensity of 13.6%, indicating a commitment to innovation that could drive future growth. This is supported by a near-sweet R&D band, suggesting effective allocation of resources towards developing new technologies and solutions. The company has also maintained a surprise streak of 6 quarters, reflecting its ability to exceed expectations in performance, which could enhance investor confidence.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "13.6%",
+              "field_path": "frameworks.3.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "High Net Revenue Retention Indicates Customer Loyalty",
+          "detail": "The company boasts a net revenue retention (NRR) rate of 126.0%, placing it in the best-in-class category. This high retention rate suggests that existing customers are not only staying but are also increasing their spending, which is a positive indicator of customer satisfaction and product value. Such metrics are crucial for long-term sustainability and growth in a competitive market.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "126.0%",
+              "field_path": "frameworks.6.key_signals.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income Raises Concerns",
+          "detail": "Tempus AI, Inc. reported a significant net loss of $245.03 million for the latest fiscal year, which raises concerns about its current financial health and sustainability. This negative income trajectory is critical to monitor, especially as the company is in a pre-profitability stage, indicating that it may need to secure additional funding or improve operational efficiency to achieve profitability in the future.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$245.03M",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Weak Momentum Signals Potential Challenges",
+          "detail": "The company's momentum framework indicates a decline of 14.7% over the past 12 months, which could signal potential challenges in market perception and investor sentiment. Coupled with a score of 3.0 in the momentum framework, this suggests that the stock may be struggling to attract buyers, which could impact its ability to raise capital or achieve favorable valuations in the near term.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-14.7%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether net income continues to decline in future fiscal years, indicating persistent financial challenges.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Watch for any deterioration in net revenue retention rates, which could signal customer dissatisfaction or increased competition.",
+          "severity": "medium",
+          "grounded_in": "frameworks.6.key_signals.1"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to improve its gross margin, as current data gaps in this area could hinder profitability assessments.",
+          "severity": "medium",
+          "grounded_in": "frameworks.1.data_gaps.0"
+        }
+      ],
+      "data_caveats": [
+        "F1 framework lacks gross margin data, which is essential for a comprehensive financial analysis.",
+        "F3 framework has a data gap regarding gross margin trajectory, limiting insights into profitability trends.",
+        "F5 framework lacks GP/A value, which is necessary for assessing growth quality."
+      ]
+    }
+  },
+  "input_tokens": 8573,
+  "output_tokens": 692,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 8906,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

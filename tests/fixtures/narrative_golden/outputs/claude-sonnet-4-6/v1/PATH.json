@@ -1,0 +1,309 @@
+{
+  "case_id": "PATH",
+  "view_sha256": "796f3456aafa3a95667e62fb5265feb483c863e040c3c2c69d3aa7d3b0ebd959",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PATH",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:02:47.749327Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11807,
+    "completion_tokens": 3656,
+    "cost_usd": 0.090261,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[4].numeric_claims[0]: claim value '34.52' does not match view value 'True' at 'frameworks.5.key_signals.5.1'"
+    ],
+    "body": {
+      "one_liner": "UiPath's F5 perfect score signals rare growth-quality discipline — strong FCF generation, clean balance sheet, and founder alignment — but momentum failure, gross-margin compression, and a GAAP/economic ROIC divergence material enough to trigger ICA-5 keep the composite at watchlist, pending structural moat validation.",
+      "bull": [
+        {
+          "headline": "F5 perfect score: FCF margin, ROIC, and zero leverage in rare simultaneous alignment",
+          "detail": "F5 scores a maximum 10.0 — the strongest possible signal in this framework. Revenue has compounded at a positive 3-year rate, FCF margin is well into the double digits, ROIC is materially positive, and the balance sheet carries zero net financial debt. This combination is structurally uncommon in enterprise software at this stage and represents the core of the hold thesis: the business generates real cash without requiring capital infusions.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "10.0",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+15.0%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+21.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+19.4%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with 8.2% equity stake — incentives durably aligned with long-horizon holders",
+          "detail": "Daniel Dines holds a disclosed-exact equity stake of 8.2%, meeting the Outsiders criterion of meaningful personal skin in the game. Founder-CEOs with this ownership level face the same compounding math as long-term shareholders; they cannot rationally optimise for short-window EPS at the cost of economic value without harming themselves. This is the single most durable alignment signal available in public-company governance data.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.2%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Piotroski F-score of 8/9 confirms balance-sheet quality and earnings signal integrity",
+          "detail": "F1's strongest constituent — Piotroski 8/9 — indicates that across nine binary financial-health criteria, only one fails. Combined with a Sloan high-quality accruals reading (True) and low-positive asset growth, the accounting signal confirms that reported earnings are not primarily accrual-driven and that asset expansion is disciplined. For a software company with significant intangible investment, this quality filter materially lowers the risk of a hidden-accrual earnings reversal.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "6.83",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        },
+        {
+          "headline": "R&D intensity in sweet-spot band with 1,086-patent defensible portfolio signals durable IP moat",
+          "detail": "F3 identifies R&D intensity at 23.9% of revenue — squarely inside the pipeline's 'sweet_spot' band — and documents 1,086 patents classified as a defensible portfolio. For an automation platform, patent density raises the cost for any $1B-funded challenger attempting to replicate core process IP. The Peters-Taylor framework's upward ICA trigger also confirms that R&D investment is economically material and under-capitalised by GAAP, meaning stated costs overstate economic drag on profitability.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+23.9%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "1,086",
+              "field_path": "frameworks.2.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Rule of 40 at 34.5 and GP/A in top-40% proxy position UiPath as a scale-approaching platform",
+          "detail": "F6's Rule of 40 reading and top-40th-percentile GP/A proxy indicate the business is approaching, but has not yet crossed, the conventional SaaS platform efficiency threshold. The Fahlenbrach signal (True) — indicating founder-led or insider-aligned capital deployment — reinforces F6's partial verdict as a watchlist-worthy rather than a fail: the platform economics exist structurally but have not yet compounded to dominance.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "34.52",
+              "field_path": "frameworks.5.key_signals.5.1"
+            },
+            {
+              "value": "5.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ICA-5: Peters-Taylor economic ROIC is 5.04pp below GAAP ROIC — intangible capitalisation materially deflates true capital efficiency",
+          "detail": "Overlay ICA-5 fires because capitalising R&D as knowledge capital and 25% of SG&A as organisational capital under Peters-Taylor methodology reduces the apparent ROIC from the GAAP level of 0.53% to an economic level of 5.57%. The direction is upward — economic ROIC exceeds GAAP — but the gap of 5.04pp (above the 3pp threshold) means the denominator expansion from unrecognised intangible assets is economically material. The GAAP balance sheet significantly under-states invested capital, making any GAAP-only capital-efficiency comparison across peers unreliable.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.04pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.0053",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "0.0557",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin in structural compression: -119.7 bps/yr average erosion undermines platform-scale thesis",
+          "detail": "F3's gross margin expansion signal reads -119.7 basis points per year on average — a direction directly contrary to the platform-compounder thesis, which requires margin expansion as software scale delivers operating leverage. Sustained compression at this rate, if it continues across multiple filings, is a first-order moat-direction signal: the moat may be widening in revenue terms while narrowing in unit-economics terms. This is the second-order failure mode most dangerous to miss in software analysis.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-119.7 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "4.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        },
+        {
+          "headline": "F2 momentum fail: trailing 12-month return of -17.3% with stock still 24.3% off 52-week high",
+          "detail": "F2 scores 1.5 — a fail band. The 12-minus-1 momentum signal is -17.3%, and the stock sits 24.3% below its 52-week high. Momentum failure is both a price-signal and an information signal: the market is revising down near-term expectations faster than the analyst consensus is updating. For a hold-philosophy investor, the relevant read is not to act on price, but to treat sustained price weakness as a prompt to verify whether any structural driver has changed — not a sell trigger.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.5",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-17.3%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+24.3%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "NRR and GRR not disclosed — platform retention thesis is unverifiable from public filings",
+          "detail": "F6 records both Net Revenue Retention and Gross Revenue Retention as not_disclosed. For a SaaS platform whose thesis requires compounding through land-and-expand, retention metrics are the primary empirical anchors. Their absence in 10-K MD&A forecloses verification of the platform-stickiness claim, forces reliance on proxy signals (GP/A band, Rule of 40), and introduces meaningful uncertainty into the moat-direction assessment. This is not a bear signal per se but a circle-of-competence boundary that constrains conviction.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "F4 stealth accumulation fails: no insider open-market buying, no EPS acceleration, options data unavailable",
+          "detail": "F4 scores 3.0 in a fail band. Zero 90-day open-market buyers are recorded at the institutional or insider level; EPS acceleration is absent; and the put/call ratio is unavailable due to a data-tier constraint. The Stealth Accumulation framework tests whether sophisticated capital is quietly positioning ahead of a re-rating — it is not. This is not a direct business-quality signal, but combined with the momentum fail, it indicates no near-term institutional catalyst is visible from current signals.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor gross margin trajectory across the next 2-3 annual filings. If average annual compression continues or accelerates beyond the current -119.7 bps/yr run-rate, it constitutes a structural thesis-break signal: platform economics are not materialising at scale, and the moat-widening assumption underpinning the hold case must be reassessed.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Watch for NRR and GRR disclosure in future 10-K MD&A sections. If the company does not voluntarily disclose retention metrics as it scales, treat continued non-disclosure as a yellow flag on platform cohesion. If disclosed metrics reveal net dollar retention materially below 100%, the land-and-expand thesis is structurally weakened.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "ICA-5 flags a 5.04pp gap between GAAP and Peters-Taylor economic ROIC. Monitor whether the gap is widening or narrowing as R&D and SG&A investment levels evolve. A widening gap with no corresponding revenue acceleration would indicate escalating capital deployment with diminishing returns — a pre-cursor to capital-allocator failure.",
+          "severity": "medium",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Founder-CEO tenure and ownership trajectory: monitor for equity stake dilution below meaningful threshold over multi-year horizon, or role changes (executive chair, reduced operational involvement). The 8.2% stake is the primary governance anchor; structural reduction of that anchor is a reconsideration trigger.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 flags recent-listing status with insufficient annual history for F7 Smart Beta Timing assessment. As the company crosses 10 years of filing history, F7 feasibility opens and may surface long-cycle valuation signals currently invisible. Monitor the annual history count; the F7 input will be material when available.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Mag 7 competitive exposure: enterprise automation directly competes with Microsoft Power Automate and Google's Workspace AI layers, both of which have deeper distribution and bundling economics. Monitor product differentiation evidence (patent grants, enterprise win-rates in earnings commentary) annually to assess whether the 1,086-patent portfolio is translating into durable displacement resistance.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Rule of 40 at 34.52 sits below the conventional 40-point threshold. Watch for the trajectory over the next 2 years. Sustained sub-40 readings combined with gross margin compression would confirm that scale benefits are not accruing — the platform is growing without compounding efficiency, which invalidates the long-duration hold premium.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio is unavailable: no free-tier data source was accessible per project specification. The F4 Stealth Accumulation score reflects this gap; the overlay's pan-Poteshman signal is absent from the F4 verdict.",
+        "F6 Net Revenue Retention (NRR) and Gross Revenue Retention (GRR) are not disclosed in UiPath's 10-K MD&A. F6 treats non-disclosure as zero-points for those components — consistent with the customer-concentration semantics — rather than inferring from secondary proxies. The platform-retention picture is therefore partially unverifiable.",
+        "F7 Smart Beta Timing is unfeasible: UiPath has approximately 8 years of annual filing history against a 10-year requirement, and has been publicly listed for approximately 4 years. F7 is excluded from the composite entirely; its weight is renormalised across F1–F6.",
+        "PSA-3 notes that the listing type field is unpopulated, meaning the spinoff/demerger PSA workflow cannot be confirmed or excluded. The overlay resolves to 'not_a_spinoff_candidate' by default.",
+        "Market capitalisation, beta, EV/EBITDA, P/B ratio, and trailing P/E are all null in the view. Valuation-multiple-dependent analyses and beta-adjusted risk assessments are not possible from available data."
+      ]
+    }
+  },
+  "input_tokens": 11807,
+  "output_tokens": 3656,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 80375,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,331 @@
+{
+  "case_id": "PLTR",
+  "view_sha256": "ff78c13e9d70b09d1f0fd84a97bec1e6a7d3a510297d0b5262ddc42ff398c42d",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PLTR",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:06:22.587802Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11848,
+    "completion_tokens": 4064,
+    "cost_usd": 0.096504,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[2].numeric_claims[0]: claim value '103.12' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "bear[2].numeric_claims[1]: claim value '103.12' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "bear[1].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Palantir's F5/F3 dominance — strict-monotonic EPS acceleration, a Rule of 40 above 103, and gross-margin expansion near 293 bps/yr — sustains a priority-watchlist composite of 7.5/10, while an ICA-flagged intangible-capital restatement and Cooper-Gulen-Schill asset-growth disqualifier impose meaningful structural caveats on that quality read.",
+      "bull": [
+        {
+          "headline": "Exceptional growth quality: FCF margin, ROIC, and revenue CAGR converge on a rare compounding profile",
+          "detail": "F5 scores 9.5/10 (strong_fit). Revenue 3-year CAGR at +32.9%, FCF margin at +54.5%, and GAAP ROIC at +714.6% — even after Peters-Taylor intangible restatement (ICA-5), adjusted ROIC stands at 12.3%, still positive. Debt/EBITDA is 0.0. Founder-aligned CEO (Karp, 11.4% equity stake) structurally aligns long-horizon capital allocation with shareholders. This combination clears the Outsiders 8 skin-in-the-game criterion decisively.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9.5",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+32.9%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+54.5%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+714.6%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "11.4%",
+              "field_path": "company.ceo_equity_pct"
+            },
+            {
+              "value": "12.3%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Compounder signal: sustained gross-margin expansion and 7-quarter earnings-surprise streak",
+          "detail": "F3 scores 9.0/10 (strong_fit). Average gross-margin expansion of 292.6 bps/yr signals durable pricing power and operating leverage — not a one-period artefact. R&D intensity at +12.5% sits in the 'near_sweet' band (sufficient to advance the platform without crowding out profitability). Seven consecutive quarters of positive earnings surprise implies systematic forecast-beating, which is a PEAD-consistent signal that market expectations continue to lag fundamental progress.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9.0",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "292.6 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+12.5%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Rule of 40 at 103 signals simultaneous high-growth and high-margin — rare in enterprise software",
+          "detail": "F6 records a Rule of 40 score of 103.12, well above the threshold that demarcates elite SaaS economics. The Fahlenbrach signal is True (founder-led alignment confirmed). Customer concentration is diversified_base_case, reducing single-customer revenue risk. The combination of high Rule-of-40 and diversified customer base is structurally more durable than a concentrated-customer high scorer.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "103.12",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "EPS trajectory is strict-monotonic: F4 stealth-accumulation signal confirms institutionally visible earnings quality",
+          "detail": "F4 scores 7.0/10 (strong_fit). EPS acceleration is classified strict_monotonic — the most demanding acceleration criterion, requiring no quarter-to-quarter regression. The decline signal is False. Piotroski score at 8/9 (F1 signal) confirms underlying accounting quality: high Sloan accruals quality, strong balance-sheet health. These signals together indicate that earnings growth is not a smoothed artifact.",
+          "framework_codes": [
+            "F4",
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay: moderate_winner_candidate verdict — extreme-winner base rate applies; sized, extended hold is the structurally correct posture",
+          "detail": "The Bessembinder Extreme Winners overlay returns moderate_winner_candidate for PLTR. Bessembinder's research shows that long-run equity wealth creation is concentrated in a small fraction of stocks; trimming on price strength is structurally wealth-destroying at the portfolio level for names in this cohort. The composite score of 7.5/10 (priority_watchlist) alongside F5 strong_fit and F3 strong_fit supports a hold-forever default, with reconsideration window opening at five years.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.5",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ICA-5: Peters-Taylor restatement reveals GAAP ROIC overstates economic capital efficiency by 6.57pp",
+          "detail": "The ICA overlay (trigger ICA-5) flags a 6.57pp downward gap between GAAP ROIC (18.87%) and Peters-Taylor-adjusted ROIC (12.3%). The restatement capitalises R&D at 15%/yr amortisation and 25% of SG&A at 20%/yr amortisation — consistent with Eisfeldt-Papanikolaou organisational capital methodology. For a platform business where SG&A and R&D are dominant investment lines, the denominator enlargement is economically real, not a methodological artefact. Headline ROIC significantly flatters the true invested-capital return.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.57pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "18.87%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "12.3%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "F1 capped at 3/10: Cooper-Gulen-Schill asset-growth disqualifier fires — top-decile asset expansion historically predicts underperformance",
+          "detail": "F1 scores 3.0/10 (fail) despite a Piotroski of 8/9 and Sloan high-quality accruals, because asset growth exceeds 25% YoY — placing PLTR in the top decile per the Cooper-Gulen-Schill (2008) criterion. Academic evidence associates top-decile asset growth with subsequent return headwinds, likely reflecting over-investment or aggressive intangible capitalisation. The cap on F1 is a mechanical disqualifier, not a discretionary downgrade. Zero open-market insider purchases in the trailing 90 days provides no offsetting signal.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 retention metrics undisclosed: NRR and GRR absent from 10-K MD&A — platform durability cannot be fully verified",
+          "detail": "F6 scores 6.0/10 (partial). Net Revenue Retention and Gross Revenue Retention are both not_disclosed — Palantir does not report these standard SaaS durability metrics in 10-K MD&A. This is a material data gap: cohort retention quality is the primary determinant of whether high Rule-of-40 (103.12) is durable or dependent on new-customer acquisition velocity. Without NRR/GRR, the platform-dominator thesis rests on incomplete evidence.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "103.12",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum is only partial: 12-1 momentum slightly negative, stock near but not at 52-week high",
+          "detail": "F2 scores 6.0/10 (partial). The 12-1 momentum signal is -5.9%, a mild negative, with the stock sitting approximately +5.9% from its 52-week high. PEAD is positive_drift, which is constructive, but the overall momentum picture does not yet confirm a broad accumulation phase. For a name of this growth quality, the absence of a strong positive trailing-year return is at minimum a flag that the market has not fully repriced the fundamental progress.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-5.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+5.9%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "F7 unfeasible and PSA-3 active: insufficient public-company history constrains long-horizon statistical validation",
+          "detail": "F7 (Smart Beta Timing) is unfeasible: PLTR has nine years of annual history versus the ten required. PSA-3 is triggered given the recent listing status. The absence of F7 means the full decadal cycle cannot be scored — specifically, whether the business sustains quality metrics through a full economic contraction. The composite score of 7.5 is computed without this dimension, and weights have been renormalised accordingly. This is a structural incompleteness, not a data retrieval failure.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.5",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor-adjusted ROIC (currently 12.3%) continues to converge toward or diverge from GAAP ROIC (18.87%) over the next 2-3 annual filings. A further widening of the ICA gap would signal that intangible-capital accumulation is outpacing economic returns, potentially indicating the moat is not translating into proportionally higher invested-capital efficiency — a thesis-break condition for the growth-quality case.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor F1 asset-growth trajectory annually. If PLTR remains in the top-decile asset-growth band (Cooper-Gulen-Schill disqualifier) for three or more consecutive years without commensurate F5 FCF-margin and ROIC improvement, it signals over-investment rather than compounding — a capital-allocator failure mode under Outsiders 8 criteria.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Watch for NRR/GRR disclosure or third-party cohort-analysis evidence over the 5-year hold. Continued non-disclosure of retention metrics is consistent with metrics that do not flatter the narrative. If platform Rule of 40 (103.12) is driven primarily by new-logo velocity rather than cohort expansion, the Platform Dominator thesis (F6) is structurally weaker than the headline score implies.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor F2 12-1 momentum for sustained improvement. Persistent negative trailing-year momentum in a high-quality compounder typically resolves either via fundamental re-rating or fundamental deterioration. If momentum remains negative across two or more annual scorecard runs while F5 fundamentals hold, it may indicate a price-level issue rather than a business issue. If momentum weakens alongside deteriorating F5 signals, it becomes a thesis-break monitor point.",
+          "severity": "low",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "PSA-3 is active: PLTR has not traded through a full economic cycle as a public company. Watch for the first material recession test — specifically whether FCF margin (+54.5%) and revenue CAGR (+32.9%) compress materially during a contraction. A >50% FCF-margin compression sustained over two fiscal years would challenge the durability assumption embedded in the F5 strong_fit verdict.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Founder-CEO equity stake (11.4%) is a durable alignment anchor, but monitor for CEO transition signals: equity sales, succession planning language in proxy statements, or shifts in capital-allocation rhetoric away from long-horizon compounding toward near-term metrics. A CEO transition at Palantir would materially alter the Outsiders 8 alignment score.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "EPS acceleration is strict_monotonic today (F4 strong_fit); however, the absence of put/call ratio data (F4 data gap per Pan-Poteshman 2006) leaves one sentiment-derived risk signal unscored. Monitor for abnormal options activity as a leading indicator of informed-money positioning shifts, particularly if options data becomes accessible in future scorecard runs.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "F4: The put/call ratio signal is absent — no free-tier source was available for PLTR options data (Pan-Poteshman 2006 methodology skipped per PROJECT_SPEC §F4). Short interest figures (current and peak) are withheld as third-party data. F4's score of 7.0 is computed without these inputs.",
+        "F6: Net Revenue Retention (NRR) and Gross Revenue Retention (GRR) are not_disclosed — Palantir does not report these metrics in 10-K MD&A. F6 score (6.0) treats absence as zero-points on those sub-signals, consistent with framework semantics.",
+        "F3: Patent portfolio is not_disclosed in the 10-K; the innovation signal relies on R&D intensity and gross-margin expansion rather than patent-count metrics.",
+        "F7: Unfeasible due to insufficient annual history (9 years available, 10 required). The composite score of 7.5 is computed on F1–F6 only, with weights renormalised to sum to 1.0.",
+        "PSA-3: Listing type field is empty and months_since_listing is null — the PSA overlay confirms PLTR is not a spinoff candidate but cannot characterise the listing type precisely.",
+        "Market cap, P/B, P/E trailing, EV/EBITDA, and beta are all null in the view. No valuation-multiple or risk-adjusted-return signals are available for this run."
+      ]
+    }
+  },
+  "input_tokens": 11848,
+  "output_tokens": 4064,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 84629,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

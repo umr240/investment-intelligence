@@ -1,0 +1,219 @@
+{
+  "case_id": "OFAL",
+  "view_sha256": "d3cdfb032898ac65c6695d3f40c979ed2e54b82a1680b737215cf51ee0afacbb",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "OFAL",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:00:08.720523Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11179,
+    "completion_tokens": 2306,
+    "cost_usd": 0.068127,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "risks[0]: grounded_in='F1' does not match any framework, overlay trigger, data gap, or view field",
+      "risks[4]: grounded_in='F5' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "OFA Group is a pre-profitability, sub-scale engineering-services micro-cap that listed only 17 months ago; every quantitative framework is unfeasible due to insufficient history, and the composite verdict is exclude — the thesis cannot yet be evaluated with the analytical toolkit required for conviction.",
+      "bull": [
+        {
+          "headline": "Founder-CEO with meaningful skin in the game — Li Hsien Wong holds a substantial equity stake",
+          "detail": "The CEO is also the founder and holds a disclosed exact equity position that is substantial. This is one of Thorndike's most predictive capital-allocator signals: owner-operators with real economic exposure tend to make decisions that preserve per-share value over multi-year horizons rather than optimising short-term reported metrics. With no external framework scores available, this is the primary structural positive observable in the scorecard at this stage.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "33.13%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "ICA overlay reveals economic ROIC materially less negative than GAAP ROIC, suggesting intangible under-capitalisation",
+          "detail": "The ICA-5 overlay fires because Peters-Taylor non-GAAP ROIC and GAAP ROIC diverge by a wide gap, with the adjusted figure less negative than the raw GAAP figure. This upward direction indicates that GAAP is expensing R&D and SG&A that are economically capital-like, making reported losses look worse than the underlying economic burn rate. The signal is not a positive verdict — both legs remain deeply negative — but it cautions against reading GAAP losses as the full picture of capital efficiency.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "302.73pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-50.33%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-353.06%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "All seven quantitative frameworks are unfeasible — the scorecard is structurally blind at this stage",
+          "detail": "F1 through F6 require at minimum four quarters of history; the company has two. F7 requires ten years of annual history and the company has been listed for only 17 months with five years of pre-IPO filings. Zero framework scores can be computed. The composite score of 0.25 is therefore a near-floor placeholder, not a calibrated signal. No analytical framework in the toolkit can be applied with integrity.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.25",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "17",
+              "field_path": "overlay_triggers.1.relevant_numbers.months_since_listing"
+            }
+          ]
+        },
+        {
+          "headline": "Company is pre-profitability with a net loss and minimal revenue — financial scale is very small",
+          "detail": "The latest fiscal year ended March 2026 recorded a net loss and revenue at a level that places this firmly in the pre-profitability stage. The engineering-services sector typically demands demonstrable contract wins, backlog visibility, and repeat-client concentration data — none of which is observable through the current data layer. At sub-scale, fixed-cost leverage is not yet working in the company's favour, and burn trajectory cannot be assessed from two quarters of data.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-$8,022,816",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$716,885",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "Both economic ROIC legs are deeply negative — capital destruction is occurring at scale relative to the asset base",
+          "detail": "Even after Peters-Taylor intangible capitalisation adjusts the ROIC upward by a wide margin, the adjusted figure remains substantially negative. The GAAP ROIC is severely negative. At this stage, capital is being consumed faster than it is being generated in any accounting framework. The business has not demonstrated a path to positive returns on capital, which is the foundational requirement for any long-hold thesis.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-50.33%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-353.06%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Composite verdict is exclude — the stage-weighted score reflects that no positive framework signal can be generated",
+          "detail": "The composite resolves to 'exclude' under default mode. With all seven frameworks unfeasible, no weight can be assigned to any positive signal. The exclude verdict is structurally correct: the analytical system cannot distinguish between a genuinely poor business and a high-quality business that simply lacks sufficient history. In the absence of that distinction, the conservative prior is exclusion.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.25",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay returns only moderate_winner_candidate despite no positive framework signals — a floor placeholder, not an endorsement",
+          "detail": "The BEW overlay verdict of 'moderate_winner_candidate' cannot be read as a positive signal here because it is generated in the absence of any scored framework. The Bessembinder extreme-winner thesis requires demonstrated compounding capacity; that cannot be inferred from two quarters of data in a pre-profitability engineering-services company with sub-scale revenue. The verdict reflects the overlay's default handling of the unfeasible state, not a substantive probability assessment.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the company achieves at least four quarters of reported financials, enabling F1/F2/F4/F5 feasibility — absent this, the scorecard remains structurally blind across the first two to three annual review cycles.",
+          "severity": "high",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor whether GAAP and Peters-Taylor ROIC trajectories improve toward breakeven over the next three to four annual filings; sustained deeply negative ROIC at this gap magnitude signals structural capital destruction rather than investment-phase burn.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor Form 4 insider transaction filings — currently absent from EDGAR — to verify that the CEO's substantial equity stake is not being systematically reduced via undisclosed dispositions, which would invert the primary bull signal.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Recent-IPO selection-pressure risk: companies in the first 17 months post-listing have not yet faced a full business cycle; the observable sample is biased toward survival of the listing process, not operational durability. Watch for revenue concentration risk and contract renewal visibility as quarterly filings accumulate.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Revenue scale is very small relative to the net loss; monitor whether gross margin and operating leverage improve materially in each successive quarter, or whether the loss rate is growing faster than revenue — the latter is a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Market cap is unavailable in the data layer, preventing any valuation or position-sizing discipline. Monitor for public market cap disclosure to enable composite weighting and stage re-classification.",
+          "severity": "low",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": [
+        "Earnings dates data is empty for OFAL from the primary market data source — intra-period event timing cannot be assessed.",
+        "No Form 4 insider transactions were found on EDGAR for OFAL — insider buying/selling activity cannot be independently verified, limiting the ability to corroborate or challenge the CEO equity position signal.",
+        "All seven frameworks (F1–F7) are unfeasible due to insufficient quarterly or annual history; no framework scores, key signals, or data gaps within individual frameworks were generated.",
+        "Market capitalisation is not available in the data layer — stage classification, composite weighting, and several overlay inputs that depend on market cap are operating with null values."
+      ]
+    }
+  },
+  "input_tokens": 11179,
+  "output_tokens": 2306,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 47926,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "case_id": "NTES",
+  "view_sha256": "d00772ded2ab80bcbd325616f5bac4a0878f9c3c84cdeb8e0f8b6202b979c9c2",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NTES",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:15.370985Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8284,
+    "completion_tokens": 307,
+    "cost_usd": 0.00135,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].detail: number '16.1' not in scorecard whitelist (possible hallucination)",
+      "bear[0].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F2' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F4' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F6' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "NetEase, Inc. lacks sufficient data for meaningful analysis, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Strong Revenue Base",
+          "detail": "NetEase, Inc. reported a latest revenue of $16.1 billion, indicating a solid revenue foundation. However, the lack of quarterly data limits further analysis of growth trends and operational efficiency.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$16.1B",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Insufficient Data for Analysis",
+          "detail": "All frameworks are deemed unfeasible due to insufficient quarterly history, with none meeting the required data thresholds. This lack of data prevents a comprehensive evaluation of the company's performance and potential.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "No Active Overlay Triggers",
+          "detail": "The absence of active overlay triggers suggests a lack of significant market signals or patterns that could provide insights into the company's future performance.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor for changes in data availability that could enable framework assessments.",
+          "severity": "high",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Watch for any shifts in revenue trends that may indicate operational challenges.",
+          "severity": "medium",
+          "grounded_in": "company.latest_revenue"
+        }
+      ],
+      "data_caveats": [
+        "Insufficient quarterly history prevents analysis across all frameworks, leading to an exclusion verdict."
+      ]
+    }
+  },
+  "input_tokens": 7260,
+  "output_tokens": 307,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 4269,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

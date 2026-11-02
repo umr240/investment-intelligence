@@ -28,6 +28,7 @@ drag the composite to zero — present-frameworks-only weighting.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 from typing import Any
 
 from config.constants import (
@@ -38,6 +39,11 @@ from config.constants import (
     WEIGHTS_B,
     WEIGHTS_C,
 )
+
+# Bump both on any change to this module's formula or the overlay bonus
+# (deepdive/orchestrator.py): golden-set cases from older dives stop replaying (ADR-047 §2.7).
+COMPOSITE_VERSION = 1
+COMPOSITE_SINCE = date(2026, 10, 23)  # first dive date scored by this version
 
 
 # ── Stage classification ──────────────────────────────────────────────────

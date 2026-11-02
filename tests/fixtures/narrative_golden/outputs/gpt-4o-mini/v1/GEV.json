@@ -1,0 +1,176 @@
+{
+  "case_id": "GEV",
+  "view_sha256": "7229425f28a9e82c816971bd5e8bc17d2e2178c4be09b8b9d17431793baada56",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "GEV",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:35.073725Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9110,
+    "completion_tokens": 664,
+    "cost_usd": 0.001765,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "GE Vernova Inc. shows potential but requires monitoring for structural risks and growth sustainability.",
+      "bull": [
+        {
+          "headline": "Strong revenue growth trajectory",
+          "detail": "GE Vernova Inc. has demonstrated a robust revenue CAGR of +8.7% over the past three years, indicating a solid growth trajectory in its sector. This growth is complemented by a free cash flow margin of +30.1%, suggesting effective capital management and operational efficiency. These factors contribute positively to the company's long-term viability and potential for compounding returns.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+8.7%",
+              "field_path": "frameworks.4.key_signals.0"
+            },
+            {
+              "value": "+30.1%",
+              "field_path": "frameworks.4.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive momentum signals",
+          "detail": "The company exhibits a significant 12-1 momentum return of +69.0%, which qualifies it as a moderate winner candidate. This strong momentum suggests that investor sentiment is favorable, potentially leading to continued price appreciation and interest from market participants.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+69.0%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak capital allocation alignment",
+          "detail": "The CEO of GE Vernova Inc. holds 0.5% equity, indicating a lack of strong alignment with shareholder interests. This could raise concerns about capital allocation decisions, especially in a growth-focused environment where strategic investments are crucial for sustaining momentum.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Insufficient historical data for robust analysis",
+          "detail": "As a recent IPO, GE Vernova Inc. lacks the necessary 10-year history for comprehensive analysis, limiting the ability to assess long-term performance trends and stability. This data gap may hinder informed decision-making regarding its future prospects.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Low scores in stealth accumulation and platform dominance",
+          "detail": "The company has received low scores in both stealth accumulation (2.0) and platform dominance (1.0), indicating potential vulnerabilities in market positioning and competitive advantage. These weaknesses could impact its ability to sustain growth against competitors.",
+          "framework_codes": [
+            "F4",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "1.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any significant changes in CEO equity ownership that could indicate alignment issues.",
+          "severity": "medium",
+          "grounded_in": "company.ceo_equity_pct"
+        },
+        {
+          "factor": "Keep an eye on revenue growth sustainability; a decline could signal deeper issues.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "No EBITDA data available for Debt/EBITDA calculation in F5.",
+        "F4 data gaps include insufficient snapshots for 13F holder-count delta and no free-tier source for options put/call ratio."
+      ]
+    }
+  },
+  "input_tokens": 9110,
+  "output_tokens": 664,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 7918,
+  "lattice_deferred": [
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

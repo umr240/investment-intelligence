@@ -1,0 +1,206 @@
+{
+  "case_id": "PLTR",
+  "view_sha256": "ff78c13e9d70b09d1f0fd84a97bec1e6a7d3a510297d0b5262ddc42ff398c42d",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PLTR",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:19:24.910367Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9404,
+    "completion_tokens": 956,
+    "cost_usd": 0.001907,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "Palantir Technologies Inc. shows strong innovation and growth quality but faces risks from economic capital efficiency divergence.",
+      "bull": [
+        {
+          "headline": "Strong Innovation Compounder Profile",
+          "detail": "Palantir demonstrates a robust innovation profile with a score of 9.0 in the Innovation Compounder framework (F3). This is supported by a significant average gross margin expansion of 292.6 bps per year and a high R&D intensity of +12.5%, indicating a commitment to developing new products and technologies.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "292.6 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+12.5%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "High Growth Quality Metrics",
+          "detail": "The Growth Quality framework (F5) scores 9.5, reflecting strong revenue growth at a CAGR of +32.9% and an impressive free cash flow margin of +54.5%. This indicates effective capital allocation and operational efficiency, enhancing the company's long-term value.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+32.9%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+54.5%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO Equity Alignment",
+          "detail": "CEO Alexander C. Karp holds 11.4% equity in Palantir, aligning his interests with shareholders. This ownership stake suggests a commitment to long-term value creation and strategic decision-making that benefits the company and its investors.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "11.4%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Pre-Discovery Alpha Score",
+          "detail": "The Pre-Discovery Alpha framework (F1) scores only 3.0, indicating potential concerns regarding asset growth and market engagement. The company has a Piotroski score of 8/9, but the lack of open-market buyers (0) raises questions about investor interest and market perception.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Economic Capital Efficiency Divergence",
+          "detail": "The overlay trigger ICA-5 indicates a significant divergence between Peters-Taylor non-GAAP ROIC and GAAP ROIC, with a gap of 6.57 percentage points. This suggests that the company's economic capital efficiency is materially lower than GAAP metrics, which could impact long-term profitability and investment attractiveness.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.57pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        },
+        {
+          "headline": "Recent IPO Risks",
+          "detail": "Palantir's recent IPO status (listed for 5 years) limits its historical data for analysis, rendering the Smart Beta Timing framework (F7) unfeasible. This lack of long-term performance data may hinder investor confidence and complicate future assessments of the company's trajectory.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Moderate Momentum Concerns",
+          "detail": "The Momentum framework (F2) scores 6.0, reflecting a negative 12-1 momentum of -5.9%. This indicates potential challenges in maintaining upward price momentum, which could affect investor sentiment and market performance in the near term.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-5.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic capital efficiency continues to diverge from GAAP metrics over the next few annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any signs of declining investor interest or market engagement, particularly in relation to the Pre-Discovery Alpha framework.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to maintain momentum and investor sentiment, particularly as it navigates its post-IPO phase.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps were reported in the fetch_data_gaps section, indicating comprehensive data availability for analysis.",
+        "The F4 framework has data gaps related to third-party short interest data, which may limit the completeness of the analysis in that area."
+      ]
+    }
+  },
+  "input_tokens": 8380,
+  "output_tokens": 956,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 8520,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

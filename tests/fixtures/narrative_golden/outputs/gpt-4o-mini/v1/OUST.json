@@ -1,0 +1,159 @@
+{
+  "case_id": "OUST",
+  "view_sha256": "a6e88150846fdad4077d090f74b7b4e16eb337dab66438eab62bf44a5306a147",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "OUST",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:47.221284Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9540,
+    "completion_tokens": 620,
+    "cost_usd": 0.001803,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[0].numeric_claims[0]: claim value '$60.4 million' does not match view value '-60377000.0' at 'company.latest_net_income'"
+    ],
+    "body": {
+      "one_liner": "Ouster, Inc. shows mixed signals with a composite score of 4.06, indicating a need for monitoring.",
+      "bull": [
+        {
+          "headline": "Strong R&D Investment Signals Growth Potential",
+          "detail": "Ouster's R&D intensity stands at +38.5%, indicating a commitment to innovation, which is crucial for long-term growth in the technology sector. This is supported by a moderate score of 6.0 in the Innovation Compounder framework (F3), reflecting potential for future revenue growth through product development.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "38.5%",
+              "field_path": "frameworks.2.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "High Revenue Growth Rate",
+          "detail": "The company has demonstrated a robust revenue CAGR of +60.4% over the past three years, suggesting strong demand for its products. This growth is a positive indicator of the company's market position and potential for future profitability, as reflected in the Growth Quality framework (F5) with a score of 4.5.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "60.4%",
+              "field_path": "frameworks.4.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income Raises Concerns",
+          "detail": "Ouster reported a net income of -$60.4 million for the latest fiscal year, indicating ongoing financial challenges. This raises concerns about the company's path to profitability, particularly in a competitive technology landscape. The pre-profitability stage (as noted in the stage section) further emphasizes the urgency of monitoring financial performance.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$60.4 million",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Weak Signals in Pre-Discovery Alpha Framework",
+          "detail": "The Pre-Discovery Alpha framework (F1) scores only 3.0, indicating weaknesses in key financial metrics such as asset growth and market engagement. This weak score suggests that the company may struggle to attract investor interest and achieve sustainable growth in the near term.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6/9",
+              "field_path": "frameworks.0.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for further declines in revenue growth or shifts in customer retention metrics, which could signal deeper issues.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to manage its R&D investments effectively, as high intensity without returns could lead to financial strain.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported, but F4 and F5 have specific data limitations affecting the analysis of short interest and buyback yield, respectively. F4 relies on third-party data for options metrics, while F5 lacks market cap and share repurchase data."
+      ]
+    }
+  },
+  "input_tokens": 9540,
+  "output_tokens": 620,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 8062,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

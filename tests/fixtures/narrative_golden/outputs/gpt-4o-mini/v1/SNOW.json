@@ -1,0 +1,175 @@
+{
+  "case_id": "SNOW",
+  "view_sha256": "07e7d4551f9cceb372dbcb4f8a28f01093711957ddb895fd61e5a9a29d242887",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SNOW",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:19:55.772664Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9631,
+    "completion_tokens": 612,
+    "cost_usd": 0.001735,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[1]: claim value '1,050' does not match view value '('Surprise streak', '7 qtrs')' at 'frameworks.2.key_signals.3'",
+      "bull[1].numeric_claims[1]: claim value 'positive_drift' does not match view value '('PEAD signal', 'positive_drift')' at 'frameworks.1.key_signals.2'",
+      "bear[1].numeric_claims[1]: claim value 'no_alignment' does not match view value '('CEO alignment', 'no_alignment')' at 'frameworks.4.key_signals.4'",
+      "bear[0].detail: number '1.33' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Snowflake Inc. is on the watchlist due to mixed signals across key frameworks, indicating a need for careful monitoring.",
+      "bull": [
+        {
+          "headline": "Strong Innovation Signals",
+          "detail": "Snowflake demonstrates robust innovation capabilities, evidenced by a high R&D intensity of 42.0% and a strong patent portfolio of 1,050 patents, indicating a defensible position in the market. This is supported by a strong score of 9.0 in the Innovation Compounder framework (F3).",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "42.0%",
+              "field_path": "frameworks.2.key_signals.1"
+            },
+            {
+              "value": "1,050",
+              "field_path": "frameworks.2.key_signals.3"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Momentum Indicators",
+          "detail": "The company shows positive momentum with a 12-1 momentum of 24.1% and a positive drift in post-earnings announcement drift (PEAD), reflected in a strong score of 7.0 in the Momentum framework (F2).",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "24.1%",
+              "field_path": "frameworks.1.key_signals.0"
+            },
+            {
+              "value": "positive_drift",
+              "field_path": "frameworks.1.key_signals.2"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income Trend",
+          "detail": "Snowflake reported a significant net loss of approximately $1.33 billion, indicating ongoing challenges in achieving profitability. This raises concerns about the sustainability of its growth model, particularly in the context of its current pre-profitability stage.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "$1,331,616,000",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Low ROIC and CEO Alignment Issues",
+          "detail": "The company has a negative ROIC of -167.2% and lacks CEO alignment, which may hinder long-term value creation. This is reflected in a partial score of 5.5 in the Growth Quality framework (F5).",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-167.2%",
+              "field_path": "frameworks.4.key_signals.2"
+            },
+            {
+              "value": "no_alignment",
+              "field_path": "frameworks.4.key_signals.4"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for signs of declining customer retention metrics, as this could impact future revenue growth.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to convert its innovation into sustainable profitability; failure to do so could undermine its growth narrative.",
+          "severity": "high",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the current analysis.",
+        "F4 lacks complete data on options put/call ratio due to third-party data withholding."
+      ]
+    }
+  },
+  "input_tokens": 8607,
+  "output_tokens": 612,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 7488,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

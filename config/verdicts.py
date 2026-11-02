@@ -26,3 +26,19 @@ def stored_forms(verdicts: Iterable[str]) -> tuple[str, ...]:
     """Every spelling a row may hold for these verdicts, legacy ones included."""
     wanted = set(verdicts)
     return tuple(sorted(wanted | {old for old, new in LEGACY_VERDICTS.items() if new in wanted}))
+
+
+# The narrative's verdict for each composite verdict (ADR-054 table; ADR-023 §1.4 labels).
+NARRATIVE_VERDICTS: Final[dict[str, str]] = {
+    "priority_watchlist": "WATCHLIST WITH TRIGGERS",
+    "watchlist": "WATCHLIST WITH TRIGGERS",
+    "monitor": "WATCHLIST WITH TRIGGERS",
+    "exclude": "EXCLUDE WITH REASON",
+    "research_only": "RESEARCH-ONLY",
+}
+
+
+def narrative_verdict(verdict: str | None) -> str | None:
+    """The narrative label a composite verdict maps to; None for an unknown verdict."""
+    canonical = canonical_verdict(verdict)
+    return None if canonical is None else NARRATIVE_VERDICTS.get(canonical)

@@ -1,0 +1,179 @@
+{
+  "case_id": "DNOPF",
+  "view_sha256": "5b9aa5ccf5edfc36d401c3a3d54263d9fd44cb31094adf6b5e2304bc937e8659",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "DNOPF",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:12.178378Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9254,
+    "completion_tokens": 591,
+    "cost_usd": 0.001666,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[2].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "risks[1]: grounded_in='F1' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "Dino Polska S.A. shows weak momentum and growth quality signals, leading to an exclusion verdict.",
+      "bull": [
+        {
+          "headline": "Strong Revenue Growth",
+          "detail": "Dino Polska S.A. has demonstrated a robust revenue CAGR of 23.2% over the past three years, indicating strong market demand and operational efficiency.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "23.2%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive ROIC",
+          "detail": "The company maintains a healthy ROIC of 17.9%, suggesting effective capital utilization and profitability relative to invested capital.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "17.9%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Momentum Signals",
+          "detail": "The momentum framework indicates a significant decline of 35.9% over the past 12 months, reflecting negative market sentiment and performance issues.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-35.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Insufficient Insider Transactions",
+          "detail": "The absence of insider transaction data limits insights into management confidence and alignment with shareholder interests, impacting the overall assessment of governance.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Limited Historical Data",
+          "detail": "As a recent IPO, Dino Polska lacks sufficient historical data for comprehensive analysis, with only three years of financial history available, which constrains the reliability of long-term projections.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Low EPS Acceleration Visibility",
+          "detail": "The stealth accumulation framework shows no reported EPS acceleration, indicating potential challenges in sustaining earnings growth and investor confidence.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Data Gaps in Financial Metrics",
+          "detail": "Key financial metrics such as EBITDA are unavailable, which hampers the ability to assess the company's financial health and leverage effectively.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any signs of management misalignment or lack of insider ownership that could impact long-term performance.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        }
+      ],
+      "data_caveats": [
+        "EDGAR companyfacts unavailable for CIK 1796026; falling back to per-filing XBRL",
+        "EDGAR: no financial data parsed for DNOPF",
+        "DNOPF: yfinance CEO name not found in companyOfficers",
+        "DNOPF: yfinance shortPercentOfFloat unavailable",
+        "DNOPF: no Form 4 insider transactions found on EDGAR"
+      ]
+    }
+  },
+  "input_tokens": 8230,
+  "output_tokens": 591,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 5744,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "case_id": "BFLY",
+  "view_sha256": "4385380341707915bd7b3122c27d40c5a9ae5513a6075472961e9680ffee58a9",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BFLY",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:36.988245Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9794,
+    "completion_tokens": 617,
+    "cost_usd": 0.001762,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[0].numeric_claims[1]: claim value '$77.1 million' does not match view value '-77064000.0' at 'company.latest_net_income'",
+      "bear[0].detail: number '77.1' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Butterfly Network, Inc. is on the watchlist due to mixed signals across key frameworks, particularly in profitability and innovation.",
+      "bull": [
+        {
+          "headline": "Strong Innovation Signals",
+          "detail": "Butterfly Network demonstrates significant innovation potential, reflected in a high score of 9.5 in the Innovation Compounder framework (F3). Key indicators include a remarkable average gross margin expansion of 3584.4 bps per year and a robust R&D intensity of 37.1%, suggesting a solid foundation for future growth and product development.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3584.4 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "37.1%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Momentum Trends",
+          "detail": "The company has shown strong momentum with a score of 7.0 in the Momentum framework (F2), highlighted by a 12-1 momentum return of 232.7%. This indicates a strong upward price movement, suggesting investor confidence and potential for continued performance improvement.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "232.7%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Profitability Metrics",
+          "detail": "Butterfly Network's financial health is concerning, with a negative net income of $77.1 million for the latest fiscal year and a ROIC of -74.8% in the Growth Quality framework (F5). These figures indicate significant challenges in achieving profitability and efficient capital allocation, which could hinder long-term sustainability.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-74.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "$77.1 million",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "High Risk of Capital Underperformance",
+          "detail": "The company faces substantial risks related to its capital efficiency, as indicated by the ICA overlay triggers. The divergence between GAAP and Peters-Taylor ROIC suggests that the reported capital efficiency is misleading, with a gap of 96.76 percentage points. This raises concerns about the true economic performance of the business.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "96.76pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for signs of declining innovation momentum or patent portfolio deterioration.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio data is unavailable due to reliance on third-party sources.",
+        "F5 buyback yield is not available as market capitalization and share repurchase data are not persisted."
+      ]
+    }
+  },
+  "input_tokens": 8770,
+  "output_tokens": 617,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 6270,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

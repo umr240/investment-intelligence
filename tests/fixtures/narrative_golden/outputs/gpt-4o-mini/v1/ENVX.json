@@ -1,0 +1,181 @@
+{
+  "case_id": "ENVX",
+  "view_sha256": "f0633ed5b148afbb4a1b7c10431c3d57c3233f1d1eb2e75fa4fbec2df43a0fe7",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ENVX",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:20.086356Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9679,
+    "completion_tokens": 633,
+    "cost_usd": 0.001832,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[0].detail: number '156.7' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Enovix Corporation (ENVX) shows potential as an innovation compounder but faces significant financial challenges.",
+      "bull": [
+        {
+          "headline": "Strong Innovation Signals",
+          "detail": "Enovix demonstrates robust innovation capabilities, evidenced by a high average gross margin expansion of 9796.2 bps per year and a significant R&D intensity increase of 346.7%. This positions the company favorably within its sector for future growth opportunities.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9796.2 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+346.7%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Extreme Winner Candidate Status",
+          "detail": "Enovix qualifies as a Bessembinder Extreme Winner candidate due to its small market cap and high R&D intensity, suggesting potential for outsized returns if it can capitalize on its innovation.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.4672",
+              "field_path": "overlay_triggers.3.relevant_numbers.rd_intensity"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Financial Performance",
+          "detail": "The company reported a significant net loss of $156.7 million for the latest fiscal year, indicating ongoing financial distress that could hinder growth and innovation efforts.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-156741000.0",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Negative ROIC and Cash Flow Issues",
+          "detail": "Enovix has a negative ROIC of -51.8% and a free cash flow margin of -346.2%, raising concerns about its capital efficiency and ability to sustain operations without external funding.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-51.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "-346.2%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum Challenges",
+          "detail": "The company's momentum is weak, with a 12-1 momentum score of -76.6%, indicating a significant decline in stock performance relative to its peers, which could deter investor interest.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-76.6%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any signs of improvement in revenue growth and profitability metrics in the next fiscal year.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to maintain its innovation momentum and patent portfolio disclosures.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps were identified in the overall analysis, but F4 lacks specific options data due to third-party source limitations."
+      ]
+    }
+  },
+  "input_tokens": 9679,
+  "output_tokens": 633,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 7885,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

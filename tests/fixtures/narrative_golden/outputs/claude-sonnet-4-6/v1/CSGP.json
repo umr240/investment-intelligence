@@ -1,0 +1,280 @@
+{
+  "case_id": "CSGP",
+  "view_sha256": "88c571120c7cd3bd92ccc477f66345505c92a1dcb879de9cca1c69676d673b9c",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "CSGP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:45:55.299905Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11186,
+    "completion_tokens": 3159,
+    "cost_usd": 0.080943,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[1]: claim value '22.47' does not match view value 'False' at 'frameworks.5.key_signals.5.1'"
+    ],
+    "body": {
+      "one_liner": "CoStar Group is a structurally sound real-estate data compounder with a durable information moat and cheap relative valuation, but near-zero ROIC, suppressed momentum, and weak platform-retention disclosure combine to sustain a monitor verdict pending evidence that the heavy investment cycle converts to cash returns.",
+      "bull": [
+        {
+          "headline": "Revenue CAGR of +14.2% sustained at modest leverage shows the core data franchise is still growing at scale",
+          "detail": "F5 records a three-year revenue CAGR of +14.2% alongside a debt/EBITDA of 0.0, confirming that growth is organically funded with no balance-sheet stress. For a business sitting on proprietary real-estate data and a multi-decade network effect, sustaining double-digit top-line expansion at this revenue base is a qualitative signal that the information moat is still extracting incremental market share.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+14.2%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Smart-Beta valuation screen is at maximum score — the market is pricing in failure the fundamentals don't yet confirm",
+          "detail": "F7 returns a score of 10.0 (strong_fit, very_cheap band) driven by EV/Rev and P/B z-scores of -2.0 and -2.61 respectively. That degree of multiple compression relative to the company's own history is consistent with temporary sentiment dislocation rather than a structural deterioration story. For a long-horizon holder, this spread between narrative pessimism and underlying growth rate is precisely the entry configuration that produces asymmetric multi-year outcomes.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "10.0",
+              "field_path": "frameworks.6.score"
+            },
+            {
+              "value": "-2.0",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "-2.61",
+              "field_path": "frameworks.6.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with skin in the game, no debt, and a 25-year domain focus compress capital-allocator failure risk",
+          "detail": "Andrew Florance has been CEO since founding, holds an equity stake, and the balance sheet carries zero net debt. The Outsiders framework's central concern — hired managers destroying capital on empire-building M&A funded by leverage — is structurally mitigated here. A founder-CEO whose career identity is the business he built is operating under the strongest possible alignment incentive, independent of the comp structure's quantitative signals.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Seven-quarter earnings surprise streak indicates systematic under-estimation of the business by the consensus",
+          "detail": "F3 records a seven-quarter positive surprise streak, meaning the business has consistently delivered outcomes above expectations for nearly two years. Persistent positive PEAD (F2) drift, even while momentum is weak overall, suggests the operating machine is generating results the market is structurally slow to price. For a patient holder, systematic analyst underestimation is a qualitative tailwind.",
+          "framework_codes": [
+            "F3",
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Sloan high-quality accruals signal earnings are cash-backed, not inflated by working-capital manipulation",
+          "detail": "F1's Sloan high-quality flag is True, confirming that reported earnings are not significantly ahead of underlying cash generation via accrual inflation. This is the most basic forensic test for earnings reliability. Combined with an FCF margin of +7.9%, the earnings quality signal holds even though absolute ROIC is thin — the cash is real, the reinvestment cycle is simply absorbing it.",
+          "framework_codes": [
+            "F1",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+7.9%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ROIC of +0.7% means the business is currently not earning its cost of capital — compounding stalls until this reverses",
+          "detail": "F5's ROIC reading of +0.7% is the central structural concern. Compounding requires return on incremental capital to exceed the hurdle rate. A reinvestment-heavy platform business that sustains sub-cost-of-capital returns for multiple cycles is consuming shareholder value, not creating it — regardless of revenue growth rate. The bull case requires visible ROIC expansion as the investment cycle matures; until that inflection appears in filings, the compounding premise is unproven.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+0.7%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Rule of 40 at 22.47 and F6 fail band expose the gap between platform ambition and current unit economics",
+          "detail": "F6 scores 2.0 (fail, weak band). Rule of 40 of 22.47 — the sum of growth rate and profit margin — is materially below the 40-point threshold that distinguishes compounding SaaS economics from subscale operations. NRR and GRR are not_disclosed, which means the retention flywheel cannot be independently verified. A platform narrative that cannot demonstrate retention durability in filings carries elevated thesis risk.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "22.47",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "12-1 momentum of -60.2% and distance from 52-week high of +50.7% reflect deep sentiment dislocation with no near-term catalyst",
+          "detail": "F2 scores 3.0 (fail). The twelve-month-minus-one momentum signal of -60.2% indicates the market has systematically re-rated the stock downward over the measurement period. While the PEAD signal is positive drift, the magnitude of the momentum drawdown suggests either a structural re-rating or sentiment overshoot that has not yet resolved. Without a clear near-term catalyst, patient holders must be comfortable with continued price weakness.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-60.2%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+50.7%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin in mild contraction at -50.1 bps/year undermines the long-run pricing power narrative",
+          "detail": "F3 records average gross margin expansion of -50.1 bps per year. For a data-network business where pricing power is a core moat claim, gross margin contraction — even at a slow rate — is directionally adverse. The moat direction question (widening vs. narrowing) cannot be answered bullishly when the margin derivative is negative. This must stabilise and reverse before the innovation-compounder thesis can be rated higher than partial.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-50.1 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment flagged no_alignment in F5 quantitative screen — equity stake ambiguity limits conviction on the allocator thesis",
+          "detail": "Despite founder-CEO status, F5 records CEO alignment as no_alignment and the ceo_equity_pct_state is parser_uncertain. The qualitative argument for alignment is strong; the quantitative signal is not. Until the equity ownership figure is confirmed with precision and the comp structure independently verified to favour long-duration capital deployment over short-term metrics, the capital-allocator thesis rests partly on inference rather than verified data.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC remains below meaningful thresholds across 2-3 additional annual filings. If incremental capital deployed in the Homes.com and international build-out does not produce measurable ROIC expansion by year 3-4, the investment-cycle thesis breaks and the compounding premise requires re-evaluation.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor gross margin trajectory annually. A second consecutive year of margin contraction beyond -50 bps would suggest structural pricing pressure or competitive dilution of the data network rather than a transient cost cycle.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor whether CoStar begins voluntarily disclosing NRR and GRR in 10-K MD&A. Continued non-disclosure as the platform narrative matures is itself a signal: best-in-class retention metrics are almost always disclosed proactively. Sustained opacity warrants downgraded platform-moat conviction.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor Rule of 40 trajectory over rolling four-quarter windows. A sustained reading below 25 while the investment cycle continues would indicate that the platform is not achieving the efficiency inflection required to justify the reinvestment narrative.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor Piotroski score trajectory. A current reading of 5/9 is neutral-moderate; any decline toward 3-4 in conjunction with rising accruals would be an early-warning signal of deteriorating financial health warranting heightened scrutiny.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Options put/call data is unavailable (skipped per project spec), limiting the ability to independently assess institutional sentiment positioning. Monitor insider open-market purchases as a partial proxy — currently only one 90-day buyer in F1 signals limited insider confidence at current prices.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "R&D intensity data is absent from the view (no annual with rd_intensity). Monitor whether subsequent filings allow this signal to populate — sustained innovation investment is a core moat-widening precondition for the thesis, and its absence from the scorecard is an ongoing analytic blind spot.",
+          "severity": "low",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "F3 R&D intensity is unavailable: no annual filing period with rd_intensity data was parseable. R&D band is therefore unknown and scored as a gap in the Innovation Compounder framework.",
+        "F4 options put/call ratio is unavailable: no free-tier source exists for this signal per project spec (Pan-Poteshman 2006 methodology). Short interest current and peak figures are withheld as third-party data. F4 scoring reflects only available signals.",
+        "CEO equity percentage carries a parser_uncertain state — the figure of 0.5% is a best-effort parse, not a verified filing value. F5 CEO alignment is scored as no_alignment on the quantitative screen.",
+        "NRR and GRR are not_disclosed in CoStar's 10-K MD&A. F6 treats absence as zero-points per framework spec; this is consistent with treatment of other non-disclosing companies in the universe, not an assertion that retention is poor.",
+        "Market cap, beta, EV/EBITDA, P/B ratio, and trailing P/E are all null in the company record. F7 valuation signals are computed from EV/Rev and P/B z-scores internally; composite weighting proceeds without market-cap-dependent adjustments."
+      ]
+    }
+  },
+  "input_tokens": 11186,
+  "output_tokens": 3159,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 66813,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

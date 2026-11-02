@@ -1,0 +1,187 @@
+{
+  "case_id": "SHOP",
+  "view_sha256": "340223a67583d68182a635d5add93d2208f040f009a4969a834c88e916ad3cc4",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SHOP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:19:48.261680Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9404,
+    "completion_tokens": 755,
+    "cost_usd": 0.001787,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Shopify Inc. is on the watchlist due to mixed signals across multiple frameworks, indicating potential for growth but also notable risks.",
+      "bull": [
+        {
+          "headline": "Strong Growth Quality Signals",
+          "detail": "Shopify demonstrates robust growth metrics, with a revenue CAGR of +27.3%, a free cash flow margin of +17.7%, and a ROIC of +19.2%. These indicators suggest a solid foundation for sustainable growth and capital efficiency, supported by founder alignment in management.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "27.3%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "17.7%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "19.2%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Innovation Indicators",
+          "detail": "Despite some challenges, Shopify's R&D intensity is at +13.3%, indicating a commitment to innovation. The company is also in the near sweet spot for R&D, which may support future product development and competitive positioning.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "13.3%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Diverse Customer Base",
+          "detail": "Shopify's customer concentration is classified as diversified, which mitigates risks associated with dependency on a few large clients. This broad base can enhance stability in revenue streams.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Declining Gross Margin Trends",
+          "detail": "Shopify's average gross margin is experiencing a contraction of -91.0 basis points per year, which could signal challenges in maintaining profitability as competition intensifies and pricing pressures mount.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-91.0 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Negative Momentum Signals",
+          "detail": "The company's 12-1 momentum is currently at -12.9%, indicating a downward trend in stock performance over the recent period. This could reflect broader market sentiment or specific operational challenges.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-12.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Economic Capital Efficiency Divergence",
+          "detail": "The divergence between GAAP and non-GAAP ROIC indicates potential overstatement of economic efficiency. The ICA overlay highlights a significant gap of 5.56 percentage points, suggesting that the company's capital efficiency may be inflated by intangible assets.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.56pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether gross margin erosion continues over the next few quarters, as persistent declines could impact profitability.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Watch for further deterioration in momentum signals, as continued negative trends may affect investor sentiment and stock performance.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "Keep an eye on the divergence between GAAP and non-GAAP ROIC; if this trend worsens, it could indicate deeper issues with capital efficiency.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        }
+      ],
+      "data_caveats": [
+        "No insider transactions found on EDGAR, which may limit insights into management's confidence and alignment.",
+        "F4 options put/call ratio data is unavailable due to reliance on third-party sources, potentially obscuring market sentiment."
+      ]
+    }
+  },
+  "input_tokens": 8380,
+  "output_tokens": 755,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 9020,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

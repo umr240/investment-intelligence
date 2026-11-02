@@ -1,0 +1,216 @@
+{
+  "case_id": "PAYC",
+  "view_sha256": "5333a4c16abc38ce680e3c2147bd291c08a3a589e72567698a5c2770cfefdef1",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PAYC",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:19:08.467794Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9353,
+    "completion_tokens": 992,
+    "cost_usd": 0.001921,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].numeric_claims[0]: claim value '14.3%' does not match view value '('Customer concentration', 'diversified_base_case')' at 'frameworks.5.key_signals.0'",
+      "bull[0].numeric_claims[1]: claim value '26.9%' does not match view value '('NRR (Net Revenue Retention)', 'not_disclosed')' at 'frameworks.5.key_signals.1'",
+      "bull[0].numeric_claims[2]: claim value '34.1%' does not match view value '('GRR (Gross Revenue Retention)', 'not_disclosed')' at 'frameworks.5.key_signals.2'",
+      "bull[3].numeric_claims[0]: claim value '13.8%' does not match view value '('Short int (peak)', 'withheld: third-party data')' at 'frameworks.3.key_signals.1'",
+      "bull[2].framework_codes: 'BEW' is not a recognised framework"
+    ],
+    "body": {
+      "one_liner": "Paycom Software, Inc. (PAYC) is on the watchlist, exhibiting strong growth quality but facing potential economic capital efficiency issues.",
+      "bull": [
+        {
+          "headline": "Strong Growth Quality Signals",
+          "detail": "Paycom demonstrates robust growth metrics, with a revenue CAGR of +14.3%, a free cash flow margin of +26.9%, and a return on invested capital (ROIC) of +34.1%. These indicators suggest a solid operational foundation and effective capital allocation by the founder-CEO, Chad R. Richison, who holds 12.4% equity in the company.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "14.3%",
+              "field_path": "frameworks.5.key_signals.0"
+            },
+            {
+              "value": "26.9%",
+              "field_path": "frameworks.5.key_signals.1"
+            },
+            {
+              "value": "34.1%",
+              "field_path": "frameworks.5.key_signals.2"
+            },
+            {
+              "value": "12.4%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Momentum Indicators",
+          "detail": "The company shows a positive momentum trend with a 12-1 momentum of +18.1% and a PEAD signal indicating positive drift. This suggests that PAYC is gaining traction in the market, which could enhance investor sentiment and support future growth.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "18.1%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Potential for Extreme Winner Status",
+          "detail": "The overlay verdict indicates that PAYC is a moderate winner candidate, suggesting that it may have the potential to achieve extreme winner status if growth trends continue and operational efficiencies improve.",
+          "framework_codes": [
+            "BEW"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Innovation Compounder Characteristics",
+          "detail": "Paycom's R&D intensity is at +13.8%, indicating a commitment to innovation, although average gross margin expansion is negative. This suggests that while the company invests in innovation, it may need to address profitability challenges to sustain its competitive edge.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "13.8%",
+              "field_path": "frameworks.3.key_signals.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Pre-Discovery Alpha Score",
+          "detail": "The company scores only 3.0 in the Pre-Discovery Alpha framework, indicating potential concerns regarding its asset growth and quality. The asset growth is in the top decile, but the lack of open-market buyers raises questions about market confidence.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Economic Capital Efficiency Divergence",
+          "detail": "The ICA overlay indicates a significant divergence between Peters-Taylor non-GAAP ROIC (17.15%) and GAAP ROIC (28.6%), with a gap of 11.45 percentage points. This suggests that the company's economic capital efficiency may be overstated, warranting close monitoring.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "11.45",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "17.15%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "28.6%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Partial Signals in Platform Dominator Framework",
+          "detail": "Paycom's Platform Dominator framework score is moderate at 5.0, indicating that while customer concentration is diversified, key retention metrics like NRR and GRR are not disclosed. This lack of transparency could pose risks to long-term growth sustainability.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Stealth Accumulation Framework Failure",
+          "detail": "The Stealth Accumulation framework score is low at 3.5, reflecting insufficient data on short interest metrics. This could indicate a lack of investor confidence or interest in accumulating shares, which may affect stock performance.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic capital efficiency continues to diverge from GAAP ROIC over the next few annual filings before reconsidering the thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for signs of declining gross margins and innovation effectiveness, as these could impact long-term growth prospects.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Keep an eye on the lack of open-market buyers, as this may indicate waning investor interest and could affect stock liquidity.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps were identified in the fetch_data_gaps section, indicating comprehensive data availability for analysis.",
+        "F4 data gaps exist due to reliance on third-party sources for short interest metrics, which are currently withheld."
+      ]
+    }
+  },
+  "input_tokens": 8329,
+  "output_tokens": 992,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 13990,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

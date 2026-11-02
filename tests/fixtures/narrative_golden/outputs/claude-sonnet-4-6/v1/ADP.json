@@ -1,0 +1,280 @@
+{
+  "case_id": "ADP",
+  "view_sha256": "63f704c36fe4dd3b507d7fe08b5b4058cd88d68d791d678644bf11fa66b353e4",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ADP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:34:48.266295Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11768,
+    "completion_tokens": 3145,
+    "cost_usd": 0.082479,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "ADP is a capital-light payroll and HCM incumbent with a durable switching-cost moat, but the composite sits at monitor territory (4.93/10) partly because GAAP-stated capital efficiency flatters economic reality once intangible capital is properly capitalised, and valuation signals offer no margin of safety.",
+      "bull": [
+        {
+          "headline": "Switching-cost moat reinforced by deeply embedded payroll infrastructure across a diversified employer base",
+          "detail": "ADP's core payroll and HCM workflows are deeply wired into customers' HR, tax, and compliance processes. Ripping out a payroll system is operationally disruptive and regulatorily risky for the employer. The customer concentration signal reads 'diversified_base_case' (F6), which means no single-client cliff risk. This switching-cost architecture is structurally different from product-feature competition and is not easily replicated by a well-funded challenger in five years.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Economic ROIC remains high even after Peters-Taylor intangible capitalisation",
+          "detail": "GAAP ROIC is materially higher than the Peters-Taylor-adjusted figure (ICA-5 overlay), but even the adjusted economic ROIC of 21.46% is well above most capital-allocation hurdles. A business generating this level of economic return on a properly measured capital base — including capitalised R&D and 25% of SG&A as organisational capital — demonstrates durable value-creation at scale.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+60.6%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "21.46%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue compound with a modest leverage footprint preserves financial resilience",
+          "detail": "Three-year revenue CAGR sits at 6.8% and Debt/EBITDA is 0.124 — a near-unlevered balance sheet. At this leverage level, the business can sustain investment cycles, weather payroll-volume cyclicality, and return capital without risking compounding via leverage-induced ruin. The combination of steady top-line growth and minimal leverage is consistent with a business built for multi-decade duration.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+6.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "0.124",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum signals near 52-week high with positive post-earnings drift",
+          "detail": "F2 scores strong_fit (7/10). The stock is effectively at its 52-week high (0.0% below), and the PEAD signal reads 'positive_drift', suggesting the market is continuing to absorb positive earnings revisions rather than fading them. Earnings acceleration is described as 'net_increase_with_dips' (F4), consistent with a business sustaining upward EPS trajectory through minor volatility.",
+          "framework_codes": [
+            "F2",
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+0.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Consistent positive earnings surprise streak supports thesis durability signal",
+          "detail": "ADP has posted seven consecutive quarters of positive earnings surprises (F3 key signal). For an established-stage company of this revenue scale, a seven-quarter surprise streak signals that consensus systematically underestimates earnings power — a pattern consistent with durable operating leverage and management conservatism in guidance, both of which favour the long-hold thesis.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ICA-5: GAAP ROIC overstates economic capital efficiency by 27.75 percentage points",
+          "detail": "The Peters-Taylor intangible capitalisation (R&D as knowledge capital, 25% of SG&A as organisational capital) reduces reported ROIC from 49.22% (GAAP) to 21.46% — a 27.75pp gap, well above the 3pp ICA trigger threshold. The direction is downward (economic < GAAP), meaning the balance sheet omits the invested capital that built the brand and customer-relationship base. This does not make the business bad, but the GAAP ROIC figure should not be used in isolation to justify valuation.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "27.75pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "49.22%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "21.46%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation bands signal very expensive on revenue multiples; limited margin of safety",
+          "detail": "F7 scores 2/10 (fail). The EV/Revenue z-score of 1.243 places ADP in the 'very_expensive' band; the P/B z-score of 0.46 is above average. At this entry price, the margin of safety for a new position is structurally thin. The composite (4.93/10) lands in monitor territory — not a strong-fit entry signal. This is the primary tension in the hold-forever framework: the business quality is not in question, but the price paid at initiation compresses the forward return distribution.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.6.score"
+            },
+            {
+              "value": "1.243",
+              "field_path": "frameworks.6.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform Dominator fails: NRR and GRR are not disclosed; Rule of 40 reads weak",
+          "detail": "F6 scores 1/10 (fail). Neither net revenue retention nor gross revenue retention is disclosed in the 10-K MD&A — the two metrics most diagnostic of platform stickiness in recurring-revenue businesses. The Rule of 40 signal comes in at 6.74, well below the 40-point threshold that characterises high-quality SaaS-like compounders. This is not necessarily a structural failure given ADP's payroll-driven model, but the absence of disclosed retention metrics limits independent verification of moat durability.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "6.74",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment reads 'no_alignment'; non-founder CEO with uncertain equity stake",
+          "detail": "F5's CEO alignment signal is 'no_alignment'. Maria Black is not the founder-CEO. The ceo_equity_pct is flagged as parser_uncertain at 0.5%, which is low for a business of this scale and compounds the Outsiders-8 capital-allocator concern: without meaningful personal equity stake, incentive alignment with long-duration shareholders is structurally weaker. Management tenure and comp structure should be monitored across annual DEF 14A filings.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Gross-profit asset intensity and GP/A strength signal are not supportive at scale",
+          "detail": "F1's GP/A strong signal is False, and F6 GP/A band reads moderate. For an established-stage company with revenue at this scale, flat or moderate gross-profit-per-dollar-of-assets intensity may reflect the capital requirements of running compliance infrastructure and data centres at scale. However, it constrains the Piotroski score to 6/9 (partial, not strong), and means the balance-sheet-quality case is not fully unambiguous.",
+          "framework_codes": [
+            "F1",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the Peters-Taylor economic ROIC (currently 21.46%) trends downward over 2–3 more annual filings. If SG&A-intensive growth is outpacing revenue expansion, the organisational capital denominator grows faster than the numerator, compressing economic returns. This is the thesis-break condition, not the GAAP figure.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for NRR/GRR disclosure events: if ADP begins disclosing retention metrics and those metrics deteriorate, it would validate the F6 fail signal structurally rather than as a disclosure gap. Sustained failure to disclose is itself a monitoring signal across years 1–3.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor CEO capital allocation behaviour (M&A sizing, buyback price discipline, dividend growth vs. reinvestment ratio) across annual filings. The 'no_alignment' signal in F5 and uncertain equity stake make this a first-class Outsiders-8 checkpoint — not an exit trigger, but a thesis-validation condition.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "The Rule of 40 score of 6.74 (F6) warrants monitoring: if the combined growth-plus-margin score continues to compress as the business matures, it signals deteriorating platform economics. Three or more years of sustained sub-10 Rule of 40 should re-open the F6 thesis question.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Valuation remains the primary constraint on forward return distribution. If the EV/Revenue z-score expands further (moving deeper into 'very_expensive' territory per F7), incremental capital deployment becomes harder to justify under the margin-of-safety principle — though this is a sizing and incremental-purchase consideration, not a hold-exit signal.",
+          "severity": "low",
+          "grounded_in": "F7"
+        },
+        {
+          "factor": "Options-market sentiment data is absent (F4 data gap: put/call ratio unavailable from free-tier sources). Stealth accumulation or distribution signals that rely on derivatives positioning cannot be independently verified. Monitor if a paid-tier source becomes accessible.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio: no free-tier data source was available; Pan-Poteshman (2006) signal component is absent and scored as zero. The F4 partial verdict reflects this gap.",
+        "F5 FCF margin: free cash flow figure was not available in the sourced data; the FCF margin key signal is listed as unknown. The F5 score is affected by this absence.",
+        "CEO equity percentage (0.5%) is flagged as parser_uncertain — the precise ownership stake could not be reliably extracted from filings. The 'no_alignment' designation in F5 should be treated with this uncertainty in mind.",
+        "Short interest (current and peak) for F4 is withheld as third-party data and is not reflected in the stealth-accumulation signal.",
+        "Market cap, EV/EBITDA, P/B ratio, and beta are null in the company block; certain valuation and overlay calculations that depend on these inputs rely on alternative computations or are noted as unavailable."
+      ]
+    }
+  },
+  "input_tokens": 11768,
+  "output_tokens": 3145,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 64464,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

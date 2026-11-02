@@ -1,0 +1,332 @@
+{
+  "case_id": "PAYC",
+  "view_sha256": "5333a4c16abc38ce680e3c2147bd291c08a3a589e72567698a5c2770cfefdef1",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PAYC",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:04:04.484654Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11806,
+    "completion_tokens": 3772,
+    "cost_usd": 0.091998,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].numeric_claims[1]: claim value '28.83' does not match view value 'True' at 'frameworks.5.key_signals.5.1'",
+      "bear[1].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Paycom is a founder-led, high-ROIC payroll/HCM SaaS with strong momentum and attractive relative valuation, held back by an asset-growth disqualifier, an intangible-capital restatement that materially reduces economic ROIC, and incomplete platform-retention disclosure — a watchlist-grade compounder requiring thesis validation on moat durability before conviction sizing.",
+      "bull": [
+        {
+          "headline": "Exceptional growth quality: high ROIC, strong FCF margin, low leverage, founder-aligned CEO",
+          "detail": "F5 scores a perfect 10/10. Revenue CAGR of +14.3% over three years compounds alongside a FCF margin of +26.9% and a GAAP ROIC of +34.1% — a rare combination signalling that growth is not burning capital. Debt/EBITDA of 0.936 leaves structural flexibility. Chad Richison holds 12.4% of equity, one of the strongest founder-alignment signals in the SaaS universe. These economics ground the case for an extended, conviction hold.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "10/10",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "+14.3%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+26.9%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+34.1%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.936",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "12.4%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum strong: 12-1 return near 52-week high with positive post-earnings drift",
+          "detail": "F2 scores 8/10 (strong_fit). The 12-1 momentum signal of +18.1%, price sitting at its 52-week high, and a positive PEAD drift signal all converge on sustained institutional interest. Momentum frameworks have documented intermediate-term persistence; the combination with fundamental quality (F5) reduces the risk that momentum is purely sentiment-driven.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8/10",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+18.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+0.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation z-scores suggest relative cheapness on both revenue and book multiples",
+          "detail": "F7 scores 9/10 (strong_fit). EV/Revenue z-score of -0.893 (cheap band) and P/B z-score of -1.114 (very_cheap band) indicate the market is pricing Paycom at a discount to its own SaaS-universe history. Combined with a composite score of 6.71 and founder-aligned compounding economics, this creates the asymmetric entry profile the framework is designed to surface. F7 weighting is intentionally capped at 0.10 given contested academic ground.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9/10",
+              "field_path": "frameworks.6.score"
+            },
+            {
+              "value": "-0.893",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "-1.114",
+              "field_path": "frameworks.6.key_signals.2.1"
+            },
+            {
+              "value": "6.71",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "BEW overlay fires as moderate_winner_candidate — Bessembinder tail-return profile warrants sized, extended hold",
+          "detail": "The BEW overlay classifies Paycom as a moderate_winner_candidate. Bessembinder's research demonstrates that long-run equity wealth creation is concentrated in a small fraction of stocks, and that premature trimming on price strength is structurally wealth-destroying at the portfolio level. A founder-led, high-ROIC SaaS with positive momentum and relative undervaluation occupies the distributional region where extended holds dominate tactical rotation.",
+          "framework_codes": [
+            "F5",
+            "F2",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Sloan earnings quality confirmed: accruals-based quality flag is clean",
+          "detail": "The Sloan high-quality flag is True, indicating that reported earnings are substantially cash-backed rather than accrual-inflated. This is a meaningful signal for a company with growing revenues — the +26.9% FCF margin corroborates that profitability is real and not an artifact of revenue recognition choices.",
+          "framework_codes": [
+            "F1",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+26.9%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ICA-5: Peters-Taylor ROIC restatement reveals an 11.45pp gap — economic capital efficiency materially lower than GAAP",
+          "detail": "After capitalising R&D (15%/yr amortisation) and 25% of SG&A (20%/yr amortisation) per Peters-Taylor (2017), the adjusted ROIC falls to 17.15% versus the GAAP ROIC of 28.6% — a downward divergence of 11.45 percentage points. This means the intangible capital embedded in Paycom's sales and R&D spend is large relative to reported book assets, and the true capital deployed to generate earnings is meaningfully higher than GAAP shows. Conviction in the F5 score should be proportionally discounted pending multi-year verification that economic ROIC is stable or widening.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "11.45pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "17.15%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "28.6%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "F1 capped at fail: asset growth in the top decile triggers Cooper-Gulen-Schill disqualifier",
+          "detail": "F1 scores 3/10 (fail). Asset growth classified as top_decile triggers the Cooper-Gulen-Schill (2008) disqualifier, which documents that extreme asset expansion is associated with subsequent return underperformance. Zero open-market insider buyers over the past 90 days and GP/A below the strong threshold add to the cautionary signal. High asset growth may reflect productive investment in a SaaS build-out, but it historically suppresses near-term alpha regardless of the business rationale.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3/10",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "6/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Platform retention metrics (NRR, GRR) undisclosed — moat durability is structurally unmeasurable from public filings",
+          "detail": "F6 scores 5/10 (partial). NRR and GRR are both not_disclosed — the two metrics most directly measuring customer stickiness and platform lock-in for a HCM SaaS. Rule of 40 at 28.83 is below the conventional 40-point threshold. Without disclosed retention metrics, the switching-cost moat cannot be quantified from public data; the thesis rests on qualitative evidence of integration depth. This is a first-class known-unknown that must be resolved over Years 1-3 of the hold.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5/10",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "28.83",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Gross margin contracting: -43 bps/yr average expansion signals pricing or cost pressure",
+          "detail": "F3 scores 5/10 (partial). Average gross margin expansion of -43.0 bps/yr is negative — meaning margins are compressing rather than expanding. For a SaaS business with scale advantages, this is the wrong direction. R&D intensity at +13.8% (near_sweet band) and a three-quarter earnings surprise streak are partially offsetting signals, but persistent GM compression is inconsistent with widening moat economics. Monitor whether this trend reverses or accelerates over the next 2-3 annual filings.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5/10",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "-43.0 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+13.8%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "3 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Stealth accumulation absent: F4 fails with no short data and no decline signal",
+          "detail": "F4 scores 3.5/10 (fail). Short interest data is withheld due to third-party source limitations, the put/call ratio is unavailable per project specification, and the decline signal is absent. The only partial positive is EPS acceleration with dips. The absence of a stealth-accumulation setup means the stock is not displaying the early-discovery characteristics associated with institutional quietly building positions — consistent with a name that is already well-covered rather than mis-priced from neglect.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.5/10",
+              "field_path": "frameworks.3.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor-adjusted ROIC (currently 17.15%) continues to diverge from GAAP ROIC or begins converging over 2-3 more annual filings. Persistent or widening gap would indicate that the business requires ever-larger intangible-capital investment to sustain growth — a thesis-break condition if it crosses into ROIC-below-WACC territory.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor whether gross margin trend (-43.0 bps/yr) reverses. If GM contraction persists or accelerates across 3+ more annual filings without a corresponding acceleration in FCF margin, this signals pricing power erosion or structural cost increases inconsistent with the switching-cost moat thesis.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Watch for disclosure (or continued absence) of NRR and GRR in annual filings. If Paycom begins disclosing retention metrics that reveal sub-100% NRR, the platform-lock-in thesis is directly contradicted. Continued non-disclosure itself warrants heightened scrutiny as the SaaS universe increasingly normalises this disclosure.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor top-decile asset growth trajectory. If asset base continues expanding faster than revenue or FCF, the Cooper-Gulen-Schill headwind remains active and capital efficiency (already restated lower by ICA-5) may deteriorate further. A reversal toward asset-growth normalisation would be a positive thesis checkpoint.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Founder-CEO concentration risk: Chad Richison holds 12.4% of equity and is the primary identified capital allocator. Monitor for any announced succession plans, changes to equity ownership patterns, or compensation structure shifts (DEF 14A) that signal a move away from owner-operator governance. Outsiders-8 inversion — empire-building M&A or revenue-metric comp replacing FCF-per-share framing — is the concrete early-warning signal.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Rule of 40 at 28.83 is below the conventional threshold for platform-dominator classification. If this metric continues declining (driven by either growth deceleration or margin compression), the platform-dominator thesis weakens materially. Watch across 2-3 annual cycles before treating a single reading as trend.",
+          "severity": "low",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "F4 short-interest data is unavailable from free-tier sources; put/call ratio is similarly unavailable. This creates a structural blind spot in sentiment monitoring. If third-party short-interest data becomes accessible, verify whether a large short position has built against the thesis — a condition that would require its own inversion analysis.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio: no free-tier source available; skipped per project specification (Pan-Poteshman 2006 methodology). Short interest current and peak figures are withheld as third-party data. F4 score should be treated as a lower-bound estimate.",
+        "F6 NRR and GRR: both not_disclosed. Paycom does not publish retention metrics in its 10-K MD&A. Scoring treats non-disclosure as zero-points on those signals, consistent with project specification semantics. The absence is informative but does not confirm poor retention.",
+        "Market cap, beta, EV/EBITDA, P/E trailing, and P/B ratio fields are null in the company block. Valuation signals in F7 derive from internally computed z-scores; absolute multiple levels are not available in this view.",
+        "IPO date state is parser_uncertain — the February 2015 IPO date should be verified against primary filings before using tenure-based signals.",
+        "F7 valuation scores rest on contested academic ground: Arnott (Research Affiliates) and Asness (AQR) hold opposing views on whether valuation z-scores reliably predict factor returns. F7 weight is intentionally capped at 0.10 in the composite."
+      ]
+    }
+  },
+  "input_tokens": 11806,
+  "output_tokens": 3772,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 76709,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

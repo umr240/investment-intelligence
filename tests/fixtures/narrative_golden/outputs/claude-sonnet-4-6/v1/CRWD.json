@@ -1,0 +1,341 @@
+{
+  "case_id": "CRWD",
+  "view_sha256": "dcb05c8ea96c4eaee0c2e4371b511f6a0ddf6640eb04114c2bd27e8c602fde2b",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "CRWD",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:44:48.468670Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11920,
+    "completion_tokens": 3800,
+    "cost_usd": 0.09276,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[2].numeric_claims[3]: claim value '+29.8%' does not match view value '-11.6%' at 'frameworks.4.key_signals.2.1'",
+      "bull[3].numeric_claims[2]: claim value '48.94' does not match view value 'False' at 'frameworks.5.key_signals.5.1'"
+    ],
+    "body": {
+      "one_liner": "CrowdStrike is a high-velocity innovation compounder with a confirmed Bessembinder extreme-winner signal, but GAAP losses, top-decile asset growth, and incomplete retention disclosures keep the composite at watchlist until capital efficiency confirms at scale.",
+      "bull": [
+        {
+          "headline": "Bessembinder extreme-winner candidate: trailing momentum confirms right-tail velocity",
+          "detail": "BEW-3 triggered at a 12-1 momentum return of +98.9%, placing CRWD in the cohort that empirically accounts for the vast majority of long-run equity wealth creation. Bessembinder's framework demands sized, extended holds for names that enter this cohort; trimming on price strength is structurally wealth-destroying at the portfolio level. The momentum signal is corroborated by F2 scoring at the strong band, with the stock within +6.3% of its 52-week high and a positive PEAD drift signal — institutions are continuing to absorb earnings surprises rather than fading them.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+98.9%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+6.3%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "9.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation engine at scale: gross margin expanding and R&D intensity in the academic sweet spot",
+          "detail": "F3 scores in the strong band. Gross margin has expanded at an average of 18.4 basis points per year, and R&D intensity of +28.8% sits squarely in the empirically identified sweet spot for durable innovation compounders. A 7-quarter consecutive positive earnings surprise streak signals that management's execution is repeatedly exceeding the market's model — a qualitative indicator of compounding operational leverage that the point-in-time financials understate.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "18.4 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+28.8%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            },
+            {
+              "value": "8.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        },
+        {
+          "headline": "Operating cash generation radically decoupled from GAAP losses: ICA-adjusted capital efficiency may be strongly positive",
+          "detail": "ICA-3 fires because GAAP net income of –$162.5M is accompanied by operating cash flow of $1.61B, implying an OCF-to-loss ratio of approximately 9.92×. Peters-Taylor intangible-capital accounting would capitalise a significant fraction of R&D (28.8% intensity) and organisational SG&A, materially expanding the denominator and simultaneously revealing that the business generates substantial real economic returns obscured by GAAP expensing conventions. The FCF margin stands at +29.8%, a direct observable that bypasses the GAAP distortion.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-$162.5M",
+              "field_path": "overlay_triggers.1.relevant_numbers.gaap_net_income"
+            },
+            {
+              "value": "$1.61B",
+              "field_path": "overlay_triggers.1.relevant_numbers.operating_cash_flow"
+            },
+            {
+              "value": "9.92×",
+              "field_path": "overlay_triggers.1.relevant_numbers.ocf_to_loss_ratio"
+            },
+            {
+              "value": "+29.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue compounding at +29.0% CAGR with clean balance sheet: growth runway intact",
+          "detail": "Three-year revenue CAGR of +29.0% against a Debt/EBITDA of 0.0 means compounding is funded internally, not borrowed. Rule of 40 at 48.94 — comfortably above the threshold that distinguishes compounders from growers — confirms that speed and efficiency are coexisting, not trading off. The balance sheet offers optionality: no leverage means management retains full capital-allocation discretion without creditor constraints.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+29.0%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "48.94",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with skin in the game: George Kurtz remains aligned principal, not hired agent",
+          "detail": "George Kurtz is the founder-CEO, a structural alignment condition that the Thorndike Outsiders framework treats as first-order. Founder CEOs have empirically longer time horizons, lower propensity for EPS-target-driven buybacks at any price, and stronger identification with business permanence. CEO equity reported at 0.5% (with parser uncertainty noted). The Fahlenbrach institutional-alignment signal is False in F6, which warrants monitoring, but the founder identity partially offsets the absence of the Fahlenbrach flag.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Top-decile asset growth triggers Cooper-Gulen-Schill disqualifier: F1 capped at fail",
+          "detail": "Asset growth in the top decile (>25% YoY) is the single most robust academic disqualifier in the pre-discovery alpha literature (Cooper, Gulen & Schill 2008). The F1 Piotroski score of 4/9 is itself uninspiring, but the asset growth band triggers a hard cap that renders F1 a fail regardless. There are zero open-market insider buyers in the trailing 90 days, and GP/A does not read as strong — together these signals suggest institutional enthusiasm is not being echoed at the management level through open-market purchases.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC deeply negative at –11.6%: capital efficiency unproven at the accounting level",
+          "detail": "F5 ROIC of –11.6% is the headline concern. ICA-1 fires precisely because GAAP ROIC is below the 15% threshold while R&D intensity is 28.8%, confirming the distortion is methodological — but the distortion is directional, not eliminable. Until retained earnings accumulate and intangible capital stops expanding at this pace, the GAAP ROIC will remain negative, depressing F5 to a partial verdict. The pre-profitability stage classification formalises this: the business has not yet demonstrated accounting-level capital returns at scale.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-11.6%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "5.0",
+              "field_path": "frameworks.4.score"
+            }
+          ]
+        },
+        {
+          "headline": "NRR and GRR undisclosed: platform retention quality cannot be independently verified",
+          "detail": "F6 scores in the moderate band in part because NRR and GRR are not disclosed in the 10-K MD&A. For a platform dominator thesis, net revenue retention is the single most important confirmation that the moat is compounding. Its absence prevents independent validation of whether expansion revenue is offsetting churn at rates consistent with the thesis. The Fahlenbrach institutional-alignment signal is also False. F6 at 4.0 is the softest pillar of the bull case and requires resolution.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        },
+        {
+          "headline": "Stealth accumulation signal weak: sentiment data gaps limit conviction on institutional positioning",
+          "detail": "F4 scores at 4.0 with two material data gaps: 13F holder-count delta has only one snapshot (insufficient for trend analysis) and the put/call ratio is unavailable. The EPS acceleration signal reads only weakly increasing. Without multi-period institutional accumulation data, it is not possible to distinguish between broad passive ownership and active conviction-weighted accumulation — a distinction that matters for the thesis that smart money is sizing into a platform winner.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4.0",
+              "field_path": "frameworks.3.score"
+            }
+          ]
+        },
+        {
+          "headline": "Composite at watchlist (5.69): lollapalooza has not assembled — F1 drag is structural",
+          "detail": "The composite score of 5.69 resolves to a watchlist verdict. The strong signals in F2 (9.0) and F3 (8.0) are diluted by F1 fail (3.0) and partial readings across F4, F5, and F6. Munger's lollapalooza requires multiple independent forces aligning simultaneously; here, the innovation and momentum pillars are clearly present but the financial quality and accumulation pillars are not yet confirming. The composite will not upgrade until asset growth normalises and capital efficiency confirms.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.69",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "9.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "8.0",
+              "field_path": "frameworks.2.score"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC remains deeply negative across 2–3 additional annual filings as asset growth normalises. Persistent GAAP ROIC deterioration after the hyper-growth phase would indicate the moat is not converting investment into durable returns — a thesis-break condition, not a noise event.",
+          "severity": "high",
+          "grounded_in": "ICA-1"
+        },
+        {
+          "factor": "Monitor whether NRR and GRR are disclosed in future 10-K MD&A filings. Continued non-disclosure may indicate that retention metrics would be unflattering relative to platform-dominator comparables; if disclosed, compare against the Rule of 40 trajectory to test whether expansion revenue is compounding or decelerating.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Watch for asset growth normalisation: if asset growth remains in the top decile beyond two additional fiscal years without corresponding FCF conversion, the Cooper-Gulen-Schill disqualifier becomes structurally load-bearing rather than a temporary growth-phase artifact.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor CEO equity concentration over time. The 0.5% figure carries parser uncertainty; confirm via proxy statement. If Kurtz reduces ownership materially below this level through scheduled sales, the founder-alignment premise weakens and warrants re-scoring the management pillar.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "BEW-3 is active at a 12-1 momentum return of +98.9%, placing the stock in the extreme-winner cohort. Monitor for momentum reversal over rolling 12-month windows: if 12-1 momentum drops below zero and PEAD flips to negative drift, the F2 signal degrades and the primary momentum driver of the current composite recedes.",
+          "severity": "medium",
+          "grounded_in": "BEW-3"
+        },
+        {
+          "factor": "F4 institutional accumulation data remains structurally incomplete (single 13F snapshot, no put/call ratio). Over the next 2–3 filing cycles, accumulate snapshots. If institutional holder-count delta turns negative concurrent with weakening momentum, it signals distribution rather than accumulation — a thesis-relevant shift.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "PSA-3 is active: CRWD has approximately 88 months of listed history, short of the 12-year requirement for F7. As the price history lengthens, F7 will become feasible; if it resolves to a weak or fail band, the composite will face downward pressure from a previously excluded framework.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Lunch-eating test: the cybersecurity platform category is contested by Microsoft, Palo Alto, and others with comparable distribution and R&D budgets. Monitor whether gross margin expansion rate (currently 18.4 bps/yr average) continues or compresses — compression would signal competitive pricing pressure eroding the platform moat before it reaches full scale.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        }
+      ],
+      "data_caveats": [
+        "F4 – 13F holder-count delta: only one institutional snapshot is available; multi-period trend analysis requires additional dive cycles to accumulate. The accumulation signal is therefore provisional.",
+        "F4 – Options put/call ratio: no free-tier data source is available per project specification; this signal is absent from the F4 score.",
+        "F5 – Buyback yield: not computed because market cap and share repurchases data were not persisted in this run; the F5 score excludes this signal.",
+        "F6 – NRR and GRR: not disclosed in 10-K MD&A; treated as zero-point signals. This is a material omission for a platform-dominator assessment.",
+        "Company – market cap, beta, EV/EBITDA, P/B, trailing P/E: all null in this run; valuation-relative signals dependent on these fields are unavailable.",
+        "CEO equity pct (0.5%): flagged as parser_uncertain; the figure should be independently verified against the most recent DEF 14A before being relied upon in the management-alignment assessment."
+      ]
+    }
+  },
+  "input_tokens": 11920,
+  "output_tokens": 3800,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 80652,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

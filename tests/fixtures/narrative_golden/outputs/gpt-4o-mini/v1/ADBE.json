@@ -1,0 +1,187 @@
+{
+  "case_id": "ADBE",
+  "view_sha256": "827905c012dbbde5b4947d9cf3a2dda8a33a37163b758575e7fd39c7a9ebeede",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ADBE",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:15:44.241101Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9390,
+    "completion_tokens": 849,
+    "cost_usd": 0.001841,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[0]: field_path 'overlay_triggers.0.pt_adjusted_roic' does not exist in view",
+      "bear[1].numeric_claims[1]: field_path 'overlay_triggers.0.roic_gaap' does not exist in view"
+    ],
+    "body": {
+      "one_liner": "Adobe Inc. demonstrates strong fundamentals but faces challenges in momentum and economic capital efficiency.",
+      "bull": [
+        {
+          "headline": "Strong Pre-Discovery Alpha Signals",
+          "detail": "Adobe Inc. exhibits strong fundamentals with a Piotroski score of 7/9, indicating solid financial health. The company is experiencing shrinking asset growth, which aligns with a focus on efficiency and profitability. Additionally, it has a strong gross profitability ratio, suggesting effective cost management and a robust business model. These factors contribute to a strong fit in the Pre-Discovery Alpha framework (F1).",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7/9",
+              "field_path": "frameworks.0.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "High Growth Quality Metrics",
+          "detail": "The company shows impressive growth quality with a revenue CAGR of 10.5% and a free cash flow margin of 40.8%. Furthermore, its return on invested capital (ROIC) stands at 56.5%, indicating effective capital utilization. These metrics suggest that Adobe is well-positioned for sustained growth and profitability, reinforcing its strong fit in the Growth Quality framework (F5).",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "10.5%",
+              "field_path": "frameworks.4.key_signals.0"
+            },
+            {
+              "value": "40.8%",
+              "field_path": "frameworks.4.key_signals.1"
+            },
+            {
+              "value": "56.5%",
+              "field_path": "frameworks.4.key_signals.2"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation Appears Attractive",
+          "detail": "Adobe's valuation metrics indicate it is trading at a very cheap level, with an EV/Revenue z-score of -1.989 and a P/B z-score of -1.018. This suggests that the market may be undervaluing the company's growth potential, providing a favorable entry point for long-term investors. The strong fit in the Smart Beta Timing framework (F7) supports this valuation perspective.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.989",
+              "field_path": "frameworks.6.key_signals.0"
+            },
+            {
+              "value": "-1.018",
+              "field_path": "frameworks.6.key_signals.2"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Momentum Signals",
+          "detail": "Adobe's momentum framework (F2) shows a significant decline of 30.1% over the past 12 months, indicating a lack of positive price action. This weak momentum could deter potential investors and suggests that the stock may not be attracting new buyers, which is a critical factor for sustained price appreciation.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-30.1%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Economic Capital Efficiency Divergence",
+          "detail": "The Peters-Taylor adjusted ROIC is 34.84%, which is significantly lower than the GAAP ROIC of 53.67%, resulting in a divergence of 18.84 percentage points. This indicates that economic capital efficiency is materially lower than GAAP suggests, raising concerns about the company's true profitability and operational efficiency. This divergence is highlighted by the active overlay trigger (ICA-5).",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "34.84%",
+              "field_path": "overlay_triggers.0.pt_adjusted_roic"
+            },
+            {
+              "value": "53.67%",
+              "field_path": "overlay_triggers.0.roic_gaap"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for further deterioration in momentum metrics, as continued weakness may signal broader market issues.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        }
+      ],
+      "data_caveats": [
+        "No recent insider purchases were reported, which may indicate a lack of confidence from management in the company's near-term prospects.",
+        "R&D intensity data is not disclosed, limiting insights into the company's investment in innovation.",
+        "Customer retention metrics (NRR and GRR) are not disclosed, which are critical for assessing long-term revenue stability."
+      ]
+    }
+  },
+  "input_tokens": 8366,
+  "output_tokens": 849,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 8498,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

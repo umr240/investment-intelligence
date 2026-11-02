@@ -1,0 +1,148 @@
+{
+  "case_id": "OFAL",
+  "view_sha256": "d3cdfb032898ac65c6695d3f40c979ed2e54b82a1680b737215cf51ee0afacbb",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "OFAL",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:39.139926Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8916,
+    "completion_tokens": 458,
+    "cost_usd": 0.001535,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].numeric_claims[0]: claim value '1' does not match view value '2025-05-21' at 'company.ipo_date'"
+    ],
+    "body": {
+      "one_liner": "OFA Group's composite verdict is to exclude due to insufficient data and negative net income.",
+      "bull": [
+        {
+          "headline": "Founder CEO with Significant Equity Stake",
+          "detail": "Li Hsien Wong, the founder and CEO, holds 33.13% equity, indicating strong alignment with shareholder interests. This ownership can drive long-term strategic decisions beneficial for the company.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "33.13%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income Signals Financial Strain",
+          "detail": "OFA Group reported a net income of -$8,022,816, indicating ongoing financial challenges that could hinder growth and operational stability.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-$8,022,816",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Insufficient Historical Data for Analysis",
+          "detail": "The company lacks the necessary quarterly and annual history for reliable framework assessments, limiting the ability to evaluate its performance and potential effectively.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Recent IPO Raises Caution",
+          "detail": "As a recent IPO with only 1 year of public data, OFA Group faces inherent risks associated with new listings, including volatility and untested business models.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "1",
+              "field_path": "company.ipo_date"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether net income continues to decline over the next few quarters, indicating persistent financial issues.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Watch for any signs of operational improvement or strategic shifts that could stabilize financial performance.",
+          "severity": "medium",
+          "grounded_in": "company.ceo_equity_pct"
+        },
+        {
+          "factor": "Keep an eye on the company's ability to generate sufficient historical data for future assessments, as this is critical for long-term evaluation.",
+          "severity": "medium",
+          "grounded_in": "frameworks"
+        }
+      ],
+      "data_caveats": [
+        "OFA Group has insufficient quarterly history for frameworks F1, F2, F3, F4, F5, and F6, limiting analysis.",
+        "Recent IPO status (listed for 1 year) affects the applicability of framework F7, which requires 10 years of data."
+      ]
+    }
+  },
+  "input_tokens": 7892,
+  "output_tokens": 458,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 9497,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

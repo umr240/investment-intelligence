@@ -1,0 +1,243 @@
+{
+  "case_id": "NTIP",
+  "view_sha256": "6b108338f9c09fbdfc80c7a5f9a59156672d10b4236377a9b7d0db454debde46",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NTIP",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:58:01.636876Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11478,
+    "completion_tokens": 2498,
+    "cost_usd": 0.071904,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Network-1 Technologies is a pre-profitability patent-licensing shell with a composite score of 2.63 (exclude verdict), deeply negative GAAP ROIC, and only two feasible frameworks — both failing — leaving no credible compounding thesis.",
+      "bull": [
+        {
+          "headline": "Zero financial leverage is a structural floor — no debt-servicing risk in a cash-burning entity",
+          "detail": "F5 signals Debt/EBITDA of 0.0, meaning the company carries no financial leverage. For a pre-profitability patent licensor burning cash, this eliminates the acute risk of covenant breach or forced dilution via debt restructuring. It is a narrow positive — it protects the downside floor but provides no compounding mechanism on its own.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ROIC restatement narrows the loss significantly — intangible capitalisation is informative",
+          "detail": "The ICA-5 overlay reveals that Peters-Taylor non-GAAP ROIC diverges from GAAP ROIC by approximately 90.86 percentage points (upward direction), lifting the economic loss rate materially relative to the raw GAAP figure. For a patent-licensing business where SG&A and R&D are partially capital-like, this restatement is the more economically accurate lens. The gap is large enough to matter analytically, though both legs remain negative.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "90.86pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-6.12%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-96.98%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Composite score of 2.63 triggers an 'exclude' verdict — the weakest possible outcome",
+          "detail": "The stage-weighted composite scores 2.63 out of 10, producing an unambiguous 'exclude' verdict. Only two frameworks (F5, F6) were feasible; both failed in the 'weak' band. F5 scored 3.5 and F6 scored 2.0. With five frameworks unfeasible, the analytical base is thin and systematically unfavorable across every computable dimension.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.63",
+              "field_path": "composite.score"
+            },
+            {
+              "value": "3.5",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC of -92.1% signals capital destruction at a severe rate",
+          "detail": "F5 key signals show ROIC of -92.1%. Even under Peters-Taylor restatement, economic ROIC remains negative at -6.12%. A patent-licensing entity with latest net income of -$2.42M against revenue of only $150K is not merely pre-profitability in a growth sense — it is consuming capital against a near-zero revenue base. There is no observable path to positive returns from reported financials.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-92.1%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "-$2,420,000",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$150,000",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform Dominator fails on every retention and efficiency metric",
+          "detail": "F6 scores 2.0. NRR and GRR are both not_disclosed, yielding zero points. GP/A band is 'weak'. The Fahlenbrach insider-alignment signal is False. Rule of 40 registers at 50.0, but in a business with negligible revenue, this figure lacks the interpretive weight it carries in a scaled SaaS context — it does not represent a healthy growth-profitability tradeoff.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "50.0",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Five of seven frameworks are unfeasible — analytical coverage is structurally impaired",
+          "detail": "F1, F2, F3, F4 are unfeasible due to absent analyst coverage and earnings history. F7 is unfeasible due to insufficient history (only 9 annual periods vs. the required 10). This means the composite rests entirely on F5 (weighted 0.25) and F6 (weighted 0.75), with renormalised weights. The result is a structurally thin verdict that cannot be validated across the standard multi-framework lattice.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.25",
+              "field_path": "composite.weights_used.F5"
+            },
+            {
+              "value": "0.75",
+              "field_path": "composite.weights_used.F6"
+            }
+          ]
+        },
+        {
+          "headline": "CEO is not a founder and equity stake is undisclosed — capital-allocator alignment cannot be confirmed",
+          "detail": "Corey Horowitz is identified as CEO but is_founder_ceo is False and ceo_equity_pct_state is 'not_disclosed.' The Fahlenbrach signal in F6 also returned False. For a small patent-licensing entity where management incentive alignment is the principal governance mechanism, the absence of disclosed insider ownership and non-founder status is a meaningful gap in the thesis.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether revenue remains near zero across the next 2-3 annual filings. A patent licensor with $150K in latest revenue and -$2.42M net income faces terminal cash depletion if litigation outcomes do not convert to material licensing streams. Thesis-break condition: continued revenue stasis with no demonstrated licensing pipeline.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor GAAP ROIC trajectory over annual filings. Current GAAP ROIC of -92.1% and Peters-Taylor economic ROIC of -6.12% both remain negative. If the economic ROIC fails to trend toward positive over the 5-year hold, the capital destruction thesis intensifies. The ICA-5 divergence is informative but not a rescue — both legs negative.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "CEO equity ownership is undisclosed (ceo_equity_pct_state = not_disclosed) and the Fahlenbrach signal is False. Watch annual proxy filings for evidence of insider ownership changes, compensation structure shifts, or dilutive equity issuance patterns that would confirm capital-allocator misalignment.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "PSA-3 fired due to insufficient annual history (9 of 10 required periods). Once the 10th annual period is available, re-run F7 Smart Beta Timing. If F7 then fails or scores weak, it further reinforces the exclude verdict with no new mitigants.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "F5 is missing Revenue CAGR 3y, FCF margin, and GP/A — three of its primary growth-quality signals. If future filings enable these computations and they confirm weak or negative readings, the F5 score of 3.5 may prove optimistic rather than conservative.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        }
+      ],
+      "data_caveats": [
+        "NTIP: yfinance earnings_dates empty — earnings history is unavailable from the primary market-data feed, which is why F2 (Momentum) and F4 (Stealth Accumulation) are unfeasible.",
+        "NTIP: F5 Revenue CAGR 3y — missing revenue data; this signal could not be computed and contributes no points to the F5 score.",
+        "NTIP: F5 FCF margin — no free_cash_flow data available; this signal is absent from the F5 calculation.",
+        "NTIP: F5 GP/A — no value computable; gross-profit-to-assets efficiency signal is missing from F5.",
+        "F6 NRR and GRR are not_disclosed in 10-K MD&A; absence is treated as zero-points per methodology — not a data-pipeline failure but a disclosure gap.",
+        "Market cap, beta, P/E, P/B, and EV/EBITDA are all null in the company record — valuation multiples cannot be computed or cited for this run.",
+        "CEO equity percentage is not_disclosed; insider alignment cannot be quantified beyond the qualitative Fahlenbrach signal.",
+        "IPO date state is parser_uncertain; listing-type for PSA workflow could not be confirmed, leaving PSA-3 as a conditional trigger rather than a confirmed spinoff flag."
+      ]
+    }
+  },
+  "input_tokens": 11478,
+  "output_tokens": 2498,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 48957,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

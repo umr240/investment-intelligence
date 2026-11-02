@@ -1,0 +1,149 @@
+{
+  "case_id": "ATGL",
+  "view_sha256": "34a6fb0a36935b8316a0a6cb6e4054ff23cb490c0db938a7405c00876c4f0d8a",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ATGL",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:17.406954Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8907,
+    "completion_tokens": 433,
+    "cost_usd": 0.001519,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F2' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F4' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F6' is unfeasible for this ticker — cannot ground a point",
+      "bear[0].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point",
+      "risks[1]: grounded_in='F7' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "ATGL's composite score indicates exclusion due to insufficient data and recent IPO status.",
+      "bull": [
+        {
+          "headline": "Potential for High Economic Capital Efficiency",
+          "detail": "The divergence between Peters-Taylor non-GAAP ROIC and GAAP ROIC suggests that ATGL may have significant economic capital efficiency, with a notable upward gap of 48.37 percentage points. This indicates that the company’s underlying operational efficiency could be better than GAAP metrics suggest, warranting close monitoring as it matures.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "48.37pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Insufficient Historical Data for Analysis",
+          "detail": "ATGL's recent IPO and lack of sufficient quarterly history across all frameworks (only 1 quarter available) severely limit the ability to assess its financial health and operational performance. This lack of data makes it challenging to establish reliable trends or forecasts, which is critical for long-term investment decisions.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Negative Net Income Signals Financial Strain",
+          "detail": "The latest reported net income of -$9,049,044 indicates that ATGL is currently operating at a loss. This financial strain raises concerns about sustainability and the ability to achieve profitability in the near future, particularly in a competitive technology sector.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$9,049,044",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic capital efficiency continues to diverge from GAAP metrics in future filings, indicating potential operational improvements.",
+          "severity": "medium",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any signs of profitability or continued losses in subsequent quarters, which could validate or invalidate the current thesis.",
+          "severity": "high",
+          "grounded_in": "F7"
+        }
+      ],
+      "data_caveats": [
+        "ATGL: yfinance earnings_dates empty",
+        "ATGL: no Form 4 insider transactions found on EDGAR"
+      ]
+    }
+  },
+  "input_tokens": 7883,
+  "output_tokens": 433,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 5048,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

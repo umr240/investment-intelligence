@@ -1,0 +1,291 @@
+{
+  "case_id": "SOLV",
+  "view_sha256": "2d2057ee36eeabc8f014674538d54cca2f5d4ba40e7a3d6a7486368822ef1213",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SOLV",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:12:42.699382Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11872,
+    "completion_tokens": 3222,
+    "cost_usd": 0.083946,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "Solventum is a profitable, ROIC-positive medtech spinoff carrying material intangible-capital distortion, flat revenue growth, and negative FCF margin — composite monitor verdict reflects a business in post-separation transition, not yet demonstrating the compounding trajectory required for a long-duration hold.",
+      "bull": [
+        {
+          "headline": "Piotroski F-score signals financial statement quality above mid-range",
+          "detail": "A 7/9 Piotroski score indicates strengthening profitability, leverage, and operating efficiency signals across the balance sheet. For a company only one year into independent public life, this is a constructive baseline — it suggests the separation from 3M did not produce an immediately deteriorating financial profile. The score is a partial positive, not a clean pass, but it is the strongest single signal in F1.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Price momentum is the scorecard's strongest signal — strong-fit band with positive PEAD drift",
+          "detail": "F2 scores in the strong band, anchored by double-digit 12-1 momentum and a price sitting above its 52-week high. The PEAD signal adds a behavioural dimension: the market is still incorporating earnings information in the direction of the trend, not fading it. Under a 5-year hold framing, sustained momentum with positive post-earnings drift reduces the probability that current pricing reflects a crowded consensus short-covering event.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "8.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "+27.3%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+6.9%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC at a structurally attractive level for a medtech incumbent",
+          "detail": "Reported ROIC is a significant positive in isolation. For a surgical and medical instruments business with a diversified customer base, a return above cost of capital signals that the legacy 3M healthcare franchise retained durable pricing power post-spinoff. The ICA overlay qualifies this (see risks), but even the Peters-Taylor-adjusted figure remains meaningfully positive — the business is generating economic returns, not just accounting ones.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+18.5%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.1052",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Seven-quarter earnings surprise streak: management guidance credibility is intact",
+          "detail": "A seven-quarter beat streak is a durable signal of conservative guide-then-beat discipline, which is rare in post-spinoff environments where initial guidance is often set to manage separation complexity. This reduces the probability of a near-term negative earnings discontinuity and raises confidence that the internal planning apparatus transferred cleanly from the parent.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Debt load is moderate and manageable relative to earnings base",
+          "detail": "Debt/EBITDA of 1.81x is consistent with a capital structure that does not threaten solvency under normal operating conditions. For a medtech business with a large installed base and diversified customer concentration, this level of leverage preserves optionality for deleveraging or targeted capital deployment — provided FCF turns positive (a key watch condition).",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.81",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative FCF margin undermines the compounding thesis at a foundational level",
+          "detail": "Free cash flow margin is negative. A business that does not convert earnings to cash cannot self-fund reinvestment, debt repayment, or shareholder returns without external capital. For a hold-forever framework, this is the most material structural concern: compounding requires reinvestable cash, not accounting income. Until FCF turns sustainably positive, the ROIC signal is partially disconnected from actual capital generation.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.4%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "ICA-5 trigger: intangible-capital restatement reveals GAAP ROIC overstates economic returns by a wide margin",
+          "detail": "The Peters-Taylor restatement, capitalising R&D and a fraction of SG&A per published methodology, reduces reported ROIC by over ten percentage points. This is a large gap — the intangible capital base embedded in the business (accumulated R&D, organisational capital) is not reflected in the GAAP denominator. The economic ROIC is still positive, but the gap signals that the headline efficiency metric should not be taken at face value when sizing the quality of the franchise.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "10.52pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.2104",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "0.1052",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue growth is effectively stagnant — the compounding runway is unclear",
+          "detail": "Three-year revenue CAGR is below one percent. For a business requiring a long-duration hold to generate meaningful wealth creation, near-zero top-line growth is a structural constraint on the compounding equation. Even with stable margins, the earnings growth rate is bounded by revenue growth absent significant margin expansion — which is itself contradicted by the gross margin contraction signal in F3.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+0.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "-142.8 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 fails: no platform-dominator characteristics, Rule of 40 well below threshold",
+          "detail": "F6 scores in the weak band. NRR and GRR are not disclosed, suggesting the business does not manage or communicate around retention metrics — a hallmark of relationship-led or transactional medtech rather than a recurring-revenue platform. The Rule of 40 composite is far below the threshold used to identify compounding platform franchises. No Fahlenbrach CEO-ownership signal. This is not a platform business by any measurable proxy.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "2.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "0.74",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment signal is absent; non-founder hired CEO with parser-uncertain equity stake",
+          "detail": "CEO equity ownership is flagged as parser-uncertain and at a low reported level. Bryan Hanson is not a founder. Under the Outsiders capital-allocator lens, hired CEOs with minimal skin in the game face structurally different incentive structures than owner-operators. Combined with F6's Fahlenbrach signal being false, there is no observable quantitative evidence that management compensation is structured around long-term shareholder value creation.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether FCF margin remains negative across two or more additional annual filings. Persistent negative FCF in a business reporting positive ROIC is a structural warning — it may reflect working capital deterioration, capex overruns, or earnings quality issues. If FCF does not turn positive within the first two years of the hold, the compounding thesis is impaired at the cash-generation layer, not merely delayed.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor gross margin trajectory annually. The current rate of contraction is the primary signal that pricing power and/or cost structure are moving in the wrong direction. If contraction persists across three or more annual filings without an identifiable reversal driver (mix shift, pricing action, cost restructuring), the moat-direction assessment should be revised from flat to narrowing.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "ICA-5 restatement gap: monitor whether the spread between GAAP ROIC and Peters-Taylor-adjusted ROIC narrows over time. A stable or widening gap would indicate that intangible capital is growing faster than economic returns — consistent with a business investing heavily without generating proportionate economic value. Narrowing would be constructive.",
+          "severity": "medium",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Revenue growth stagnation: monitor whether the three-year CAGR inflects meaningfully upward. Near-zero revenue growth with margin compression is the precursor profile for a value trap. If revenue growth does not accelerate to a level consistent with the business's ROIC, the long-duration compounding case cannot be sustained on margin expansion alone.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 trigger: Solventum is a recent listing (spinoff context uncertain per trigger). Post-separation businesses frequently carry stranded costs, dis-synergies, and capital structure decisions that take two to four years to resolve. Monitor whether separation-related cost headwinds are being disclosed and resolved, or whether they are becoming structural.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "CEO alignment: monitor DEF 14A annually for changes in equity ownership, compensation structure, and capital allocation philosophy. The current parser-uncertain, low reported equity stake is not disqualifying, but it requires active monitoring. Any shift toward revenue-linked compensation without profitability gates would be a deteriorating signal.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "F4 data gaps will resolve over time as multiple 13F snapshots accumulate. Monitor whether institutional holder-count delta turns positive (accumulation pattern) or negative (distribution). Short interest data is currently withheld; if disclosed in future periods, a structurally elevated short position would warrant additional thesis scrutiny.",
+          "severity": "low",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "F4: Institutional holder-count delta cannot be computed — only one 13F snapshot exists to date; this signal will populate as multiple dives accumulate over time.",
+        "F4: Options put/call ratio is unavailable — no free-tier source was available per project specification; this signal is absent from the stealth-accumulation assessment.",
+        "F4: Short interest (current and peak) is withheld due to third-party data restrictions; the short-squeeze and short-decline signals cannot be evaluated.",
+        "F5: Buyback yield is not persisted — market cap and share repurchase data were not available in the data layer; this capital-return signal is absent from the growth quality assessment.",
+        "F7: Unfeasible — insufficient annual history (five years available, ten required); Smart Beta Timing framework is excluded from the composite entirely.",
+        "PSA-3: Listing type (spinoff vs. IPO) is unconfirmed in the data layer; the PSA spinoff workflow applicability is therefore flagged but not conclusively resolved.",
+        "Company: Market cap, P/B ratio, trailing P/E, EV/EBITDA, and beta are all null in the current data pull; valuation multiple and market-value-dependent signals cannot be assessed.",
+        "Company: IPO date parser state is flagged as uncertain; months-since-listing used in PSA-3 overlay is null as a result."
+      ]
+    }
+  },
+  "input_tokens": 11872,
+  "output_tokens": 3222,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 69156,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

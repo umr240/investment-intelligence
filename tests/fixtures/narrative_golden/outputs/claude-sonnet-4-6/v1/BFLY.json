@@ -1,0 +1,320 @@
+{
+  "case_id": "BFLY",
+  "view_sha256": "4385380341707915bd7b3122c27d40c5a9ae5513a6075472961e9680ffee58a9",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "BFLY",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:40:42.701927Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12304,
+    "completion_tokens": 3723,
+    "cost_usd": 0.092757,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].numeric_claims[1]: claim value '2.51' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "bear[2].headline: number '90' not in scorecard whitelist (possible hallucination)",
+      "bear[2].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Butterfly Network is a pre-profitability medical-imaging innovator with elite gross-margin expansion and extreme-winner momentum signals, but structurally negative ROIC and an absent platform-retention profile keep the composite at watchlist — hold conviction must rest on intangible-capital-adjusted economics and moat-direction, not current GAAP profitability.",
+      "bull": [
+        {
+          "headline": "Gross-margin trajectory is exceptional: F3 records ~3,585 bps/yr expansion, a signal of maturing unit economics",
+          "detail": "Annual gross-margin expansion at this pace from a hardware-anchored medical-device base implies meaningful mix shift toward software/services or rapid COGS leverage. For an owner-operator horizon, the trajectory matters more than the current level — if sustained even partially, this converts a burning pre-profitability P&L into an attractive operating-leverage story over years 3-5 of the hold.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3584.4 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "9.5",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ICA restatement narrows the ROIC gap materially: economic ROIC is far less negative than GAAP implies",
+          "detail": "GAAP ROIC of -74.8% is severely distorted by immediate expensing of R&D (37.1% intensity) and SG&A. ICA-5 triggers an upward restatement of 96.76 percentage points, producing an economic ROIC of -13.9%. This is still negative, but the direction and magnitude of the gap are analytically critical: the company is investing heavily in intangible capital that GAAP does not recognise on the balance sheet. For a 5-year hold, the denominator will grow as those investments mature.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-74.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "96.76pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-13.9%",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "+37.1%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Momentum and PEAD are both firing: 12-1 return of +232.7% with positive post-earnings drift signals institutional accumulation",
+          "detail": "A 12-1 momentum return of this magnitude, confirmed by a positive-drift PEAD signal and the stock trading above its 52-week high by 29.2%, suggests the market is beginning to price-in a thesis inflection. BEW-3 triggers the extreme-winner check — Bessembinder's evidence shows this is precisely the return profile that precedes the minority of stocks that drive aggregate wealth creation. Position sizing and hold duration matter more than entry timing for right-tail outcomes.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+232.7%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+29.2%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "7.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "Patent portfolio of 665 and a 6-quarter earnings surprise streak indicate durable innovation cadence",
+          "detail": "A moderate patent portfolio of 665 patents combined with six consecutive quarters of positive earnings surprises suggests that R&D investment is converting to product capability faster than consensus models. This is the compounding pattern — repeated outperformance against expectations at the innovation layer — that separates intangible-capital compounders from capital destroyers who merely spend on R&D.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "665",
+              "field_path": "frameworks.2.key_signals.4.1"
+            },
+            {
+              "value": "6 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Clean balance sheet (Debt/EBITDA 0.0) preserves optionality; Piotroski Sloan accrual quality is high",
+          "detail": "Zero financial leverage in a pre-profitability company is structurally important: it eliminates the left-tail ruin scenario where cash burn meets a debt maturity wall. High Sloan accrual quality (True) confirms that reported losses are cash-based, not accrual-inflated — the burn is real but not obscured. Together these extend the runway for the gross-margin and R&D investment thesis to mature before any forced restructuring.",
+          "framework_codes": [
+            "F1",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            },
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "GAAP FCF margin of -25.0% and ROIC of -74.8% confirm the company is a heavy capital consumer in pre-profitability",
+          "detail": "Even after Peters-Taylor restatement, economic ROIC remains at -13.9%. Revenue CAGR of 10.0% is insufficient to suggest the business will reach break-even on invested capital in the near term without a step-change in either pricing power or volume. A 3-year CAGR at this pace against a deeply negative FCF margin means the Bessembinder right-tail outcome requires a non-linear inflection — which is possible but not yet evidenced at the cash-flow level.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-25.0%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "-74.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "+10.0%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform Dominator scores 1.0/10: no disclosed NRR/GRR and Rule of 40 of 2.51 signal weak platform economics",
+          "detail": "For a hardware/software medical-imaging platform, retention metrics are the single most important predictor of long-term economics. Their non-disclosure in 10-K MD&A is itself a signal — companies with strong net revenue retention tend to disclose it. A Rule of 40 score of 2.51 confirms the combined growth-plus-margin profile is structurally insufficient at the current stage. Without NRR evidence, the moat durability claim is ungrounded.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "1.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "2.51",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Piotroski 4/9 and single open-market buyer in 90 days point to weak fundamental quality and insider indifference",
+          "detail": "A Piotroski F-score of 4 places the company in the lower quality band — profitability, leverage/liquidity, and operating efficiency signals are mostly failing. Only one open-market insider buyer in 90 days (against zero disclosed CEO equity stake) confirms that management is not signalling conviction with personal capital. For a hold thesis anchored on capital-allocator quality, this is the most structurally concerning data point in the scorecard.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "1",
+              "field_path": "frameworks.0.key_signals.2.1"
+            },
+            {
+              "value": "3.67",
+              "field_path": "frameworks.0.score"
+            }
+          ]
+        },
+        {
+          "headline": "CEO is not a founder and equity ownership is not disclosed — capital-allocator alignment is structurally ambiguous",
+          "detail": "Joseph DeVivo is a hired CEO with no disclosed equity percentage. For a pre-profitability company where capital-allocation decisions over the next 3-5 years determine whether the intangible-capital thesis converts to cash, the absence of measurable skin-in-the-game is a material gap. The Outsiders 8-traits framework demands observable owner-operator behaviour; here, the signal is absent rather than negative — which is not the same as positive.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "F4 Stealth Accumulation is only partial: short-interest data withheld and options put/call ratio unavailable",
+          "detail": "The F4 partial score of 6.0 is computed without the two most informative signals — short interest trajectory and options skew. Given the 232.7% trailing momentum run, short interest dynamics are particularly relevant: a high short position unwinding into momentum could explain price action without reflecting genuine fundamental accumulation. The data gap prevents disambiguation.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6.0",
+              "field_path": "frameworks.3.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether gross-margin expansion rate decelerates across 2-3 more annual filings. If the 3,584 bps/yr trajectory reverts toward flat or negative, the core bull thesis — that unit economics are maturing — is invalidated. Watch for hardware-to-software mix disclosure in each 10-K.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor whether economic ROIC (Peters-Taylor adjusted, currently -13.9%) improves toward zero over years 2-4. If it remains deeply negative or widens despite gross-margin gains, the intangible-capital-adjusted thesis does not hold and the capital-destruction narrative strengthens.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor whether NRR or GRR are ever disclosed in 10-K MD&A. Continued non-disclosure after reaching a larger installed base would confirm the platform-dominator thesis is not developing. A disclosed NRR below 100% would be a thesis-break condition for the moat argument.",
+          "severity": "high",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "Monitor CEO equity ownership disclosure and insider open-market purchase activity across each proxy season. If CEO equity remains undisclosed and insider purchases remain sparse through year 3, the capital-allocator alignment concern becomes a thesis-break signal — not a monitoring note.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Extreme-winner momentum runs (BEW-3: +232.7% 12-1) can reverse rapidly if the underlying fundamental inflection fails to materialise in GAAP results. Monitor whether the 6-quarter positive earnings surprise streak continues or breaks — a surprise reversal combined with momentum mean-reversion is the most acute near-term drawdown scenario.",
+          "severity": "medium",
+          "grounded_in": "BEW-3"
+        },
+        {
+          "factor": "BEW-5 is a partial trigger: R&D intensity qualifies at 37.1% but market cap is unavailable. If market cap is confirmed above $2B, the BEW-5 small-cap condition does not fully apply and the Bessembinder extreme-winner probability estimate weakens. Verify market cap against the $2B threshold at next data refresh.",
+          "severity": "low",
+          "grounded_in": "BEW-5"
+        },
+        {
+          "factor": "FCF burn at -25.0% margin against 10.0% revenue CAGR implies the runway is finite. Monitor quarterly cash balance and burn rate for any indication that a dilutive capital raise is approaching — dilution at current prices would impair the per-share compounding thesis even if the business trajectory is intact.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 flags recent-listing status (IPO 2021). Institutional ownership patterns typical of post-IPO lock-up release and index-inclusion cycles can distort price signals in years 1-5. Treat F4 accumulation signals cautiously until the company has at least 6-7 years of post-IPO trading history.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio is unavailable (no free-tier source per project specification); the F4 score of 6.0 is computed without this signal and should be treated as a partial score.",
+        "F4 short interest (current and peak) is withheld as third-party data; short-interest trajectory — one of the most informative signals for distinguishing genuine accumulation from momentum short-squeeze — cannot be assessed.",
+        "F5 buyback yield is not computed because market cap and share repurchases data are not persisted in this run; the F5 score excludes this signal.",
+        "CEO equity percentage is not disclosed in available filings (state: not_disclosed); the F5 CEO alignment signal is scored as no_alignment, and the capital-allocator quality assessment is constrained by this gap.",
+        "Market cap (USD) is null in this run; BEW-5 is therefore a partial trigger only — the small-cap condition ($2B threshold) cannot be confirmed. PSA-3 months-since-listing is also null for the same reason.",
+        "F7 (Smart Beta Timing) is unfeasible due to insufficient annual history (8 years available, 10 required; listed approximately 5 years). No F7 signal contributes to the composite, and the composite weights are renormalised across F1-F6 accordingly.",
+        "NRR and GRR are not disclosed in 10-K MD&A; F6 retention signals are scored as not_disclosed zero-points per project specification. This is the modal outcome for non-pure-SaaS companies and does not necessarily imply poor retention — but the absence cannot be treated as a positive."
+      ]
+    }
+  },
+  "input_tokens": 12304,
+  "output_tokens": 3723,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 79561,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

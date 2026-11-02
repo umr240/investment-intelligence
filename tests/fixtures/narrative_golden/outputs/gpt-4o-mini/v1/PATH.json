@@ -1,0 +1,169 @@
+{
+  "case_id": "PATH",
+  "view_sha256": "796f3456aafa3a95667e62fb5265feb483c863e040c3c2c69d3aa7d3b0ebd959",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PATH",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:54.457234Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9367,
+    "completion_tokens": 634,
+    "cost_usd": 0.001785,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "ok",
+    "guard_warnings": [],
+    "body": {
+      "one_liner": "UiPath, Inc. shows mixed signals with strong growth quality but weak momentum and innovation metrics.",
+      "bull": [
+        {
+          "headline": "Strong Growth Quality Metrics",
+          "detail": "UiPath demonstrates robust growth quality with a revenue CAGR of 15.0%, a free cash flow margin of 21.1%, and a return on invested capital (ROIC) of 19.4%. These metrics indicate a solid foundation for sustainable growth and effective capital allocation, reflecting positively on the company's long-term potential.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "15.0%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "21.1%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "19.4%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Economic Capital Efficiency Divergence",
+          "detail": "The Peters-Taylor non-GAAP ROIC shows a significant upward divergence from GAAP ROIC, indicating that the company's economic capital efficiency is materially better than what GAAP suggests. This suggests that the company is effectively leveraging its investments in R&D and SG&A, which could enhance future profitability.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.04pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "0.0557",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "0.0053",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Momentum Signals",
+          "detail": "UiPath's momentum framework shows a significant decline of 17.3% over the past 12 months, indicating a lack of positive price action and investor interest. This weak momentum could hinder the stock's performance in the near term, suggesting caution in the short run.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-17.3%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation Metrics Underperforming",
+          "detail": "The company's innovation compounder score is hindered by an average gross margin contraction of 119.7 basis points per year, which raises concerns about its ability to maintain competitive pricing and profitability. This trend could impact long-term growth prospects if not addressed.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-119.7 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether ROIC erosion continues over 2-3 more annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Watch for any signs of increased customer concentration that could impact revenue stability.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the current analysis.",
+        "F4 data is incomplete due to reliance on third-party sources for short interest metrics."
+      ]
+    }
+  },
+  "input_tokens": 9367,
+  "output_tokens": 634,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 7221,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

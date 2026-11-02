@@ -1,0 +1,190 @@
+{
+  "case_id": "FIG",
+  "view_sha256": "7f32daabac14f8b2c609a8a064a15e1e3079f7fc20b42972c5b8294c568545bb",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "FIG",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:17:27.135494Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9511,
+    "completion_tokens": 576,
+    "cost_usd": 0.001695,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[1].numeric_claims[0]: claim value 'top_decile' does not match view value '('Asset growth band', 'top_decile')' at 'frameworks.0.key_signals.1'"
+    ],
+    "body": {
+      "one_liner": "Figma, Inc. shows potential but requires monitoring due to mixed signals across frameworks.",
+      "bull": [
+        {
+          "headline": "Strong CEO Equity Stake",
+          "detail": "Dylan Field holds 48.5% equity, indicating significant alignment with shareholder interests, which is a positive signal for long-term governance and strategic direction.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "48.5%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        },
+        {
+          "headline": "High Asset Growth",
+          "detail": "Figma's asset growth is in the top decile, suggesting robust expansion potential, although it raises concerns about sustainability given the high growth rate.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "top_decile",
+              "field_path": "frameworks.0.key_signals.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income",
+          "detail": "Figma reported a net income of -$1.25B, indicating significant financial strain and raising concerns about its path to profitability.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-$1,250,463,000",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Weak Momentum Signals",
+          "detail": "The stock's momentum is down 57.1% over the last 12 months, reflecting a lack of investor confidence and potential challenges in market perception.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-57.1%",
+              "field_path": "frameworks.1.key_signals.0"
+            }
+          ]
+        },
+        {
+          "headline": "Partial Framework Scores",
+          "detail": "Figma's scores in key frameworks are partial, indicating mixed performance across critical areas such as growth quality and platform dominance, which may hinder long-term success.",
+          "framework_codes": [
+            "F4",
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "5.5",
+              "field_path": "frameworks.3.score"
+            },
+            {
+              "value": "4.5",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "5.0",
+              "field_path": "frameworks.5.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Continued negative net income",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Weak momentum and investor confidence",
+          "severity": "medium",
+          "grounded_in": "frameworks.1.score"
+        },
+        {
+          "factor": "Partial performance in growth and platform frameworks",
+          "severity": "medium",
+          "grounded_in": "frameworks.3.score"
+        },
+        {
+          "factor": "Recent IPO with insufficient historical data",
+          "severity": "high",
+          "grounded_in": "frameworks.2.unfeasible_reason"
+        }
+      ],
+      "data_caveats": [
+        "No data gaps reported for the overall analysis.",
+        "F4 lacks data on options put/call ratio due to third-party data withholding.",
+        "F5 has missing revenue data affecting CAGR and ROIC calculations.",
+        "F6's NRR and GRR metrics are not disclosed, impacting retention analysis."
+      ]
+    }
+  },
+  "input_tokens": 8487,
+  "output_tokens": 576,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 7027,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "case_id": "DNOPF",
+  "composite_version": 1,
+  "dive_date": "2026-10-25",
+  "run_id": 230,
+  "schema_version": "1.0",
+  "source_view_sha256": "236c1043eaf93b3e5ec2fac73f57e50e5155a239860f0f6ebf4f28d9f4baed9c",
+  "split": "train",
+  "strata": [
+    "recent_ipo_unfeasible",
+    "exclude_path"
+  ],
+  "view": {
+    "company": {
+      "beta": null,
+      "ceo_equity_pct": null,
+      "ceo_equity_pct_state": "not_disclosed",
+      "ceo_name": null,
+      "cik": "0001796026",
+      "ev_ebitda": null,
+      "exchange": "OTC",
+      "fiscal_year_end_month": 12,
+      "industry": "Grocery Stores",
+      "ipo_date": "2023-08-17",
+      "ipo_date_state": "disclosed_exact",
+      "is_founder_ceo": null,
+      "latest_fiscal_year": 2025,
+      "latest_net_income": 389590000.0,
+      "latest_period_end": "2025-12-31",
+      "latest_revenue": 8408538750.0,
+      "market_cap_usd": null,
+      "name": "Dino Polska S.A.",
+      "pb_ratio": null,
+      "pe_trailing": null,
+      "sector": "Consumer Defensive",
+      "ticker": "DNOPF"
+    },
+    "composite": {
+      "mode_resolved": "B",
+      "score": 2.46,
+      "verdict": "exclude",
+      "weights_renormalised": true,
+      "weights_used": {
+        "F2": 0.3333,
+        "F4": 0.25,
+        "F5": 0.4167
+      }
+    },
+    "fetch_data_gaps": [
+      "EDGAR companyfacts unavailable for CIK 1796026; falling back to per-filing XBRL",
+      "EDGAR: no financial data parsed for DNOPF",
+      "DNOPF: yfinance CEO name not found in companyOfficers",
+      "DNOPF: yfinance shortPercentOfFloat unavailable",
+      "DNOPF: no Form 4 insider transactions found on EDGAR"
+    ],
+    "frameworks": [
+      {
+        "band": "unfeasible",
+        "code": "F1",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Pre-Discovery Alpha",
+        "unfeasible_reason": "no Form 4 insider history persisted (needs_insider_transactions)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "weak",
+        "code": "F2",
+        "data_gaps": [
+          "PEAD: only 0 reported earnings rows"
+        ],
+        "is_unfeasible": false,
+        "key_signals": [
+          [
+            "12-1 momentum",
+            "-35.9%"
+          ],
+          [
+            "% from 52w high",
+            "+34.8%"
+          ],
+          [
+            "PEAD signal",
+            "None"
+          ]
+        ],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Momentum",
+        "unfeasible_reason": "",
+        "verdict": "fail"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F3",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Innovation Compounder",
+        "unfeasible_reason": "recent IPO / insufficient annual history (needs 5yr, have 4); listed 3yr",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "weak",
+        "code": "F4",
+        "data_gaps": [
+          "DNOPF: F4 EPS accel \u2014 only 0 reported quarters",
+          "F4 surprise streak: no reported rows",
+          "DNOPF: F4 options put/call ratio \u2014 no free-tier source (skipped per PROJECT_SPEC \u00a7F4 Pan-Poteshman 2006)"
+        ],
+        "is_unfeasible": false,
+        "key_signals": [
+          [
+            "Short int (current)",
+            "withheld: third-party data"
+          ],
+          [
+            "Short int (peak)",
+            "withheld: third-party data"
+          ],
+          [
+            "Decline signal",
+            "False"
+          ],
+          [
+            "EPS acceleration",
+            "?"
+          ]
+        ],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 1.5,
+        "title": "Stealth Accumulation",
+        "unfeasible_reason": "",
+        "verdict": "fail"
+      },
+      {
+        "band": "moderate",
+        "code": "F5",
+        "data_gaps": [
+          "DNOPF: F5 Debt/EBITDA \u2014 no EBITDA",
+          "DNOPF: F5 buyback yield \u2014 not persisted (no market_cap or share_repurchases)"
+        ],
+        "is_unfeasible": false,
+        "key_signals": [
+          [
+            "Revenue CAGR 3y",
+            "+23.2%"
+          ],
+          [
+            "FCF margin",
+            "+2.3%"
+          ],
+          [
+            "ROIC",
+            "+17.9%"
+          ],
+          [
+            "Debt/EBITDA",
+            "None"
+          ],
+          [
+            "CEO alignment",
+            "no_alignment"
+          ]
+        ],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 5.0,
+        "title": "Growth Quality",
+        "unfeasible_reason": "",
+        "verdict": "partial"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F6",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Platform Dominator",
+        "unfeasible_reason": "insufficient quarterly history (needs 8Q, have 6)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F7",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Smart Beta Timing",
+        "unfeasible_reason": "recent IPO / insufficient annual history (needs 10yr, have 4); listed 3yr",
+        "verdict": "unfeasible"
+      }
+    ],
+    "mode_used": "default",
+    "overlay_triggers": [
+      {
+        "condition": "|Peters-Taylor non-GAAP ROIC \u2212 GAAP ROIC| = 4.25pp \u2265 3pp (downward (economic < GAAP \u2014 invested-capital base inflated by intangibles)) \u2014 economic capital efficiency materially diverges from GAAP; ICA restatement is informative regardless of GAAP ROIC level. Methodology-consistent: both legs from same SEC 10-K XBRL; no SBC/restructuring/acquisition add-backs (ADR-021 \u00a74.1)",
+        "framework_section": "F5",
+        "overlay_type": "ICA",
+        "relevant_numbers": {
+          "direction": "downward",
+          "gap_pp": 4.25,
+          "gap_threshold_pp": 3.0,
+          "methodology": {
+            "addbacks_excluded": [
+              "SBC",
+              "restructuring",
+              "acquisition_costs",
+              "impairment",
+              "one-time_items"
+            ],
+            "addbacks_included": [
+              "R&D capitalised as KC (15%/yr amortisation)",
+              "25% of SG&A capitalised as OC (20%/yr amortisation)"
+            ],
+            "adr_reference": "ADR-021",
+            "non_gaap_method": "Peters-Taylor (2017 JFE) capitalisation",
+            "same_source": true,
+            "source_gaap": "SEC 10-K XBRL (companyfacts.json)",
+            "source_non_gaap": "SEC 10-K XBRL (companyfacts.json)"
+          },
+          "pt_adjusted_roic": 0.1401,
+          "roic_gaap": 0.1826
+        },
+        "trigger_id": "ICA-5"
+      },
+      {
+        "condition": "F7 unfeasible \u2014 recent listing: recent IPO / insufficient annual history (needs 10yr, have 4); listed 3yr. Spinoff/demerger PSA workflow may apply if listing_type confirms",
+        "framework_section": "F7",
+        "overlay_type": "PSA",
+        "relevant_numbers": {
+          "f7_unfeasible_reason": "recent IPO / insufficient annual history (needs 10yr, have 4); listed 3yr",
+          "listing_type": "",
+          "months_since_listing": 38
+        },
+        "trigger_id": "PSA-3"
+      }
+    ],
+    "overlay_verdicts": {
+      "BEW": "no_winner_pattern",
+      "PSA": "not_a_spinoff_candidate"
+    },
+    "run_date": "2026-10-25",
+    "schema_version": "1.0",
+    "stage": {
+      "reasoning": {
+        "established_threshold": 50000000000,
+        "latest_net_income": 389590000.0,
+        "market_cap_usd": null,
+        "profitable_3yr": true
+      },
+      "stage": "mid_cap"
+    },
+    "ticker": "DNOPF"
+  },
+  "view_sha256": "5b9aa5ccf5edfc36d401c3a3d54263d9fd44cb31094adf6b5e2304bc937e8659",
+  "withheld": [
+    "company.market_cap_usd",
+    "stage.reasoning.market_cap_usd",
+    "frameworks.F4.Short int (current)",
+    "frameworks.F4.Short int (peak)"
+  ]
+}

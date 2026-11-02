@@ -1,0 +1,302 @@
+{
+  "case_id": "SERV",
+  "view_sha256": "d3cffe84d3c00a5596009d68986ef2295cdea01cfd8e7eb662851d377c140a19",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "SERV",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:08:53.177023Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12213,
+    "completion_tokens": 3655,
+    "cost_usd": 0.091464,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[3].numeric_claims[1]: claim value '-4388.9' does not match view value 'False' at 'frameworks.5.key_signals.5.1'",
+      "bear[1].detail: number '90' not in scorecard whitelist (possible hallucination)",
+      "formatting: bull.0.headline trimmed from 146 to 140 chars",
+      "formatting: bull.2.headline trimmed from 151 to 140 chars",
+      "formatting: bear.1.headline trimmed from 141 to 140 chars",
+      "formatting: bear.4.headline trimmed from 165 to 140 chars"
+    ],
+    "body": {
+      "one_liner": "Serve Robotics is a pre-profitability, deep-R&D autonomous delivery platform whose composite score of 3.53 (\"monitor\") reflects genuine early-stage optionality against structurally failing near-term financial metrics; the BEW overlay flags tail-upside potential, but the thesis is unproven across every quantitative dimension that matters for capital efficiency.",
+      "bull": [
+        {
+          "headline": "Gross margin trajectory is the standout signal: expansion averaging ~12,830 bps/yr suggests rapid unit-economics improvement from a…",
+          "detail": "F3 captures an average gross margin expansion of ~12,830 bps per year — an unusually steep improvement arc for a hardware/robotics platform. For a company at SERV's revenue scale, this rate of GM expansion indicates that per-unit economics are improving faster than cost structure is scaling, which is the correct sequencing for a capital-light robotics model. The direction is right even if the absolute level remains deeply negative.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "12830.3 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue CAGR of ~191% over three years signals demand validation at early scale, despite an effectively zero revenue base",
+          "detail": "F5 records a 3-year revenue CAGR of approximately 191%, which, while mathematically inflated by the near-zero starting base, represents real commercial traction — autonomous delivery contracts being signed and executed. This is the pre-discovery phase where volume matters more than margin. The question for the hold period is whether this growth rate decelerates gracefully into a defensible market position or collapses as competition scales.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+190.8%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "BEW-5 overlay flags Bessembinder extreme-winner candidacy: high-R&D small-cap with a plausible right-tail outcome if autonomous delivery…",
+          "detail": "The BEW overlay triggered on the combination of sub-$2B market cap and elevated R&D intensity. Bessembinder's empirical work establishes that essentially all net equity wealth creation is concentrated in a small fraction of stocks — companies with large addressable markets, durable differentiation, and early compounding. SERV's profile (founder-led, deep R&D, nascent category) is structurally consistent with Bessembinder candidacy, though the base rate for realising that outcome is low and the current financial profile disqualifies it from near-term conviction.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "17.0754",
+              "field_path": "overlay_triggers.3.relevant_numbers.rd_intensity"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO at the helm and zero financial debt reduce two common pre-profitability failure modes",
+          "detail": "Ali Kashani is confirmed founder-CEO — a structural alignment signal that correlates with longer time horizons and mission-driven capital allocation. F5 also records Debt/EBITDA of 0.0, meaning SERV carries no financial leverage. For a pre-profitability company burning cash, the absence of debt removes the forced-liquidation tail risk that kills otherwise viable early-stage platforms. These are necessary but not sufficient conditions for the bull case.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ICA restatement narrows the ROIC gap by ~26 pp, indicating GAAP overstates capital inefficiency for this R&D-intensive profile",
+          "detail": "ICA-5 records a divergence of approximately 26 percentage points between GAAP ROIC and Peters-Taylor-adjusted ROIC (upward direction: economic ROIC is less negative than GAAP implies). For a company capitalising knowledge via R&D and organisational capital via SG&A, GAAP immediately expenses both, systematically understating the invested-capital denominator. The adjusted figure is still deeply negative, but the direction of restatement is informative: less capital-inefficient than the headline GAAP number suggests.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "26.37pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-120.9%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "ROIC of -120.9% (GAAP) and FCF margin of -21.8% confirm SERV is burning capital at a rate inconsistent with near-term profitability",
+          "detail": "F5 signals are unambiguous: ROIC at approximately -121% and free cash flow margin at approximately -22% on latest-year revenue of roughly $2.7M. Even after Peters-Taylor restatement, adjusted ROIC remains deeply negative at approximately -11.6%. The company is pre-revenue at meaningful scale. Until unit economics demonstrate a credible path to positive ROIC, the growth rate is not compounding value — it is expanding the capital base faster than it generates returns.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-120.9%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "-21.8",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "-0.116",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Piotroski score of 3/9 and zero open-market insider buyers indicate weak financial health signals and no insider conviction at current…",
+          "detail": "F1 returns a Piotroski F-score of 3 out of 9 — well below the threshold associated with financial health — and records zero open-market insider buyers over the trailing 90 days. For a pre-profitability company, insider buying would be the clearest forward-looking signal of management conviction. Its absence, combined with a low Piotroski score, suggests insiders do not view the current price as cheap relative to intrinsic value. Asset growth in the top decile triggers a Cooper-Gulen-Schill disqualifier, capping F1.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "12-month momentum of -65.1% signals deep capital destruction; price recovery of +81.3% from 52-week low does not reverse the trend",
+          "detail": "F2 records 12-1 momentum of approximately -65%, one of the most negative signals in the feasible framework set. While the stock has recovered approximately 81% from its 52-week low, this recovery from a distressed base does not constitute trend reversal — it is consistent with a relief rally in a deeply out-of-favour name. Momentum is not an entry signal here; it is a warning that the market's aggregate forward estimate of this business has deteriorated severely over the past year.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-65.1%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+81.3%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform Dominator score of 0.0: no disclosed retention metrics, Rule of 40 at approximately -4,389, no Fahlenbrach signal",
+          "detail": "F6 — the platform-quality framework most relevant to a robotics-as-a-service model — scores zero across every dimension. NRR and GRR are not disclosed, the Rule of 40 is approximately -4,389 (extreme cash burn relative to growth quality), and the Fahlenbrach CEO-ownership signal is absent. A platform thesis requires demonstrable customer stickiness; without disclosed retention data, that pillar of the bull case is entirely unverifiable from public filings.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "-4388.9",
+              "field_path": "frameworks.5.key_signals.5.1"
+            }
+          ]
+        },
+        {
+          "headline": "Latest net loss of approximately -$101M against revenue of approximately $2.7M illustrates the existential gap between current operations…",
+          "detail": "The company's most recent fiscal year shows a net loss of approximately $101M against total revenue of approximately $2.7M. This is not a growth-phase efficiency gap — it is a structural mismatch that requires either dramatic revenue acceleration or continued equity issuance to survive. The Lunch-Eating Test is relevant here: well-capitalised incumbents (logistics platforms, last-mile delivery networks) can absorb autonomous delivery as a feature, not a business, making SERV's standalone survival path narrow and dependent on category-creation at speed.",
+          "framework_codes": [
+            "F5",
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-101361000.0",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "2651000.0",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether gross margin expansion rate sustains across the next 2-3 annual filings. A deceleration below the current trajectory would indicate that unit economics are not scaling as expected — a thesis-break condition for the bull case on SERV's robotics platform model.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor CEO equity ownership disclosure across annual proxy filings. Confirmed founder-CEO status with no disclosed equity percentage (not_disclosed state) leaves capital-allocator alignment unverifiable. A pattern of equity liquidation by Ali Kashani, if disclosed, would constitute a thesis-break signal.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor cash runway across quarterly filings. With a net loss of approximately $101M against approximately $2.7M revenue, dilutive equity issuance is the primary survival mechanism. Persistent dilution at scale erodes per-share intrinsic value regardless of operational progress — watch for share count growth rate and issuance terms.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor R&D intensity trend relative to gross margin expansion. ICA-1 and ICA-5 both fired because GAAP understates economic capital efficiency for this R&D-intensity profile. If R&D intensity declines faster than GM expands, the Peters-Taylor restatement advantage narrows and the adjusted ROIC improvement stalls.",
+          "severity": "medium",
+          "grounded_in": "ICA-1"
+        },
+        {
+          "factor": "Monitor competitive entry from logistics incumbents and Mag 7-adjacent platforms. SERV operates in autonomous last-mile delivery — a category where Amazon, Uber, and DoorDash each have structural distribution advantages and the capital to absorb autonomous robotics as a feature. A credible incumbent pivot into sidewalk robotics would compress SERV's TAM ceiling materially.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor whether BEW-5's partial trigger resolves as idiosyncratic volatility data becomes available. The Bessembinder candidacy flag is partially triggered with no idiosyncratic vol computed. If full resolution does not confirm the BEW signal, the extreme-winner optionality framing should be discounted in the thesis.",
+          "severity": "medium",
+          "grounded_in": "BEW-5"
+        },
+        {
+          "factor": "Monitor NRR and GRR disclosure across future 10-K filings. F6 scores zero in part because retention metrics are not disclosed. As SERV's customer base grows, the absence of retention data in MD&A — when peers disclose it — would suggest either adverse metrics or management reluctance to be held accountable on platform stickiness.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "PSA-3 flagged the recent-listing status (IPO ~2021, ~5 years listed). Monitor for post-lockup and post-IPO-quiet-period insider selling patterns over years 1-3 of the hold. Systematic insider selling by founders or early institutional holders at scale would constitute a negative capital-allocator signal.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio was unavailable from free-tier sources and was skipped per project spec (Pan-Poteshman 2006 methodology). The F4 stealth-accumulation signal is partially incomplete as a result.",
+        "F5 buyback yield could not be computed: neither market cap nor share repurchase figures were available in the data layer. CEO equity percentage is in a 'not_disclosed' state — alignment scoring treats this as no-alignment.",
+        "F7 (Smart Beta Timing) is unfeasible due to insufficient annual history: the framework requires 10 years of data; SERV has approximately 6 years with approximately 5 years since listing. This framework is excluded from the composite entirely.",
+        "Market cap is null in the current data snapshot, which caused BEW-5 to trigger only partially (idiosyncratic volatility not computed). The Bessembinder overlay verdict of EXTREME_WINNER_CANDIDATE reflects a partial trigger state.",
+        "PSA-3 flagged the recent-listing workflow, but listing_type and months-since-listing are unpopulated; the spinoff/demerger PSA workflow was evaluated and returned 'not_a_spinoff_candidate'."
+      ]
+    }
+  },
+  "input_tokens": 12213,
+  "output_tokens": 3655,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 78413,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "case_id": "ENVX",
+  "view_sha256": "f0633ed5b148afbb4a1b7c10431c3d57c3233f1d1eb2e75fa4fbec2df43a0fe7",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "ENVX",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:48:05.203478Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12183,
+    "completion_tokens": 3303,
+    "cost_usd": 0.086094,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[2].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Enovix is a pre-profitability, heavy-R&D silicon-anode battery developer with a strong innovation signal but deeply negative cash economics and deteriorating momentum — a high-variance extreme-winner candidate that requires monitoring of commercialisation progress before the thesis can mature.",
+      "bull": [
+        {
+          "headline": "Gross margin expansion at an exceptional rate signals a maturing manufacturing process",
+          "detail": "F3 records average gross margin expansion of roughly 9,796 basis points per year — a trajectory consistent with a company moving from pilot-scale to volume production economics. If this trajectory is sustained, unit economics could inflect meaningfully within the 5-year monitoring window, which is the central bull case for a pre-profitability hardware compounder.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "9796.2 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "7.0",
+              "field_path": "frameworks.2.score"
+            }
+          ]
+        },
+        {
+          "headline": "Six-quarter positive earnings-surprise streak suggests execution is beating early-stage expectations",
+          "detail": "F3 records a six-quarter consecutive positive PEAD surprise streak. For a company with no positive earnings, this measures revenue and gross-profit outperformance against consensus — a signal that management is setting achievable operational targets and then clearing them, a pre-condition for institutional re-rating.",
+          "framework_codes": [
+            "F3",
+            "F4"
+          ],
+          "numeric_claims": [
+            {
+              "value": "6 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "R&D intensity at top-decile levels is consistent with Bessembinder extreme-winner morphology",
+          "detail": "BEW-5 fires on R&D intensity exceeding the top-tercile threshold. Peters-Taylor intangible capitalisation (ICA-5) reveals a 15.15 percentage-point upward gap between economic and GAAP ROIC, meaning GAAP materially under-reports the capital efficiency being built by ongoing R&D investment. The knowledge capital stock is larger than book values suggest.",
+          "framework_codes": [
+            "F3",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+346.7%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "15.15pp",
+              "field_path": "overlay_triggers.1.relevant_numbers.gap_pp"
+            }
+          ]
+        },
+        {
+          "headline": "Revenue CAGR reflects real commercial traction, not financial engineering",
+          "detail": "F5 records a 3-year revenue CAGR of approximately 72.5%, and the Sloan accrual-quality signal in F1 is clean (high quality = True), indicating that reported revenue growth is not accrual-inflated. The combination of top-line velocity with clean accrual quality is a rare conjunction at this stage.",
+          "framework_codes": [
+            "F5",
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+72.5%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Diversified customer base reduces single-customer concentration risk common in early-stage hardware",
+          "detail": "F6 records a diversified customer base (not dependent on a single anchor customer), which is atypical for a company at this revenue scale. This reduces the risk of a single design-win loss causing catastrophic revenue disruption — a tail risk that has destroyed many hardware startups at comparable stages.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "bear": [
+        {
+          "headline": "FCF margin of -346% and ROIC of -51.8% GAAP: cash burn is structurally severe",
+          "detail": "F5 scores 2/10 (fail). Free cash flow margin is deeply negative and ROIC, even adjusted upward by 15.15pp under Peters-Taylor, remains at -6.1% on an economic basis. The company is consuming capital faster than it is building recoverable value at current scale. This is not a near-term solvency flag but a compounding drag — every year of deep burn delays the free cash flow inflection that justifies the long-duration thesis.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-346.2%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "-51.8%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "2.0",
+              "field_path": "frameworks.4.score"
+            },
+            {
+              "value": "-0.0606",
+              "field_path": "overlay_triggers.1.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "12-month momentum of -76.6% indicates severe market confidence deterioration",
+          "detail": "F2 scores 3/10 (fail). The stock sits 76.6% below its trailing 12-month high while simultaneously 76.7% above its 52-week low — indicating extreme volatility and a price that has recovered partially from a catastrophic drawdown but not recaptured prior levels. Momentum this negative, sustained, is a signal that institutional holders are exiting, not accumulating. PEAD is positive-drift but insufficient to offset.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-76.6%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+76.7%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.1.score"
+            }
+          ]
+        },
+        {
+          "headline": "Asset growth in top decile triggers Cooper-Gulen-Schill disqualifier, capping F1 score",
+          "detail": "F1 is capped at 3/9 by the Cooper-Gulen-Schill 2008 empirical disqualifier: companies with asset growth in the top decile systematically underperform in subsequent periods. This is not a management-quality judgment — it is a base-rate signal that rapid asset expansion, absent proven returns on that capital, predicts weaker forward returns. Zero open-market insider buyers over the trailing 90 days reinforces the absence of insider confidence signals.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "F6 Platform score of 0/10: no retention metrics disclosed, Rule of 40 deeply negative",
+          "detail": "F6 scores 0/10. NRR and GRR are not disclosed — consistent with hardware-centric revenue rather than a recurring software platform. Rule of 40 stands at -318.82, far below any threshold for platform-quality economics. The Fahlenbrach founder-alignment signal is False. This company does not exhibit platform characteristics; it is a capital-intensive hardware manufacturer, with associated margin structure and reinvestment requirements.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.5.score"
+            },
+            {
+              "value": "-318.82",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO equity stake is parser-uncertain and flagged low; no observable founder-operator alignment",
+          "detail": "The is_founder_ceo flag is False (CEO Ryan A. Benton is not the founder), and the CEO equity stake is flagged as parser-uncertain at a low level. F5 records no_alignment on the CEO alignment signal. F6 Fahlenbrach signal is also False. Across three independent signals, skin-in-the-game alignment is absent or unverifiable — a meaningful gap for a company requiring multi-year, high-burn patient capital deployment.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.5",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor-adjusted ROIC (-6.1%) improves toward breakeven across 2-3 more annual filings. If economic ROIC fails to inflect positively as revenue scales, the knowledge-capital investment thesis breaks — the R&D spend is not translating into durable economic returns at any observed pace.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor gross margin trajectory across at least 4 more quarters. The 9,796 bps/yr expansion rate is the central bull signal. If GM expansion stalls or reverses as production volumes increase (yield problems, input cost inflation, customer pricing pressure), the manufacturing-learning-curve thesis is invalidated.",
+          "severity": "high",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Monitor FCF margin trajectory annually. At -346% FCF margin on current revenue, dilution risk from equity raises or covenant risk from debt facilities is material. Watch for balance-sheet-driven thesis disruption, not price moves.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor insider open-market purchases. Zero open-market buyers in the trailing 90-day window — at a price far below prior highs — is an absence of conviction signal. If insiders remain non-buyers through a full year of the monitoring window, re-examine management's private assessment of fair value.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor asset growth normalisation. Top-decile asset growth is a Cooper-Gulen-Schill empirical disqualifier. Watch whether capital deployment (CapEx, working capital) produces observable gross margin or revenue productivity improvements; if asset growth persists without yield, the disqualifier signal strengthens.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Monitor CEO capital-allocation track record annually against Outsiders 8 traits. Benton is not a founder; compensation structure, acquisition discipline, and cash deployment decisions in years 1-3 will establish whether he exhibits owner-operator or hired-manager behaviour patterns.",
+          "severity": "medium",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "PSA-3 flags recent-listing status (IPO 2021, ~5 years of public history). The F7 Smart Beta framework is unfeasible due to insufficient annual history. Structural re-assessment opportunity opens when 10 years of annual data becomes available; until then, long-cycle valuation frameworks cannot be applied.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "BEW-5 extreme-winner candidate status is a partial trigger (market cap data unavailable; idiosyncratic volatility not yet computed). The Bessembinder thesis requires a sized, held position to matter — but the partial trigger means not all qualifying conditions are confirmed. Monitor for full trigger confirmation in subsequent runs.",
+          "severity": "low",
+          "grounded_in": "BEW-5"
+        }
+      ],
+      "data_caveats": [
+        "F4 options put/call ratio was skipped — no free-tier data source available per project specification (Pan-Poteshman 2006 signal absent); F4 partial verdict reflects this gap.",
+        "Short interest (current and peak) is withheld as third-party data — F4 stealth accumulation assessment is incomplete; the decline signal and EPS acceleration inputs were scored on available data only.",
+        "CEO equity stake (reported as 0.5%) is flagged parser_uncertain — the actual beneficial ownership figure should be verified against the most recent DEF 14A before relying on alignment conclusions.",
+        "IPO date is flagged parser_uncertain — months-since-listing was not calculable, leaving the PSA-3 spinoff/demerger workflow conditional on manual listing-type confirmation.",
+        "Market cap is null in the view — BEW-5 fired as a partial trigger only; the small-cap (<$2B) leg of the Bessembinder screen could not be confirmed. Full BEW verdict requires market cap data in a subsequent run.",
+        "NRR and GRR are not disclosed in the 10-K MD&A — F6 retention metric scoring defaults to zero per project specification; absence reflects non-disclosure, not confirmed churn.",
+        "Patent portfolio is listed as not_disclosed in F3 — the intellectual property depth of the R&D investment cannot be assessed from available 10-K data."
+      ]
+    }
+  },
+  "input_tokens": 12183,
+  "output_tokens": 3303,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 71812,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

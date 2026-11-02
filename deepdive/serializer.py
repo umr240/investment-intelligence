@@ -9,6 +9,7 @@ import csv
 import io
 import json
 from datetime import datetime
+from typing import Any
 
 from data.models.schema import DeepDiveRun, ScreenerRun
 
@@ -277,6 +278,17 @@ def _render_risk_section(raw: str | None) -> list[str]:
     if one_liner:
         lines.append("")
         lines.append(f"> {one_liner}")
+
+    if body.get("verdict"):  # schema v2 (ADR-045 §2.3)
+        reason = body.get("verdict_reason") or ""
+        lines += ["", f"**Verdict:** {body['verdict']}. {reason}".rstrip()]
+        lines.append(f"**Owner-operator answer:** {body.get('owner_operator_answer') or '—'} · "
+                     f"**Moat direction:** {body.get('moat_direction') or '—'}")  # fmt: skip
+        triggers: list[Any] = body.get("triggers") or []
+        if triggers:
+            lines += ["", "Triggers that would change the verdict:", ""]
+            lines += [f"- `{t.get('field_id')}`: {t.get('condition')}"
+                      for t in triggers if isinstance(t, dict)]  # fmt: skip
 
     risks: list = body.get("risks") or []
     if risks:

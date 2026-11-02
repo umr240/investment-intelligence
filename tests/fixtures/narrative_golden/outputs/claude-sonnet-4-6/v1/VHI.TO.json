@@ -1,0 +1,242 @@
+{
+  "case_id": "VHI.TO",
+  "view_sha256": "e68cb016fdfbe2bd56c3f49f5ef0f37da97887ec5d5ad40c15cce3e1894e7808",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "VHI.TO",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:15:47.441347Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11207,
+    "completion_tokens": 2639,
+    "cost_usd": 0.073206,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[0].detail: number '90' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "Vitalhub's composite score of 3.1 (exclude) reflects a meaningful growth track record undercut by top-decile asset expansion, deeply negative price momentum, and CEO alignment gaps that together prevent a hold thesis from clearing the quality bar at this stage.",
+      "bull": [
+        {
+          "headline": "High-quality revenue growth at scale: 3-year CAGR near +40% with positive FCF margin",
+          "detail": "F5 records a revenue CAGR of +39.7% over three years alongside a free-cash-flow margin of +16.3%, demonstrating that growth has not come at the cost of cash generation. For a Health Information Services business operating in a fragmented, regulation-driven vertical, sustained double-digit FCF margin alongside near-40% topline compounding is a structurally unusual combination and the primary reason F5 scores moderate rather than failing outright.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+39.7%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "+16.3%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "Clean balance sheet: Debt/EBITDA at zero removes near-term financial-distress tail risk",
+          "detail": "F5 records Debt/EBITDA of 0.0, meaning the company carries no meaningful net debt relative to earnings. In a period of elevated rates and tightening credit, a zero-leverage posture preserves full optionality for organic investment and acquisitive growth without subordinating equity holders to creditor covenants. This meaningfully shrinks the left tail of the 5-year outcome distribution.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "ICA-1 overlay: stated ROIC of +8.7% likely understates true capital efficiency given R&D intensity of 26.6%",
+          "detail": "The ICA-1 trigger fires because ROIC sits below the 15% threshold while R&D intensity reaches 26.6% — well above the 10% overlay threshold. Under Peters-Taylor intangible-capital accounting, the denominator expands to include capitalised R&D, which typically compresses reported ROIC; however, for a software/health-IT business at this R&D intensity, GAAP ROIC systematically understates economic returns by expensing durable knowledge capital. The true economic ROIC may be materially higher, though no adjusted figure is available in this view.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+8.7%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "0.0866",
+              "field_path": "overlay_triggers.0.relevant_numbers.f5_roic"
+            },
+            {
+              "value": "0.2657",
+              "field_path": "overlay_triggers.0.relevant_numbers.rd_intensity"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Top-decile asset growth triggers Cooper-Gulen-Schill disqualifier; F1 score capped at 3/10",
+          "detail": "F1 records asset growth in the top decile — the Cooper-Gulen-Schill 2008 finding links this band to persistent negative abnormal returns as over-investment dilutes capital efficiency. The pipeline applies a score cap, leaving F1 at 3/10 with a fail verdict. Combined with zero open-market insider purchases in the trailing 90 days and a Piotroski score of 5/9, the pre-discovery alpha picture is weak: the balance sheet quality signals are insufficient to offset the asset-growth disqualifier.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.0",
+              "field_path": "frameworks.0.score"
+            },
+            {
+              "value": "5/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "12-month momentum of -30.3% and negative PEAD signal: price action is a material headwind",
+          "detail": "F2 scores 0/10. The 12-1 momentum signal reads -30.3% — deep negative territory — and the PEAD signal registers negative drift, suggesting post-earnings price action is also deteriorating. The stock remains +31.0% off its 52-week high, confirming the drawdown is not a brief pullback. Empirically, momentum is one of the most robust cross-sectional predictors of near-term returns; a zero F2 score under a 5-year hold framework means the entry timing carries meaningful headwind that will require business fundamentals to do more compounding work.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.0",
+              "field_path": "frameworks.1.score"
+            },
+            {
+              "value": "-30.3%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "+31.0%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        },
+        {
+          "headline": "CEO alignment flagged as 'no_alignment'; non-founder CEO with undisclosed equity stake",
+          "detail": "F5 records CEO alignment as 'no_alignment'. The CEO is not the founder, and equity percentage is not disclosed (state: not_disclosed). Under Thorndike Outsiders criteria, skin-in-the-game is a first-order signal for capital-allocation discipline across a multi-year hold. Absent that, the risk of empire-building M&A (particularly notable given top-decile asset growth already flagged in F1) or EPS-optimising decisions detached from per-share intrinsic value is structurally elevated.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Composite score of 3.1 yields an 'exclude' verdict; only 3 of 7 frameworks feasible",
+          "detail": "The composite scores 3.1/10, verdict exclude, with weights renormalised across only F1, F2, and F5 — F3, F4, F6, and F7 are all unfeasible due to insufficient quarterly/annual history and missing short-interest data. The analytical picture is therefore materially incomplete: platform domination signals (F6), innovation compounder dynamics (F3), and smart-beta valuation anchors (F7) cannot be assessed. This data vacuum widens the uncertainty band substantially; the scorecard should be treated as a lower-bound-quality read, not a full assessment.",
+          "framework_codes": [
+            "F1",
+            "F2",
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.1",
+              "field_path": "composite.score"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether asset growth remains top-decile across the next 2-3 annual filings. If sustained without a corresponding improvement in ROIC above the 15% threshold, it signals capital is being deployed at sub-economic returns — a thesis-break condition for long-term compounding.",
+          "severity": "high",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Watch for continued PEAD negative drift and momentum deterioration over rolling 12-month windows. If F2 fails to recover above neutral after 2+ years of operating improvements, it may signal the market is reading fundamental deterioration not yet visible in reported financials.",
+          "severity": "medium",
+          "grounded_in": "F2"
+        },
+        {
+          "factor": "CEO alignment remains unverifiable due to undisclosed equity stake (not_disclosed state). Monitor DEF 14A equivalents (SEDAR filings) for any equity-plan changes, option grants at dilutive volumes, or acquisition bonuses — each is a Thorndike-inversion signal for capital-allocator quality.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "ICA-1 fires on ROIC below 15% with R&D intensity at 26.6%. Monitor whether intangible capital is generating durable customer relationships and switching costs (observable via revenue retention and gross margin trends) or is dissipating as competitive R&D spending without pricing power.",
+          "severity": "medium",
+          "grounded_in": "ICA-1"
+        },
+        {
+          "factor": "PSA-3 notes the company listed 61 months ago with only 5 years of annual history. As F7 becomes feasible (at 10-year history), the valuation anchor framework will engage for the first time. Monitor whether the business model has demonstrated durable unit economics sufficient to pass F7 once data accumulates.",
+          "severity": "low",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Insider transaction data is wholly unavailable under SEDAR jurisdiction (no SEC Form 4 equivalent). This is a permanent blind spot for open-market conviction signals. If the company cross-lists or files voluntarily, watch for insider purchasing as a high-quality alignment signal.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        }
+      ],
+      "data_caveats": [
+        "Short percent of float is unavailable from the data provider for VHI.TO; F4 (Stealth Accumulation) is therefore unfeasible and excluded from the composite.",
+        "Institutional holder data is unavailable for VHI.TO; this limits assessment of ownership structure and smart-money accumulation signals.",
+        "Insider transaction history is unavailable — Toronto Stock Exchange issuers file under SEDAR (Canadian regime), not SEC Form 4, so no open-market purchase or sale data can be sourced. This is a structural and permanent gap for this issuer under current data coverage.",
+        "F5 buyback yield could not be computed: neither market cap nor share repurchases were persisted for this ticker, leaving shareholder return via buybacks unscored.",
+        "Market cap in USD is not available; stage classification (mid_cap) is inferred from profitability and net income data rather than confirmed market-cap thresholds."
+      ]
+    }
+  },
+  "input_tokens": 11207,
+  "output_tokens": 2639,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 57267,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

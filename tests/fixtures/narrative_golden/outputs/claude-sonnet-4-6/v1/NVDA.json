@@ -1,0 +1,299 @@
+{
+  "case_id": "NVDA",
+  "view_sha256": "ecf7846a4f9949082fa4cedaee443b732e4640ae498deafddff7501a978f1905",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "NVDA",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:59:20.775538Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 12305,
+    "completion_tokens": 3714,
+    "cost_usd": 0.092625,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[1].detail: number '35' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "NVIDIA is a rare convergence of dominant platform economics, extraordinary capital efficiency, and sustained innovation velocity — a Bessembinder extreme-winner candidate that demands a sized, multi-year hold rather than valuation-driven trimming.",
+      "bull": [
+        {
+          "headline": "Exceptional capital efficiency: ROIC and FCF margin place NVDA in the top tier of all public companies",
+          "detail": "F5 records an ROIC of +83.2% and an FCF margin of +41.9% against a three-year revenue CAGR of +100.0%, with Debt/EBITDA at 0.0. This combination — explosive topline compounding, near-zero leverage, and very high returns on invested capital — is structurally rare and consistent with a business operating well within a durable competitive moat. The zero-leverage balance sheet preserves full reinvestment optionality and eliminates ruin risk, which Bessembinder's distribution analysis identifies as the critical left-tail constraint for extreme winners.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+83.2%",
+              "field_path": "frameworks.4.key_signals.2.1"
+            },
+            {
+              "value": "+41.9%",
+              "field_path": "frameworks.4.key_signals.1.1"
+            },
+            {
+              "value": "+100.0%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            },
+            {
+              "value": "0.0",
+              "field_path": "frameworks.4.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Platform economics firing at scale: Rule of 40 of 110.24 is among the highest observable in public markets",
+          "detail": "F6 records a Rule of 40 score of 110.24 — nearly three times the practitioner threshold of 35 — alongside GP/A in the top-40% proxy band. This profile is consistent with Helmer's Scale Economies and Switching Costs Powers operating simultaneously: as AI compute workloads standardise on CUDA and the broader NVIDIA ecosystem, re-platforming costs for hyperscalers and enterprise AI builders increase structurally. NRR and GRR are not disclosed in the 10-K MD&A, which is the primary gap in the F6 picture.",
+          "framework_codes": [
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "110.24",
+              "field_path": "frameworks.5.key_signals.4.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation compounder with a 7-quarter earnings surprise streak and sustained gross margin expansion",
+          "detail": "F3 scores 7/10 with gross margin expanding at an average of 174.5 bps per year and R&D intensity at +8.6% in the edge band. A 7-quarter consecutive positive earnings surprise streak is a strong PEAD signal — the market has persistently under-estimated NVIDIA's earnings power across multiple reporting cycles. The Peters-Taylor intangible-capital framework is directly relevant here: capitalised R&D represents genuine knowledge capital that GAAP expenses immediately, making the economic asset base materially larger than book.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "174.5 bps/yr",
+              "field_path": "frameworks.2.key_signals.0.1"
+            },
+            {
+              "value": "+8.6%",
+              "field_path": "frameworks.2.key_signals.1.1"
+            },
+            {
+              "value": "7 qtrs",
+              "field_path": "frameworks.2.key_signals.3.1"
+            }
+          ]
+        },
+        {
+          "headline": "Bessembinder extreme-winner overlay fired: strong innovation + platform moat at premium — the case for a permanent, sized position",
+          "detail": "BEW-1 triggered on F3 ≥ 7 and F6 ≥ 7 simultaneously with a positive EV/Rev z-score of 0.962. Bessembinder's empirical finding — that the entire net equity wealth creation in US markets is concentrated in roughly 4% of stocks — reframes the valuation premium. For names that credibly belong to that tail, trimming on price strength is a structurally wealth-destroying habit. The BEW overlay verdict is 'moderate_winner_candidate,' not confirmed; the thesis requires sustained monitoring of moat direction and capital allocation quality.",
+          "framework_codes": [
+            "F3",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.962",
+              "field_path": "overlay_triggers.2.relevant_numbers.ev_revenue_z"
+            },
+            {
+              "value": "7.0",
+              "field_path": "overlay_triggers.2.relevant_numbers.f3_score"
+            },
+            {
+              "value": "7.0",
+              "field_path": "overlay_triggers.2.relevant_numbers.f6_score"
+            }
+          ]
+        },
+        {
+          "headline": "Founder-CEO with meaningful equity ownership sustains owner-operator capital allocation incentives",
+          "detail": "Jensen Huang holds a disclosed exact equity stake of 3.58%, which is below the Fahlenbrach 5% threshold that triggers the full founder premium signal (F6 Fahlenbrach: False) but is nonetheless a substantial alignment stake for a company of NVIDIA's scale. The founder-CEO status combined with a track record of R&D reinvestment (rather than EPS-maximising buybacks at any price) and zero leverage is consistent with several of the Thorndike Outsiders traits: long tenure, owner mentality, and capital discipline. CEO alignment in F5 is rated 'partial_alignment,' reflecting the sub-5% threshold.",
+          "framework_codes": [
+            "F5",
+            "F6"
+          ],
+          "numeric_claims": [
+            {
+              "value": "3.58%",
+              "field_path": "company.ceo_equity_pct"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Asset growth in top decile triggers Cooper-Gulen-Schill 2008 disqualifier, capping F1 at 3/10",
+          "detail": "F1 scores 3/10 (weak/fail) primarily because asset growth exceeded 25% year-over-year, placing NVDA in the top decile — a historically reliable predictor of forward equity underperformance in the academic literature. The Piotroski score of 4/9 is at the boundary of financial strength. Zero open-market insider buyers in the trailing 90-day window and a Sloan accruals quality flag (False for high quality) compound the F1 weakness. The asset growth flag may reflect genuine capacity investment rather than empire-building, but the signal cannot be dismissed without additional filing-level review.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "4/9",
+              "field_path": "frameworks.0.key_signals.0.1"
+            },
+            {
+              "value": "0",
+              "field_path": "frameworks.0.key_signals.2.1"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor intangible restatement reveals GAAP ROIC materially overstates economic capital efficiency by 15.93 percentage points",
+          "detail": "ICA-5 fired on a downward gap of 15.93pp between GAAP ROIC (68.34%) and Peters-Taylor-adjusted ROIC (52.41%). The adjustment capitalises R&D and 25% of SG&A as intangible assets, expanding the denominator to reflect the true economic capital base. The direction is downward — economic capital efficiency is lower than GAAP implies. At 52.41% the adjusted ROIC remains exceptional, but the gap is material enough that any further expansion of the intangible asset base (via sustained R&D intensity) will exert continued downward pressure on economic ROIC as the stock of capitalised knowledge grows.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "15.93pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "52.41%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "68.34%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Valuation at significant premium to own history: EV/Rev and P/B both in expensive-to-very-expensive bands",
+          "detail": "F7 scores 1/10 with EV/Rev z-score of 0.962 (expensive band) and P/B z-score of 1.052 (very expensive band). The composite weight on F7 is deliberately low at 0.10, and the framework's academic grounding is contested (Arnott vs. Asness). The premium is noted not as an exit signal — that would contradict both the BEW overlay and hold-forever framing — but as a margin-of-safety consideration: future return expectations should be calibrated to reflect premium entry rather than historical-average-multiple entry.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": [
+            {
+              "value": "0.962",
+              "field_path": "frameworks.6.key_signals.0.1"
+            },
+            {
+              "value": "1.052",
+              "field_path": "frameworks.6.key_signals.2.1"
+            },
+            {
+              "value": "0.10",
+              "field_path": "composite.weights_used.F7"
+            }
+          ]
+        },
+        {
+          "headline": "F4 data gaps on short interest and options flow reduce confidence in the stealth-accumulation signal",
+          "detail": "F4 scores 6.5/10 (partial) with short interest data withheld (third-party data restriction) and the Pan-Poteshman put/call ratio skipped for lack of a free-tier source. EPS acceleration is confirmed as strict monotonic and no short-decline signal is active, but the two missing inputs — which are the primary contrarian-sentiment gauges in the F4 framework — leave the accumulation thesis partially blind. The framework verdict is 'partial' rather than 'strong_fit' precisely because of these gaps.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether top-decile asset growth (F1 Cooper-Gulen-Schill flag) reflects disciplined capacity investment or balance-sheet bloat across the next 2-3 annual filings. If asset turns decline alongside ROIC compression, the flag upgrades from caution to potential thesis-break.",
+          "severity": "medium",
+          "grounded_in": "F1"
+        },
+        {
+          "factor": "Watch the ICA-5 gap over annual filings: if Peters-Taylor-adjusted ROIC trends below 40% as the intangible asset base grows, economic capital efficiency is eroding materially beneath the GAAP headline, which would weaken the F5 growth-quality thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "F6 NRR and GRR are not disclosed. Monitor whether future 10-K or earnings call disclosures reveal retention trends — if revenue retention within existing hyperscaler and enterprise accounts deteriorates, the platform-switching-cost thesis requires reassessment.",
+          "severity": "medium",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "The BEW-1 overlay verdict is 'moderate_winner_candidate,' not confirmed. Monitor whether F3 innovation velocity (gross margin expansion, R&D edge band) is sustained across 3+ more annual periods. A deceleration in GM expansion or a step-down in R&D intensity relative to revenue would reduce extreme-winner probability.",
+          "severity": "medium",
+          "grounded_in": "BEW-1"
+        },
+        {
+          "factor": "CEO equity at 3.58% is meaningful but below the Fahlenbrach 5% threshold; Fahlenbrach signal is False in F6. Monitor for equity stake dilution via SBC-funded grants that reduce Huang's proportional alignment without a corresponding capital-return discipline offset.",
+          "severity": "low",
+          "grounded_in": "F6"
+        },
+        {
+          "factor": "F4 short interest and options put/call ratio remain unobservable due to data gaps. If short interest normalises sharply (rapid short covering followed by institutional distribution), the accumulation-phase signal could invert. Revisit F4 completeness at next annual refresh.",
+          "severity": "low",
+          "grounded_in": "F4"
+        },
+        {
+          "factor": "Valuation remains in the expensive-to-very-expensive band across both EV/Rev and P/B dimensions. This is not an exit signal, but it materially compresses the margin of safety on the entry. Any sustained deceleration in revenue growth from the current three-year CAGR would reprice the multiple sharply; monitor whether hyper-growth normalises across 2-3 quarters.",
+          "severity": "high",
+          "grounded_in": "F7"
+        },
+        {
+          "factor": "PSA-4 fired on Piotroski ≤ 4 with positive OCF and GP/A strength intact — an anomaly pattern. Monitor whether the low Piotroski score reflects transient balance-sheet dynamics (rapid asset expansion) or a structural deterioration in financial condition signals (leverage, accruals, margin). Three consecutive Piotroski readings below 5 alongside ROIC compression would constitute a thesis-review trigger.",
+          "severity": "medium",
+          "grounded_in": "PSA-4"
+        }
+      ],
+      "data_caveats": [
+        "F4 (Stealth Accumulation): Short interest current and peak values are withheld due to third-party data restrictions; the Pan-Poteshman (2006) put/call ratio input was skipped for lack of a free-tier source. The F4 score and verdict are partial as a direct result of these gaps.",
+        "F6 (Platform Dominator): Net Revenue Retention (NRR) and Gross Revenue Retention (GRR) are not disclosed in the NVIDIA 10-K MD&A. Both inputs score zero by the framework's not_disclosed convention, consistent with how customer_concentration is handled when undisclosed. This is the primary limitation on the F6 platform-retention signal.",
+        "F3 (Innovation Compounder): Patent portfolio status is 'not_disclosed' — the 10-K does not provide a quantified patent count or portfolio valuation. This input could not be scored.",
+        "Company-level: market_cap_usd, beta, EV/EBITDA, P/B ratio, and trailing P/E are null in the view. Valuation multiples in F7 are computed from EV/Rev and P/B z-scores using available data; the null fields are not used in any scored framework signal."
+      ]
+    }
+  },
+  "input_tokens": 12305,
+  "output_tokens": 3714,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 79117,
+  "lattice_deferred": [
+    "bayesian_updating",
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

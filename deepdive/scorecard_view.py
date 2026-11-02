@@ -31,7 +31,7 @@ import json
 import logging
 from dataclasses import dataclass, field, asdict
 from datetime import date, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import select, desc
 
@@ -42,6 +42,9 @@ from data.models.schema import (
     Financial,
     FrameworkScore,
 )
+
+if TYPE_CHECKING:
+    from deepdive.citable_fields import CitableField
 
 logger = logging.getLogger(__name__)
 
@@ -230,6 +233,12 @@ class ScorecardView:
             "n_overlay_triggers": len(self.overlay_triggers),
             "overlay_types": sorted({t.overlay_type for t in self.overlay_triggers}),
         }
+
+    def citable_fields(self) -> dict[str, CitableField]:
+        """Stable ID -> value the narrative may cite (ADR-045 §2.1)."""
+        from deepdive.citable_fields import build_citable_fields
+
+        return build_citable_fields(self)
 
 
 # ── Public loader ────────────────────────────────────────────────────────

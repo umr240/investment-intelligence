@@ -1,0 +1,169 @@
+{
+  "case_id": "AMBQ",
+  "view_sha256": "2ba57a611934c21ae0c7ced0a94ef48c992aa0a9c4cce27bc98764e4f73b9a2d",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AMBQ",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:12.339391Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9439,
+    "completion_tokens": 556,
+    "cost_usd": 0.001673,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[0].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F2' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F3' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "bear[1].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point",
+      "bear[2].framework_codes: 'F5' is unfeasible for this ticker — cannot ground a point",
+      "risks[2]: grounded_in='frameworks.2.key_signals[2]' does not match any framework, overlay trigger, data gap, or view field"
+    ],
+    "body": {
+      "one_liner": "Ambiq Micro, Inc. shows weak signals across frameworks, indicating challenges in achieving sustainable profitability.",
+      "bull": [
+        {
+          "headline": "Potential for Extreme Winner Status",
+          "detail": "Ambiq Micro, Inc. qualifies as a Bessembinder Extreme Winner candidate due to its small market cap and high R&D intensity, suggesting it could generate significant returns if it successfully scales its operations and captures market share.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "53.07%",
+              "field_path": "overlay_triggers.2.relevant_numbers.rd_intensity"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Weak Financial Signals",
+          "detail": "The company has a weak score of 3.0 in the Pre-Discovery Alpha framework, indicating potential issues with financial health and operational efficiency, particularly with a negative net income reported for the latest fiscal year.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-36,461,000",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Insufficient Historical Data",
+          "detail": "Ambiq Micro's recent IPO limits the availability of historical data, rendering several frameworks unfeasible for analysis. This lack of data may hinder accurate assessment of long-term performance and growth potential.",
+          "framework_codes": [
+            "F2",
+            "F3",
+            "F5",
+            "F7"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Negative ROIC Signals",
+          "detail": "The Peters-Taylor non-GAAP ROIC shows a significant divergence from GAAP ROIC, indicating potential inefficiencies in capital utilization. This divergence raises concerns about the company's ability to generate sustainable returns on invested capital.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-1.3664",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "-0.0529",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether net income continues to decline over the next few quarters, indicating persistent operational challenges.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Watch for any signs of erosion in R&D efficiency as indicated by the divergence between GAAP and non-GAAP ROIC.",
+          "severity": "medium",
+          "grounded_in": "overlay_triggers.0.trigger_id"
+        },
+        {
+          "factor": "Keep an eye on customer retention metrics once disclosed, as they are critical for assessing long-term growth potential.",
+          "severity": "medium",
+          "grounded_in": "frameworks.2.key_signals[2]"
+        }
+      ],
+      "data_caveats": [
+        "Insufficient historical data limits the analysis of several frameworks (F2, F3, F5, F7).",
+        "F4 signals are incomplete due to missing third-party data on options and EPS acceleration."
+      ]
+    }
+  },
+  "input_tokens": 8415,
+  "output_tokens": 556,
+  "cache_read_tokens": 1024,
+  "cache_write_tokens": 0,
+  "latency_ms": 7093,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

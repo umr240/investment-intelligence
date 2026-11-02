@@ -1,0 +1,166 @@
+{
+  "case_id": "AUUA.V",
+  "view_sha256": "56372085c152b5e6eb22c2471bfca5d1173bd1269930c5601bb3f607a7484c9d",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "AUUA.V",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:16:24.171824Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 8573,
+    "completion_tokens": 592,
+    "cost_usd": 0.001641,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].framework_codes: 'F1' is unfeasible for this ticker — cannot ground a point",
+      "bear[2].framework_codes: 'F7' is unfeasible for this ticker — cannot ground a point"
+    ],
+    "body": {
+      "one_liner": "Aluula Composites Inc. shows early-stage growth potential but faces significant profitability challenges.",
+      "bull": [
+        {
+          "headline": "Strong Revenue Growth Trajectory",
+          "detail": "Aluula Composites Inc. has demonstrated a robust revenue CAGR of 42.1% over the past three years, indicating strong demand for its products. This growth is a positive signal for potential future profitability as the company scales operations.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "42.1%",
+              "field_path": "frameworks.4.key_signals.0.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive Momentum Indicators",
+          "detail": "The company exhibits positive momentum with a 12-1 momentum score of 23.2% and is currently 24.7% off its 52-week high. These indicators suggest a favorable market perception and potential for continued upward movement in stock performance.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "23.2%",
+              "field_path": "frameworks.1.key_signals.0.1"
+            },
+            {
+              "value": "24.7%",
+              "field_path": "frameworks.1.key_signals.1.1"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Negative Net Income Signals",
+          "detail": "The latest net income stands at -$1,610,691, indicating ongoing losses that raise concerns about the company's path to profitability. This negative performance could hinder future investment and operational expansion.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-$1,610,691",
+              "field_path": "company.latest_net_income"
+            }
+          ]
+        },
+        {
+          "headline": "Lack of Analyst Coverage",
+          "detail": "The absence of analyst coverage limits the availability of insights and could hinder investor confidence. This lack of scrutiny may lead to underperformance in market perception and valuation.",
+          "framework_codes": [
+            "F1"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Insufficient Historical Data for Robust Analysis",
+          "detail": "With only three years since its IPO, the company lacks the necessary historical data for comprehensive analysis across several frameworks, which may obscure true performance trends and risks.",
+          "framework_codes": [
+            "F7"
+          ],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the company continues to report negative net income over the next few annual filings before reconsidering the thesis.",
+          "severity": "high",
+          "grounded_in": "company.latest_net_income"
+        },
+        {
+          "factor": "Watch for any changes in revenue growth trends that could indicate a slowdown in demand or operational challenges.",
+          "severity": "medium",
+          "grounded_in": "frameworks.4.key_signals.0.1"
+        },
+        {
+          "factor": "Monitor for any developments in analyst coverage that could provide deeper insights into the company's performance and market positioning.",
+          "severity": "medium",
+          "grounded_in": "frameworks.0.unfeasible_reason"
+        }
+      ],
+      "data_caveats": [
+        "Insider transactions are unavailable due to jurisdictional filing differences for TSX Venture issuers.",
+        "Short interest data is not available, limiting insights into market sentiment and potential risks."
+      ]
+    }
+  },
+  "input_tokens": 8573,
+  "output_tokens": 592,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 6745,
+  "lattice_deferred": [
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

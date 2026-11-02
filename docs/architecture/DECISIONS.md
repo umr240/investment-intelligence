@@ -750,3 +750,21 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Date**: 2026-10-27
 **Decision**: The owner accepted ADR-044 as a build. Each contract (C1–C8) counts failing units out of total units against a threshold that is the largest failing share allowed, or none for a reported-only contract, and every result stores up to 20 failing keys. Both patterns are borrowed: the failing fraction from Pointblank and Soda, the stored failing keys from Great Expectations and Soda. No library is adopted: the contracts are cross-table SQL and one Python comparison (C5), which these libraries' per-row table checks do not express, and Great Expectations brings 25 required packages for eight queries (SECURITY §5). Soda Core v4 is under the Elastic License 2.0 and has no SQLite connector; Pointblank is thinly proven and reads SQLite through Ibis.
 **See**: `ADR-044-data-contracts-on-refresh.md` §2.2; the borrow-before-building comparison in the PR.
+
+---
+
+## DEC-52 — ADR-047 accepted: a built eval harness, with both splits in the public repo
+
+**Date**: 2026-10-28
+**Decision**: The owner accepted ADR-047 with four additions (§2.7): versioned fixtures that replay refuses on a mismatch, live runs from the CLI only with a priced confirmation, eval calls marked in `llm_calls`, and composer deferrals recorded per case as the evidence ADR-055 needs before lattice RAG can reopen. The golden set's train and test splits both live in this public repo; contamination is mitigated by a canary string in every test file, a quarterly refresh with post-cutoff dives, and the existing `Read` deny rule. No eval library is adopted: the graders are deterministic and the model is called only through `deepdive/narrative.py`; pydantic-evals' case/evaluator/report shape is borrowed. The work is delivered as an epic branch (`epic/adr-047-evals`) of story PRs, merged into `main` after a full e2e run.
+**Resolves**: `docs/OPEN_QUESTIONS.md` #1.
+**See**: `ADR-047-narrative-eval-harness.md` §2.1, §2.7.
+
+---
+
+## DEC-53 — ADR-045 accepted: the model cites field IDs, code renders the numbers
+
+**Date**: 2026-10-28
+**Decision**: The owner accepted ADR-045 with eight amendments: the baseline evidence and the longer model list in §1, the other six in §2.7. Narrative claims cite stable field IDs (framework code plus label slug) from a per-request enum, prose uses `{F5.roic}`-style placeholders that code renders, and the model explains the deterministic verdict rather than choosing it. Anthropic moves from a forced tool call, which current models reject with a 400, to `output_config.format`; OpenAI keeps strict `json_schema`. One bounded repair is allowed, graded separately from the first attempt. No library is adopted: instructor's validation-retry pattern is borrowed, since both providers enforce the schema natively. The evidence is the ADR-047 baseline, where most guard failures were right values cited at the wrong list position. Delivered as `epic/adr-045-grounded-narrative`.
+**See**: `ADR-045-grounded-narrative-generation.md` §1, §2.7.
+

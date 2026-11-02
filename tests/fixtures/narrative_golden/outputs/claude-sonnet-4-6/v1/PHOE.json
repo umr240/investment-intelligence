@@ -1,0 +1,212 @@
+{
+  "case_id": "PHOE",
+  "view_sha256": "50bbbf667506834312554ec6e2322d734e3f0c6684f951f7192a37962483f2bb",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "PHOE",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T08:04:57.937976Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11180,
+    "completion_tokens": 2438,
+    "cost_usd": 0.07011,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "risks[5]: grounded_in='F5' does not match any framework, overlay trigger, data gap, or view field",
+      "formatting: bear.1.headline trimmed from 144 to 140 chars"
+    ],
+    "body": {
+      "one_liner": "Phoenix Asia Holdings (PHOE) is a pre-profitability micro-cap special-trade contractor that listed approximately 18 months ago; with every quantitative framework unfeasible, a composite score of 0.25 driving an exclude verdict, and a severe intangible-capital restatement gap, the scorecard cannot support a hold thesis at this stage.",
+      "bull": [
+        {
+          "headline": "Operating in a capital-light trade-contractor niche that is structurally insulated from Mag-7 disruption",
+          "detail": "Special-trade contracting in Hong Kong / Asia is geographically bounded, relationship-driven, and operationally dense — categories historically least defended by technology incumbents. A $1B-funded challenger would face licensing, local-subcontractor networks, and client-relationship barriers that capital alone cannot dissolve quickly. This is a structural (not quantified) observation; no framework score exists to anchor it given all F1–F7 are unfeasible.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Revenue base is non-zero; the business has demonstrated commercial activity pre-profitability",
+          "detail": "The company recorded revenues in its most recent fiscal year, confirming it is an operating entity, not a blank-check vehicle. The pre-profitability stage label is consistent with an early-lifecycle contractor still absorbing listing costs and SG&A load. Whether the revenue trajectory is durable cannot be assessed until quarterly history accumulates to the minimum required by F1–F5.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "$7,205,749",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "All seven quantitative frameworks are unfeasible; composite rests on near-zero informational content",
+          "detail": "F1–F5 require at least 4 quarters of history; F3 and F6 require 8; F7 requires 10 years of annual history. PHOE has zero quarters of public reporting and only 5 years of annual history with 18 months since listing. No framework score was computed. The composite of 0.25 therefore reflects a structural data-absence penalty, not a balanced analytical verdict. This is the defining bear point: the scorecard cannot be populated with the company's own data.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.25",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Peters-Taylor ROIC restatement reveals a severe intangible-capital distortion: GAAP ROIC overstates economic capital efficiency by a wide…",
+          "detail": "ICA-5 fires because the Peters-Taylor non-GAAP ROIC diverges from the GAAP ROIC by a large downward gap, meaning economic capital efficiency is materially worse than GAAP suggests. The direction is 'downward' (economic < GAAP), indicating the invested-capital base is inflated by intangibles when properly capitalised. For a sub-scale contractor with negative net income, this restatement compounds the concern about true capital productivity.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "149.13pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "1.3532",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "-0.1381",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "Net income is negative; pre-profitability stage with no visibility into path to breakeven",
+          "detail": "Latest net income is negative against a modest revenue base. In special-trade contracting, negative net income at low revenue scale typically reflects either project-cost overruns, elevated SG&A from listing expenses, or structurally thin project margins. Without quarterly filing history, it is impossible to distinguish cyclical trough from structural unit-economics failure.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-$1,200,960",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$7,205,749",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "CEO equity stake undisclosed; capital-allocator quality and insider alignment are unobservable",
+          "detail": "The CEO's equity percentage is in a 'not_disclosed' state, and no Form 4 insider transactions were found on EDGAR. For the Outsiders 8-traits lens, skin-in-the-game is the first observable signal of capital-allocator quality. Its absence here means alignment cannot be assessed, removing a key thesis-support element. The absence of insider transaction history further limits the ability to infer management conviction.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Recent-IPO lifecycle position constrains every statistical and moat inference",
+          "detail": "PHOE listed approximately 18 months ago (PSA-3 triggered). The sample of survivorship is thin: today's listed cohort contains names that have not yet been stress-tested by a credit cycle, sector downturn, or key-customer loss. The base rate for micro-cap recent-IPO contractors achieving durable compounding over a 5-year hold is low. Circle-of-competence reasoning demands acknowledging that the pre-listing operating history (5 years available vs. 10 required by F7) cannot be independently verified through public quarterly filings.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "18",
+              "field_path": "overlay_triggers.1.relevant_numbers.months_since_listing"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether Peters-Taylor-adjusted ROIC remains deeply negative across the next 2–3 annual filings before forming any view on capital efficiency. A persistently negative economic ROIC (vs. the inflated GAAP ROIC) would confirm structural capital destruction, a thesis-break condition for any long-horizon hold.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for sustained net losses over the next 3–4 annual reporting cycles. Continued negative net income at this revenue scale, without a credible path to breakeven visible in project backlog or gross-margin expansion, would signal a structural unit-economics failure rather than a listing-cost artifact.",
+          "severity": "high",
+          "grounded_in": "stage.stage"
+        },
+        {
+          "factor": "Monitor CEO and insider equity disclosure. If the CEO equity stake remains undisclosed or is revealed to be negligible across the next proxy cycle, the capital-allocator alignment condition — a foundational hold requirement — is not met.",
+          "severity": "medium",
+          "grounded_in": "company.ceo_equity_pct_state"
+        },
+        {
+          "factor": "Watch for Form 4 insider transaction filings on EDGAR over the next 12–24 months. A complete absence of insider buying at current price levels, combined with undisclosed stake, would reinforce the alignment concern.",
+          "severity": "medium",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Monitor the pace of quarterly filing accumulation. Until at least 4 quarters of public data are available, F1–F5 remain unfeasible and the composite verdict carries no quantitative content. If filings are delayed, restated, or inconsistent, treat this as a disclosure-quality signal.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "Watch for evidence of project-concentration risk: in sub-scale special-trade contracting, a small number of clients or projects typically drives the majority of revenue. Loss of a single major contract at this revenue level could be existential. This risk cannot be quantified without segment or project-backlog disclosures.",
+          "severity": "high",
+          "grounded_in": "F5"
+        },
+        {
+          "factor": "Monitor for any indication of key-person dependency on CEO Chi Kin Yeung. In relationship-driven contracting at micro-cap scale, non-founder management without disclosed equity creates a key-person risk that is structural, not temporary.",
+          "severity": "medium",
+          "grounded_in": "company.is_founder_ceo"
+        }
+      ],
+      "data_caveats": [
+        "Earnings-date history is empty for PHOE in the pipeline's data fetch, meaning no quarterly reporting cadence could be established. This is the proximate cause of all F1–F6 unfeasibility determinations.",
+        "No Form 4 insider transactions were found on EDGAR for PHOE. Management equity alignment and insider conviction are therefore unobservable from public filings.",
+        "CEO equity percentage is in a 'not_disclosed' state — no percentage figure was retrievable from available disclosures.",
+        "Market capitalisation is null in the view; valuation multiples (P/E, P/B, EV/EBITDA, beta) are all null. No price-based framework signal can be computed.",
+        "The PSA overlay notes that listing_type field is empty, meaning the spinoff/demerger workflow could not be confirmed or ruled out from available data."
+      ]
+    }
+  },
+  "input_tokens": 11180,
+  "output_tokens": 2438,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 53431,
+  "lattice_deferred": [
+    "boundaries_hexagonal",
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

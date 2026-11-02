@@ -1,0 +1,164 @@
+{
+  "case_id": "NTES",
+  "composite_version": 1,
+  "dive_date": "2026-10-28",
+  "run_id": 258,
+  "schema_version": "1.0",
+  "source_view_sha256": "6c09cfefb544113a519bf694fbe472d19510ebbea14bf3b6a766eef54f44d1ad",
+  "split": "train",
+  "strata": [
+    "exclude_path"
+  ],
+  "view": {
+    "company": {
+      "beta": null,
+      "ceo_equity_pct": null,
+      "ceo_equity_pct_state": "not_disclosed",
+      "ceo_name": "Lei Ding",
+      "cik": "0001110646",
+      "ev_ebitda": null,
+      "exchange": "Nasdaq",
+      "fiscal_year_end_month": 12,
+      "industry": "Services-Prepackaged Software",
+      "ipo_date": "2000-06-30",
+      "ipo_date_state": "disclosed_exact",
+      "is_founder_ceo": true,
+      "latest_fiscal_year": 2025,
+      "latest_net_income": null,
+      "latest_period_end": "2025-12-31",
+      "latest_revenue": 16105276000.0,
+      "market_cap_usd": null,
+      "name": "NetEase, Inc.",
+      "pb_ratio": null,
+      "pe_trailing": null,
+      "sector": "Communication Services",
+      "ticker": "NTES"
+    },
+    "composite": {
+      "mode_resolved": "A",
+      "score": 0.0,
+      "verdict": "exclude",
+      "weights_renormalised": false,
+      "weights_used": {}
+    },
+    "fetch_data_gaps": [
+      "NTES: data contract C2 (block) not met: quarterly rows present"
+    ],
+    "frameworks": [
+      {
+        "band": "unfeasible",
+        "code": "F1",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Pre-Discovery Alpha",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F2",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Momentum",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F3",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Innovation Compounder",
+        "unfeasible_reason": "insufficient quarterly history (needs 8Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F4",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Stealth Accumulation",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F5",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Growth Quality",
+        "unfeasible_reason": "insufficient quarterly history (needs 4Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F6",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Platform Dominator",
+        "unfeasible_reason": "insufficient quarterly history (needs 8Q, have 0)",
+        "verdict": "unfeasible"
+      },
+      {
+        "band": "unfeasible",
+        "code": "F7",
+        "data_gaps": [],
+        "is_unfeasible": true,
+        "key_signals": [],
+        "max_score": 10.0,
+        "notes": "",
+        "score": 0.0,
+        "title": "Smart Beta Timing",
+        "unfeasible_reason": "insufficient history (F7 requires 10 single-basis annual (split basis unresolved for one or more years) period(s); only 6 available)",
+        "verdict": "unfeasible"
+      }
+    ],
+    "mode_used": "default",
+    "overlay_triggers": [],
+    "overlay_verdicts": {
+      "BEW": "no_winner_pattern",
+      "SIM": "auto_partial_one_test_only"
+    },
+    "run_date": "2026-10-28",
+    "schema_version": "1.0",
+    "stage": {
+      "reasoning": {
+        "established_threshold": 50000000000,
+        "latest_net_income": null,
+        "market_cap_usd": null,
+        "profitable_3yr": false
+      },
+      "stage": "mid_cap"
+    },
+    "ticker": "NTES"
+  },
+  "view_sha256": "d00772ded2ab80bcbd325616f5bac4a0878f9c3c84cdeb8e0f8b6202b979c9c2",
+  "withheld": [
+    "company.market_cap_usd",
+    "stage.reasoning.market_cap_usd"
+  ]
+}

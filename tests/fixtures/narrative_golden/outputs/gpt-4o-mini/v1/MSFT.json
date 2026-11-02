@@ -1,0 +1,185 @@
+{
+  "case_id": "MSFT",
+  "view_sha256": "8fc2b5df84e0f31d1a904d8bee36072979ac5e2407910d81635c2432131074d9",
+  "model": "gpt-4o-mini",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "MSFT",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:18:04.126241Z",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "prompt_tokens": 9378,
+    "completion_tokens": 749,
+    "cost_usd": 0.001856,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bull[2].numeric_claims[0]: claim value '+10.7%' does not match view value '('R&D band', 'near_sweet')' at 'frameworks.2.key_signals.2'"
+    ],
+    "body": {
+      "one_liner": "Microsoft Corporation is on the watchlist due to mixed signals across several frameworks, indicating areas for monitoring.",
+      "bull": [
+        {
+          "headline": "Strong revenue growth trajectory.",
+          "detail": "Microsoft's revenue has shown a compound annual growth rate (CAGR) of +16.1% over the last three years, reflecting robust demand and effective market positioning. This growth is supported by a solid Free Cash Flow (FCF) margin of +20.2%, indicating strong operational efficiency and cash generation capabilities.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+16.1%",
+              "field_path": "frameworks.4.key_signals.0"
+            },
+            {
+              "value": "+20.2%",
+              "field_path": "frameworks.4.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "Positive momentum signals.",
+          "detail": "The momentum framework indicates a positive drift in post-earnings announcement returns, with a slight increase of +2.0% from the 52-week high. This suggests a favorable market perception and potential for continued upward price movement.",
+          "framework_codes": [
+            "F2"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+2.0%",
+              "field_path": "frameworks.1.key_signals.1"
+            }
+          ]
+        },
+        {
+          "headline": "Innovation capabilities remain strong.",
+          "detail": "Microsoft's R&D intensity is at +10.7%, indicating a commitment to innovation and product development. This is crucial for maintaining competitive advantages in the technology sector, particularly in software and cloud services.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "+10.7%",
+              "field_path": "frameworks.2.key_signals.2"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Erosion of economic capital efficiency.",
+          "detail": "The divergence between Peters-Taylor non-GAAP ROIC and GAAP ROIC is concerning, with a gap of 15.76 percentage points indicating that economic capital efficiency is materially lower than GAAP suggests. This raises questions about the sustainability of returns and the quality of reported earnings.",
+          "framework_codes": [
+            "F5"
+          ],
+          "numeric_claims": [
+            {
+              "value": "15.76pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            }
+          ]
+        },
+        {
+          "headline": "Short interest data is unavailable.",
+          "detail": "The lack of available data on short interest limits the ability to assess market sentiment and potential risks associated with short selling. This absence of information could mask underlying vulnerabilities in investor confidence.",
+          "framework_codes": [
+            "F4"
+          ],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Gross margin expansion is negative.",
+          "detail": "The average gross margin expansion is reported at -19.6 basis points per year, indicating potential challenges in maintaining profitability as costs may be rising faster than revenues. This trend should be monitored closely as it could impact future earnings.",
+          "framework_codes": [
+            "F3"
+          ],
+          "numeric_claims": [
+            {
+              "value": "-19.6 bps/yr",
+              "field_path": "frameworks.2.key_signals.0"
+            }
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether economic capital efficiency continues to diverge from GAAP ROIC over the next few annual filings before reconsidering thesis.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Watch for any further decline in gross margins over the next few quarters, which could signal deeper operational issues.",
+          "severity": "medium",
+          "grounded_in": "F3"
+        },
+        {
+          "factor": "Keep an eye on the availability of short interest data, as its absence may obscure market sentiment and risk assessments.",
+          "severity": "medium",
+          "grounded_in": "F4"
+        }
+      ],
+      "data_caveats": [
+        "Earnings dates from yfinance are currently unavailable due to a timeout, which may affect the analysis of recent performance.",
+        "F4 relies on third-party data for short interest, which is currently withheld and limits the assessment of market sentiment."
+      ]
+    }
+  },
+  "input_tokens": 9378,
+  "output_tokens": 749,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 8319,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}

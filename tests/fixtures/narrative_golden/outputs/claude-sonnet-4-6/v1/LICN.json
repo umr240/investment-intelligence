@@ -1,0 +1,213 @@
+{
+  "case_id": "LICN",
+  "view_sha256": "b588e7cd651da017ad49bb9ba44e8ed1cb456c46b18e8cf91900dac4fe5987e6",
+  "model": "claude-sonnet-4-6",
+  "prompt_version": 1,
+  "narrative": {
+    "ticker": "LICN",
+    "schema_version": "1.0",
+    "generated_at": "2026-10-28T07:53:58.283125Z",
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "prompt_tokens": 11149,
+    "completion_tokens": 2294,
+    "cost_usd": 0.067857,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "status": "guard_failed",
+    "guard_warnings": [
+      "bear[1].headline: number '27' not in scorecard whitelist (possible hallucination)"
+    ],
+    "body": {
+      "one_liner": "All seven analytical frameworks are unfeasible due to insufficient operating history, the composite scores at the floor, and active overlays flag deep losses against thin revenue — the scorecard verdict is unambiguous exclusion at this stage.",
+      "bull": [
+        {
+          "headline": "ICA overlay reveals intangible-capital adjustment partially closes the GAAP ROIC gap",
+          "detail": "The Peters-Taylor restatement moves ROIC upward by a material margin relative to the raw GAAP figure, indicating that R&D and SG&A spend is creating some recognised economic capital stock. While both ROIC figures remain deeply negative, the upward direction of the adjustment suggests investment-phase activity rather than pure cash destruction — a distinction that becomes relevant only if revenue trajectory inflects materially.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "15.30pp",
+              "field_path": "overlay_triggers.0.relevant_numbers.gap_pp"
+            },
+            {
+              "value": "-17.04%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            },
+            {
+              "value": "-32.34%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            }
+          ]
+        },
+        {
+          "headline": "Recent listing keeps optionality open: PSA workflow confirms this is not yet a terminal exclusion",
+          "detail": "At only 44 months post-listing, the company is squarely inside the early-monitoring window. The PSA overlay returns 'not_a_spinoff_candidate', removing one structural red flag. The BEW overlay registers 'moderate_winner_candidate', which is a base-rate statistical flag — not a quality signal — but it does mean the long-tail distribution has not been formally closed by the scoring system.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "44",
+              "field_path": "overlay_triggers.1.relevant_numbers.months_since_listing"
+            }
+          ]
+        }
+      ],
+      "bear": [
+        {
+          "headline": "Zero feasible frameworks: no quantitative basis exists to score quality, momentum, or value",
+          "detail": "All seven frameworks — F1 through F7 — are unfeasible. F1–F5 each require at minimum four quarters of operating history; none are available. F6 requires eight quarters; F7 requires ten years of annual history against a company with seven years recorded and only three years of public listing. The composite score of 0.25 reflects this analytical vacuum, not a measured assessment of business quality.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "0.25",
+              "field_path": "composite.score"
+            }
+          ]
+        },
+        {
+          "headline": "Latest net loss dwarfs reported revenue by a factor of more than 27×",
+          "detail": "The latest fiscal year shows a net loss of approximately $21.96M against revenue of only $809K. This ratio is not a growth-phase investment dynamic typical of venture-backed SaaS; it reflects a cost structure wholly disconnected from current commercial scale. Management consulting services (the declared industry) does not carry the R&D-driven capital burn profile that would make this loss ratio structurally forgivable.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-$21,962,000",
+              "field_path": "company.latest_net_income"
+            },
+            {
+              "value": "$809,000",
+              "field_path": "company.latest_revenue"
+            }
+          ]
+        },
+        {
+          "headline": "GAAP ROIC at -32.34% signals capital destruction at an extreme rate",
+          "detail": "Even before Peters-Taylor adjustment, the GAAP ROIC of -32.34% places the business firmly in capital-destruction territory. The upward ICA adjustment to -17.04% reduces the severity on an economic basis but does not approach break-even. At this revenue base, operating leverage cannot rescue ROIC without an order-of-magnitude revenue expansion — which has no observable quarterly trajectory to evaluate.",
+          "framework_codes": [],
+          "numeric_claims": [
+            {
+              "value": "-32.34%",
+              "field_path": "overlay_triggers.0.relevant_numbers.roic_gaap"
+            },
+            {
+              "value": "-17.04%",
+              "field_path": "overlay_triggers.0.relevant_numbers.pt_adjusted_roic"
+            }
+          ]
+        },
+        {
+          "headline": "No CEO equity disclosure and no insider transaction data eliminate the capital-allocator signal entirely",
+          "detail": "CEO equity percentage is not disclosed (state: 'not_disclosed'), and EDGAR returns no Form 4 insider transactions. The Outsiders framework requires observable skin-in-the-game as a precondition for capital-allocator quality assessment. With the CEO (Ya Li) not confirmed as founder and equity stake unknown, the management alignment leg of any investment thesis cannot be grounded in evidence.",
+          "framework_codes": [],
+          "numeric_claims": []
+        },
+        {
+          "headline": "Market cap, P/B, P/E, and EV/EBITDA are all null — price discovery is non-functional",
+          "detail": "Every market-derived valuation anchor is unavailable: market cap, P/B ratio, P/E trailing, beta, and EV/EBITDA all return null. This is consistent with a micro-cap recently listed stock with thin trading. Without these anchors, margin-of-safety assessment is impossible, and position sizing relative to intrinsic value cannot be computed by any standard method.",
+          "framework_codes": [],
+          "numeric_claims": []
+        }
+      ],
+      "risks": [
+        {
+          "factor": "Monitor whether the net loss-to-revenue ratio narrows materially across the next two to three annual filings. If revenue does not inflect toward covering operating costs within that window, the pre-profitability stage designation becomes a permanent structural description rather than a phase label.",
+          "severity": "high",
+          "grounded_in": "stage.stage"
+        },
+        {
+          "factor": "Monitor whether GAAP ROIC shows directional improvement across annual filings. The current -32.34% GAAP ROIC represents destruction at a rate inconsistent with any compounding thesis; absent a clear trajectory toward break-even, the ICA upward adjustment does not change the conclusion.",
+          "severity": "high",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Monitor CEO equity disclosure and Form 4 filings. If insider ownership remains undisclosed or insider selling is observed once transactions resume, the capital-allocator alignment leg of any future thesis is structurally absent. This is a thesis-break condition.",
+          "severity": "high",
+          "grounded_in": "fetch_data_gaps"
+        },
+        {
+          "factor": "Monitor the company's ability to accumulate sufficient quarterly operating history to make F1–F5 feasible. Until four or more quarters of reported data are available, no framework-grounded quality or momentum signal can be computed, and any investment thesis rests entirely on qualitative assertion.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "The BEW overlay registers 'moderate_winner_candidate' as a base-rate statistical artifact of the listing profile, not a quality endorsement. Monitor whether, as operating history accumulates, the quality frameworks validate or refute this classification. Premature positioning on BEW flag alone, without framework confirmation, violates the lollapalooza requirement.",
+          "severity": "medium",
+          "grounded_in": "PSA-3"
+        },
+        {
+          "factor": "The management consulting industry classification creates a specific moat-direction risk: the sector has low switching costs, low capital barriers, and near-zero network effects by default. Monitor whether any evidence of structural differentiation (regulatory accreditation, proprietary methodology, government contract lock-in) emerges in annual filings.",
+          "severity": "medium",
+          "grounded_in": "ICA-5"
+        },
+        {
+          "factor": "Revenue of $809K in the management consulting sector implies either a very early-stage go-to-market or a structurally niche/limited TAM. Monitor whether disclosed client concentration, geography, or market definition signals a TAM ceiling that would make even a successful moat commercially immaterial at scale.",
+          "severity": "medium",
+          "grounded_in": "ICA-5"
+        }
+      ],
+      "data_caveats": [
+        "Earnings dates data from the market data provider is empty for LICN; no quarterly earnings history is available, which is the direct cause of all seven frameworks being scored unfeasible.",
+        "No Form 4 insider transaction records were found on EDGAR for LICN; CEO equity percentage is not disclosed in filings, making capital-allocator alignment assessment impossible.",
+        "Market capitalisation, beta, P/B, trailing P/E, and EV/EBITDA are all null in the data layer; valuation-based margin-of-safety analysis cannot be performed.",
+        "PSA overlay notes listing_type field is empty; the spinoff/demerger workflow could not be fully confirmed or excluded, though the overlay verdict resolved to 'not_a_spinoff_candidate' based on available signals."
+      ]
+    }
+  },
+  "input_tokens": 11149,
+  "output_tokens": 2294,
+  "cache_read_tokens": 0,
+  "cache_write_tokens": 0,
+  "latency_ms": 48880,
+  "lattice_deferred": [
+    "chestertons_fence",
+    "confidence_calibration",
+    "efficient_market_filtration",
+    "fail_fast",
+    "failing_test_before_fix",
+    "falsifiability",
+    "functional_core_imperative_shell",
+    "historical_base_rates",
+    "idempotency",
+    "illegal_states_unrepresentable",
+    "mirror_existing_patterns",
+    "one_concern_per_change",
+    "parse_dont_validate",
+    "read_before_writing",
+    "regression_to_mean",
+    "respect_the_contract",
+    "sample_size_law_of_small_numbers",
+    "selection_pressure",
+    "signal_vs_noise",
+    "single_source_of_truth",
+    "survivorship_bias",
+    "taxonomy_of_uncertainty",
+    "two_hard_things",
+    "verify_with_tests",
+    "when_uncertain_ask",
+    "yagni",
+    "antifragility",
+    "blast_radius",
+    "boring_technology",
+    "bottleneck_theory_of_constraints",
+    "code_read_more_than_written",
+    "defense_in_depth",
+    "entropy",
+    "epistemic_humility_unknown_unknowns",
+    "failure_mode_analysis",
+    "failure_pareto",
+    "feedback_loops",
+    "intersubjective_verification",
+    "leverage_points",
+    "mean_reversion_secular_vs_cyclical",
+    "pattern_matching_wrong_analog",
+    "pre_mortem_before_commit",
+    "redundancy",
+    "rule_of_three",
+    "stocks_vs_flows",
+    "test_behaviour_not_implementation",
+    "test_failure_modes_not_happy_paths",
+    "tracer_bullets",
+    "unintended_consequences",
+    "lollapalooza_alignment_detector",
+    "man_with_hammer_warning"
+  ]
+}
