@@ -2,11 +2,11 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED 2026-11-11, awaiting user sign-off.** Nothing implemented. |
+| **Status** | **PROPOSED 2026-11-11, awaiting sign-off.** Nothing implemented. |
 | **Phase** | Infrastructure |
 | **Related** | ADR-031-A2 (in-code ceiling: the immediate stop; this is the account-side one) |
 | **Precedes** | ADR-031-A3 (Bedrock provider), whose first call waits for this stack and its drill |
-| **Provenance** | Split from the Bedrock draft on the owner's instruction, 2026-11-11. Owner: monthly AWS budget "as close to $0" as possible; recommendations accepted on review of need and cost. |
+| **Provenance** | 2026-11-11. Separated from ADR-031-A3. Requirement: monthly AWS spend as close to $0 as possible; recommendations accepted on review of need and cost. |
 
 ---
 
@@ -16,7 +16,7 @@ The project has never used AWS (no `infra/`, no AWS packages in `uv.lock`).
 Any use starts with an account that can bill. A press report describes a
 Bedrock bill that ran past credits to ~$30K, and quotes AWS that Cost Anomaly
 Detection does not cover Marketplace charges (The Register, 2026-05-14; no
-AWS page checked). The owner wants monthly AWS spend as close to $0 as
+AWS page checked). The requirement is monthly AWS spend as close to $0 as
 possible.
 
 ## 2. Decision
@@ -28,7 +28,7 @@ AWS states the Free plan "incurs no charges as long as no upgrade is made"
 accounts created on or after 15 July 2025 (OPEN_QUESTIONS #9) and lasts 6
 months or until the credits are used, after which the account must move to
 the Paid plan to continue (Free Tier FAQ). ADR-031-A3's 60-day exit test runs
-inside that window. Moving to the Paid plan is a separate owner decision,
+inside that window. Moving to the Paid plan is a separate decision,
 taken only after this stack is deployed and drilled, and only if a needed
 service is closed on the Free plan (OPEN_QUESTIONS #8).
 
@@ -39,7 +39,7 @@ service is closed on the Free plan (OPEN_QUESTIONS #8).
 | Monthly cost budget, limit **$1.00**, whole account, **credits not netted off** | Email at actual > 1% ($0.01: any usage, even if credits pay it), actual 100%, forecast 100% |
 | Budget action on it, actual 100%, automatic | Attaches `DenyBedrock` to `BedrockInvoker` |
 | `DenyBedrock` managed policy (not attached) | Denies `bedrock:*`, the Mantle namespace (OPEN_QUESTIONS #12) and `aws-marketplace:Subscribe` |
-| `BedrockInvoker` IAM role | The only principal the app uses: invoke one model, one region (template parameters). Assumable only by the owner's IAM user |
+| `BedrockInvoker` IAM role | The only principal the app uses: invoke one model, one region (template parameters). Assumable only by the project's IAM user |
 | `BudgetsActionExecution` role | Trusted by `budgets.amazonaws.com`; may attach and detach only `DenyBedrock`, only on `BedrockInvoker` |
 
 The budget covers the whole account, not Bedrock alone: at a near-$0
@@ -59,14 +59,14 @@ the template uses `AWS::AccountId` and commits no account id, ARN or email.
   account may use Organizations is unknown. It stays the alternative if
   `aws login` refresh proves unreliable.
 
-### 2.4 Deployed by the owner
+### 2.4 Manual deployment
 
 `aws cloudformation validate-template`, then `aws cloudformation deploy`,
-from the owner's machine; it creates resources in the owner's account, so
-Claude Code does not run it. Whether a Free-plan account may create a
-budget action is not checked: if `deploy` refuses it, the owner stops there
-rather than dropping the action. The owner installs the AWS CLI (outside the
-project sandbox) and creates the account and IAM user by hand, once.
+from a workstation with the account's credentials. It creates resources in
+the AWS account, so no automation runs it. Whether a Free-plan account may create a
+budget action is not checked: if `deploy` refuses it, the rollout stops there
+rather than dropping the action. The AWS CLI is installed outside the project
+sandbox, and the account and IAM user are created by hand, once.
 
 ### 2.5 Drill before the first real call
 
@@ -85,11 +85,11 @@ action.
 
 ### 2.6 Lifting the deny after a breach
 
-The owner reverses the action (`aws budgets execute-budget-action
+The action is reversed by hand (`aws budgets execute-budget-action
 --execution-type REVERSE_BUDGET_ACTION`). Per AWS, a reversed action is not
 evaluated again for the rest of the period unless reset (§8). Whether an
 applied action undoes itself when a new month starts is not checked here, so
-the owner reverses it deliberately.
+it is reversed deliberately.
 
 ## 3. Options
 
@@ -124,7 +124,7 @@ plan, by ADR-031-A2 in code, and by this budget.
 - **Budgets cannot see the spend.** Unconfirmed for Bedrock (OPEN_QUESTIONS
   #11). If not, the in-code ceiling is the only stop, and A3 does not ship on
   the Paid plan until it is answered.
-- **The app runs as someone else.** The deny lands only on `BedrockInvoker`.
+- **The app runs with a wider identity.** The deny lands only on `BedrockInvoker`.
   A3 builds the client only from that profile and tests it; the $0.01 email
   still fires for any other principal.
 - **Credits hide spend.** Handled: the budget counts usage before credits.
@@ -135,8 +135,8 @@ plan, by ADR-031-A2 in code, and by this budget.
 ## 6. Consequences
 
 - Easier: any AWS spend at all produces an email.
-- Harder: past $1 in a month, Bedrock stops until the owner reverses the
-  action.
+- Harder: past $1 in a month, Bedrock stays denied until the budget action
+  is reversed.
 - Forbidden: an app AWS credential other than `BedrockInvoker`; access keys
   on the IAM user; moving to the Paid plan before deploy and drill; an
   account id, ARN or email committed to the repository.

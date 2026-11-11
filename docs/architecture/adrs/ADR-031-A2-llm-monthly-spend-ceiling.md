@@ -2,11 +2,11 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED 2026-11-11, awaiting user sign-off.** Nothing implemented. |
+| **Status** | **PROPOSED 2026-11-11, awaiting sign-off.** Nothing implemented. |
 | **Amends** | ADR-031 §4.4 (the $100/month ceiling, written as guidance for the LLM-extraction option) and §8 ("Cost-ceiling enforcement ❌ NOT shipped") |
 | **Related** | ADR-031-A3 (Bedrock provider: sets a Bedrock ceiling here before its first call); ADR-058 (the AWS-side stop) |
 | **Eval Contract** | **UNMEASURED** (constitution VIII). Changes no prompt, guard or model; claims no quality effect. |
-| **Provenance** | Split from the Bedrock draft on the owner's instruction, 2026-11-11, because the ceiling is worth having whether or not Bedrock goes ahead. |
+| **Provenance** | 2026-11-11. Separated from ADR-031-A3 because the ceiling stands whether or not a Bedrock provider is added. |
 
 ---
 
@@ -45,7 +45,7 @@ site and every provider.
 | Option | Verdict |
 |---|---|
 | **(a) One check inside `recorded_call`** | **Chosen.** One place, covers every site and provider, reads a table that already exists. |
-| (b) Provider-side limits in the Anthropic and OpenAI consoles | **Adopted as well, as the second line** for those providers: they count the real bill, which (a) cannot. Set by the owner in each console; whether each is a hard cap or an alert is not checked here. |
+| (b) Provider-side limits in the Anthropic and OpenAI consoles | **Adopted as well, as the second line** for those providers: they count the real bill, which (a) cannot. Set in each provider console; whether each is a hard cap or an alert is not checked here. |
 | (c) A copy of the skill's check at each call site | Rejected: three copies, and a new site can forget it. |
 | (d) A budget proxy (e.g. LiteLLM) | Rejected on scope: a proxy process and a large dependency to replace a ~40-line check over an existing table. Adoption evidence not gathered. |
 
@@ -85,12 +85,11 @@ site and every provider.
 
 ## 5. Inversion (mandatory)
 
-- **It blocks a dive the owner wanted.** The error names the setting to
-  raise.
+- **It blocks a wanted dive.** The error names the setting to raise.
 - **The sum is wrong.** It is computed from `config/llm_prices.py`, not the
   bill; stale prices under-count, and a timed-out request recorded as an
-  error at $0 may still be billed (a guess). Check: once a month the owner
-  compares `invest llm stats` with each provider's invoice; option (b) is the
+  error at $0 may still be billed (a guess). Check: once a month,
+  `invest llm stats` is compared with each provider's invoice; option (b) is the
   backstop.
 - **A long-running server goes quiet after a failed write.** Every call then
   fails with the restart message, in the UI as well as the CLI.
