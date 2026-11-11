@@ -14,8 +14,8 @@
 ## 1. Context
 
 `deepdive/external_signals.py` is the opt-in path that sends filing text to a
-model: up to 80,000 characters of an 8-K EX-99.1 (`external_signals.py:181-182`)
-or a DEF 14A (`:333-334`), to extract metrics such as NRR, ARR and GMV, or CEO
+model: up to 80,000 characters of an 8-K EX-99.1 (`deepdive/external_signals.py:46,197`)
+or a DEF 14A (`deepdive/external_signals.py:355`), to extract metrics such as NRR, ARR and GMV, or CEO
 ownership. Its prompt requires a verbatim quote for every value and forbids
 deriving numbers (`:155-159`, `:308-309`). **Nothing in code enforces either
 rule.**

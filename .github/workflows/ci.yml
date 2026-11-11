@@ -152,3 +152,91 @@ jobs:
           tar -xzf gitleaks.tgz gitleaks
       - name: gitleaks detect
         run: ./gitleaks detect --source . --redact --verbose --exit-code 1
+
+  gate:
+    # The static half of tools/gate/gate.py against the PR base. Lock-file
+    # changes are allowed here: the PR review is where they are read.
+    name: gate (static)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+        with:
+          enable-cache: true
+      - run: uv sync --locked --dev
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with:
+          node-version: lts/*
+      - run: npm ci
+        working-directory: frontend
+      - name: gate --static-only
+        env:
+          BASE: ${{ github.base_ref || github.event.repository.default_branch }}
+        run: uv run tools/gate/gate.py --workdir .e2e/ci --static-only --base "origin/$BASE" --allow-lock
+
+  node:
+    name: node build + test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with:
+          node-version: lts/*
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test --if-present
+
+  workflows:
+    # Audits this repository's own GitHub workflows and Dependabot config.
+    name: zizmor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+      - run: uvx zizmor@1.31.1 .
+
+  dependencies:
+    # Known vulnerabilities in the lock files (osv.dev). The release binary is
+    # checksum-verified rather than run through a third-party action. To accept a
+    # finding, list it with a reason in osv-scanner.toml ([[IgnoredVulns]]).
+    name: osv-scanner
+    runs-on: ubuntu-latest
+    env:
+      OSV_VERSION: "2.7.0"
+      OSV_SHA256: "160c6253e2922e9e0a6a9771c5c4c40a4b3c6090b34a3cdd5e80c96cc2e4218b"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install osv-scanner
+        run: |
+          curl -fsSLo osv-scanner \
+            "https://github.com/google/osv-scanner/releases/download/v${OSV_VERSION}/osv-scanner_linux_amd64"
+          echo "${OSV_SHA256}  osv-scanner" | sha256sum --check
+          chmod +x osv-scanner
+      # --allow-no-lockfiles: a project with no lock file yet passes instead of exiting 128.
+      - run: ./osv-scanner scan source --recursive --allow-no-lockfiles .
+
+  public-text:
+    # PR bodies are public text: impersonal, no em or en dashes
+    # (tools/check_public_text.py; the gate checks added Markdown and commits).
+    name: public text (PR body)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - env:
+          BODY: ${{ github.event.pull_request.body }}  # passed by env, never interpolated into the script
+        run: printf '%s' "$BODY" | python3 tools/check_public_text.py --stdin

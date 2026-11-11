@@ -1,0 +1,22 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v0.5.10
+_src_path: gh:umr240/agentic-kit
+description: 'Quantitative equity research: screens and analyses companies through
+    seven academic frameworks, with a deterministic data path and an LLM only for
+    the narrative.'
+git_authority: merge_after_verify
+has_ui: true
+llm_sites:
+- deepdive/narrative.py
+- deepdive/external_signals.py
+- deepdive/conversation.py
+local_data: investment_intelligence.db
+main_branch: main
+node_dir: frontend
+owner_name: Umar
+project_name: Investment Intelligence
+project_slug: investment-intelligence
+stacks:
+- python
+- node
+uses_llm: true

@@ -19,22 +19,25 @@ _PATHISH = re.compile(r"`([A-Za-z0-9_./-]+\.(?:py|md|toml|ini|json|yml|yaml))`")
 _TREE_LEAF = re.compile(r"^[│├└─\s]*([A-Za-z0-9_.-]+\.(?:py|md|toml|ini|json))\s")
 
 
+_REFERENCE = "docs/architecture/SYSTEM_REFERENCE.md"  # holds the tree CLAUDE.md points to
+
+
 def _structure_block() -> list[str]:
-    text = (_ROOT / "CLAUDE.md").read_text(encoding="utf-8")
-    block = re.search(r"^## PROJECT STRUCTURE.*?^```\n(.*?)^```", text, re.S | re.M)
-    assert block, "CLAUDE.md no longer has a fenced PROJECT STRUCTURE block"
+    text = (_ROOT / _REFERENCE).read_text(encoding="utf-8")
+    block = re.search(r"^## Project structure.*?^```\n(.*?)^```", text, re.S | re.M | re.I)
+    assert block, f"{_REFERENCE} no longer has a fenced project-structure block"
     return block.group(1).splitlines()
 
 
 def test_project_structure_names_only_real_files() -> None:
-    """Every file leaf in CLAUDE.md's structure tree must exist somewhere."""
+    """Every file leaf in the structure tree must exist somewhere."""
     existing = {p.name for p in _ROOT.rglob("*") if p.is_file()}
     missing = []
     for line in _structure_block():
         m = _TREE_LEAF.match(line)
         if m and m.group(1) not in existing:
             missing.append(m.group(1))
-    assert not missing, f"CLAUDE.md structure tree names files that do not exist: {missing}"
+    assert not missing, f"the structure tree names files that do not exist: {missing}"
 
 
 def test_project_structure_lists_every_source_directory() -> None:
@@ -49,11 +52,11 @@ def test_project_structure_lists_every_source_directory() -> None:
     block = "\n".join(_structure_block())
     undocumented = sorted(d for d in tracked_dirs if f"{d}/" not in block)
     assert not undocumented, (
-        f"top-level directories absent from CLAUDE.md's structure tree: {undocumented}"
+        f"top-level directories absent from the structure tree: {undocumented}"
     )
 
 
-@pytest.mark.parametrize("doc", ["CLAUDE.md", "README.md"])
+@pytest.mark.parametrize("doc", ["CLAUDE.md", "README.md", _REFERENCE])
 def test_referenced_repo_paths_exist(doc: str) -> None:
     """Backticked repo-relative paths in the top-level docs must resolve."""
     text = (_ROOT / doc).read_text(encoding="utf-8")
