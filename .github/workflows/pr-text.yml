@@ -1,0 +1,23 @@
+name: PR text
+
+# The PR body is public text: impersonal, no em or en dashes (tools/check_public_text.py;
+# the gate checks added Markdown and commit messages). Its own workflow so that editing
+# the body re-runs the check (pull_request "edited"), without the rest of CI.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  body:
+    name: public text (PR body)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - env:
+          BODY: ${{ github.event.pull_request.body }}  # passed by env, never interpolated into the script
+        run: printf '%s' "$BODY" | python3 tools/check_public_text.py --stdin

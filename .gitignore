@@ -255,3 +255,7 @@ frontend/dist/
 .e2e/
 .backups/
 CLAUDE.local.md
+
+# agentic-kit (gate scratch is .e2e/, above)
+node_modules/
+coverage/

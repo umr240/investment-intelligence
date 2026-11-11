@@ -3,7 +3,38 @@
     "deny": [
       "Read(/.env)",
       "Read(/tests/fixtures/narrative_golden/test/**)",
-      "Edit(/tests/fixtures/narrative_golden/**)"
+      "Edit(/tests/fixtures/narrative_golden/**)",
+      "Read(/.env.*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.config/gh/**)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.docker/config.json)",
+      "Read(~/.git-credentials)",
+      "Read(~/.netrc)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Edit(~/.ssh/**)",
+      "Edit(~/.bashrc)",
+      "Edit(~/.zshrc)",
+      "Edit(~/.profile)"
     ]
+  },
+  "extraKnownMarketplaces": {
+    "agentic-kit": {
+      "source": {
+        "source": "github",
+        "repo": "umr240/agentic-kit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "agentic-kit@agentic-kit": true,
+    "ralph-loop@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   }
 }
