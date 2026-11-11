@@ -1,8 +1,8 @@
-# ADR-031 Amendment A2 — A monthly LLM spend ceiling for every provider, enforced before each call
+# ADR-031 Amendment A2: a monthly LLM spend ceiling for every provider, enforced before each call
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED 2026-11-11 — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **PROPOSED 2026-11-11, awaiting user sign-off.** Nothing implemented. |
 | **Amends** | ADR-031 §4.4 (the $100/month ceiling, written as guidance for the LLM-extraction option) and §8 ("Cost-ceiling enforcement ❌ NOT shipped") |
 | **Related** | ADR-031-A3 (Bedrock provider: sets a Bedrock ceiling here before its first call); ADR-058 (the AWS-side stop) |
 | **Eval Contract** | **UNMEASURED** (constitution VIII). Changes no prompt, guard or model; claims no quality effect. |
@@ -52,8 +52,8 @@ site and every provider.
 ## 4. Decision
 
 1. **Check before each request.** On entry, `recorded_call` sums this UTC
-   calendar month's `cost_usd` from `llm_calls` — every row, eval runs
-   included, since they are real spend — overall and for the call's provider.
+   calendar month's `cost_usd` from `llm_calls`, overall and for the call's
+   provider. Every row counts, eval runs included, since they are real spend.
    If either has reached its ceiling it raises `SpendCeilingError` and sends
    nothing.
 2. **Ceilings are settings.** `LLM_MONTHLY_CEILING_USD` (overall; default 100,
@@ -85,8 +85,8 @@ site and every provider.
 
 ## 5. Inversion (mandatory)
 
-- **It blocks a dive the owner wanted.** That is the point; the error names
-  the setting to raise.
+- **It blocks a dive the owner wanted.** The error names the setting to
+  raise.
 - **The sum is wrong.** It is computed from `config/llm_prices.py`, not the
   bill; stale prices under-count, and a timed-out request recorded as an
   error at $0 may still be billed (a guess). Check: once a month the owner

@@ -1,8 +1,8 @@
-# ADR-031 Amendment A3 — Amazon Bedrock as a third provider for the narrative
+# ADR-031 Amendment A3: Amazon Bedrock as a third provider for the narrative
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED 2026-11-11 — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **PROPOSED 2026-11-11, awaiting user sign-off.** Nothing implemented. |
 | **Amends** | ADR-031 §4.1 (who the permitted call sites may call) |
 | **Depends on** | ADR-031-A2 (in-code ceiling) and ADR-058 (AWS guardrails, deployed and drilled). Neither optional. |
 | **Also touches** | CLAUDE.md SECURITY §1 (secrets in scope), §2 (egress), §5 (one optional dependency); ADR-048 (a provider value and a price row); `deep_dive_conversations.provider` (`data/models/schema.py:782`) is unchanged: chat does not use Bedrock (§4.1) |
@@ -46,7 +46,7 @@ accepted that on 2026-11-11 with the work marked UNMEASURED and an exit test
   `thinking` or sampling parameters and `max_tokens=8192`
   (`narrative.py:494-510`), and treats a `refusal` stop as a provider failure
   (`narrative.py:522`). Chat forces a tool (`conversation.py:314`), which
-  current models reject with a 400 — the reason the narrative already moved
+  current models reject with a 400. That is why the narrative already moved
   to structured output (`narrative.py:503`, ADR-045).
 - **Redaction.** `narrative.py:215` `_KEYISH` misses AWS key ids
   (`AKIA…`/`ASIA…`) and the account id in ARNs; the gate's scan matches
@@ -61,7 +61,7 @@ accepted that on 2026-11-11 with the work marked UNMEASURED and an exit test
 | (C) Bedrock Converse API through `boto3` | similar | Rejected: a second structured-output path to keep in step. |
 | (D) Same as (A) with a Bedrock API key | same | Rejected: a long-lived secret in `.env`; AWS calls long-term keys "for exploration". |
 | (E) Claude Platform on AWS | ~ Anthropic price | Rejected: an Anthropic API billed by AWS; exercises neither IAM nor Bedrock, which is the point. |
-| (F) A multi-provider router (e.g. LiteLLM) | — | Rejected: replaces working SDK calls with a large dependency. Adoption evidence was not gathered; the rejection does not rest on it. |
+| (F) A multi-provider router (e.g. LiteLLM) | n/a | Rejected: replaces working SDK calls with a large dependency. Adoption evidence was not gathered; the rejection does not rest on it. |
 | (G) No Bedrock; AWS experience elsewhere (ADR-056 hosting) | $0 | Not exclusive; stays open. |
 
 The (A) range: per Anthropic's model-migration documentation, Sonnet 5.5's
@@ -159,7 +159,7 @@ smoke-test rows excluded:
 ## 8. Inversion (mandatory)
 
 - **A surprise bill.** Bounded by the Free plan while on it, by A2 within the
-  requests in flight, and by ADR-058 within hours — if its deny reaches the
+  requests in flight, and by ADR-058 within hours if its deny reaches the
   Mantle endpoint (OPEN_QUESTIONS #12; the second drill shows it). Not
   shipped on the Paid plan until OPEN_QUESTIONS #11 is answered.
 - **Thinking eats the output budget.** A `max_tokens` stop is billed and
@@ -186,9 +186,9 @@ smoke-test rows excluded:
 
 ## 10. Sources (checked 2026-11-11)
 
-- pydantic/genai-prices `prices/providers/aws.yml` at e66fb87 — https://github.com/pydantic/genai-prices
-- Anthropic API version 2026-10-21 migration — https://platform.claude.com/docs/en/api/migration-2026-10-21.md
-- Claude on Amazon Bedrock (legacy models) — https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy
-- AWS SDK login credentials provider (`aws login`) — https://docs.aws.amazon.com/sdkref/latest/guide/feature-login-credentials.html
-- Bedrock API keys — https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html
-- AWS Free Tier FAQ — https://aws.amazon.com/free/free-tier-faqs/
+- pydantic/genai-prices `prices/providers/aws.yml` at e66fb87: https://github.com/pydantic/genai-prices
+- Anthropic API version 2026-10-21 migration: https://platform.claude.com/docs/en/api/migration-2026-10-21.md
+- Claude on Amazon Bedrock (legacy models): https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy
+- AWS SDK login credentials provider (`aws login`): https://docs.aws.amazon.com/sdkref/latest/guide/feature-login-credentials.html
+- Bedrock API keys: https://docs.aws.amazon.com/bedrock/latest/userguide/api-keys.html
+- AWS Free Tier FAQ: https://aws.amazon.com/free/free-tier-faqs/

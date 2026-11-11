@@ -1,8 +1,8 @@
-# ADR-058 — AWS Account Guardrails as Code (near-$0 budget, deny on breach)
+# ADR-058: AWS account guardrails as code (near-$0 budget, deny on breach)
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED 2026-11-11 — awaiting user sign-off.** Nothing implemented. |
+| **Status** | **PROPOSED 2026-11-11, awaiting user sign-off.** Nothing implemented. |
 | **Phase** | Infrastructure |
 | **Related** | ADR-031-A2 (in-code ceiling: the immediate stop; this is the account-side one) |
 | **Precedes** | ADR-031-A3 (Bedrock provider), whose first call waits for this stack and its drill |
@@ -96,7 +96,7 @@ the owner reverses it deliberately.
 | Option | Verdict |
 |---|---|
 | **(a) Plain CloudFormation template** | **Chosen.** No dependencies, no bootstrap, $0, state kept by AWS, `delete-stack` rolls back. |
-| (b) AWS CDK | Rejected: a Node CLI, Python packages (SECURITY §5) and a bootstrap stack with an S3 bucket and ECR repository, for five resources. CloudFormation is also what the owner's target certification (SAA-C03) examines — an owner preference, not a technical reason. |
+| (b) AWS CDK | Rejected: a Node CLI, Python packages (SECURITY §5) and a bootstrap stack with an S3 bucket and ECR repository, for five resources. CloudFormation is also what the owner's target certification (SAA-C03) examines. That is an owner preference, not a technical reason. |
 | (c) Terraform / OpenTofu | Rejected: a new binary and a local state file to protect, where CloudFormation keeps state in AWS for free. |
 | (d) Set up by hand in the console | Rejected, narrowly: it is deployed once and no gate runs the template, so code buys review, a diff and a one-command rollback, not automation. |
 
@@ -143,7 +143,7 @@ plan, by ADR-031-A2 in code, and by this budget.
 - Rollback: reverse the budget action if it has fired (§2.6), then
   `aws cloudformation delete-stack` removes every resource in §2.2. (A policy
   the action attached is not CloudFormation's, and may block deleting the
-  role until detached — unverified.)
+  role until detached. Unverified.)
 
 ## 7. Out of scope
 
@@ -153,11 +153,11 @@ plan, by ADR-031-A2 in code, and by this budget.
 
 ## 8. References (checked 2026-11-11)
 
-- AWS Free Tier FAQ — https://aws.amazon.com/free/free-tier-faqs/
-- AWS Free Tier announcement, July 2025 — https://aws.amazon.com/about-aws/whats-new/2025/07/aws-free-tier-credits-month-free-plan/
-- AWS Budgets pricing — https://aws.amazon.com/aws-cost-management/aws-budgets/pricing/
-- Get started with AWS Budgets actions (reversal) — https://aws.amazon.com/blogs/aws-cloud-financial-management/get-started-with-aws-budgets-actions/
-- AWS SDK login credentials provider (`aws login`) — https://docs.aws.amazon.com/sdkref/latest/guide/feature-login-credentials.html
-- IAM Identity Center and AWS Organizations — https://docs.aws.amazon.com/singlesignon/latest/userguide/identity-center-and-orgs.html
-- Classmethod, Identity Center without Organizations — https://dev.classmethod.jp/en/articles/using-aws-iam-identity-center-without-organizations-organization-vs-account-instances-explained/
-- The Register, 2026-05-14 — https://www.theregister.com/saas/2026/05/14/bedrock-and-a-hard-place-claude-adventure-leaves-aws-user-staring-down-30k-invoice/5238153
+- AWS Free Tier FAQ: https://aws.amazon.com/free/free-tier-faqs/
+- AWS Free Tier announcement, July 2025: https://aws.amazon.com/about-aws/whats-new/2025/07/aws-free-tier-credits-month-free-plan/
+- AWS Budgets pricing: https://aws.amazon.com/aws-cost-management/aws-budgets/pricing/
+- Get started with AWS Budgets actions (reversal): https://aws.amazon.com/blogs/aws-cloud-financial-management/get-started-with-aws-budgets-actions/
+- AWS SDK login credentials provider (`aws login`): https://docs.aws.amazon.com/sdkref/latest/guide/feature-login-credentials.html
+- IAM Identity Center and AWS Organizations: https://docs.aws.amazon.com/singlesignon/latest/userguide/identity-center-and-orgs.html
+- Classmethod, Identity Center without Organizations: https://dev.classmethod.jp/en/articles/using-aws-iam-identity-center-without-organizations-organization-vs-account-instances-explained/
+- The Register, 2026-05-14: https://www.theregister.com/saas/2026/05/14/bedrock-and-a-hard-place-claude-adventure-leaves-aws-user-staring-down-30k-invoice/5238153
