@@ -226,17 +226,3 @@ jobs:
           chmod +x osv-scanner
       # --allow-no-lockfiles: a project with no lock file yet passes instead of exiting 128.
       - run: ./osv-scanner scan source --recursive --allow-no-lockfiles .
-
-  public-text:
-    # PR bodies are public text: impersonal, no em or en dashes
-    # (tools/check_public_text.py; the gate checks added Markdown and commits).
-    name: public text (PR body)
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
-        with:
-          persist-credentials: false
-      - env:
-          BODY: ${{ github.event.pull_request.body }}  # passed by env, never interpolated into the script
-        run: printf '%s' "$BODY" | python3 tools/check_public_text.py --stdin

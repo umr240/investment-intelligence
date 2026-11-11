@@ -70,7 +70,7 @@ value = "sqlite:///{path}"
 
 
 # Public-repo text: added Markdown lines and commit messages are impersonal and
-# use no em or en dashes. CI also runs it on the PR body (job "public text").
+# use no em or en dashes. CI also runs it on the PR body (.github/workflows/pr-text.yml).
 [[check]]
 name = "public text"
 phase = "static"
