@@ -48,16 +48,7 @@ If a feature, framework, mental model, or thesis cannot survive its own inversio
 
 The mental-model stack is not ornament. It translates into concrete engineering decisions. Each row maps a model (full file in `mental_models/`) to its code consequence:
 
-| Mental model | Code consequence |
-|---|---|
-| `core/inversion` | Every framework has a corresponding *disqualification* check. Tests cover failure modes, not just success paths. |
-| `core/margin_of_safety` | Composite score is capped. Overlay bonuses bounded (≤1.0 / 10.0). No single signal drives a verdict. |
-| `management/thorndike_outsiders_eight_traits` | F5/F6 surface CEO tenure, founder ownership %, buyback timing vs price, multi-year insider buy/sell ratio. DEF 14A parsing is non-optional. |
-| `moat/munger_dorsey_five_sources` + `moat/helmer_seven_powers` | F6 separates academic anchors (Patatoukas, Fahlenbrach, Novy-Marx) from practitioner heuristics (NRR, Rule of 40). Moat-direction (`moat/moat_direction`) tracked at unit-economic level. |
-| `core/circle_of_competence` | `data_gaps[]` is a first-class output. "Unknown" is a valid system response and surfaces in the CLI. |
-| `core/first_principles` | Frameworks compute from raw EDGAR XBRL where possible; never depend on third-party calculated fields without source verification (ADR-022). |
-| `bias/*` (7 models) | CLI never offers a "buy" verdict, only "watchlist with triggers" or "exclude with reason." Verdict labels avoid emotional language. |
-| `moat/lunch_eating_test` + `moat/challenger_inversion_test` | Any framework that surfaces "growth" without TAM context is incomplete. Mandatory inversion of moat claims at narrative output (ADR-023 §1.4 §5). |
+The table mapping each model to its code consequence lives in `CLAUDE.md` §ANALYTICAL PERSONALITY (ADR-024 §2).
 
 ## Adding a mental model
 
@@ -66,6 +57,6 @@ The mental-model stack is not ornament. It translates into concrete engineering 
 3. Write the file with full frontmatter + body sections (especially `inversion_form`: half-loaded models are rejected).
 4. Cross-link via `related_models`: the lattice is a graph, not a list.
 5. Update `mental_models/_index.md` and remove the corresponding row in `_gaps.md`.
-6. Only update CLAUDE.md if the model belongs in the operationalisation table above.
+6. Only update CLAUDE.md if the model belongs in its operationalisation table.
 
 The narrative LLM in `deepdive/narrative.py` (shipped, ADR-023) reasons through this lattice in a structured order, Inversion → Circle of Competence → Moat Direction → Capital Allocator → Lunch-Eating Test → Probabilistic Base Rate. ADR-024's directory structure is the artifact ADR-023's prompt composer reads at runtime; the prose lives once, in `mental_models/`. The composer (`deepdive/mental_model_composer.py`) is wired into `narrative.py` (2026-05-10): a `LatticeProfile` is derived from the deterministic `ScorecardView` (revenue / proxy / archetype / overlays-fired), `select_models_for_dive` picks the relevant subset under a token budget (default 8000, raised from 6000 on 2026-05-17 to unblock budget-starved conditional fires, see `mental_model_composer.py`), and the chosen models' Summary + Inversion form sections are injected into the LLM user prompt. Lattice slugs do NOT appear in `framework_codes` / `grounded_in`: only F1..F7 codes, overlay trigger_ids, and view field paths are valid groundings (see `deepdive/narrative_guard.py`).

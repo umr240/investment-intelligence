@@ -93,7 +93,20 @@ Every decision (what to fetch, what to test, what to surface, what verdict to is
 - **Latticework, not a hammer.** The project lattice lives in `mental_models/` (ADR-024; index `mental_models/_index.md`, schema `mental_models/README.md`). The narrative reasons through it in the order Inversion, Circle of Competence, Moat Direction, Capital Allocator, Lunch-Eating Test, Probabilistic Base Rate (ADR-023).
 - **"Unknown" is a valid output.** `data_gaps[]` is first class; verdicts are only watchlist-with-triggers, exclude-with-reason or research-only, never "buy".
 
-The full stance, the model-to-code table and how to add a model: `docs/architecture/ANALYTICAL_PERSONALITY.md`.
+How the lattice touches the code (kept here by ADR-024 §2):
+
+| Mental model | Code consequence |
+|---|---|
+| `core/inversion` | Every framework has a corresponding *disqualification* check. Tests cover failure modes, not just success paths. |
+| `core/margin_of_safety` | Composite score is capped. Overlay bonuses bounded (≤1.0 / 10.0). No single signal drives a verdict. |
+| `management/thorndike_outsiders_eight_traits` | F5/F6 surface CEO tenure, founder ownership %, buyback timing vs price, multi-year insider buy/sell ratio. DEF 14A parsing is non-optional. |
+| `moat/munger_dorsey_five_sources` + `moat/helmer_seven_powers` | F6 separates academic anchors (Patatoukas, Fahlenbrach, Novy-Marx) from practitioner heuristics (NRR, Rule of 40). Moat-direction (`moat/moat_direction`) tracked at unit-economic level. |
+| `core/circle_of_competence` | `data_gaps[]` is a first-class output. "Unknown" is a valid system response and surfaces in the CLI. |
+| `core/first_principles` | Frameworks compute from raw EDGAR XBRL where possible; never depend on third-party calculated fields without source verification (ADR-022). |
+| `bias/*` (7 models) | CLI never offers a "buy" verdict, only "watchlist with triggers" or "exclude with reason." Verdict labels avoid emotional language. |
+| `moat/lunch_eating_test` + `moat/challenger_inversion_test` | Any framework that surfaces "growth" without TAM context is incomplete. Mandatory inversion of moat claims at narrative output (ADR-023 §1.4 §5). |
+
+The full stance and how to add a model: `docs/architecture/ANALYTICAL_PERSONALITY.md`.
 
 ---
 
@@ -115,7 +128,7 @@ Frameworks read data only through `CompanyDataReader`, never SQL (data contract:
 
 ## SECURITY & PRIVACY
 
-Summary of the contract in `docs/architecture/SECURITY_AND_PRIVACY.md` (same section numbers); the summary binds, the document explains.
+Summary of `docs/architecture/SECURITY_AND_PRIVACY.md`, which is the binding text (same section numbers). The summary must never contradict it.
 
 1. **Secrets** (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `POLYGON_API_KEY`, `DATABASE_URL`, `EDGAR_IDENTITY`): never hardcoded, printed, logged, committed or put in a prompt; redact before surfacing. `.env` stays gitignored; `.env.example` holds names only. A secret that ever hit disk unredacted or git history is compromised: flag it for rotation.
 2. **Data egress to LLM providers.** Only public-derived quant metrics (and, in `conversation.py`, the user's own typed question) enter a prompt. Never: holdings, positions, cost basis, intent-framed watchlists, personal financial context, secrets or `EDGAR_IDENTITY`.

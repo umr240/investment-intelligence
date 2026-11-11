@@ -27,7 +27,9 @@ adr_prefix = "ADR"
 
 [merge]
 # Read by tools/gate/merge_ready.py. Only the owner changes this (CLAUDE.local.md).
-agent_may_merge = true
+# Off until the full end-to-end checks (screener stages, live dive, browser) run here;
+# the constitution requires them for an agent merge.
+agent_may_merge = false
 # Added to the merge command merge_ready.py prints.
 # Read from the base branch only, like merge_on: a PR can't change it for its own merge.
 # author_email = "owner@example.com"
