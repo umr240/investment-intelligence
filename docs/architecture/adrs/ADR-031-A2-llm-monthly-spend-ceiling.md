@@ -37,7 +37,7 @@ site and every provider.
 - **Spend can go uncounted two ways.** A model with no price row records
   `cost_usd = None` (`config/llm_prices.py:62-73`); narrative does not refuse
   one (chat does, `conversation.py:396`; external signals does,
-  `external_signals.py:208,366`). And a failed row write is dropped by design
+  `deepdive/external_signals.py:208,366`). And a failed row write is dropped by design
   ("Recording never fails a call", `deepdive/llm_calls.py:5-6,153-165`).
 
 ## 3. Options

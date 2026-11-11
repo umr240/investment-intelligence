@@ -48,6 +48,8 @@ is out of date.
 | [ADR-030-A2](ADR-030-A2-f7-history-floor-vs-fetch-depth.md) | ADR-030 Amendment A2 — F7's history floor is unreachable at the default fetch depth | accepted | 2026-08-23 |
 | [ADR-030](ADR-030-maturity-classifier-and-young-tier-routing.md) | Maturity classifier and young-tier routing | accepted | 2026-05-14 |
 | [ADR-031-A1](ADR-031-A1-third-llm-call-site.md) | ADR-031 Amendment A1 — `deepdive/conversation.py` as a permitted LLM call site, and an enforced allow-list | accepted |  |
+| [ADR-031-A2](ADR-031-A2-llm-monthly-spend-ceiling.md) | ADR-031 Amendment A2: a monthly LLM spend ceiling for every provider, enforced before each call | proposed |  |
+| [ADR-031-A3](ADR-031-A3-amazon-bedrock-provider.md) | ADR-031 Amendment A3: Amazon Bedrock as a third provider for the narrative | proposed |  |
 | [ADR-031](ADR-031-data-gap-register-and-supplementary-data-sources.md) | Data Gap Register & Supplementary Data Sources | accepted |  |
 | [ADR-032](ADR-032-project-local-skills-for-routine-task-workflows.md) | Project-Local Skills for Routine-Task Workflows | accepted |  |
 | [ADR-033](ADR-033-sec-first-source-hierarchy-and-compute-dont-pull.md) | SEC-First Source Hierarchy & Compute-Don't-Pull | accepted |  |
@@ -75,4 +77,5 @@ is out of date.
 | [ADR-055](ADR-055-rejected-llm-techniques.md) | Retrieval-Augmented Generation and Other Rejected LLM Techniques | accepted |  |
 | [ADR-056](ADR-056-hosted-read-only-demo.md) | Hosted Read-Only Demo From a Sanitised Snapshot | proposed |  |
 | [ADR-057](ADR-057-external-signals-verification.md) | External Signals: Verify Before Storing | accepted |  |
+| [ADR-058](ADR-058-aws-account-guardrails-as-code.md) | AWS account guardrails as code (near-$0 budget, deny on breach) | proposed |  |
 <!-- adr-index:end -->
