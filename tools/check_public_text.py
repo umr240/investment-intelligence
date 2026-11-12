@@ -54,7 +54,10 @@ def git(*args: str) -> str:
 
 
 VENDORED = (
-    ".claude/skills/speckit-",  # Spec Kit's own text, copied as shipped
+    # agentic-kit template text (the speckit-* skills, the spec template
+    # override, the ratified constitution), kept identical for copier update;
+    # Spec Kit's own copies are gitignored
+    ".claude/skills/speckit-",
     ".specify/",
     "docs/LLM_PRACTICES.md",  # agentic-kit template text, kept identical for copier update
 )
