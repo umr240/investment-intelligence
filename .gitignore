@@ -259,3 +259,19 @@ CLAUDE.local.md
 # agentic-kit (gate scratch is .e2e/, above)
 node_modules/
 coverage/
+
+# Spec Kit 1.2.5, installed by tools/setup_speckit.sh. Only the project-owned
+# files stay tracked: constitution, extensions.yml, template overrides and the
+# agentic-kit speckit-verify, -decisions and -handoff skills.
+/.specify/*
+!/.specify/memory/
+/.specify/memory/*
+!/.specify/memory/constitution.md
+!/.specify/extensions.yml
+!/.specify/templates/
+/.specify/templates/*
+!/.specify/templates/overrides/
+/.claude/skills/speckit-*/
+!/.claude/skills/speckit-verify/
+!/.claude/skills/speckit-decisions/
+!/.claude/skills/speckit-handoff/
