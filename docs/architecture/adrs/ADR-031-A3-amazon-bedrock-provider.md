@@ -35,7 +35,7 @@ exit test (§6) stands in for an eval.
   own first (§7), since it is a defect now.
 - **The SDK ships the client.** `anthropic` 1.15.0 (`uv.lock`) exports
   `AnthropicBedrockMantle` (the Messages API on Bedrock). SigV4 signing
-  imports `boto3`/`botocore` (`anthropic/lib/bedrock/_auth.py:10,45`); neither
+  imports `boto3`/`botocore` (the SDK's `lib/bedrock/_auth.py`, lines 10 and 45 in 1.15.0); neither
   is installed.
 - **Verified price.** pydantic/genai-prices `prices/providers/aws.yml`
   (commit e66fb87, `prices_checked: 2026-10-19`, from the AWS price list API,
@@ -50,7 +50,7 @@ exit test (§6) stands in for an eval.
   to structured output (`narrative.py:503`, ADR-045).
 - **Redaction.** `narrative.py:215` `_KEYISH` misses AWS key ids
   (`AKIA…`/`ASIA…`) and the account id in ARNs; the gate's scan matches
-  `AKIA` only (`docs/release/e2e_gate.py:435`).
+  `AKIA` only (the maintainer's local release gate, outside the repository).
 
 ## 3. Options
 
