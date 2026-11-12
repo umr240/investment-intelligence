@@ -29,11 +29,20 @@
         "source": "github",
         "repo": "umr240/agentic-kit"
       }
+    },
+    "humanizer": {
+      "source": {
+        "source": "github",
+        "repo": "blader/humanizer",
+        "ref": "v4.0.0",
+        "sha": "b48c832f0f809c1b5658edbb838c2521b72f2413"
+      }
     }
   },
   "enabledPlugins": {
     "agentic-kit@agentic-kit": true,
     "ralph-loop@claude-plugins-official": true,
+    "humanizer@humanizer": true,
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   }
