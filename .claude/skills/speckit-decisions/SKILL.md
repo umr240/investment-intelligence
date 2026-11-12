@@ -29,5 +29,10 @@ disable-model-invocation: false
    Write "None found" if no accepted ADR applies, with the titles checked.
 4. If the spec contradicts an accepted ADR, stop and report it: a change to a
    decision is the owner's (CLAUDE.md, "Decisions are ADRs"), not the plan's.
+5. While planning, if the plan makes a lasting design choice that no accepted
+   ADR covers (an architecture, a dependency, a data model, or a rule other
+   features must follow), draft it as a proposed ADR in the same PR and review
+   it with `/agentic-kit:adr-review draft`. Choices that matter only to this
+   feature stay in `plan.md`.
 
 Keep it short: titles and one-line constraints, not ADR text.

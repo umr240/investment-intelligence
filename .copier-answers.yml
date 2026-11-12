@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v0.5.10
+_commit: v0.5.11
 _src_path: gh:umr240/agentic-kit
 description: 'Quantitative equity research: screens and analyses companies through
     seven academic frameworks, with a deterministic data path and an LLM only for
