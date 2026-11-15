@@ -81,7 +81,7 @@ These hold for every contributor and every assistant session.
 5. **Ralph only when asked**, never on the router's say-so.
 6. **Owner asks are listed, never acted on** (open questions, proposed ADRs, unapproved specs, held PRs), each with the exact ask.
 
-The constitution (`.specify/memory/constitution.md`) names the non-negotiables and never contradicts this file. Open outcomes are in `docs/ROADMAP.md`; known defects are GitHub issues labelled `known-issue`.
+The `/speckit-*` commands need `tools/setup_speckit.sh` once per clone; only the project-owned Spec Kit files are committed. The constitution (`.specify/memory/constitution.md`) names the non-negotiables and never contradicts this file. Open outcomes are in `docs/ROADMAP.md`; known defects are GitHub issues labelled `known-issue`.
 
 ---
 
