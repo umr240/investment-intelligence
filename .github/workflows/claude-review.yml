@@ -10,7 +10,7 @@ name: Claude review
 # for this workflow, from a Console workspace with its own spend limit.
 
 on:
-  issue_comment:
+  issue_comment:  # zizmor: ignore[dangerous-triggers] — the job runs only for OWNER/MEMBER/COLLABORATOR comments, and the action re-checks write access
     types: [created]
   pull_request_review_comment:
     types: [created]

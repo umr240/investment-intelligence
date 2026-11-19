@@ -1,0 +1,160 @@
+# What "done" means for Investment Intelligence. Read by tools/gate/gate.py.
+# Live checks (screener stages, a live dive, the browser tour) stay in the
+# maintainer's local release gate, docs/release/e2e_gate.py, which is not in the
+# repository; this file covers the static and unit checks anyone can run.
+# Commands use `uv run --no-sync`: a plain `uv run` re-syncs and uninstalls
+# local extras. CI runs `uv sync --locked --dev` first.
+# Placeholders: {root} = this checkout (in baseline cmds), {workdir} / {variant} in live cmds.
+
+base = "main"
+# Path prefixes a branch may touch; empty = no limit. Narrow it per run with --scope.
+scope = []
+locks = ["uv.lock", "frontend/package-lock.json"]
+# Decisions are ADRs (adr_dir); DECISIONS.md is their generated index (agentic-kit ADR 005).
+# A project that keeps a DEC-nn log names it in decision_log and the gate checks its ids.
+# This project keeps a DEC-nn log in DECISIONS.md, so the ADR index lives in the ADR README.
+decision_log = "docs/architecture/DECISIONS.md"
+adr_index = "docs/architecture/adrs/README.md"
+# ADR files (<prefix>-NNN-*.md): status, references and cited `file:line` checked by the gate.
+adr_dir = "docs/architecture/adrs"
+# The file and reference prefix, if not ADR (LIFE for LIFE-<n>-title.md files).
+# Every <prefix>-<digits> in the repo is read as a reference, so avoid a prefix that
+# is also an issue-tracker key.
+adr_prefix = "ADR"
+# A Read of more lines than this, with no offset/limit, is denied with a pointer to
+# Grep, the language server or a targeted read (agentic-kit ADR 006). 0 turns it off.
+# read_max_lines = 400
+
+[merge]
+# Read by tools/gate/merge_ready.py. Only the owner changes this (CLAUDE.local.md).
+# Off until the full end-to-end checks (screener stages, live dive, browser) run here;
+# the constitution requires them for an agent merge.
+agent_may_merge = false
+# Added to the merge command merge_ready.py prints.
+# Read from the base branch only, like merge_on: a PR can't change it for its own merge.
+# author_email = "owner@example.com"
+# Accept a static gate run for an agent merge, when live checks cost money and run
+# on a schedule. Owner-only, and it counts only once it is on the base branch too.
+# require_live = false
+# Finding tags (agentic-kit ADR 004). pr-verifier tags every finding; a finding left unfixed may
+# merge only if its tag is listed here, read from the base branch. Empty: every unfixed
+# finding goes to the owner. `owner` can never be listed. Owner-only, like the above.
+# merge_on = ["no-effect"]
+# The document that says when each tag applies, read from the base branch.
+# tag_rules = "docs/architecture/adrs/ADR-NNN-finding-tags.md"
+
+[llm_boundary]
+# The only files that may import an LLM provider SDK; adding one is a decision (an ADR).
+allowed = ["deepdive/narrative.py", "deepdive/external_signals.py", "deepdive/conversation.py"]
+skip_dirs = ["tests"]
+# Other packages that call a model, added to the gate's built-in list.
+# extra_providers = ["my_llm_wrapper"]
+
+[guard]
+# Real data files or directories the gate must leave byte-identical.
+files = ["investment_intelligence.db"]
+
+[[scratch]]
+# Live checks see a copy of the real data, never the original.
+src = "investment_intelligence.db"
+env = "DATABASE_URL"
+value = "sqlite:///{path}"
+
+# [[variant]]            # run every live check once per configuration
+# name = "default"
+# env = { FEATURE_X = "off" }
+
+# [[service]]            # started before live checks, stopped after
+#                        # (a cmd that backgrounds it must exit 0; nothing may already hold the port)
+# name = "api"
+# cmd = "uv run uvicorn app:app --port 8765"
+# ready = "http://127.0.0.1:8765/health"
+
+
+# Public-repo text: added Markdown lines and commit messages are impersonal and
+# use no em or en dashes. CI also runs it on the PR body (.github/workflows/pr-text.yml).
+[[check]]
+name = "public text"
+phase = "static"
+cmd = "python3 tools/check_public_text.py --base origin/main"
+
+# ── Python ──
+# tools/gate/ is vendored from agentic-kit (copier); its findings belong upstream.
+[[check]]
+name = "ruff correctness subset"
+phase = "static"
+cmd = "uv run --no-sync ruff check . --select F821,F811,E722"
+
+[[baseline]]
+name = "ruff"
+cmd = "uv run --no-sync --project {root} ruff check . --output-format concise --extend-exclude tools/gate"
+ok_exit = [0, 1]  # 1 = findings; 2 = ruff itself failed
+match = '^[\w./-]+\.py:\d'
+strip = ':\d+:\d+:'
+
+[[baseline]]
+name = "mypy --strict"
+cmd = "uv run --no-sync --project {root} mypy . --strict --exclude tools/gate"
+ok_exit = [0, 1]  # 1 = type errors; 2 = mypy itself failed
+match = '^[\w./-]+\.py:\d+: error'
+strip = ':\d+: '
+
+[[baseline]]
+name = "ruff format"
+cmd = "uv run --no-sync --project {root} ruff format --diff . --extend-exclude tools/gate"
+ok_exit = [0, 1]  # 1 = files would change
+match = '^--- \S'
+
+[[check]]
+name = "unit suite"
+cmd = "uv run --no-sync pytest -q"
+
+# ── TypeScript / Node ──
+[[baseline]]
+name = "tsc"
+cwd = "frontend"
+setup = "ln -sfn {root}/node_modules node_modules"
+# tsconfig.json only references the two projects, so each is checked on its own.
+cmd = "{root}/node_modules/.bin/tsc -p tsconfig.app.json --noEmit --pretty false; {root}/node_modules/.bin/tsc -p tsconfig.node.json --noEmit --pretty false"
+match = 'error TS\d+'
+strip = '\(\d+,\d+\)'
+
+[[check]]
+name = "lint"
+phase = "static"
+cwd = "frontend"
+cmd = "npm run lint --if-present"
+
+[[check]]
+name = "build"
+cwd = "frontend"
+cmd = "npm run build --if-present"
+
+[[check]]
+name = "node tests"
+cwd = "frontend"
+cmd = "npm test --if-present"
+
+# ── Security scanners (agentic-kit ADR 006: scripts, not agents; zero tokens) ──
+# semgrep's findings may not grow: each is reduced to file and rule, so editing
+# nearby lines doesn't make an old finding look new. Registry rules (p/default),
+# metrics off; the first run needs the network. --exclude-newer resolves semgrep's
+# dependencies as they were at its release, so a later upload can't change them.
+# ok_exit: any other exit (offline, registry error) fails the check, never "0 -> 0".
+[[baseline]]
+name = "semgrep"
+cmd = "uvx --exclude-newer 2026-11-06T00:00:00Z semgrep@1.184.0 scan --config p/default --metrics off --emacs --quiet --exclude tools/gate ."
+ok_exit = [0]
+match = '^[^:\s][^:]*:\d+:\d+:'
+strip = ':\d+:\d+:[a-z]+\(|\):.*$'
+
+# Known-vulnerable dependencies run in CI (osv-scanner job). To check locally too,
+# install it (brew install osv-scanner) and uncomment:
+# [[check]]
+# name = "osv-scanner"
+# phase = "static"
+# cmd = "osv-scanner scan source --recursive ."
+
+# [[check]]              # the browser tour: drive the real UI, exit non-zero on any failure
+# name = "browser tour"
+# cmd = "uv run python tests/ui_tour.py --out {workdir}/shots"

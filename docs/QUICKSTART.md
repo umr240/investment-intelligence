@@ -16,6 +16,8 @@ cp .env.example .env          # then edit EDGAR_IDENTITY
 uv run invest db-init         # create or upgrade the schema; safe to re-run
 ```
 
+Contributors using the Spec Kit workflow also run `tools/setup_speckit.sh` once per clone. It installs the pinned Spec Kit 1.2.5 skills, scripts and templates, which are not committed.
+
 `.env`:
 
 ```

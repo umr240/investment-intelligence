@@ -1,0 +1,18 @@
+# Spec Kit hooks for this repository (read by the speckit-* skills).
+hooks:
+  before_plan:
+    - extension: agentic-kit
+      command: speckit.decisions
+      description: List the accepted ADRs that govern this feature, so the plan cites them (agentic-kit ADR 005)
+      optional: false
+  after_tasks:
+    - extension: agentic-kit
+      command: speckit.handoff
+      description: Implement now in this session, or hand the tasks to an unattended Ralph loop
+      prompt: Implement the tasks now, or run them unattended with /agentic-kit:ralph-tasks?
+      optional: true
+  after_implement:
+    - extension: pr-verifier
+      command: speckit.verify
+      description: Fresh-context review of the implementation by the agentic-kit pr-verifier agent
+      optional: false

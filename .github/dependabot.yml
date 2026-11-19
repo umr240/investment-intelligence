@@ -8,6 +8,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7  # a release must age a week first (supply-chain hygiene)
     open-pull-requests-limit: 5
     labels: ["dependencies"]
     groups:
@@ -19,6 +21,8 @@ updates:
     directory: "/frontend"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7  # a release must age a week first (supply-chain hygiene)
     open-pull-requests-limit: 5
     labels: ["dependencies", "frontend"]
     groups:
@@ -29,4 +33,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    cooldown:
+      default-days: 7  # a release must age a week first (supply-chain hygiene)
     labels: ["dependencies", "ci"]

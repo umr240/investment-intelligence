@@ -108,3 +108,10 @@ Quality over count. Munger's man-with-a-hammer applies recursively to mental-mod
 - Don't paste the same model into both `core/` and `bias/` (canonical location only; cross-link instead)
 
 The aspirational target of 100+ models is a function of *coverage breadth* (psychology, economics, biology, physics, engineering, history, epistemology, game theory, statistics, information theory, systems thinking — see `_gaps.md`), not of cosmetic count.
+
+## The agentic-kit lattice
+
+The agentic-kit plugin ships a separate, shared lattice for engineering
+judgement (`agentic-kit:lattice`). This directory stays the project's own
+lattice (ADR-024): it is what the narrative composer reads, and its schema is
+the one above.
