@@ -2,13 +2,19 @@
 
 | Field | Detail |
 |---|---|
-| **Status** | **PROPOSED 2026-11-11, awaiting sign-off.** Nothing implemented. |
+| **Status** | **REJECTED 2026-11-19.** Nothing implemented. See Rejection below. |
 | **Amends** | ADR-031 §4.1 (who the permitted call sites may call) |
 | **Depends on** | ADR-031-A2 (in-code ceiling) and ADR-058 (AWS guardrails, deployed and drilled). Neither optional. |
 | **Also touches** | CLAUDE.md SECURITY §1 (secrets in scope), §2 (egress), §5 (one optional dependency); ADR-048 (a provider value and a price row); `deep_dive_conversations.provider` (`data/models/schema.py:782`) is unchanged: chat does not use Bedrock (§4.1) |
 | **Does not touch** | The allow-list (`tests/test_llm_call_sites.py:15`): no new module. `conversation.py` and `external_signals.py` stay off Bedrock. ADR-047: the eval's `--provider` stays `anthropic\|openai`. |
 | **Eval Contract** | **UNMEASURED** (constitution VIII). Claims no quality result and runs no paid eval. |
 | **Provenance** | 2026-11-11. Requirement: use AWS on its free tier, starting with Bedrock, with monthly AWS spend as close to $0 as possible. Options weighed on need and cost (§3). |
+
+---
+
+## Rejection (2026-11-19)
+
+AWS work moves to a separate repository, owned and run by the maintainer, so that integrate-then-remove experiments leave no dead code or decision churn here. §1 records that the provider was proposed for AWS experience, not because an eval chose it (DEC-42); with that experience pursued elsewhere, the narrative's two providers (OpenAI primary, Anthropic fallback) leave no product need for a third. The provider fall-through defect in §2's first bullet does not depend on this ADR and is tracked as issue #74. ADR-031-A2 (the spend ceiling) does not depend on this ADR and stays proposed. The open questions cited below (#7, #8, #11, #12, #13) are closed with this rejection. A third provider would be reconsidered only if an eval under DEC-42 chose one; that would be a new ADR, not a revival of this one. Recorded as DEC-54.
 
 ---
 
