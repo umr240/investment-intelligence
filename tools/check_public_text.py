@@ -1,11 +1,12 @@
 """Public-repo text is canonical: no em or en dashes, no first- or second-person voice,
 no co-author trailer or AI-tool footer (the git author is the only author).
 Squash merges take their message from the branch's commits, so --base covers them;
-a hand-typed `gh pr merge --body` is not checked.
+CI checks the PR title with the body. A hand-typed `gh pr merge --body` is not checked.
 
 Checks Markdown lines added since the merge-base with BASE, commit messages in
 BASE..HEAD, a commit message file (commit-msg hook), or stdin (a PR body in CI).
-Code spans, fenced code and blockquotes are skipped; quoting a source is allowed.
+Code spans, fenced code and blockquotes are skipped, so a source can be quoted;
+attribution is checked inside fences and blockquotes too, and only a code span quotes it.
 
     python3 tools/check_public_text.py --base origin/main
     python3 tools/check_public_text.py --message-file .git/COMMIT_EDITMSG
@@ -28,9 +29,14 @@ INDEX_ROW = re.compile(r"^\| \[[A-Z]+-\d+")  # generated ADR index rows copy old
 TRAILER = re.compile(r"^(Co-Authored-By|Signed-off-by|Reviewed-by|Acked-by|Refs?): ", re.IGNORECASE)
 # One author of record, the git author: no co-author trailer at all, and no AI-tool footer.
 AI_TOOL = r"(claude|anthropic|copilot|codex|chatgpt|openai|cursor|gemini|aider|devin)"
+FOOTER = (  # a whole line crediting a tool, e.g. "Generated with [Claude Code](url)"
+    r"^\W*(generated|written|created|made|built|assisted) (with|by|using) "
+    rf"\[?(\w+ )?{AI_TOOL}( \w+)?\]?(\(\S*\))?\W*$"
+)
 ATTRIBUTION = re.compile(
     r"^\s*co-authored-by:|noreply@anthropic\.com"
-    rf"|^\W*(generated|written|created|made) (with|by|using) \[?{AI_TOOL}\b",  # a footer line
+    rf"|^\s*[\w-]+-by:.*\b{AI_TOOL}\b|{FOOTER}"
+    r"|\b(generated|written|created) (with|by) claude code\b",
     re.IGNORECASE,
 )
 

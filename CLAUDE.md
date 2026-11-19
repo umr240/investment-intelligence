@@ -55,7 +55,8 @@ These hold for every contributor and every assistant session.
   dashes, and carry no co-author trailer or AI-tool attribution footer: the git
   author is the only author.
   `tools/check_public_text.py` enforces it in the gate, a commit-msg hook and
-  CI; a hand-typed `gh pr merge --body` is the one text it does not see.
+  CI (PR title and body); a hand-typed `gh pr merge --body` is the one text it
+  does not see.
 - **Borrow before building.** Before a non-trivial feature, search for a
   proven open-source project that already does it (`gh search repos`, web
   search). Proven means real dependents or production users, several active
