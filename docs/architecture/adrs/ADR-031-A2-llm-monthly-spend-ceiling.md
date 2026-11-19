@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | **PROPOSED 2026-11-11, awaiting sign-off.** Nothing implemented. |
 | **Amends** | ADR-031 §4.4 (the $100/month ceiling, written as guidance for the LLM-extraction option) and §8 ("Cost-ceiling enforcement ❌ NOT shipped") |
-| **Related** | ADR-031-A3 (Bedrock provider: sets a Bedrock ceiling here before its first call); ADR-058 (the AWS-side stop) |
+| **Related** | ADR-031-A3 and ADR-058 were rejected on 2026-11-19; the Bedrock references below are kept as written. ADR-031-A3 (Bedrock provider: sets a Bedrock ceiling here before its first call); ADR-058 (the AWS-side stop) |
 | **Eval Contract** | **UNMEASURED** (constitution VIII). Changes no prompt, guard or model; claims no quality effect. |
 | **Provenance** | 2026-11-11. Separated from ADR-031-A3 because the ceiling stands whether or not a Bedrock provider is added. |
 
