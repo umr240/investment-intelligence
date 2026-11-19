@@ -1,5 +1,6 @@
 """Public-repo text is canonical: no em or en dashes, no first- or second-person voice,
-no co-author trailer or AI-tool footer (the git author is the only author).
+no co-author trailer or AI-tool footer (the git author is the only author; the
+attribution patterns are a best-effort denylist of known forms).
 Squash merges take their message from the branch's commits, so --base covers them;
 CI checks the PR title with the body. A hand-typed `gh pr merge --body` is not checked.
 
@@ -29,14 +30,16 @@ INDEX_ROW = re.compile(r"^\| \[[A-Z]+-\d+")  # generated ADR index rows copy old
 TRAILER = re.compile(r"^(Co-Authored-By|Signed-off-by|Reviewed-by|Acked-by|Refs?): ", re.IGNORECASE)
 # One author of record, the git author: no co-author trailer at all, and no AI-tool footer.
 AI_TOOL = r"(claude|anthropic|copilot|codex|chatgpt|openai|cursor|gemini|aider|devin)"
-FOOTER = (  # a whole line crediting a tool, e.g. "Generated with [Claude Code](url)"
-    r"^\W*(generated|written|created|made|built|assisted) (with|by|using) "
-    rf"\[?(\w+ )?{AI_TOOL}( \w+)?\]?(\(\S*\))?\W*$"
+AI_TOOL = rf"({AI_TOOL}|gpt-[\w.]+)"
+VERB = r"(generated|written|created|made|built|assisted|drafted|authored|produced)"
+FOOTER = (  # a whole line crediting a tool, e.g. "Generated with [Claude Code](url) by X"
+    rf"^\W*{VERB} (with|by|using) \[?(\w+ )?{AI_TOOL}( [\w.-]+){{0,3}}\]?"
+    r"(\(\S*\)( by \w+)?)?\W*$"
 )
-ATTRIBUTION = re.compile(
-    r"^\s*co-authored-by:|noreply@anthropic\.com"
-    rf"|^\s*[\w-]+-by:.*\b{AI_TOOL}\b|{FOOTER}"
-    r"|\b(generated|written|created) (with|by) claude code\b",
+ATTRIBUTION = re.compile(  # best effort: a denylist of known forms, not every phrasing
+    r"^\s*co-authored-by\s*:|noreply@anthropic\.com"
+    rf"|^\s*[\w-]+-by\s*:[^<]*\b{AI_TOOL}\b|{FOOTER}"
+    rf"|\b{VERB} (with|by|using) \[?claude code\]?(\(\S*\))?\W*$",  # mid-line, ending the line
     re.IGNORECASE,
 )
 
