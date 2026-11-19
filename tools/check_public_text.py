@@ -1,4 +1,5 @@
-"""Public-repo text is canonical: no em or en dashes, no first- or second-person voice.
+"""Public-repo text is canonical: no em or en dashes, no first- or second-person voice,
+no AI-tool attribution (the git author is the only author).
 
 Checks Markdown lines added since the merge-base with BASE, commit messages in
 BASE..HEAD, a commit message file (commit-msg hook), or stdin (a PR body in CI).
@@ -23,6 +24,18 @@ PERSON = re.compile(
 CODE_SPAN = re.compile(r"`[^`]*`")
 INDEX_ROW = re.compile(r"^\| \[[A-Z]+-\d+")  # generated ADR index rows copy older titles
 TRAILER = re.compile(r"^(Co-Authored-By|Signed-off-by|Reviewed-by|Acked-by|Refs?): ", re.IGNORECASE)
+ATTRIBUTION = re.compile(
+    r"co-authored-by:.*\b(claude|anthropic)\b|noreply@anthropic\.com"
+    r"|\bgenerated (with|by) \[?claude\b|\U0001f916 generated",
+    re.IGNORECASE,
+)
+
+
+def without_trailers(text: str) -> str:
+    """Drop trailer lines, except AI attribution, which is checked."""
+    return "\n".join(
+        ln for ln in text.splitlines() if not TRAILER.match(ln) or ATTRIBUTION.search(ln)
+    )
 
 
 def problems(text: str, where: str) -> list[str]:
@@ -44,6 +57,8 @@ def problems(text: str, where: str) -> list[str]:
         who = PERSON.search(line)
         if who:
             found.append(f"person: {who.group(0)!r}")
+        if ATTRIBUTION.search(line):
+            found.append("AI attribution")
         if found:
             out.append(f"{where}:{n}: {', '.join(found)}: {raw.strip()[:100]}")
     return out
@@ -85,10 +100,7 @@ def added_markdown(base: str) -> list[str]:
 def commit_messages(base: str) -> list[str]:
     out: list[str] = []
     for sha in git("rev-list", f"{base}..HEAD").split():
-        body = "\n".join(
-            ln for ln in git("log", "-1", "--format=%B", sha).splitlines() if not TRAILER.match(ln)
-        )
-        out += problems(body, f"commit {sha[:7]}")
+        out += problems(without_trailers(git("log", "-1", "--format=%B", sha)), f"commit {sha[:7]}")
     return out
 
 
@@ -103,14 +115,16 @@ def main() -> int:
         found += added_markdown(args.base) + commit_messages(args.base)
     if args.message_file:
         with open(args.message_file, encoding="utf-8") as f:
-            text = "\n".join(ln for ln in f.read().splitlines() if not TRAILER.match(ln))
-        found += problems(text, "commit")
+            found += problems(without_trailers(f.read()), "commit")
     if args.stdin:
         found += problems(sys.stdin.read(), "text")
     for line in found:
         print(line)
     if found:
-        print("Public-repo text must be impersonal and use no em or en dashes.")
+        print(
+            "Public-repo text must be impersonal, use no em or en dashes and carry no AI-tool"
+            " attribution."
+        )
     return 1 if found else 0
 
 
