@@ -9,7 +9,8 @@ chosen and why, and how it is verified. Smaller decisions live in
 - **Amendments** keep the parent's number with a suffix: `ADR-023-A1` amends
   ADR-023. The parent ADR's status line names its amendments.
 - **Status** is one of *Proposed* (written, awaiting sign-off), *Accepted*,
-  *Superseded* (the status line names the successor) or *Draft*. A proposed
+  *Superseded* (the status line names the successor), *Rejected* (the ADR
+  says why and keeps its text as the record) or *Draft*. A proposed
   ADR describes intent; the code may not do it yet.
 - **Archived references.** Some ADRs cite probe scripts, plans or status
   snapshots that were retired when the repository was published. Those are

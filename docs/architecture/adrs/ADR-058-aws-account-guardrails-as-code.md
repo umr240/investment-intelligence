@@ -12,7 +12,7 @@
 
 ## Rejection (2026-11-19)
 
-AWS work moves to a separate repository, owned and run by the maintainer, so that integrate-then-remove experiments leave no dead code or decision churn here. The guardrails had one consumer in this project, the Bedrock provider (ADR-031-A3), which is rejected with this ADR. The design below stays as the record of what was weighed; it may be reused in that other repository. The AWS rows of `docs/OPEN_QUESTIONS.md` (6 to 9 and 11 to 13) are closed with it.
+AWS work moves to a separate repository, owned and run by the maintainer, so that integrate-then-remove experiments leave no dead code or decision churn here. The guardrails had one consumer in this project, the Bedrock provider (ADR-031-A3), which is rejected with this ADR. The design below stays as the record of what was weighed; it may be reused in that other repository. The AWS rows of `docs/OPEN_QUESTIONS.md` (6 to 9 and 11 to 13) are closed with it. It would be reconsidered only if this project itself came to run on AWS. Recorded as DEC-54.
 
 ---
 

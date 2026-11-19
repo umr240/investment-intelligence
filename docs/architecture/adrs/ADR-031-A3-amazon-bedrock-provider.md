@@ -14,7 +14,7 @@
 
 ## Rejection (2026-11-19)
 
-AWS work moves to a separate repository, owned and run by the maintainer, so that integrate-then-remove experiments leave no dead code or decision churn here. §1 records that the provider was proposed for AWS experience, not because an eval chose it (DEC-42); with that experience pursued elsewhere, the narrative's two providers (OpenAI primary, Anthropic fallback) leave no product need for a third. The provider fall-through defect in §2's first bullet does not depend on this ADR and is tracked as issue #74. ADR-031-A2 (the spend ceiling) does not depend on this ADR and stays proposed.
+AWS work moves to a separate repository, owned and run by the maintainer, so that integrate-then-remove experiments leave no dead code or decision churn here. §1 records that the provider was proposed for AWS experience, not because an eval chose it (DEC-42); with that experience pursued elsewhere, the narrative's two providers (OpenAI primary, Anthropic fallback) leave no product need for a third. The provider fall-through defect in §2's first bullet does not depend on this ADR and is tracked as issue #74. ADR-031-A2 (the spend ceiling) does not depend on this ADR and stays proposed. The open questions cited below (#7, #8, #11, #12) are closed with this rejection. A third provider would be reconsidered only if an eval under DEC-42 chose one; that would be a new ADR, not a revival of this one. Recorded as DEC-54.
 
 ---
 

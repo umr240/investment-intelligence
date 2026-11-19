@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | **PROPOSED 2026-11-11, awaiting sign-off.** Nothing implemented. |
 | **Amends** | ADR-031 §4.4 (the $100/month ceiling, written as guidance for the LLM-extraction option) and §8 ("Cost-ceiling enforcement ❌ NOT shipped") |
-| **Related** | ADR-031-A3 and ADR-058 were rejected on 2026-11-19; the Bedrock references below are kept as written. ADR-031-A3 (Bedrock provider: sets a Bedrock ceiling here before its first call); ADR-058 (the AWS-side stop) |
+| **Related** | ADR-031-A3 (Bedrock provider) and ADR-058 (AWS-side stop), both rejected 2026-11-19 (DEC-54). Bedrock mentions below are kept as written; the per-provider ceiling in §4 item 2 lost its only named use with them and is decided when this ADR's spec opens. |
 | **Eval Contract** | **UNMEASURED** (constitution VIII). Changes no prompt, guard or model; claims no quality effect. |
 | **Provenance** | 2026-11-11. Separated from ADR-031-A3 because the ceiling stands whether or not a Bedrock provider is added. |
 
@@ -58,7 +58,7 @@ site and every provider.
    nothing.
 2. **Ceilings are settings.** `LLM_MONTHLY_CEILING_USD` (overall; default 100,
    ADR-031 §4.4's figure) and `LLM_PROVIDER_CEILINGS_USD` (per provider,
-   e.g. `bedrock=1`; unset means only the overall ceiling).
+   e.g. `anthropic=20`; unset means only the overall ceiling).
 3. **Nothing escapes the count.** The three rules below, with item 1's count,
    are one mechanism; each closes a way spend goes uncounted, so they ship
    together:
