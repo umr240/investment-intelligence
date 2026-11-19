@@ -21,7 +21,7 @@ repos:
         language: system
         types: [python]
       - id: public-text
-        name: commit message is impersonal, no em or en dashes
+        name: commit message is impersonal, no em or en dashes, no co-author or AI-tool attribution
         entry: python3 tools/check_public_text.py --message-file
         language: system
         stages: [commit-msg]

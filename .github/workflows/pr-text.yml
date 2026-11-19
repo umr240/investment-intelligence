@@ -1,6 +1,6 @@
 name: PR text
 
-# The PR body is public text: impersonal, no em or en dashes (tools/check_public_text.py;
+# The PR body is public text: impersonal, no em or en dashes, no co-author or AI-tool attribution (tools/check_public_text.py;
 # the gate checks added Markdown and commit messages). Its own workflow so that editing
 # the body re-runs the check (pull_request "edited"), without the rest of CI.
 on:

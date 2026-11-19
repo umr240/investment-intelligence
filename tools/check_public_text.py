@@ -1,5 +1,7 @@
 """Public-repo text is canonical: no em or en dashes, no first- or second-person voice,
-no AI-tool attribution (the git author is the only author).
+no co-author trailer or AI-tool footer (the git author is the only author).
+Squash merges take their message from the branch's commits, so --base covers them;
+a hand-typed `gh pr merge --body` is not checked.
 
 Checks Markdown lines added since the merge-base with BASE, commit messages in
 BASE..HEAD, a commit message file (commit-msg hook), or stdin (a PR body in CI).
@@ -24,15 +26,22 @@ PERSON = re.compile(
 CODE_SPAN = re.compile(r"`[^`]*`")
 INDEX_ROW = re.compile(r"^\| \[[A-Z]+-\d+")  # generated ADR index rows copy older titles
 TRAILER = re.compile(r"^(Co-Authored-By|Signed-off-by|Reviewed-by|Acked-by|Refs?): ", re.IGNORECASE)
+# One author of record, the git author: no co-author trailer at all, and no AI-tool footer.
+AI_TOOL = r"(claude|anthropic|copilot|codex|chatgpt|openai|cursor|gemini|aider|devin)"
 ATTRIBUTION = re.compile(
-    r"co-authored-by:.*\b(claude|anthropic)\b|noreply@anthropic\.com"
-    r"|\bgenerated (with|by) \[?claude\b|\U0001f916 generated",
+    r"^\s*co-authored-by:|noreply@anthropic\.com"
+    rf"|^\W*(generated|written|created|made) (with|by|using) \[?{AI_TOOL}\b",  # a footer line
     re.IGNORECASE,
 )
 
 
+def flags_attribution(raw: str) -> bool:
+    """Checked inside a fence or quote too, so neither hides a trailer; code spans quote."""
+    return bool(ATTRIBUTION.search(CODE_SPAN.sub("", raw)))
+
+
 def without_trailers(text: str) -> str:
-    """Drop trailer lines, except AI attribution, which is checked."""
+    """Drop trailer lines, except attribution, which is checked."""
     return "\n".join(
         ln for ln in text.splitlines() if not TRAILER.match(ln) or ATTRIBUTION.search(ln)
     )
@@ -47,6 +56,8 @@ def problems(text: str, where: str) -> list[str]:
             fenced = not fenced
             continue
         if fenced or raw.lstrip().startswith(">") or INDEX_ROW.match(raw):
+            if flags_attribution(raw.lstrip("> ")):
+                out.append(f"{where}:{n}: attribution: {raw.strip()[:100]}")
             continue
         if raw.startswith("#") and where == "commit":
             continue
@@ -58,7 +69,7 @@ def problems(text: str, where: str) -> list[str]:
         if who:
             found.append(f"person: {who.group(0)!r}")
         if ATTRIBUTION.search(line):
-            found.append("AI attribution")
+            found.append("attribution")
         if found:
             out.append(f"{where}:{n}: {', '.join(found)}: {raw.strip()[:100]}")
     return out
@@ -110,6 +121,8 @@ def main() -> int:
     ap.add_argument("--message-file", help="a commit message file (commit-msg hook)")
     ap.add_argument("--stdin", action="store_true", help="read text, e.g. a PR body, from stdin")
     args = ap.parse_args()
+    for stream in (sys.stdin, sys.stdout):  # Windows consoles default to cp1252
+        stream.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     found: list[str] = []
     if args.base:
         found += added_markdown(args.base) + commit_messages(args.base)
@@ -122,8 +135,8 @@ def main() -> int:
         print(line)
     if found:
         print(
-            "Public-repo text must be impersonal, use no em or en dashes and carry no AI-tool"
-            " attribution."
+            "Public-repo text must be impersonal, use no em or en dashes, and carry no co-author"
+            " trailer or AI-tool attribution: the git author is the only author."
         )
     return 1 if found else 0
 
