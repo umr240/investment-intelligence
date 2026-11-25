@@ -768,3 +768,11 @@ Rule-of-three for new skills (3 invocations across sessions before authoring); r
 **Decision**: The owner accepted ADR-045 with eight amendments: the baseline evidence and the longer model list in §1, the other six in §2.7. Narrative claims cite stable field IDs (framework code plus label slug) from a per-request enum, prose uses `{F5.roic}`-style placeholders that code renders, and the model explains the deterministic verdict rather than choosing it. Anthropic moves from a forced tool call, which current models reject with a 400, to `output_config.format`; OpenAI keeps strict `json_schema`. One bounded repair is allowed, graded separately from the first attempt. No library is adopted: instructor's validation-retry pattern is borrowed, since both providers enforce the schema natively. The evidence is the ADR-047 baseline, where most guard failures were right values cited at the wrong list position. Delivered as `epic/adr-045-grounded-narrative`.
 **See**: `ADR-045-grounded-narrative-generation.md` §1, §2.7.
 
+---
+
+## DEC-54: ADR-058 and ADR-031-A3 rejected, AWS work moves to its own repository
+
+**Date**: 2026-11-19
+**Decision**: The owner rejected both proposals. AWS learning and demo work is built in a separate repository the owner runs, so this project carries no integrate-then-remove AWS code. Bedrock was proposed for AWS experience rather than chosen by an eval (DEC-42), and the account guardrails had no other consumer here. ADR-031-A2, the spend ceiling, stays proposed. The provider fall-through defect found while drafting ADR-031-A3 is issue #74.
+**Resolves**: `docs/OPEN_QUESTIONS.md` #6 to #9 and #11 to #13, closed unanswered.
+**See**: `ADR-058-aws-account-guardrails-as-code.md`, `ADR-031-A3-amazon-bedrock-provider.md` (Rejection sections).

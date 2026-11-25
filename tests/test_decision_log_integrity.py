@@ -19,7 +19,8 @@ _LOG_CANDIDATES = [
     _ROOT / "docs" / "architecture" / "DECISIONS.md",
 ]
 
-_HEADING = re.compile(r"^## (DEC-\d+) — (.+)$", re.M)
+# An em dash in older entries; a colon in new ones (public text uses no dashes).
+_HEADING = re.compile(r"^## (DEC-\d+)(?: —|:) (.+)$", re.M)
 _REFERENCE = re.compile(r"\bDEC-\d+\b")
 
 
@@ -47,7 +48,7 @@ def test_ids_are_contiguous_and_ordered() -> None:
 
 def test_entries_are_in_chronological_order() -> None:
     text = _log_path().read_text(encoding="utf-8")
-    pairs = re.findall(r"^## (DEC-\d+) —.*?\n+\*\*Date\*\*: (\S+)", text, re.M | re.S)
+    pairs = re.findall(r"^## (DEC-\d+)(?: —|:).*?\n+\*\*Date\*\*: (\S+)", text, re.M | re.S)
     dates = [d for _, d in pairs]
     assert dates == sorted(dates), "decision entries are not in date order"
 
