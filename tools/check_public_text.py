@@ -1,8 +1,13 @@
-"""Public-repo text is canonical: no em or en dashes, no first- or second-person voice.
+"""Public-repo text is canonical: no em or en dashes, no first- or second-person voice,
+no co-author trailer or AI-tool footer (the git author is the only author; the
+attribution patterns are a best-effort denylist of known forms).
+Squash merges take their message from the branch's commits, so --base covers them;
+CI checks the PR title with the body. A hand-typed `gh pr merge --body` is not checked.
 
 Checks Markdown lines added since the merge-base with BASE, commit messages in
 BASE..HEAD, a commit message file (commit-msg hook), or stdin (a PR body in CI).
-Code spans, fenced code and blockquotes are skipped; quoting a source is allowed.
+Code spans, fenced code and blockquotes are skipped, so a source can be quoted;
+attribution is checked inside fences and blockquotes too, and only a code span quotes it.
 
     python3 tools/check_public_text.py --base origin/main
     python3 tools/check_public_text.py --message-file .git/COMMIT_EDITMSG
@@ -23,6 +28,32 @@ PERSON = re.compile(
 CODE_SPAN = re.compile(r"`[^`]*`")
 INDEX_ROW = re.compile(r"^\| \[[A-Z]+-\d+")  # generated ADR index rows copy older titles
 TRAILER = re.compile(r"^(Co-Authored-By|Signed-off-by|Reviewed-by|Acked-by|Refs?): ", re.IGNORECASE)
+# One author of record, the git author: no co-author trailer at all, and no AI-tool footer.
+AI_TOOL = r"(claude|anthropic|copilot|codex|chatgpt|openai|cursor|gemini|aider|devin)"
+AI_TOOL = rf"({AI_TOOL}|gpt-[\w.]+)"
+VERB = r"(generated|written|created|made|built|assisted|drafted|authored|produced)"
+FOOTER = (  # a whole line crediting a tool, e.g. "Generated with [Claude Code](url) by X"
+    rf"^\W*{VERB} (with|by|using) \[?(\w+ )?{AI_TOOL}( [\w.-]+){{0,3}}\]?"
+    r"(\(\S*\)( by \w+)?)?\W*$"
+)
+ATTRIBUTION = re.compile(  # best effort: a denylist of known forms, not every phrasing
+    r"^\s*co-authored-by\s*:|noreply@anthropic\.com"
+    rf"|^\s*[\w-]+-by\s*:[^<]*\b{AI_TOOL}\b|{FOOTER}"
+    rf"|\b{VERB} (with|by|using) \[?claude code\]?(\(\S*\))?\W*$",  # mid-line, ending the line
+    re.IGNORECASE,
+)
+
+
+def flags_attribution(raw: str) -> bool:
+    """Checked inside a fence or quote too, so neither hides a trailer; code spans quote."""
+    return bool(ATTRIBUTION.search(CODE_SPAN.sub("", raw)))
+
+
+def without_trailers(text: str) -> str:
+    """Drop trailer lines, except attribution, which is checked."""
+    return "\n".join(
+        ln for ln in text.splitlines() if not TRAILER.match(ln) or ATTRIBUTION.search(ln)
+    )
 
 
 def problems(text: str, where: str) -> list[str]:
@@ -34,6 +65,8 @@ def problems(text: str, where: str) -> list[str]:
             fenced = not fenced
             continue
         if fenced or raw.lstrip().startswith(">") or INDEX_ROW.match(raw):
+            if flags_attribution(raw.lstrip("> ")):
+                out.append(f"{where}:{n}: attribution: {raw.strip()[:100]}")
             continue
         if raw.startswith("#") and where == "commit":
             continue
@@ -44,6 +77,8 @@ def problems(text: str, where: str) -> list[str]:
         who = PERSON.search(line)
         if who:
             found.append(f"person: {who.group(0)!r}")
+        if ATTRIBUTION.search(line):
+            found.append("attribution")
         if found:
             out.append(f"{where}:{n}: {', '.join(found)}: {raw.strip()[:100]}")
     return out
@@ -85,10 +120,7 @@ def added_markdown(base: str) -> list[str]:
 def commit_messages(base: str) -> list[str]:
     out: list[str] = []
     for sha in git("rev-list", f"{base}..HEAD").split():
-        body = "\n".join(
-            ln for ln in git("log", "-1", "--format=%B", sha).splitlines() if not TRAILER.match(ln)
-        )
-        out += problems(body, f"commit {sha[:7]}")
+        out += problems(without_trailers(git("log", "-1", "--format=%B", sha)), f"commit {sha[:7]}")
     return out
 
 
@@ -98,19 +130,23 @@ def main() -> int:
     ap.add_argument("--message-file", help="a commit message file (commit-msg hook)")
     ap.add_argument("--stdin", action="store_true", help="read text, e.g. a PR body, from stdin")
     args = ap.parse_args()
+    for stream in (sys.stdin, sys.stdout):  # Windows consoles default to cp1252
+        stream.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     found: list[str] = []
     if args.base:
         found += added_markdown(args.base) + commit_messages(args.base)
     if args.message_file:
         with open(args.message_file, encoding="utf-8") as f:
-            text = "\n".join(ln for ln in f.read().splitlines() if not TRAILER.match(ln))
-        found += problems(text, "commit")
+            found += problems(without_trailers(f.read()), "commit")
     if args.stdin:
         found += problems(sys.stdin.read(), "text")
     for line in found:
         print(line)
     if found:
-        print("Public-repo text must be impersonal and use no em or en dashes.")
+        print(
+            "Public-repo text must be impersonal, use no em or en dashes, and carry no co-author"
+            " trailer or AI-tool attribution: the git author is the only author."
+        )
     return 1 if found else 0
 
 

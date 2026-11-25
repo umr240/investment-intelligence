@@ -51,9 +51,12 @@ These hold for every contributor and every assistant session.
   check (as `tests/test_llm_call_sites.py` enforces the LLM call sites). Where a
   rule can only live in prose, say so where it is stated.
 - **Public text is canonical.** Commit messages, PR bodies, ADRs and docs are
-  impersonal (no first or second person, no chat context) and use no em or en
-  dashes; `tools/check_public_text.py` enforces it in the gate, a commit-msg
-  hook and CI.
+  impersonal (no first or second person, no chat context), use no em or en
+  dashes, and carry no co-author trailer or AI-tool attribution footer: the git
+  author is the only author.
+  `tools/check_public_text.py` enforces it in the gate, a commit-msg hook and
+  CI (PR title and body); a hand-typed `gh pr merge --body` is the one text it
+  does not see.
 - **Borrow before building.** Before a non-trivial feature, search for a
   proven open-source project that already does it (`gh search repos`, web
   search). Proven means real dependents or production users, several active
