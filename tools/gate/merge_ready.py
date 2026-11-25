@@ -14,7 +14,8 @@ head commit (SHA on its second line) and was posted after that commit; its findi
 tagged format and every tag is in `[merge] merge_on` read from the base branch (agentic-kit ADR 004); the
 PR is open, not a
 draft, targets the gate's base branch, is mergeable, changes no `specs/*/spec.md` (the
-owner's merge is a spec's approval, agentic-kit ADR 005), and every CI check has completed
+owner's merge is a spec's approval, agentic-kit ADR 005), has a Conventional Commits title,
+and every CI check has completed
 successfully. On YES it prints the merge command, whose `--match-head-commit` stops anything
 pushed after this check from riding along. Standard library + the `gh` CLI.
 """
@@ -36,7 +37,13 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 OK_CONCLUSIONS = {"SUCCESS", "NEUTRAL", "SKIPPED"}
+# The template's one CI job skips drafts (agentic-kit ADR 008). Skipped, it has run nothing, so
+# it must succeed: else a PR just marked ready could pass before its real run is queued.
+MUST_SUCCEED = {"CI"}
 VERIFIER_HEADING = "## pr-verifier"
+# The squash commit is the PR title and git-cliff builds the changelog from it (cliff.toml).
+# Checked here, not by a CI workflow: an extra workflow is an extra billed job (agentic-kit ADR 008).
+TITLE_RE = re.compile(r"^(feat|fix|perf|refactor|docs|test|build|ci|chore|revert)(\([a-z0-9._/-]+\))?!?: .+")
 
 
 def gh_pr(pr: str) -> dict[str, Any]:
@@ -65,7 +72,9 @@ def check_states(rollup: list[dict[str, Any]]) -> list[str]:
             if c.get("state") != "SUCCESS":
                 bad.append(f"{c.get('context')}={c.get('state')}")
         elif (
-            c.get("status") != "COMPLETED" or c.get("conclusion") not in OK_CONCLUSIONS
+            c.get("status") != "COMPLETED"
+            or c.get("conclusion") not in OK_CONCLUSIONS
+            or (c.get("name") in MUST_SUCCEED and c.get("conclusion") != "SUCCESS")
         ):
             bad.append(f"{c.get('name')}={c.get('conclusion') or c.get('status')}")
     return bad
@@ -350,6 +359,12 @@ def main() -> int:
         else f"{nfiles} files: gh lists at most 100, so the owner merges"
         if nfiles >= 100
         else "no spec.md changed",
+    )
+    title = str(pr.get("title") or "")
+    record(
+        "PR: title follows Conventional Commits",
+        bool(TITLE_RE.match(title)),
+        title or "no title",
     )
     rollup = pr.get("statusCheckRollup") or []
     bad = check_states(rollup)

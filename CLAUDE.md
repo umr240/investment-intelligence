@@ -80,6 +80,7 @@ These hold for every contributor and every assistant session.
 4. **Decisions are ADRs** in `docs/architecture/adrs/`, drafted as proposed and reviewed with `/agentic-kit:adr-review draft`; only the owner accepts one. Smaller decisions are `DEC-nn` entries in `docs/architecture/DECISIONS.md`.
 5. **Ralph only when asked**, never on the router's say-so.
 6. **Owner asks are listed, never acted on** (open questions, proposed ADRs, unapproved specs, held PRs), each with the exact ask.
+7. **Text people read gets one `humanizer:humanizer` pass per PR** (`ship-pr` lists what; prose-only). Each fact lives in one doc and others link to it.
 
 The `/speckit-*` commands need `tools/setup_speckit.sh` once per clone; only the project-owned Spec Kit files are committed. The constitution (`.specify/memory/constitution.md`) names the non-negotiables and never contradicts this file. Open outcomes are in `docs/ROADMAP.md`; known defects are GitHub issues labelled `known-issue`.
 

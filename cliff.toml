@@ -2,7 +2,7 @@
 # the PR title the commit), never written by hand (agentic-kit ADR 006: scripts,
 # not agents). Generate or refresh it at release:
 #   uvx git-cliff@2.14.2 -o CHANGELOG.md
-# PR titles follow Conventional Commits (`feat(scope): ...`); CI checks them.
+# PR titles follow Conventional Commits (`feat(scope): ...`); merge_ready.py checks them.
 
 [changelog]
 header = "# Changelog\n\nGenerated from merged PR titles by git-cliff; edit the PR title, not this file.\n"
